@@ -1,0 +1,38 @@
+<!-- -*- html -*- -->
+<html xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+      xmlns:ucw="http://common-lisp.net/project/ucw/core"
+      tal:in-package="it.bese.ucw-user">
+  <head>
+    <title>UCW Examples</title>
+    <link href="/ucw/ucw.css" rel="stylesheet"/>
+    <link href="/ucw/examples/examples.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <h1>UCW Examples</h1>
+    <div id="option-menu">
+      <ul>
+        <li>
+          <a ucw:action="(switch-component $component 'counter)">
+            Counter Example
+          </a>
+        </li>
+        <li>
+          <a ucw:action="(switch-component $component 'transaction-example)">
+            Transaction Example
+          </a>
+        </li>
+        <li>
+          <a ucw:action="(switch-component $component 'file-upload-example)">
+            File upload
+          </a>
+        </li>
+        <li>
+          <a ucw:action="(error)">
+            Divide 1 by 0 (signal an error)
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ucw:render-component ucw:component="(container.current-component $component)"/>
+  </body>
+</html>

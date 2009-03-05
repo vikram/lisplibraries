@@ -1,0 +1,5 @@
+- portable save/load (only works on sbcl and allegro)
+
+- maybe do a few batch fine tuning passing when it has converged
+
+- tests

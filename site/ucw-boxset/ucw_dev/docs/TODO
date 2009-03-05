@@ -1,0 +1,166 @@
+-*- outline -*-
+
+* Core RERL
+
+** Add a clean argument to shutdown server/backend
+
+** Multithreading
+
+Need to think about how the multiple threads interact better.
+
+We should serialize the processing of requests coming to a session.
+
+Locking at many places could use a read-write lock.
+
+** Actions
+
+After calling callbacks in the action-dispatcher, we always save
+the backtracked places, but most of the time it's a waste. Add a
+parameter to make-callback that controls this.
+
+** File uploading
+
+While this currently works it's very rudimentary and could use some
+thought.
+
+* Component Library
+
+** Tree Component
+
+provide support for viewing dynamically generated collapsable trees.
+
+** Grib/Table Component
+
+** Area Maps
+
+This is a simple matter of being able to put ucw:action attributes on
+map tags.
+
+** Cleanup, seperated and publish octane.
+
+standard-component-class should be split. the functionality that
+handles the component (and bracktracked?) slots should be cut into a
+standalone metaclass, so that it's usable without the other stuff
+component provides/requires (most importantly that the instantiation
+of standard-component requires a bound request context).
+
+** Web Components:
+
+you define a component of type web-component (as opposed to
+standard-component-class). this causes a url (probably the name of the
+class) to be published. the entry-point on on this url calls an action
+on the component. (web-component can have request or session scope. in
+the later case a new component will be created for each session (when
+the first action is called) and resued.
+
+web components must be creatable via (make-instance component-type).
+
+it would be nice, though not required, if web component would also
+produce readable links (instead of using the action parameter).
+
+** Nobody uses active-components and attached-components. remove them.
+
+* Documentation
+
+** Write HOW-TOs
+
+- Write a simple UCW Application
+
+- Create your own Component
+
+- Write a Web Menus - Navigation bars, tabbed panes and containers
+
+- Validate an Input Field
+
+* rename the presentation's render method to present
+
+* document all the exported symbols
+
+* This is a _really_ nice way to create a componnet and its nested components:
+
+(capi:define-interface login-dialog ()
+   ()
+   (:panes
+    (user capi:text-input-pane
+          :text ""
+          :callback-type :interface
+          :callback 'exit-login-dialog)
+    (pass capi:password-pane
+          :text ""
+          :callback-type :interface
+          :callback 'exit-login-dialog)
+    (ok capi:push-button
+        :text "Login" :data 'login
+        :callback 'exit-login-dialog)
+    (cancel capi:push-button
+            :text "Cancel" :data 'cancel
+            :callback 'capi:abort-dialog))
+   (:layouts
+    (main capi:column-layout '(input-pane-layout buttons))
+    (input-pane-layout capi:grid-layout
+                       '("Username:" user
+                         "Password:" pass))
+    (buttons capi:row-layout '(ok cancel)))
+   (:default-initargs
+    :title "Login"
+    :min-width 256))
+
+which in a ucw syntax would be:
+
+(define-component login-dialog ()
+  ()
+  (:panes
+   ;; this sholud translate into a shared-initialize :after, panes
+   ;; would be visibli to the init forms of other panes
+   (username text-field :size 10)
+   (password password-field :size 10)
+   (ok submit-button :text "Ok" :action #'try-login)
+   (cancel submit-button :text "Cancel" :action (lambda (c) (ok c nil))))
+  (:layout grid-layout ;; we need to write a grid-layout component which uses div to spread out the fields
+   '(("Username:" username)
+     ("Password:" password)))
+  (:default-initargs))
+
+   
+* when we have mime data:
+
+in order to keep mime stuff and non mime stuff as similar as possible we'll do this:
+
+1) when we get a mime post we put associate the body with the nome in
+   the request params as normal. we'll add a function GET-MIME-INFO
+   which, given the name of the parameter, returns the mime headers.
+
+* live-updating form values
+
+we have the accessor, we have the forms, we have a way to generate
+actions and callbacks, how hard can it be to automatically pass the
+form values to the server when they change? (easy).
+
+what's harder is passing new values from the server to the client.
+
+* Make actions into funcallable-objects.
+
+consider turning the action-entry sturct into a funcallable *IF*
+there's any use of it. when an action needs to be a clos instance
+(e.g. for dispatching) then it's probably worth doing it, too.
+
+* URLS
+
+1) drop the entry point stuff and replace it with a url mapping.
+
+   basicalyl each application has a list of urls -> (web-method).
+   based on the url we call a particular method on an instance of a
+   particular class. (nb: this will require all entry points to become
+   start methods on task-components).
+
+   whenever we see an :action (foo bar baz) and we have FOO defined a
+   web method we write out the url according to the same mapping whcih
+   converts urls to web-methods.
+
+   ex:
+
+   we have a mapping from: /article/YEAR/MONTH to (view-article YEAR MONTH)
+
+   whenevr we have an action like (view-article foo bar) we spit out
+   the corresponding url. (instead of our s=...&f=...&a=... gunk.
+

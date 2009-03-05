@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Function make-builder</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-stp</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-stp.html">cxml-stp</a></p>
+      <h2 class="page-title">
+	  Function
+	  make-builder</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Lambda List</h3>
+          <div class="indent">
+<tt>make-builder</tt> ()</div>
+          <h3>Return Value</h3>
+          <div class="indent">STP builder, a SAX handler</div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">   This function creates SAX handler that constructs an STP document.<br><br>
+   The builder processes SAX events and can be used with any
+   function generating such events, in particular with cxml:parse-file.<br><br>
+   Examples. Parsing a file:   <pre>(cxml:parse #p"example.xml" (stp:make-builder))</pre>
+   Parsing a string:   <pre>(cxml:parse "&lt;example/&gt;" (stp:make-builder))</pre>
+<br><br>   </div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>See also</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-stp__fun__serialize.html">
+                  <tt>serialize</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

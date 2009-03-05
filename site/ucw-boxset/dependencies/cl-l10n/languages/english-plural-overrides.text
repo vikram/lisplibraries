@@ -1,0 +1,55 @@
+;;; -*- encoding: utf-8 -*-
+
+;; TODO http://www.google.co.hu/search?&q=irregular+plural+nouns&btnG=Search
+
+calf 	calves
+child   children
+echo 	echoes
+elf 	elves
+foot    feet
+goose 	geese
+half 	halves
+hero 	heroes
+hoof 	hooves
+knife 	knives
+leaf 	leaves
+life 	lives
+loaf 	loaves
+louse 	lice
+man     men
+mouse   mice
+patch 	patches
+potato 	potatoes
+scarf 	scarfs/scarves
+self 	selves
+sheaf 	sheaves
+shelf 	shelves
+thief 	thieves
+tomato 	tomatoes
+tooth 	teeth
+torpedo	torpedoes
+veto 	vetoes
+wife 	wives
+wolf 	wolves
+woman   women
+
+;; these are not irregulars, but overrides for the algorithm
+bay 	bays
+osprey 	ospreys
+
+barracks
+cod
+crossroads
+deer
+dice
+fish
+gallows
+headquarters
+means
+offspring
+perch
+series
+sheep
+species
+trousers
+trout

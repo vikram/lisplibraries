@@ -1,0 +1,34 @@
+# -*- cperl -*-
+
+sub top_navigation_panel {
+    return
+      "<div class=\"top-nav-panel\">\n" .
+        "<dl>" .
+          ($NEXT_TITLE ? "<dt>Next:</dt><dd>$NEXT_TITLE</dt>" : "") .
+          ($UP_TITLE ? "<dt>Up:</dt><dd>$UP_TITLE</dt>" : "") .
+          ($PREVIOUS_TITLE ? "<dt>Prev:</dt><dd>$PREVIOUS_TITLE</dt>" : "") .
+        "</dl>\n" .
+      "</div>\n";
+}
+
+sub bot_navigation_panel {
+    return <<EOHTML
+<div class="bottom-nav-panel">
+  $NEXT_TITLE
+</div>
+EOHTML
+
+}
+
+$STYLESHEET = "style.css";
+
+$WORDS_IN_NAVIGATION_PANEL_TITLES = -1;
+
+$ADDRESS = "";
+
+$MAX_SPLIT_DEPTH = 4;
+
+$SHOW_SECTION_NUMBERS = 1;
+
+1;
+

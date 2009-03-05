@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="7"
+   name=""
+   committed-date="2005-11-25T20:00:46.211841Z"
+   url="svn://unmutual.info/html-encode"
+   last-author="chandler"
+   kind="dir"
+   uuid="3cf5c468-6606-0410-8af3-f24f8ca847a0"
+   revision="153"/>
+<entry
+   committed-rev="7"
+   name="LICENSE"
+   text-time="2006-01-21T17:41:58.000000Z"
+   committed-date="2005-11-25T20:00:46.211841Z"
+   checksum="c71d813ff4e2955efe879fa39e62e351"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-21T17:41:58.000000Z"/>
+<entry
+   committed-rev="7"
+   name="html-encode.lisp"
+   text-time="2006-01-21T17:41:58.000000Z"
+   committed-date="2005-11-25T20:00:46.211841Z"
+   checksum="793e56e349c5e619a5cd1b726db96f46"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-21T17:41:58.000000Z"/>
+<entry
+   committed-rev="7"
+   name="html-encode.asd"
+   text-time="2006-01-21T17:41:58.000000Z"
+   committed-date="2005-11-25T20:00:46.211841Z"
+   checksum="b91ca2d924b03e15f9cd06a73b2e21c7"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-21T17:41:58.000000Z"/>
+</wc-entries>

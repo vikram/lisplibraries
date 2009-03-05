@@ -1,0 +1,103 @@
+Abstract
+========
+
+create-groups-bind-regex-dispatcher is a small macro (with a big ugly
+name) for TBNL, that allows to bind portions of a request URI to
+arguments passed to dispatch functions.
+
+It has been created to ease the management of RESTful [1] URIs in web
+APIs and applications developed with TBNL.
+
+    Author:  Alceste Scalas <alceste@muvara.org>
+             (feel free to write for comments and suggestions)
+
+    License: this software is released under the terms of a BSD-style
+             license, without advertising clause (see source code).
+
+
+API documentation
+=================
+
+create-groups-bind-regex-dispatcher regex var-list page-function => dispatch-fn
+
+    Like CREATE-REGEX-DISPATCHER, but call PAGE-FUNCTION with the
+    variables in VAR-LIST used as additional keyword arguments bound
+    to the corresponding register groups of REGEX.
+
+    Note: VAR-LIST has the same format of its omonymous in
+    CL-PPCRE:REGISTER-GROUPS-BIND, so you can use the (FN VAR ...)
+    form if needed.
+
+
+Examples
+========
+
+Let's say we want to publish a news archive.  The "usual" way for
+accessing the news for August 27th, 2005 would be an URI like:
+
+    http://www.news.tld/archive?year=2005&month=08&day=27
+
+The create-groups-bind-regex-dispatcher macro allows to easily manage
+URIs like this:
+
+    http://www.news.tld/archive/2005/08/27/
+
+The macro takes three arguments:
+
+    1. a CL-PPCRE regex (a string, an s-expression or a scanner)
+       with one or more register groups.  It will be matched against
+       the request URI;
+
+    2. a list of variable names that will be bound to the register
+       groups above if the regex matches;
+
+    3. a dispatch function that accepts keyword arguments named like
+       the variables above.
+
+A code sample for the news archive:
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(defun archive-page (&key year month day)
+  "Archive page"
+  (format nil "Year: ~A; Month: ~A; Day: ~A" year month day))
+
+(setq *dispatch-table*
+      (list
+        (create-groups-bind-regex-dispatcher
+           "^\\/archive\\/(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\/?$"
+           (year month day) archive-page)
+        #'default-dispatcher))
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+The list of variables provided to create-groups-bind-regex-dispatcher
+has the same format used by cl-ppcre:register-groups-bind [2].  It
+means that you can use the (FN VAR ...) form to apply functions to the
+matched strings, before passing the results to your PAGE-FUNCTION.
+
+For example, if you want to convert the news archive year, month and
+day parameters to integers before using them:
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(defun archive-page (&key year month day)
+  "Archive page, with keyword parameters converted to integers"
+  (format nil "(+ year month day) => ~D" (+ year month day)))
+
+(setq *dispatch-table*
+      (list
+        (create-groups-bind-regex-dispatcher
+           "^\\/archive\\/(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\/?$"
+           ((#'parse-integer year month day)) archive-page)
+        #'default-dispatcher))
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+For more details, see cl-ppcre:register-groups-bind documentation.
+
+
+References
+==========
+
+    [1] The REST wiki:
+            http://rest.blueoxen.net/
+
+    [2] CL-PPCRE:register-groups-bind documentation:
+            http://www.weitz.de/cl-ppcre/#register-groups-bind

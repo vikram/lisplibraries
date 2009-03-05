@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="9"
+   name=""
+   committed-date="2005-11-25T20:33:29.245169Z"
+   url="svn://unmutual.info/trivial-http"
+   last-author="chandler"
+   kind="dir"
+   uuid="3cf5c468-6606-0410-8af3-f24f8ca847a0"
+   revision="151"/>
+<entry
+   committed-rev="9"
+   name="LICENSE"
+   text-time="2006-01-17T16:29:57.000000Z"
+   committed-date="2005-11-25T20:33:29.245169Z"
+   checksum="4654ad5b2b029d12ccf8b8f35e1a1190"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-17T16:29:57.000000Z"/>
+<entry
+   committed-rev="9"
+   name="trivial-http.lisp"
+   text-time="2006-01-17T16:29:57.000000Z"
+   committed-date="2005-11-25T20:33:29.245169Z"
+   checksum="62ba3e2c1ce3a8bb65937f2e67601722"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-17T16:29:57.000000Z"/>
+<entry
+   committed-rev="9"
+   name="README"
+   text-time="2006-01-17T16:29:57.000000Z"
+   committed-date="2005-11-25T20:33:29.245169Z"
+   checksum="542dff8ca8b913eb4d421eef8203eac2"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-17T16:29:57.000000Z"/>
+<entry
+   committed-rev="9"
+   name="trivial-http.asd"
+   text-time="2006-01-17T16:29:57.000000Z"
+   committed-date="2005-11-25T20:33:29.245169Z"
+   checksum="7d1a9a37ecd19f04ba7ed95b723c5256"
+   last-author="chandler"
+   kind="file"
+   prop-time="2006-01-17T16:29:57.000000Z"/>
+</wc-entries>

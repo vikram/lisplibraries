@@ -1,0 +1,440 @@
+; SLIME 2006-03-20
+CL-USER> (asdf:oos 'asdf:load-op :asdf-install)
+; loading system definition from
+; /Users/alexis/Applications/sbcl/lib/sbcl/systems/asdf-install.asd into
+; #<PACKAGE "ASDF4518">
+; registering #<SYSTEM ASDF-INSTALL {10E22FF1}> as ASDF-INSTALL
+NIL
+CL-USER> (asdf-install:install "/Users/alexis/workspace/pythononlisp/pythononlisp.tar.gz")
+Install where?
+1) System-wide install: 
+   System in /Users/alexis/Applications/sbcl/lib/sbcl/site-systems/
+   Files in /Users/alexis/Applications/sbcl/lib/sbcl/site/ 
+2) Personal installation: 
+   System in /Users/alexis/.sbcl/systems/
+   Files in /Users/alexis/.sbcl/site/ 
+ --> 2
+Installing /Users/alexis/workspace/pythononlisp/pythononlisp.tar.gz in /Users/alexis/.sbcl/site/,/Users/alexis/.sbcl/systems/
+pythononlisp/
+pythononlisp/doc/
+pythononlisp/doc/Changelog
+pythononlisp/doc/README
+pythononlisp/packages.lisp
+pythononlisp/pythononlisp.asd
+pythononlisp/pythononlisp.lisp
+; loading system definition from /Users/alexis/.sbcl/systems/pythononlisp.asd
+; into #<PACKAGE "ASDF4558">
+; registering #<SYSTEM #:PYTHONONLISP {409551D9}> as PYTHONONLISP
+; loading system definition from /Users/alexis/.sbcl/systems/cffi.asd into
+; #<PACKAGE "ASDF4568">
+; registering #<SYSTEM CFFI {40C0ADE9}> as CFFI
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::LISPEVAL
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::LISPEVAL STRING (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::GETSTRING
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::GETSTRING STRING NIL))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;     (BLOCK PYTHONONLISP::GETSTRING
+;       (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::GETSTRING STRING NIL)))
+; 
+; caught STYLE-WARNING:
+;   The variable ARGS is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::SETSTRING
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::SETSTRING NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::DUMPSTD
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::DUMPSTD NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; 
+; caught STYLE-WARNING:
+;   Too many arguments (3) to FORMAT "~A~A": uses at most 2.
+;   See also:
+;     The ANSI Standard, Section 22.3.10.2
+; in: DEFPYCALLSTRUCT (LENGTH (REST METHODS))
+;     (CFFI-SYS:NULL-POINTER)
+; 
+; note: deleting unreachable code
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-FIELD
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-FIELD
+;                                           NIL
+;                                           (# #)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-HEADER
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-HEADER
+;                                           NIL
+;                                           (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-EMAIL
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-EMAIL
+;                                           NIL
+;                                           NIL))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;     (BLOCK PYTHONONLISP::MBOX-ADD-EMAIL
+;       (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-EMAIL NIL NIL)))
+; 
+; caught STYLE-WARNING:
+;   The variable ARGS is defined but never used.
+; in: LAMBDA NIL
+;     (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::TESTNUM
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::TESTNUM NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+; compiling file "/Users/alexis/.sbcl/site/pythononlisp/packages.lisp" (written 24 APR 2006 10:21:20 AM):
+; compiling (IN-PACKAGE :COMMON-LISP-USER)
+; compiling (DEFPACKAGE #:PYTHONONLISP ...)
+
+; /Users/alexis/.sbcl/site/pythononlisp/packages.fasl written
+; compilation finished in 0:00:00
+; compiling file "/Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp" (written 29 MAY 2006 05:35:10 PM):
+; compiling (IN-PACKAGE :PYTHONONLISP)
+; compiling (DEFPARAMETER *PATH-TO-LISP-EXECUTABLE* ...)
+; compiling (DEFINE-FOREIGN-LIBRARY PYTHON-LIBRARY ...)
+; compiling (DEFMACRO STR-FORMAT ...)
+; compiling (DEFUN ATOF ...)
+; compiling (USE-FOREIGN-LIBRARY PYTHON-LIBRARY)
+; compiling (DEFCFUN ("Py_InitModule4" PY_INITMODULE4) ...)
+; compiling (DEFCFUN ("Py_SetProgramName" PY_SETPROGRAMNAME) ...)
+; compiling (DEFCFUN ("Py_Initialize" PY_INITIALIZE) ...)
+; compiling (DEFCFUN ("PyRun_SimpleString" PYRUN_SIMPLESTRING) ...)
+; compiling (DEFCFUN ("Py_BuildValue" PY_BUILDVALUE) ...)
+; compiling (DEFCFUN ("PyArg_ParseTuple" PYARG_PARSETUPLE) ...)
+; compiling (DEFUN GENERATE-PARSETUPLE-FORMAT ...)
+; compiling (DEFUN GEN-PYCALLBACK ...)
+; compiling (DEFUN GEN-DEPYFUN ...)
+; compiling (DEFUN PYGETARG ...)
+; compiling (DEFMACRO DEFPYCALLBACKENTRY ...)
+; compiling (DEFMACRO DEFPYCALLBACKFUNCTION ...)
+; compiling (DEFMACRO DEFPYFUN ...)
+; compiling (DEFPARAMETER *CALLBACKSTR* ...)
+; compiling (DEFPARAMETER *SESSION-STDOUT* ...)
+; compiling (DEFPYFUN LISPEVAL ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN LISPEVAL
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::LISPEVAL
+;                           STRING
+;                           ((PYTHONONLISP::CODE STRING))
+;                           (PYTHONONLISP::STR-FORMAT "~A"
+;                                                     (EVAL
+;                                                      (READ-FROM-STRING
+;                                                       PYTHONONLISP::CODE))))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::LISPEVAL
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::LISPEVAL STRING (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; compiling (DEFPYFUN GETSTRING ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN GETSTRING
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::GETSTRING
+;                           STRING
+;                           NIL
+;                           PYTHONONLISP::*CALLBACKSTR*)
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::GETSTRING
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::GETSTRING STRING NIL))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION LET 
+; ==>
+;   (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;     (BLOCK PYTHONONLISP::GETSTRING
+;       (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::GETSTRING STRING NIL)))
+; 
+; caught STYLE-WARNING:
+;   The variable ARGS is defined but never used.
+
+; compiling (DEFPYFUN SETSTRING ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN SETSTRING
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::SETSTRING
+;                           NIL
+;                           ((PYTHONONLISP::TEXT STRING))
+;                           (SETF PYTHONONLISP::*CALLBACKSTR* PYTHONONLISP::TEXT))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::SETSTRING
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::SETSTRING NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; compiling (DEFPYFUN DUMPSTD ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN DUMPSTD
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::DUMPSTD
+;                           NIL
+;                           ((PYTHONONLISP::TEXT STRING))
+;                           (WHEN PYTHONONLISP::*SESSION-STDOUT*
+;                             (SETF PYTHONONLISP::*SESSION-STDOUT*
+;                                     (PYTHONONLISP::STR-FORMAT "~A~A"
+;                                                               PYTHONONLISP::*SESSION-STDOUT*
+;                                                               PYTHONONLISP::TEXT
+;                                                               'STRING)))
+;                           (FORMAT T PYTHONONLISP::TEXT))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::DUMPSTD
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::DUMPSTD NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; 
+; caught STYLE-WARNING:
+;   Too many arguments (3) to FORMAT "~A~A": uses at most 2.
+;   See also:
+;     The ANSI Standard, Section 22.3.10.2
+
+; compiling (DEFVAR *PYTHON-INITIALISED* ...)
+; compiling (DEFUN INIT-PYTHON ...)
+; compiling (DEFCSTRUCT PYMETHODDEF ...)
+; compiling (DEFMACRO DEFPYCALLSTRUCT ...)
+; compiling (DEFUN ADD-PYTHON-MODULE ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFMACRO DEFPYCALLSTRUCT
+;     (CFFI-SYS:NULL-POINTER)
+; 
+; note: deleting unreachable code
+
+; in: DEFUN ADD-PYTHON-MODULE => DEFPYCALLSTRUCT (LENGTH (REST METHODS))
+;     (CFFI-SYS:NULL-POINTER)
+; 
+; note: deleting unreachable code
+
+; compiling (DEFMACRO PY ...)
+; compiling (DEFUN PYTHONLISP ...)
+; compiling (DEFUN PY-REPL ...)
+; compiling (DEFUN GET-WEB-PAGE ...)
+; compiling (DEFPARAMETER *MBOX-MESSAGE* ...)
+; compiling (DEFPARAMETER *MBOX-MESSAGES* ...)
+; compiling (DEFPARAMETER *MBOX-IDS* ...)
+; compiling (DEFUN GET-MBOX-MESSAGES ...)
+; compiling (DEFPYFUN MBOX-ADD-FIELD ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN MBOX-ADD-FIELD
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::MBOX-ADD-FIELD
+;                           NIL
+;                           ((PYTHONONLISP::KEY STRING)
+;                            (PYTHONONLISP::VALUE STRING))
+;                           (PUSH (LIST PYTHONONLISP::KEY PYTHONONLISP::VALUE)
+;                                 PYTHONONLISP::*MBOX-MESSAGE*))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-FIELD
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-FIELD
+;                                           NIL
+;                                           (# #)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; compiling (DEFPYFUN MBOX-ADD-HEADER ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN MBOX-ADD-HEADER
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::MBOX-ADD-HEADER
+;                           NIL
+;                           ((PYTHONONLISP::VALUE STRING))
+;                           (PUSH PYTHONONLISP::VALUE
+;                                 PYTHONONLISP::*MBOX-MESSAGE*))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-HEADER
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-HEADER
+;                                           NIL
+;                                           (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; compiling (DEFPYFUN MBOX-ADD-EMAIL ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN MBOX-ADD-EMAIL
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::MBOX-ADD-EMAIL
+;                           NIL
+;                           NIL
+;                           (PUSH PYTHONONLISP::*MBOX-MESSAGE*
+;                                 PYTHONONLISP::*MBOX-MESSAGES*)
+;                           (SETF PYTHONONLISP::*MBOX-MESSAGE* (LIST)))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::MBOX-ADD-EMAIL
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-EMAIL
+;                                           NIL
+;                                           NIL))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION LET 
+; ==>
+;   (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;     (BLOCK PYTHONONLISP::MBOX-ADD-EMAIL
+;       (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::MBOX-ADD-EMAIL NIL NIL)))
+; 
+; caught STYLE-WARNING:
+;   The variable ARGS is defined but never used.
+
+; compiling (DEFUN FIND-MBOX-AUTHOR ...)
+; compiling (DEFUN TESTMYNUM ...)
+; compiling (DEFPYFUN TESTNUM ...)
+
+; file: /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.lisp
+; in: DEFPYFUN TESTNUM
+;     (PYTHONONLISP::DEFPYFUN PYTHONONLISP::TESTNUM
+;                           NIL
+;                           ((NUMBER PYTHONONLISP::LONG))
+;                           (PRINT NUMBER))
+; --> PROGN CFFI:DEFCALLBACK PROGN CFFI-SYS:%DEFCALLBACK SETF LET* LET* 
+; --> MULTIPLE-VALUE-BIND LET ALIEN-SAP SB-ALIEN::ALIEN-LAMBDA 
+; --> SB-ALIEN-INTERNALS:ALIEN-CALLBACK SB-ALIEN-INTERNALS:%SAP-ALIEN 
+; --> SB-ALIEN::%ALIEN-CALLBACK-SAP LAMBDA FUNCTION 
+; ==>
+;   (LET ((PYTHONONLISP::SELF (VALUES PYTHONONLISP::SELF)))
+;     (LET ((PYTHONONLISP::ARGS (VALUES PYTHONONLISP::ARGS)))
+;       (BLOCK PYTHONONLISP::TESTNUM
+;         (PYTHONONLISP::DEFPYCALLBACKENTRY PYTHONONLISP::TESTNUM NIL (#)))))
+; 
+; caught STYLE-WARNING:
+;   The variable SELF is defined but never used.
+
+; /Users/alexis/.sbcl/site/pythononlisp/pythononlisp.fasl written
+; compilation finished in 0:00:06
+WARNING:
+   COMPILE-FILE warned while performing #<COMPILE-OP NIL {1000B731}> on
+   #<CL-SOURCE-FILE "pythononlisp" {1000B741}>.
+STYLE-WARNING: redefining ATOF in DEFUN
+STYLE-WARNING: redefining PY_INITMODULE4 in DEFUN
+STYLE-WARNING: redefining PY_SETPROGRAMNAME in DEFUN
+STYLE-WARNING: redefining PY_INITIALIZE in DEFUN
+STYLE-WARNING: redefining PYRUN_SIMPLESTRING in DEFUN
+STYLE-WARNING: redefining PY_BUILDVALUE in DEFUN
+STYLE-WARNING: redefining PYARG_PARSETUPLE in DEFUN
+STYLE-WARNING: redefining GENERATE-PARSETUPLE-FORMAT in DEFUN
+STYLE-WARNING: redefining GEN-PYCALLBACK in DEFUN
+STYLE-WARNING: redefining GEN-DEPYFUN in DEFUN
+STYLE-WARNING: redefining PYGETARG in DEFUN
+STYLE-WARNING: redefining LISPEVAL in DEFUN
+STYLE-WARNING: redefining GETSTRING in DEFUN
+STYLE-WARNING: redefining SETSTRING in DEFUN
+STYLE-WARNING: redefining DUMPSTD in DEFUN
+STYLE-WARNING: redefining INIT-PYTHON in DEFUN
+STYLE-WARNING: redefining ADD-PYTHON-MODULE in DEFUN
+STYLE-WARNING: redefining PYTHONLISP in DEFUN
+STYLE-WARNING: redefining PY-REPL in DEFUN
+STYLE-WARNING: redefining GET-WEB-PAGE in DEFUN
+STYLE-WARNING: redefining GET-MBOX-MESSAGES in DEFUN
+STYLE-WARNING: redefining MBOX-ADD-FIELD in DEFUN
+STYLE-WARNING: redefining MBOX-ADD-HEADER in DEFUN
+STYLE-WARNING: redefining MBOX-ADD-EMAIL in DEFUN
+STYLE-WARNING: redefining FIND-MBOX-AUTHOR in DEFUN
+STYLE-WARNING: redefining TESTMYNUM in DEFUN
+STYLE-WARNING: redefining TESTNUM in DEFUN
+; 
+; compilation unit finished
+;   caught 22 STYLE-WARNING conditions
+;   printed 3 notes
+NIL
+CL-USER> (py::py "print \"Hello world\"")
+; Evaluation aborted
+CL-USER> (py::py "print \"Hello world\"")
+; Evaluation aborted
+CL-USER> (py::py "print \"Hello world\"")
+; Evaluation aborted
+CL-USER> 

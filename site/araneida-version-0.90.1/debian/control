@@ -1,0 +1,20 @@
+Source: araneida
+Section: unknown
+Priority: optional
+Maintainer: Daniel Barlow <dan@telent.net>
+Build-Depends: debhelper (>> 3.0.0), sbcl
+Standards-Version: 3.5.2
+
+Package: araneida
+Architecture: all
+Depends: ${shlibs:Depends}, common-lisp-controller, lisp-compiler, cl-db-sockets, cl-net-telent-date
+Recommends: apache
+Description: A programmable web server written and extended in Lisp
+ Features:
+ - all content is dynamic and created by calling user-defined handler functions
+ - HTML-from-sexpr generation function makes balancing tags trivial
+ - sexpr rewriting tools for flexible templates a la XSLT
+ - sits behind a caching proxy; can write appropriate bits of Apache config
+ - understands HTTP/1.1 Host: header for multiple host support
+ - does not use multiple threads.  Hooks into the CMUCL event loop so
+   for many purposes it behaves as though it does.

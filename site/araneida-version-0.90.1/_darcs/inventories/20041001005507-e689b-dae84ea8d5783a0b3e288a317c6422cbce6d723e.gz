@@ -1,0 +1,1322 @@
+[Initial revision
+dan**19991212135313] 
+[Dunno how these ended up in here
+dan**19991212153204] 
+[Make 404 errors display the name of the file they can't find
+dan**19991212153533] 
+[how to build a tar file
+dan**19991212155835] 
+[miscommittedCVS: ----------------------------------------------------------------------
+dan**19991212155848] 
+[this is a generated file
+dan**19991223014635] 
+[should not have been committed
+dan**19991223014927] 
+[more release engineering foolery
+dan**19991223015001
+ more release engineering foolery
+ make dist RELEASE=x.y
+ 
+] 
+[doodle doodle
+dan**19991223015009] 
+[some amount of rearrangement to make telentweb a contained example rather
+dan**19991223015016
+ some amount of rearrangement to make telentweb a contained example rather
+ than a module of its own
+ 
+] 
+[all-new SERVE-EVENT-based daemon: we now can run at the same time as
+dan**19991223015025
+ all-new SERVE-EVENT-based daemon: we now can run at the same time as
+ the perfectly normal toplevel
+ 
+] 
+[new 'examples' subdirectory
+dan**19991223015144
+ new 'examples' subdirectory
+ new doc directory which will eventually have useful documentation in it
+ 
+] 
+[tar files may not exist.
+dan**19991223015232] 
+[TAG rel_0_3 
+dan**19991223015232] 
+[Tunable stuff
+dan**19991228181740] 
+[silly errors
+dan**19991228183103] 
+[explanatory note added
+dan**19991228183118] 
+[pointer to (more nearly) current docs added
+dan**19991228183134
+ pointer to (more nearly) current docs added
+ chopped out handler documentation
+ 
+] 
+[deleted lots, cleaned up, added some stuff
+dan**19991228183140] 
+[get the product release from RELEASE
+dan**19991228183147] 
+[make the examples a completely separate file: not everyone wants one
+dan**19991228183157] 
+[still dead code
+dan**19991228183204] 
+[commenting
+dan**19991228183212] 
+[when read-handler is first called, we need to remove the SERVE-EVENT
+dan**19991228183222
+ when read-handler is first called, we need to remove the SERVE-EVENT
+ handler that called it and do all our reading for that request.
+ READ-HANDLER is not re-entrant
+ 
+] 
+[export the right symbols from daemon.lisp
+dan**19991228183229] 
+[commntary
+dan**19991228183236] 
+[typo
+dan**19991228183244] 
+[commentary
+dan**19991228183253] 
+[new location for stuff
+dan**19991228183311
+ new location for stuff
+ new installation instructions
+ 
+] 
+[new package name
+dan**19991228183317] 
+[*** empty log message ***
+dan**19991228183326] 
+[New files
+dan**19991228183429] 
+[New pathnames
+dan**19991228192721] 
+[TAG rel_0_3_1 
+dan**19991228192721] 
+[Examples
+dan**19991228202629] 
+[typo
+dan**19991228203428] 
+[another typo
+dan**19991228203448] 
+[What do you want?
+dan**20000103183726
+ What do you want?
+ Information ...
+ 
+] 
+[MIME Base64 decoder
+dan**20000103183816
+ MIME Base64 decoder
+ Could probably benefit from some profiling and optimization
+ 
+] 
+[`sequential let' macro
+dan**20000103183851] 
+[chop some more bits out
+dan**20000103184332] 
+[more ideas to do
+dan**20000103184336] 
+[seqlet and base64 are part of the system
+dan**20000103184341] 
+[this is basically a new file now.
+dan**20000103184348] 
+[deleted *session* reference that was hungover from dhttp
+dan**20000103184354
+ deleted *session* reference that was hungover from dhttp
+ refine the order that handers are run in.
+ 
+] 
+[commentary
+dan**20000103184404] 
+[add request-user slot
+dan**20000103184409] 
+[general reordering and split installation details in to their own file
+dan**20000103184414] 
+[New handlers to demonstrate HTTP basic auth
+dan**20000103184420] 
+[add auth.lisp to system
+dan**20000103184520] 
+[TAG rel_0_4 
+dan**20000103184520] 
+[turned into  handlers.html
+dan**20000103184559] 
+[more to do
+dan**20000218150052] 
+[deleted some old cruft that we don't use, and vestigial *multiprocessing*
+dan**20000218150054
+ deleted some old cruft that we don't use, and vestigial *multiprocessing*
+ specal-casing
+ 
+] 
+[missed a couple of exported symbols
+dan**20000218150056] 
+[package name
+dan**20000218150058] 
+[updated doc index page to have link to cvsweb in it
+dan**20000218150100] 
+[fiddling
+dan**20000218150102] 
+[just fiddling
+dan**20000218150104] 
+[New files to make araneida work with my spiffy new sockets interface
+dan**20000324010323] 
+[use :sockets if they're already loaded
+dan**20000324010557] 
+[cruft-away
+dan**20000324010559] 
+[mostly gratuitous formatting changes
+dan**20000324010601] 
+[changed princ to write-sequence, to see if it makes a difference
+dan**20000324010603
+ changed princ to write-sequence, to see if it makes a difference
+ (it doesn't much)
+ 
+] 
+[dead, for all practical purposes.
+dan**20000526233221] 
+[handles Expires headers when supplied
+dan**20000526233227
+ handles Expires headers when supplied
+ allow relative URLs in request-redirect
+ 
+] 
+[use :sockets every time.  Life's too short to support the old interface
+dan**20000527005637] 
+[bind the socket to 0.0.0.0 not 127.0.01, duh
+dan**20000527020842] 
+[don't merge-urlstring if we had a real url to start with
+dan**20000527020847] 
+[file-request: recognize .png
+dan**20000528235226] 
+[READ-SEQUENCE is buggy in CMUCL (it does short reads a la read(2) when
+dan**20000531085409
+ READ-SEQUENCE is buggy in CMUCL (it does short reads a la read(2) when
+ there isn't enough data to get).  Eschew use.
+ 
+] 
+[(1) less to do
+dan**20010106212824
+ (1) less to do
+ (2) add musing on handler hierarchies
+ 
+] 
+[add new files for pattern matching stuff and for define-page
+dan**20010106212831] 
+[new external symbols
+dan**20010106212842] 
+[new function read-mime-types
+dan**20010106212850
+ new function read-mime-types
+ send-file now copes with conditional GETs
+ 
+] 
+[(html-stream stream foo) is about twice as fast as (princ (html foo) stream)
+dan**20010106212907] 
+[new method request-if-modified-since
+dan**20010106212916] 
+[commentary
+dan**20010106212925] 
+[whitespace
+dan**20010106212935] 
+[more useful commentary
+dan**20010106212945
+ more useful commentary
+ nmew examples to show use of rewriting stuff
+ 
+] 
+[ +(defvar *mime-types-file* "/etc/mime.types"
+dan**20010106212957] 
+[faster version of s. (don't princ-to-string if we have a string already)
+dan**20010106213005] 
+[new files courtesy of rinaldo-that-was/stargreen
+dan**20010107022800] 
+[TAG rel_0_5 
+dan**20010107022800] 
+[ +               (:file "define-page" :depends-on ("request"))
+dan**20010107024812] 
+[ -  (labels ((page () ,@forms))
+dan**20010107024819
+  -  (labels ((page () ,@forms))
+  -    (maybe-output-func changed-time headers #'page)))
+  +  `(labels ((page () ,@forms))
+  +     (maybe-output-func changed-time headers #'page)))
+ 
+] 
+[updates for new stuff in 0.51
+dan**20010107024829] 
+[TAG rel_0_51 
+dan**20010107024829] 
+[Handle both binary and character streams.
+colin**20010206045015
+ Handle both binary and character streams.
+ Throw an error if the streams are incompatible.
+ 
+] 
+[Use outline mode.
+colin**20010206051039] 
+[ +        (error "Unable to find exported server ~A" name))))
+dan**20010302030300
+  +        (error "Unable to find exported server ~A" name))))
+ Give a helpful error message if we can't find the server for a URL export
+ Courtesy of Colin Walters
+ 
+] 
+[add the OSU Elisp archive (wonder if we should add Stargreen too?)
+dan**20010304003447] 
+[html-stream: optionally supply list of elements _not_ to output newline after
+dan**20010514113058] 
+[parse-urlstring can now optionally not throw an error if it fails
+dan**20010514113059] 
+[ -  :depends-on ("sockets")               ; it will make things simpler
+dan**20010514134752
+  -  :depends-on ("sockets")               ; it will make things simpler
+  +  :depends-on ("db-sockets")               ; it will make things simpler
+ 
+] 
+[use *araneida-internal-port* instead of hardcoding 8000
+dan**20010514141556] 
+[just use db-sockets.  it works, it reduces the number of conditionals
+dan**20010529175150
+ just use db-sockets.  it works, it reduces the number of conditionals
+ depend on net-telent-date.  hack up system definition slightly so it
+ works (at least, fails to fail) with LPNs
+ 
+] 
+[remove blanks in /etc/mime.types
+dan**20010529175151] 
+[:user is not an ansi package
+dan**20010529175152] 
+[use date functions in net.telent.date
+dan**20010529175154] 
+[use explicit slot list, avoid mop
+dan**20010529175155] 
+[ -(in-package :http-server)
+dan**20010529175156
+  -(in-package :http-server)
+  +(in-package :araneida)
+ 
+] 
+[ -(in-package :user)
+dan**20010529175158
+  -(in-package :user)
+  +(in-package :cl-user)
+  -  (:use "MAKE" "COMMON-LISP" "ARANEIDA" "USER"))
+  +  (:use "COMMON-LISP" "ARANEIDA" "CL-USER"))
+ 
+] 
+[ -                             (debug:backtrace 40 out))))
+dan**20010529175200
+  -                             (debug:backtrace 40 out))))
+  +                             #+cmu (debug:backtrace 40 out)
+  +			     #+sbcl (sb-debug:backtrace 40 out))))
+ 
+] 
+[  (defun join (delimiter elements)
+dan**20010529175201
+   (defun join (delimiter elements)
+  -  (apply #'concatenate 'string
+  +  (with-output-to-string (o)
+ 
+] 
+[rewrote split to not return blank strings when the input has consecutive
+dan**20010529175202
+ rewrote split to not return blank strings when the input has consecutive
+ whitespace characters
+ 
+] 
+[ +(defun remove-if-empty (strings)
+dan**20010529175204
+  +(defun remove-if-empty (strings)
+  +  (remove-if (lambda (x) (= (length x) 0)) strings))
+ 
+] 
+[dead
+dan**20010529181137] 
+[deleted much old cmucl cruft which we don't need now we use db-sockets
+dan**20010529182003] 
+[implementation-neutral package for the event functions
+dan**20010529182004] 
+[create new package EVENT to hide cmucl/sbcl differences
+dan**20010529182006
+ create new package EVENT to hide cmucl/sbcl differences
+ conditionalise PCL hackery on cmu
+ 
+] 
+[let's clean up around here
+dan**20010529221234] 
+[ -(in-package :http-server)
+dan**20010604120232
+  -(in-package :http-server)
+  +(in-package :araneida)
+ 
+] 
+[rfc2396.txt
+dan**20010605120158] 
+[/doc -> /docs
+dan**20010605122819] 
+[gone
+dan**20010605133320] 
+[ +usr/share/common-lisp/repositories
+dan**20010605133404] 
+[parametrise for ease of copying around
+dan**20010605133405] 
+[lpn fumbling
+dan**20010607153254] 
+[sbcl porting stuff
+dan**20010607153255] 
+[stage 1 of of new design for handlers; should be invisible for user code
+dan**20010607153256
+ stage 1 of of new design for handlers; should be invisible for user code
+ stage 2, yet to happen, is to change the type signatures on dispatch-request
+ and handlers
+ 
+] 
+[stage 1 of of new design for handlers; should be invisible for user code
+dan**20010607153257] 
+[ -(in-package :http-server)
+dan**20010607153258
+  -(in-package :http-server)
+  +(in-package :araneida)
+  +(defmethod make-load-form ((url url) &optional environment)
+  +  (make-load-form-saving-slots url :environment environment))
+ 
+] 
+[  clean:
+dan**20010607153259
+   clean:
+  -	rm -f build-stamp configure-stamp
+  +	rm -f build-stamp configure-stamp Makefile
+ 
+] 
+[blah
+dan**20010626201028] 
+[-               (:file "session" :depends-on ("request"))
+dan**20010626201029
+ -               (:file "session" :depends-on ("request"))
+ this moves into the examples package
+ 
+] 
+[(defmacro define-page ...)
+dan**20010626201030
+ (defmacro define-page ...)
+ accept variable-lookup-fn argument
+ 
+] 
+[some handlers need the discriminator
+dan**20010626201031] 
+[ +(defparameter *variable-lookup-fn* nil)
+dan**20010626201033
+  +(defparameter *variable-lookup-fn* nil)
+   (defun variable-lookup (name)
+  -  (declare (special  *variable-lookup-fn*))
+ 
+] 
+[ +(defmethod dispatch-request ((request request) handlers &optional discriminator)
+dan**20010626201034
+  +(defmethod dispatch-request ((request request) handlers &optional discriminator)
+  -           (subseq (urlstring (request-url request))
+  +           (subseq (urlstring discriminator)
+                      (length (urlstring (request-base-url request)))
+ and check if the export needed a discriminator
+  -        (princ (s. "Expires: " (universal-time-to-rfc-date expires) eol)
+  +        (princ (s. "Expires: " (date:universal-time-to-rfc-date expires) eol)
+ 
+] 
+[whitespace
+dan**20010626205711] 
+[session.lisp moved from the mail distribution
+dan**20010626205734] 
+[It would help to have this in CVS
+dan**20010626233921] 
+[doodle doodle
+dan**20010626233933] 
+[new release
+dan**20010627000727] 
+[TAG debian_version_0_52 
+dan**20010627000727] 
+[fix dependency bugs
+dan**20010627002451] 
+[new release
+dan**20010627002508] 
+[blah
+dan**20010627124129] 
+[dont amke lins by hand, now they're in the package itself
+dan**20010627124204] 
+[new file
+dan**20010627124956] 
+[correct the dependencies
+dan**20010627125105] 
+[TAG debian_version_0_53 
+dan**20010627125105] 
+[turn release into release.lisp, include it in the defsystem so it makes
+dan**20010627154832
+ turn release into release.lisp, include it in the defsystem so it makes
+ it into the installed system
+ 
+] 
+[Don't keep release.lisp in CVS: instead, generate it at "configure" time
+dan**20010627162409] 
+[TAG debian_version_0_53-1 
+dan**20010627162409] 
+[lessee
+dan**20010627163414] 
+[Moved postrm->prerm
+dan**20010627163857] 
+[bad deps
+dan**20010627164124] 
+[version number may not ne a number
+dan**20010627165000] 
+[TAG debian_version_0_53_1 **INVALID**
+dan**20010627165000] 
+[foo
+dan**20010627165404] 
+[TAG debian_version_0_53_2 
+dan**20010627165404] 
+[Stuck two files together
+dan**20010627170017] 
+[foo
+dan**20010627170045] 
+[oops.  try again
+dan**20010627170132] 
+[TAG debian_version_0_53_3 
+dan**20010627170132] 
+[doodle doodle
+dan**20010628135002] 
+[new news is ... new
+dan**20010628135004
+ new news is ... new
+ I guess
+ 
+] 
+[repair
+dan**20010628135005] 
+[ -  (translate-logical-pathname #p"cl-library:araneida;")
+dan**20010628135006
+  -  (translate-logical-pathname #p"cl-library:araneida;")
+  +  #.(translate-logical-pathname "cl-library:araneida;")
+ sbcl can't dump logical pathname hosts
+ 
+] 
+[updated for the brave new cclan world
+dan**20010628135117] 
+[0.54 release
+dan**20010628135313] 
+[TAG debian_version_0_54 
+dan**20010628135313] 
+[parse-body: take optional arg for character to split on
+dan**20010717203458] 
+[export  dispatch-request
+dan**20010723000035] 
+[the behaviour of SPLIT changed, so we need fewer elements to JOIN when
+dan**20010723000036
+ the behaviour of SPLIT changed, so we need fewer elements to JOIN when
+ putting url paths back together
+ 
+] 
+[request-send-headers has new keyword arg set-cookie
+dan**20010723221550] 
+[avoid dying when we get spurious % in URLs
+dan**20010811083457] 
+[TAG stargreen_2001_12_06 
+dan**20010811083457] 
+[ -        (method url-string protocol) (split request-line nil '(#\Space))
+dan**20011206225803
+  -        (method url-string protocol) (split request-line nil '(#\Space))
+  +        (method url-string protocol) (split request-line 3 '(#\Space))
+ 
+] 
+[ -(defun export-handler (export) (fourth export))
+dan**20011206225804
+  -(defun export-handler (export) (fourth export))
+  +;(defun export-handler (export) (fourth export))
+ oops.  we redefine export-handler later anyway, but wouldn't it be fun if
+ we reloaded this file during development
+ 
+] 
+[added cache-control header
+dan**20011206225805] 
+[evaluate the output form before sending headers, in case it didnt want us to send headers
+dan**20011218053105] 
+[simplify the serve-event gubbins considerably.  Now we only install
+dan**20011230205412
+ simplify the serve-event gubbins considerably.  Now we only install
+ serve-event handlers for the listening sockets, and handle the
+ accept/read stuff synchronously.  In practical terms we already were
+ doing this, but it's easier to read this way and probbaly won't break
+ as much
+ 
+] 
+[more request headers:
+dan**20011230205413
+ more request headers:
+  +				 location
+  +				 pragma
+ plus Expires: can be a string if you prefer, plus Set-cookies now
+ accepts a list of cookies
+ make request-redirect use request-send-headers, and optionally pass
+ spare headers through from  caller
+ 
+] 
+[bah.  may as well use db-sockets everywhere
+dan**20020108022548] 
+[this file is gradually going away
+dan**20020108022549] 
+[ -   html html-escape
+dan**20020108022550
+  -   html html-escape
+  +   html html-escape html-stream
+ 
+] 
+[ignore SIGPIPE.  rearrange the error handling slightly
+dan**20020129121808] 
+[I suspect that CLOSE errors out if there is buffered data that it cannot
+dan**20020130125930
+ I suspect that CLOSE errors out if there is buffered data that it cannot
+ write.  Be more agressive about closing sockets in that case (seems to
+ reduce socket leakage)
+ 
+] 
+[less wittering
+dan**20020227195839] 
+[offensively rigorous close-stuck-sockets code
+dan**20020227195840] 
+[  (memo::define-memo-function pattern-match (list pattern)
+dan**20020227195841
+   (memo::define-memo-function pattern-match (list pattern)
+ deleted old inapplicable docstrong bit
+ 
+] 
+[whitespace
+dan**20020227195842] 
+[asdf system definitions
+dan**20020302021326] 
+[add lots of static files
+dan**20020307000512] 
+[all of a sudden it gets much easier to find the system version
+dan**20020307000513] 
+[minor updates
+dan**20020307000514] 
+[updated for asdf system
+dan**20020307000515] 
+[ -(merge-urls an-exsting-url "/relative?url")
+dan**20020307000516
+  -(merge-urls an-exsting-url "/relative?url")
+  +(merge-url an-existing-url "/relative?url")
+ 
+] 
+[  (defvar *araneida-source-directory* changed
+dan**20020307000517] 
+[cruft-b-gone
+dan**20020307000533] 
+[new file
+dan**20020307000538] 
+[TAG cclan_version_0_6 
+dan**20020307000538] 
+[wibble
+dan**20020521183638] 
+[bump version.  depend on split-sequence
+dan**20020521183639] 
+[ -(defun read-new-sequence (length stream)
+dan**20020521183640
+  -(defun read-new-sequence (length stream)
+ gone, used no more
+ catch stream-error (probably means peer has gone away) and don't do
+ backtrace
+ parse-body takes optional end, for use with persistent connections
+ fix read-folded-line, finally
+ 
+] 
+[cleared up vestigial moppery mess
+dan**20020521183641] 
+[dead comments
+dan**20020521183642] 
+[ +(defmethod request-cookie ((request request) name)
+dan**20020521183643
+  +(defmethod request-cookie ((request request) name)
+ new method transplanted from istr
+ 
+] 
+[added (not entirely perfect) FTP method
+dan**20020521183644] 
+[docs/ directory should be relative to the source dir
+dan**20020521183646] 
+[ -      (loop for q on (remove #\= (coerce string 'list)) by #'cddddr
+dan**20020521183647
+  -      (loop for q on (remove #\= (coerce string 'list)) by #'cddddr
+  +      (loop for q on (coerce string 'list) by #'cddddr
+ not sure quite what i was thinking of there.  that only worked for
+ strings whose lenbgth was divisble by 4
+ 
+] 
+[whitespace "... for a white wedding"
+dan**20020521183648] 
+[whitespace
+dan**20020603144459] 
+[ +(defparameter *per-host-configuration*
+dan**20020603144501] 
+[comment the static site out, so we can use the examples as-is for
+dan**20020603144502
+ comment the static site out, so we can use the examples as-is for
+ araneida.telent.net
+ 
+] 
+[ +(setf *araneida-internal-port* 8002)
+dan**20020603144503] 
+[I think this file is dead, actually
+dan**20020603144504] 
+[grotty hack in cookie parsing to account for whitespace between cookies
+dan**20020604034809] 
+[TAG pre_20020909_update 
+dan**20020604034809] 
+[ -  :version "0.6.1"
+dan**20020605233936
+  -  :version "0.6.1"
+  +  :version "0.61"
+ let's stick with a single numbering scheme, can we?
+ 
+] 
+[new NEWS file
+dan**20020605234028] 
+[TAG cclan_version_0_61 
+dan**20020605234028] 
+[merge-url bugfixes: (1) merging a null string, (2) merging a string
+dan**20020606225620
+ merge-url bugfixes: (1) merging a null string, (2) merging a string
+ that starts #\?
+ 
+] 
+[TAG cclan_version_0_62 
+dan**20020606225620] 
+[give 404 for wild pathnames
+dan**20020610110629] 
+[TAG before_handler_redesign 
+dan**20020610110629] 
+[new
+dan**20020909224234] 
+[new handler protocol
+dan**20020909230649] 
+[ +New in 0.63
+dan**20020909233022
+  +New in 0.63
+  +New in 0.62
+ 
+] 
+[large pile of random gunk
+dan**20020909233023] 
+[ +	       (:file "handler" :depends-on ("defpackage"))
+dan**20020909233024] 
+[ -(defun handle-request (stream socket)
+dan**20020909233025
+  -(defun handle-request (stream socket)
+  +(defun handle-a-request (stream socket)
+ renamed.  whole pile of hardcoded catch/throw stuff pulled out into
+ methods of legacy-handler
+ 
+] 
+[ +(defun forcibly-close-stream (s)
+dan**20020909233026
+  +(defun forcibly-close-stream (s)
+ new function with contents taken from previous version of handle-request
+ (now handle-a-request)
+ 
+] 
+[extra exported symbols  for new handler protocol
+dan**20020909233027] 
+[ +    (install-handler *root-handler* (make-instance 'legacy-handler)
+dan**20020909233028
+  +    (install-handler *root-handler* (make-instance 'legacy-handler)
+  +		     (urlstring url) (eql match :exact))
+ EXPORT-HANDLER has to install a LEGACY-HANDLER instance at the appropriate
+ place in the *ROOT-HANDLER* tree
+ 
+] 
+[  ;;; XXX fix this, it's not correct
+dan**20020909233029
+   ;;; XXX fix this, it's not correct
+   (defun html-reserved-p (c)
+  -  (member c '(#\< #\> #\&)))
+  +  (member c '(#\< #\"  #\> #\&)))
+ the comment still stands, admittedly
+ 
+] 
+[ -    (sub-aux tree (parameter-as-list parameter))))
+dan**20020909233030
+  -    (sub-aux tree (parameter-as-list parameter))))
+  +    (let ((ret (sub-aux tree (parameter-as-list parameter))))
+  +      (if (car ret) ret (list "")))))
+ a bit of a kludge, but a useful piece of kludge nonetheless
+ 
+] 
+[  (defclass request ()
+dan**20020909233031
+   (defclass request ()
+  +   (urlstring :initarg :urlstring :reader request-urlstring)
+  +   (handled-by :initform nil :accessor request-handled-by)
+ new slots
+ 
+] 
+[REQUEST-SEND-ERROR now signals RESPONSE-SENT to abort further processing
+dan**20020909233032] 
+[fix for Host: headers that contain a hostname without a target port (courtesy Eric Marsden)
+dan**20021118200435] 
+[Fix invalid defgeneric syntax
+dan**20021118200556
+ Fix invalid defgeneric syntax
+ Use more conventional capItAlizatIOn for http headers, in case it was
+ causing apache mod_proxy problems (it wasn't, sad to relate)
+ 
+] 
+[pmp.lisp is dead
+dan**20021122115543] 
+[ +  (:shadowing-import-from #+sbcl :sb-pcl
+dan**20021122115544
+  +  (:shadowing-import-from #+sbcl :sb-pcl
+  +			  #+cmu :pcl "CLASS-SLOTS" "SLOT-DEFINITION-NAME")
+ 
+] 
+[work in progress (defclass static-file-handler (handler)
+dan**20021122115545] 
+[  (defmethod find-handler ((parent dispatching-handler)
+dan**20021122115546
+   (defmethod find-handler ((parent dispatching-handler)
+  -  "Remove the handler for DISCRIMINATOR, EXACT-P from the list of sub-handlers for PARENT"
+  +  "Find the handler for DISCRIMINATOR, EXACT-P from the list of sub-handlers for PARENT"
+ 
+] 
+[redirect handler added
+dan**20021122122457] 
+[new search-html-tree function (don't depend on this yet, it's mostly
+dan**20030103001132
+ new search-html-tree function (don't depend on this yet, it's mostly
+ experimental)
+ 
+ static-file-handler class basically now works, is uncommented
+ 
+ beginnings of a 'production-mode' error handler: do not print
+ potentially interesting stuff (like pathnames) to the request stream
+ if it could be a hostile user
+ 
+] 
+[Clean up long-dead code
+dan**20030106232005
+ Clean up long-dead code
+ Sort out exports
+ 
+ Delete some :: package prefixes
+ 
+] 
+[Update NEWS, README, TODO
+dan**20030112034049
+ Update NEWS, README, TODO
+ Split out the non-legacy stuff in file-request.lisp into
+ static-file-handler.lisp .
+ 
+ Add new files to .asd file
+ 
+ Documentation updates: delete anything really scarily old (should put
+ this all in CLiki, really)
+ 
+ examples/ directory is officielly considered Deprecated
+ 
+ beginnings of log-errors-to-stream support
+ 
+] 
+[TAG cclan_version_0_69 
+dan**20030112034049] 
+[add some missing dependencies
+dan**20030217205654] 
+[fix error handling lossage causing complaints about (format nil nil).  fix static-file-handler problem that was making it call the error handler in the first place
+dan**20030217205828] 
+[TAG thread-point 
+dan**20030217205828] 
+[utility module depends on defpackage
+dan**20030228110242] 
+[Mess around with the defpackage form
+dan**20030605005341
+ Mess around with the defpackage form
+ Merge the experimental thread support in.  It's still pretty
+ experimental
+ 
+ Rationalise package names: replace all occurrences of the old HTTPSRV
+ and HTTP-SERVER and stuff
+ 
+ Slightly more efficient string processing in handle-a-request: less
+ garbage
+ 
+ Chop out old socket portability stuff that was never really used
+ anyway
+ 
+ Fix merge-urls so that an absolute URL in the second place DTRT
+ (in a not-quite correct manner, it should be noted)
+ 
+] 
+[updates for 0.70, according to CVS
+dan**20030616152604] 
+[cruft
+dan**20030616152605] 
+[more to do
+dan**20030616152607] 
+[ -  :version "0.71"
+dan**20030616152609
+  -  :version "0.71"
+  +  :version "0.70"
+ 
+] 
+[restore install-serve-event-handlers as a function name: make
+dan**20030616152611
+ restore install-serve-event-handlers as a function name: make
+ install-thread-handlers an alternative
+ indentation
+ 
+] 
+[error handling for legacy handlers
+dan**20030616152613] 
+[blah
+dan**20030616152615] 
+[transplant some of the notes from new-dispatch-model
+dan**20030616152617] 
+[nobody needs a tutorial for this stuff
+dan**20030616152619] 
+[update installation instructions
+dan**20030616152621] 
+[ +[ I think everything in here has now been wrapped into one or more of
+dan**20030616152623
+  +[ I think everything in here has now been wrapped into one or more of
+  +the real doc files ]
+ 
+] 
+[better explanation of proxy vs non-proxy configuration
+dan**20030616152627] 
+[ +correctly in weird cases.  Relative URLs with authority components
+dan**20030616152629
+  +correctly in weird cases.  Relative URLs with authority components
+  +containing non-standard hosts are currently known to be broken.
+ 
+] 
+[*** empty log message ***
+dan**20030624195326] 
+[new function REMOVE-HANDLERS closes sockets, removes handlers, kills
+dan**20030624195328
+ new function REMOVE-HANDLERS closes sockets, removes handlers, kills
+ threads, whatever
+ 
+] 
+[ -  (:use "SPLIT-SEQUENCE" #+sbcl "SB-BSD-SOCKETS" "COMMON-LISP" ))
+dan**20030624195330
+  -  (:use "SPLIT-SEQUENCE" #+sbcl "SB-BSD-SOCKETS" "COMMON-LISP" ))
+  +  (:use "SPLIT-SEQUENCE" "SB-MOP" "SB-BSD-SOCKETS" "COMMON-LISP" ))
+ copy-url, bah
+ 
+] 
+[install-handlers no more
+dan**20030624195332] 
+[added some basic details of thread debugging
+dan**20030624195334] 
+[TAG release_0_70 
+dan**20030624195334] 
+[dont accept multiple connections at once: it confuses
+dan**20030709024035] 
+[better test for complete url, as fails on url-like-things that have a colon following the /
+dan**20030710075319] 
+[more useful error message from legacy handlers
+dan**20030710201156] 
+[as accept-handler now cannot be called recursively, any entry into the debugger disables web serving: bad for production sites.  So, accept-handler now has a handler-bind to backtrace and carry on.  The old behaviour can be restored by setting  *break-on-handler-errors* t
+dan**20030720121222] 
+[print the condition as well as the backtrace, in the error handler
+dan**20030720191905] 
+[add LINK to the list of empty elements
+dan**20030722222231] 
+[don't peek-char static files.  it's unnecessary and it tickles a bug in read-sequence
+dan**20030819102440] 
+[follow the defpackage dogma
+dan**20030819102501] 
+[html-stream now calls functions if it finds them in the tree.  This is experimental and I reserve the right to decide it was a bad idea after all
+dan**20030819102809] 
+[update NEWS and version number for 0.71
+dan**20030819104146] 
+[don't peek-char static files.  it's unnecessary and it tickles a bug in read-sequence
+dan**20030819111907] 
+[export a couple of url accessors.  delete export of request-socket as we never actually set it anywhere anyway.  replace body of body-params  with a new version from Zach Beane which is shorter and apparently runs about twice as fast
+dan**20030824003947] 
+[s/universal-time-to-rfc-date/universal-time-to-http-date/ (needs new net-telent-date)
+dan**20030824005105] 
+[oops
+dan**20030824005202] 
+[experiemntal http/0.9 support
+dan**20030828114627] 
+[tidy
+dan**20030828114718] 
+[TAG release_0_73 
+dan**20030828114718] 
+[Add :refresh to send-page-headers
+dan**20030905015525] 
+[start of an export-server replacement
+dan**20030905015644] 
+[experimental HTTP client
+dan**20030905015730] 
+[more/less to do
+dan**20030905020212] 
+[ documentation updates
+dan**20031006160015] 
+[stuff split out from http-listener.lisp
+dan**20031106023122] 
+[class definitions moved to http-listener-class.lisp
+dan**20031106023735
+ class definitions moved to http-listener-class.lisp
+ much other stuff moved into {threaded,serve-event}-http-listener.lisp
+ 
+ fix the mess that is error handling, in a way that works fairly
+ uniformly for threaded and serveevent models
+ 
+] 
+[chopped out functions pertaining to server start/stoppage; interesting
+dan**20031106023848
+ chopped out functions pertaining to server start/stoppage; interesting
+ bits moved to the various http-listener files
+ 
+] 
+[move sigpipe ignore up here
+dan**20031106023918] 
+[Expand on 'new resonse model' while I have the email to hand that
+dan**20031106055803
+ Expand on 'new resonse model' while I have the email to hand that
+ describes what I actually meant by it
+ 
+] 
+[added new files for http listener classes, methods etc
+dan**20031106055933] 
+[remove unused variable
+dan**20031106055952] 
+[new slot default-hostname is what will be used for requests on this listener
+dan**20031106060051
+ new slot default-hostname is what will be used for requests on this listener
+ with relative URL and no Host: header
+ 
+] 
+[stop the compiler whinging
+dan**20031106060127] 
+[new
+dan**20031108032201] 
+[Next version will be 0.8
+dan**20031109013212] 
+[New files
+dan**20031109013405] 
+[a hostname is not a URL, major media advertising notwithstanding
+dan**20031109013445] 
+[A working example using all the latest fashionable APIs
+dan**20031109013552] 
+[*root-handler* is deprecated, make a new root handler for each
+dan**20031109013854
+ *root-handler* is deprecated, make a new root handler for each
+ listener instead
+ 
+] 
+[new (and it must be admitted, ratehr large) with-accept-flets macro
+dan**20031109013949
+ new (and it must be admitted, ratehr large) with-accept-flets macro
+ removes a lot of cut & paste between threaded and serve-event
+ listeners
+ 
+] 
+[new
+dan**20031109013959] 
+[copy-request needed for the reverse-proxy-handler
+dan**20031109014030] 
+[use with-accept-flets
+dan**20031109014050] 
+[examples were terrifically out of date, deleted to avoid confusion
+dan**20031109014244] 
+[lose debugging print
+dan**20031109021141] 
+[now always returns T, for ease of use as the last thing in a handler
+dan**20031109021216] 
+[new
+dan**20031109021229] 
+[signal an http-not-found condition if file doesn't exist
+dan**20031109021359] 
+[delete dead comment and debug output
+dan**20031109021432] 
+[cursory once-over for approximate correctness
+dan**20031109032717] 
+[moved to doc/
+dan**20031109032739] 
+[new
+dan**20031109032800] 
+[Summary of new stuff in 0.8, as it will be
+dan**20031109062148] 
+[new symbols for http-listeners and reverse proxy-handler
+dan**20031109062243] 
+[apache-conf-segment outputs all the apache reverse proxy inforation we
+dan**20031109062358
+ apache-conf-segment outputs all the apache reverse proxy inforation we
+ can find out about the given listener
+ 
+] 
+[newline
+dan**20031109062410] 
+[request-urlstring needs to be writable for copy-request
+dan**20031109062430] 
+[whitespace
+dan**20031109062447] 
+[get the pathname merging a bit more nearly right
+dan**20031109062550] 
+[remove all the export-server stuff
+dan**20031109221128] 
+[remove all evidence of root-handler except for poor unfortunates still using export-handler
+dan**20031109221523] 
+[I think that's everything needed for release
+dan**20031110044443] 
+[add new reverse-proxy-listener-class
+dan**20031110044520
+ add new reverse-proxy-listener-class
+ move example.lisp into doc directory
+ 
+] 
+[new symbols for http-errors
+dan**20031110044554
+ new symbols for http-errors
+ *-reverse-proxy-*
+ 
+] 
+[added handle-request-using-listener gf so that reverse-proxy-listener
+dan**20031110044641
+ added handle-request-using-listener gf so that reverse-proxy-listener
+ can maltreat the url before dispatching on it
+ 
+] 
+[now a subclass of reverse-proxy-listener-mixin
+dan**20031110044737] 
+[if no filename in directory, merge the default (e..g index.html)
+dan**20031110044926
+ if no filename in directory, merge the default (e..g index.html)
+ catch simple-steam-error, which is given when attempt made to read a
+ directory as a file (but not until we've sent the headers and an
+ actual read from it is done, sigh)
+ 
+] 
+[dead, see reverse-proxy-listenre instead
+dan**20031110045010] 
+[reverse-proxies now done in new and excitingly different way
+dan**20031110045159] 
+[new
+dan**20031110045216] 
+[update for reverse proxies documentation
+dan**20031110051152] 
+[TAG release_0_80 
+dan**20031110051152] 
+[* Fix for bug in doc/example.lisp: long-site-name doesn't (as I had
+dan**20031122185401
+ * Fix for bug in doc/example.lisp: long-site-name doesn't (as I had
+   claimed) necessarily have to return FQDN, and only did that on my
+   machine because I had leftover bits of Debian common-lisp-controller
+   it was looking at.  Thanks to Vincent Arkesteijn
+ 
+ * Export REQUEST-UNHANDLED-PART, which is the rightmost part of the
+   urlstring: what would have been in the second parameter of an
+   old-style handler
+ 
+ * STATIC-FILE-HANDLER coped badly with requests for ".../doc" when
+   ".../doc/" is a directory.  Now issues redirect
+ 
+] 
+[bump version
+dan**20031123195101] 
+[TAG release_0_81 
+dan**20031123195101] 
+[export *restart-on-handler-errors*
+dan**20031129205437] 
+[replace *break-on-handler-errors* with *restart-on-handler-errors*
+dan**20031129205545
+ replace *break-on-handler-errors* with *restart-on-handler-errors*
+ which has the sense of the test reversed and may also be a function
+ - useful with alternative debugger interfaces like SLIME
+ 
+] 
+[Log the HTTP error code and message if we're going to log errors
+dan**20031129205617] 
+[slightly more robust check for directories
+dan**20031129205658] 
+[describe use of *restart-on-handler-errors*
+dan**20031129205718] 
+[update for 0.82
+dan**20031129210247] 
+[TAG release_0_82 
+dan**20031129210247] 
+[ -               (:file "pattern-match" :depends-on ("memoization"))
+dan**20031202032659
+  -               (:file "pattern-match" :depends-on ("memoization"))
+  +               (:file "pattern-match" :depends-on ("defpackage" "memoization"))
+ 
+] 
+[ -  ((handler :initform (make-instance 'dispatching-handler) :initarg handler
+dan**20031202032701
+  -  ((handler :initform (make-instance 'dispatching-handler) :initarg handler
+  +  ((handler :initform (make-instance 'dispatching-handler) :initarg :handler
+ oops
+ 
+] 
+[fiddle with this silly *flatten-p* thing
+dan**20031202032703] 
+[rearrange request-send-headers. New arg :conditional t makes it serve a
+dan**20031202032705
+ rearrange request-send-headers. New arg :conditional t makes it serve a
+ 304 when that looks like the appropriate thing to do
+ 
+] 
+[document request-send-headers a little
+dan**20031202032707] 
+[deleted
+dan**20031202220908] 
+[doodles
+dan**20031212184250] 
+[don't catch and resignal response-sent, just let it through
+dan**20031212184252
+ don't catch and resignal response-sent, just let it through
+  -	   (rest-of-url (subseq urlstring offset))
+  +	   (rest-of-url (request-unhandled-part request))
+ 
+] 
+[ -           :documentation "This stream is connected to the client socket")
+dan**20031212184254
+  -           :documentation "This stream is connected to the client socket")
+  +           :documentation "This stream is connected to the peer")
+ 
+] 
+[request-send-headers: signals 'response-sent if 304
+dan**20031212184256
+ request-send-headers: signals 'response-sent if 304
+ (should it do similarly if HEAD request?)
+ request-redirect now signals response-sent
+ 
+] 
+[delete unused variables
+dan**20031212184258] 
+[describe response-sent/request-send-headers
+dan**20031212184302] 
+[*** empty log message ***
+dan**20031212193206] 
+[extra exports
+dan**20031213023820] 
+[handle response-sent
+dan**20031213023823] 
+[now accepts relative urlstrings which are resolved wrt the handler url base
+dan**20031213023825] 
+[fix format string
+dan**20031213023827] 
+[delete duplicated request-unhandled-part method
+dan**20031215092520] 
+[revert accidental changes
+dan**20031215092634] 
+[update for 0.83
+dan**20031215093140] 
+[TAG release_0_83 
+dan**20031215093140] 
+[0.84
+dan**20031219073934] 
+[export listening-p
+dan**20031219073937] 
+[listening-p
+dan**20031219073939] 
+[ -		 (< (request-if-modified-since request last-modified)
+dan**20031219073941
+  -		 (< (request-if-modified-since request last-modified)
+  -		    last-modified))
+  +		 (<= last-modified
+  +		     (request-if-modified-since request 0)))
+ oops
+ 
+] 
+[don't need to do our own 304 handling any more: let request-send-headers
+dan**20031219073943
+ don't need to do our own 304 handling any more: let request-send-headers
+ take care of it
+ 
+] 
+[added documentation for HTTP caching
+dan**20031219080657] 
+[0.84
+dan**20031219080720] 
+[TAG release_0_84 
+dan**20031219080720] 
+[ +   http-error http-error-code http-error-message http-error-client-message
+dan**20031229230047] 
+[  (define-condition http-error (condition)
+dan**20031229230049
+   (define-condition http-error (condition)
+ add client-error slot: a place to put stuff that the public may see
+ 
+] 
+[docstring fixes
+dan**20031229230051] 
+[ +    ("css" "text/css")
+dan**20031229230053] 
+[Fixes from Fare and Brian: see NEWS file
+dan**20040520210836
+ Fixes from Fare and Brian: see NEWS file
+ Update NEWS file in preparation for 0.85
+ 
+] 
+[0.85
+dan**20040520211256] 
+[TAG release_0_85 
+dan**20040520211256] 
+[Portable araneida: separated out the SBCL-specific components into a
+chandler**20040524191927
+ Portable araneida: separated out the SBCL-specific components into a
+ separate file, which I implemented for SBCL, OpenMCL, and Allegro. A
+ port to Armed Bear Common Lisp is also underway.
+ 
+] 
+[Compatibility routines for SBCL, OpenMCL, and Allegro.
+chandler**20040524192015] 
+[Add preliminary Armed Bear compatibility
+chandler**20040525152607] 
+[LESS INTERNING INTO CL-USER
+chandler**20040526152237] 
+[CMUCL compatability for serve-event listeners; #+araneida-threads and
+chandler**20040603144236
+ CMUCL compatability for serve-event listeners; #+araneida-threads and
+ #+araneida-serve-event *feature*s.
+ 
+] 
+[Simplistic CLISP support: serve-event only; requires running
+chandler**20040603163427
+ Simplistic CLISP support: serve-event only; requires running
+ (araneida:host-serve-events) to boot up the serve-event loop.
+ 
+] 
+[Dan suggested I update this, which is a good idea
+chandler**20040603165135] 
+[Update for latest ABCL (add definitions for host-thread-alivep and use interrupt-thread instead of destroy-thread)
+chandler**20040603174346] 
+[Much less consy version of s. from Xach
+chandler**20040609190042] 
+[Small kludge: allow handlers to add new fd-handlers and have those handlers copied onto the real handler list for serve-event.
+chandler**20040712121542] 
+[mailto: urls
+chandler**20040712125851] 
+[Xophe/#li: suggest "" in that printed representation
+chandler**20040712130123
+ Xophe/#li: suggest "" in that printed representation
+ Xophe/#li: I worry when I see disconnected stuff in the middle of #< >
+ 
+] 
+[docstrings with open-paren in column 1 confuse emacs indentation ...
+dan**20040928180136] 
+[allow removal of a fd-handler from inside araneida event processing
+dan**20040928203031] 
+[documentation updates for 0.9
+dan**20040928203053] 
+[contributed by Jochen Schmidt
+dan**20040928203131] 
+[Remove host-without-other-handlers alltogether. Yeehah!
+chandler**20040930231755] 
+[Er. Make that a queue and not a stack.
+chandler**20040930233047] 
+[Oops. Major bugfix - now everything works properly
+chandler**20041001003759] 
+[More robust to DOS attacks
+chandler**20041001005055] 

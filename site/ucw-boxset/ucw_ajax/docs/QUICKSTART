@@ -1,0 +1,382 @@
+-*- outline -*-
+
+* Quick (or quasi-quick) start for a UnCommon Web (and Lisp) newbie
+* (release 0.6 - 19-Mar-2006)
+
+** Abstract
+
+This document describes how to configure a new application in the
+UnCommon Web framework (UCW), using different backends (internal,
+portableaserve, apache) as web server. This document is NOT an
+introduction to Lisp language and is NOT a tutorial to UnCommon Web. 
+
+** Introduction
+
+The author of UnCommon Web (UCW) is Marco Baringer.
+The homepage of UCW is http://common-lisp.net/project/ucw/.
+
+You can download UCW from ftp://ftp.common-lisp.net/pub/project/ucw.
+
+There are two movies (sic!) introducing Slime and UCW:
+
+    http://common-lisp.net/torrents/slime.torrent (~150Mb/~60mins)
+    http://common-lisp.net/torrents/hello-world.torrent (~50Mb/~20mins)
+
+You need a Lisp implementation and an interface development environment.
+I use OpenMCL 1.0, GNU Emacs and Slime on Mac OS X with Tiger 10.4.3.
+
+    OpenMCL         http://openmcl.clozure.com/
+    Emacs Homepage  http://www.gnu.org/software/emacs/emacs.html
+    Emacs for Mac   http://bluebeard.org/software/emacs_osx/
+    Slime           http://common-lisp.net/project/slime/
+
+Please, before to start the UCW adventure, you have to have a Lisp
+environment working: I mean, when you are in Emacs, pressing 'M-x
+slime', it displays the REPL (Read Eval Prompt Loop) window. A good
+introduction about Slime and Emacs is the Baringer's movie. 
+
+** Installation
+
+UCW is a framework to build web appllications. You know, we have to
+choice where to install UCW, where to install the library UCW depends
+on, where to install our applications and where to put the links
+referencing the subsystems of UCW. Of course, you can choice whatever
+path, but my installation is the following:
+
+      UCW directory 	  ~/My/Dev/Lisp/ucw_dev
+      UCW libraries	  ~/My/Dev/Lisp/ucw_lib
+      UCW applications	  ~/My/Dev/Lisp/ucw_apps
+      ASDF registry       ~/My/Dev/lisp/zsystems
+
+To download the UCW development branch, you can go in a directory, for
+instance ~/My/Dev/Lisp, :
+
+    darcs get http://common-lisp.net/project/bese/repos/ucw_dev/
+
+The ucw_dev directory is created. Again, you can install UCW wherever
+you like. I name that directory as UCW_HOME.
+
+** Read the README
+
+First, read the README you find in UCW_HOME directory.
+
+*** Dependencies
+
+In 'Dependencies' paragraph you read UCW depends on a number of external
+libraries:
+
+- arnesi
+- yaclml
+- parenscript
+- iterate
+- rfc2388
+- rfc2109
+- slime
+- cl-ppcre
+- split-sequence
+- trivial-sockets
+- puri
+- net-telent-date
+
+
+You can configure a lot of web server backend: allegroserve or
+portableaserve, araneida, apache. There is an internal web server too.
+
+*** ASDF
+
+Reading the 'Setting up ASDF' paragraph in README file, you learn about
+Another System Definition Facility (ASDF). ASDF is included in
+OpenMCL. For instance, you can try to eval (require :asdf) in REPL to
+verify the existence of the package in your Lisp environment.
+
+You can load ASDF automatically, starting Lisp implementation, using the
+proper init Lisp file. For OpenMCL init file is 'openmcl-init.lisp'.
+You can create it in the HOME directory, the user home directory, and
+write the following lines:
+
+(require :asdf)
+
+(push "/Users/albertosantini/My/Dev/Lisp/zsystems/"
+       asdf:*central-registry*)
+
+Well, you are informing UCW, using ASDF facility, where the dependencies
+are. The path of the central registry directory and the use of absolute
+or relative symlinks, it's a matter of taste.
+
+*** Slime
+
+Is Slime configured, isn't? Remember to download it by CVS, because the
+snapshot doesn't contain the 'swank.asd' file, needed in the UCW
+configuration. 
+
+** Download the libraries
+
+- arnesi            ucw repository
+- yacml             ucw repository
+- parentscript      ucw repository
+- iterate           http://common-lisp.net/project/iterate/releases/
+- portableaserve    http://sourceforge.net/projects/portableaserve/
+- rfc2388           ucw repository
+- rfc2109           http://wwww.common-lisp.net/project/rfc2109/
+- cl-l10n	    darcs get http://www.common-lisp.net/project/cl-l10n/repos/cl-l10n
+- cl-ppcre	    http://www.weitz.de/cl-ppcre/
+- split-sequence    http://ww.telent.net/cclan
+- trivial-sockets   http://ww.telent.net/cclan
+- puri              http://puri.b9.com
+- ucw-presentations ucw repository
+
+So the skyline of the library directory is:
+
+~/My/Dev/Lisp/ucw_libs $ ls -l
+total 0
+drwxr-xr-x    9 albertos  albertos   306 Mar 19 09:52 arnesi_dev
+drwxr-xr-x   41 albertos  albertos  1394 Feb 18 17:39 cl-ppcre-1.2.12
+drwxr-xr-x   16 albertos  albertos   544 Feb 18 17:39 iterate_1.4
+drwxr-xr-x    9 albertos  albertos   306 Mar 19 09:53 parenscript
+drwxr-xr-x   17 albertos  albertos   578 Nov 10 23:50 portableaserve
+drwxr-xr-x    9 albertos  albertos   306 Feb 18 17:43 puri-1.3.1.3
+drwxr-xr-x    9 albertos  albertos   306 Mar 19 10:03 rfc2109
+drwxr-xr-x    8 albertos  albertos   272 Mar 19 09:53 rfc2388
+drwxr-xr-x    6 albertos  albertos   204 Feb 18 17:43 split-sequence
+drwxr-xr-x   20 albertos  albertos   680 Mar 19 09:54 trivial-sockets
+drwxr-xr-x    9 albertos  albertos   306 Mar 19 09:54 ucw-extras
+drwxr-xr-x    7 albertos  albertos   238 Mar 19 09:55 ucw-presentations
+drwxr-xr-x    9 albertos  albertos   306 Mar 19 09:55 yaclml
+    
+** Configure UCW server
+
+The default backend, the web server, configured in UCW is an internal
+web server: httpd. You can use mod-lisp, araneida and aserve.
+
+(ucw:create-server :backend :httpd
+                         ;; :mod-lisp
+                         ;; :araneida
+                         ;; :aserve
+...
+
+Now you can add in the central registry directory all the symlinks to
+the library downloaded. You have to add the others with the command
+'ln'. For instance, if you are in the 'zsystems' directory:
+   
+    ln -s ~/My/Dev/Lisp/ucw_libs/portableaserve/aserve/aserve.asd aserve.asd
+
+When you add all the symlinks, in the 'zsystems' directory you
+find the following symlinks:
+
+acl-compat.asd -> ... ucw_libs/portableaserve/acl-compat/acl-compat.asd
+arnesi.asd -> ... ucw_libs/arnesi_dev/arnesi.asd
+aserve.asd -> ... ucw_libs/portableaserve/aserve/aserve.asd
+cl-ppcre.asd -> ... ucw_libs/cl-ppcre-1.2.12/cl-ppcre.asd
+hello.asd -> ... ucw_apps/hello/hello.asd
+htmlgen.asd -> ... ucw_libs/portableaserve/aserve/htmlgen/htmlgen.asd
+iterate.asd -> ... ucw_libs/iterate_1.4/iterate.asd
+parenscript.asd -> ... ucw_libs/parenscript/parenscript.asd
+puri.asd -> ... ucw_libs/puri-1.3.1.3/puri.asd
+rfc2109.asd -> ... ucw_libs/rfc2109/rfc2109.asd
+rfc2388.asd -> ... ucw_libs/rfc2388/rfc2388.asd
+swank.asd -> ~/.emacs.d/slime/swank.asd
+split-sequence -> ... ucw_libs/split-sequence/split-sequence.asd
+trivial-sockets -> ... ucw_libs/trivial-sockets/trivial-sockets.asd
+ucw.asd -> ... ucw_dev/ucw.asd
+ucw-presentations -> ... ucw_libs/ucw-presentations/ucw-presentations.asd
+yaclml.asd -> ... ucw_libs/yaclml/yaclml.asd
+
+These symlinks link the web apps, hello, and the backend portableaserve,
+aserve.
+
+** Start UCW server
+
+Now you can start the UCW server from the UCW_HOME directory with the
+command: 
+
+    ~/My/Apps/ccl/dppccl -l bin/start.lisp
+
+'dppccl' is the command line REPL of OpenMCL. Verify if there is a
+variable CCL_DEFAULT_DIRECTORY set to ~/My/Apps/ccl directory, the
+installation directory of OpenMCL. You can set that variable in
+~/.profile. You can use the 'openmcl' script in ~/My/Apps/ccl/scripts
+directory. If you start UCW server from a shell inside Emacs, you have
+to set again the environment variable CCL_DEFAULT_DIRECTORY: 
+
+    (setenv "CCL_DEFAULT_DIRECTORY" "/Users/albertosantini/My/Apps/ccl")
+
+Please remember to modify the path of CCL_DEFAULT_DIRECTORY.
+
+** Test UCW server
+
+The server is started and you see the welcome message of OpenMCL.
+
+To test the UCW server you can use the url:
+
+  http://localhost:8080/
+or
+  http://localhost:8080/index.ucw
+
+The port 8080 is the default port for the web server backend. You can
+find the details of the configuration at the end of the file
+'start.lisp' when the server is created. We are using the internal web
+server. 
+
+If the server is up and running you can see the UCW Examples page with
+the counter, component transaction, form demo, presentations,
+etc. examples. 
+
+*** Portableaserve backend
+
+If you want to use portableaserve, you can change 'httpd' with
+'aserve' in the fiel 'start.lisp'.
+
+A note for the portableaserve backend: it doesn't support regular
+expression entry point. You can change the file 'examples.lisp'
+in UCW_HOME/examples from
+
+  (:entry-point "^(|index.ucw)$" (:application *example-application*
+to
+  (:entry-point "index.ucw" (:application *example-application*
+
+*** Apache backend
+
+If you like to use Apache 2 backend, first you have to have a Apache web
+server up and runnnig; then you have to add the mod-lisp module by Marc
+Battyani you find at
+
+    http://www.fractalconcept.com/asp/html/mod_lisp.html
+
+You can add the module, after you downloaded it, using the command
+    
+    apxs2 -i -a -c mod_lisp2.c
+
+Then cp ucw/etc/ucw-examples.apache2 to /etc/apache2/sites-available/ucw-examples
+and ln -s /etc/apache2/sites-available/ucw-examples /etc/apache2/sites-enabled/000-ucw-examples
+
+Remember to change the port 8080 to 3000 and the backend type in the file
+'ucw/etc/start.lisp', allowing the connection between the module mod_lisp and UCW.
+
+** Write Hello application
+
+Now you can write a new (and simple) application, the classical 'Hello, 
+World!'. Make a sub-directory 'hello' in the directory
+'ucw_apps'. I name the directory '~/My/Dev/Lisp/ucw_apps/hello' as
+HELLO_HOME. Of course, you can use another path. Copy the following code
+in a file 'hello.lisp' and save it in HELLO_HOME.
+
+-------- cut --------
+(in-package :it.bese.ucw-user)
+
+(defvar *hello-world*
+  (make-instance 'cookie-session-application :url-prefix "/hello/"))
+
+(register-application *default-server* *hello-world*)
+
+(defentry-point "index.ucw" (:application *hello-world*) ()
+  (loop
+     (let ((name (call 'hello-world-home-page)))
+       (call 'personalized-greeting :name name))))
+
+(defcomponent hello-world-home-page (simple-window-component)
+  ()
+  (:default-initargs :title "Hello, World!"))
+
+(defmethod render ((hello hello-world-home-page))
+  (<:p "Hello, World!")
+  (let ((name ""))
+    (<ucw:form
+     :action (ok hello name)
+     (<ucw:input :type "text" :accessor name)
+     (<:submit))))
+
+(defcomponent personalized-greeting (simple-window-component)
+  ((name :accessor name :initarg :name))
+  (:default-initargs :title "Greetings!"))
+
+(defmethod render ((greeting personalized-greeting))
+  (<:p "Hi, " (<:as-html (name greeting)) ", how are you?")
+  (<ucw:a :action (ok greeting) "Done."))
+-------- cut --------
+
+** Configure Hello application
+
+To configure an application in the UCW framework, it's better to know
+something about ASDF. You can read the manual at the url:
+
+  http://constantly.at/lisp/asdf/
+
+In the directory HELLO_HOME you have to create the file 'hello.asd',
+copying the following code:
+
+-------- cut --------
+;; -*- lisp -*-
+
+(defsystem :hello
+  :components ((:file "hello")))
+-------- cut --------
+
+Then add a symlink in 'zsystems' to the file 'hello.asd' and
+add a line at the end of the file 'start.lisp' in UCW_HOME/bin:
+
+-------- cut --------
+(asdf:oos 'asdf:load-op :hello) ;; load hello application
+-------- cut --------
+
+Quit UCW server and restart. Now UCW server load the Hello application,
+from the HELLO_HOME directory, reading 'hello.lisp' file.
+
+** Test Hello application
+
+To test the Hello application you go to the url
+
+    http://localhost:8080/hello/index.ucw
+
+and the "Hello, World!" is there, I hope.
+
+** Conclusions
+
+Of course, this document is not exaustive about the UCW
+configuration. The audience target is the people with very little
+experience of Lisp, downloading for the first time UCW and asking "Well,
+and now?". UCW is a wonderful and powerful framework.
+
+** Getting help
+
+You can get help on IRC too. You can use ERC, an IRC implementation for
+Emacs. You can download it at the url
+
+    http://sourceforge.net/projects/erc/
+
+And you can find help at the url
+
+    http://www.emacswiki.org/cgi-bin/wiki/EmacsIRCClient 
+
+You can join to the channel #ucw or #lisp on irc.freenode.net server.
+
+** Thanks
+
+- Marco Baringer (UCW author)
+- Asbj¿rn Bj¿rnstad (asbjxrn on #ucw)
+
+** History
+
+- 19-Mar-2006 rel. 0.6 added rfc2109 dep
+- 18-Feb-2006 rel. 0.5 added trivial-sockets and split-sequence deps
+- 04-Dec-2005 rel. 0.4 added http, mod-lisp backend configuration
+- 12-Nov-2005 rel. 0.3 minor changes 
+- 05-Nov-2005 rel. 0.2 using a separate .asd for hello app
+- 01-Nov-2005 rel. 0.1 initial release
+
+** Disclaimer
+
+;; THIS DOCUMENT  IS PROVIDED BY THE COPYRIGHT  HOLDERS AND CONTRIBUTORS
+;; "AS IS"  AND ANY  EXPRESS OR IMPLIED  WARRANTIES, INCLUDING,  BUT NOT
+;; LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+;; A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+;; OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+;; SPECIAL,  EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES  (INCLUDING, BUT  NOT
+;; LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+;; DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+;; THEORY OF  LIABILITY, WHETHER IN CONTRACT, STRICT  LIABILITY, OR TORT
+;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+;; OF THIS DOCUMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+** About me
+
+Alberto Santini, http://www.albertosantini.it/

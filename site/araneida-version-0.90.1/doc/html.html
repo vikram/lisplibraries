@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//EN">
+<html><head>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida Reference : HTML generation</title>
+</head><body>
+
+<h1>HTML Generation</h1>
+
+<p> We have functions that turn sexps into HTML.  The format of the
+sexp is
+<pre>
+((element-name {:attribute-name attribute-value}*) {contents})
+</pre>
+where element-name is a symbol, attribute-name is a keyword, and
+contents are more elements, or strings.  If there are no attributes,
+the parens around element-name can be omitted.  For example
+<pre>
+(html
+ (head (title "Title"))
+ (body (p "Click here to visit ((a :href "http://www.google.com/") "Google"))))
+</pre>
+
+<p>There is a special case for a tag named comment.
+
+<pre>
+(html
+ (comment (span "yes")))
+
+=&gt;
+
+&lt;!--
+&lt;span&gt;yes&lt;/span&gt; --&gt;
+</pre>
+
+<p> You can also do:
+
+<pre>
+(html
+ ((comment "This is no longer used") (span "yes")))
+
+=&gt;
+
+&lt;!-- This is no longer used
+&lt;span&gt;yes&lt;/span&gt; --&gt;
+</pre>
+</pre>
+
+<p> The functions are HTML (returns a string) and HTML-STREAM (outputs
+directly to a stream).  The latter is much less consy, so to be
+preferred
+
+<p> We also have a pattern-based rewriting system so that you can
+"invent your own tags" (sic), using DEFINE-PATTERNS.  See example 6 in
+<a href="../examples/main.lisp">../examples/main.lisp</a>.  This is
+used in the DEFINE-PAGE macro, which also gives you correct handling of
+conditional GETs for free.
+
+
+<h1>Custom HTML tags</h1>
+<h2>They're <i>kinda</i> like macros</h2>
+
+<p>You can create custom tags that do "special" things.
+
+<pre>
+(defhtmltag coffee (attr content)
+  (declare (ignore attr content))
+  "c|_|")
+</pre>
+
+<p>Let's you do:
+<pre>
+(html (span "Coffee: " (coffee)))
+=&gt;
+&lt;span&gt;Coffee c|_|&lt;/span&gt;
+</pre>
+
+<p>That's a very simplistic example, of course.
+
+<p>A more in-depth example might be:
+<pre>
+(defhtmltag odd-even-list (attr content)
+  `((ul ,@attr)
+    ,@(let ((counter 0))
+	(mapcar (lambda (elt)
+		  (incf counter)
+		  (destructure-html (tag attrs content) elt
+		    `((,tag :class ,(if (oddp counter) "odd" "even") ,@attrs) ,@content)))
+		content))))
+(html
+  (odd-even-list
+    (li "odd")
+    (li "even")
+    (li "odd")
+    (li "even")))
+
+=&gt;
+
+&lt;ul&gt;
+   &lt;li class="odd"&gt;odd&lt;/li&gt;
+   &lt;li class="even"&gt;even&lt;/li&gt;
+   &lt;li class="odd"&gt;odd&lt;/li&gt;
+   &lt;li class="even"&gt;even&lt;/li&gt;
+&lt;/ul&gt;
+
+</pre>
+
+<p>When writing more advanced custom tags, you may find DESTRUCTURE-HTML quite useful (see above for sample code).
+
+<h1>Templates</h1>
+<p>A template is nothing special, it's just a function with a funny name. It can be useful, though, for
+keeping your templates out of the rest of your code, and for grepping purposes.
+
+<pre>
+(deftemplate mytemplate (&optional warning)
+  `(p \"A regular paragraph\" ,@(when warning (blink \"NOW WITH A BADLY FORMATTED WARNING!\"))))
+
+; it's called:
+(html
+  (call-template 'mytemplate))
+</pre>
+
+<p>Templates do not use the function namespace, so you couldn't do, for instance: <tt>(mytemplate)</tt>
+
+<p>You can trace and untrace templates, as well:
+<pre>
+(trace-template mytemplate)
+(untrace-template mytemplate)
+</pre>
+
+<h1>Integration with Parenscript</h1>
+<p>If you load Parenscript before Araneida, you can use it with your normal
+HTML generation routines.
+
+<p>For example:
+<pre>
+(html '((span :css (:color "black" :size "200%")) "Print this"))
+</pre>
+
+<p>Would result in:
+<pre>
+&lt;span style="color:black;size:200%"&gt;Print this&lt;/span&gt;
+</pre>
+
+<p>If you need a block of CSS, you can do:
+
+<pre>
+(html  '(html
+	  (head (title "A simple title")
+		(css (h1 :color "red")
+		     (h2 :color "blue")))
+	  (body (h1 "A simple header"))))
+</pre>
+
+<p>To get:
+<pre>
+&lt;html&#62;&#60;head&#62;&#60;title&#62;A simple title&#60;/title&#62;
+&#60;style type=&#34;text/css&#34;&#62;
+&#60;!--
+h1 {
+   color:red;
+}
+
+h2 {
+   color:blue;
+}
+
+
+--&#62;&#60;/style&#62;&#60;/head&#62;
+&#60;body&#62;&#60;h1&#62;A simple header&#60;/h1&#62;
+&#60;/body&#62;
+&#60;/html&#62;
+</pre>
+
+<p>If you need to send CSS as a file, just do:
+
+<pre>
+(defmethod handle-request-response ((handler my-handler) method request)
+  (css-file request
+	    (* :border \"1px solid black\")
+	    (div.bl0rg :font-family \"serif\")
+	    ((\"a:active\" \"a:hoover\") :color \"black\" :size \"200%\")))
+</pre>
+
+<p>It will send it with the proper content type, even.
+
+<p>On the Javascript side of things, if you need inline Javascript, do:
+
+<pre>
+(html `((a :onclick ,(js:js-inline (alert "click!"))) "Click me!"))
+</pre>
+
+<p>To get:
+<pre>
+&lt;a onclick="javascript:alert('click!');"&gt;Click me!&lt;/a&gt;
+</pre>
+
+<p>If you need a block of Javascript code, do:
+<pre>
+(html `(html
+		     (head (title "Another simple title")
+		      (js-script
+		       (defun foo (x)
+			 (alert (+ "Be a lert: " x)))
+		       (defun bar (x)
+			 (alert (+ "Bar - " x)))))
+		     (body
+		      (p "All foos and bars come to an end")
+		      (p ((a :onclick ,(js:js-inline (foo "end"))) "Foo!"))
+		      (p ((a :onclick ,(js:js-inline (bar "end"))) "Bar!")))))
+</pre>
+
+<p>And the Javascript will be put in a proper &lt;script&gt; block.
+
+<p>Lastly, if you need to send a javascript file, it's exactly like css-file,
+except it's called js-file.
+
+<p>Remember to use Araneida's css-file and js-file and NOT Parenscript's.
+
+<p>On the same note, please note that Parenscript's HTML generation code is called
+within Parenscript code and NOT Araneida's. This means that you would say
+
+<pre>
+(js-script
+  (defun add-div (name href link-text)
+    (document.write
+     (html ((:div :id name)
+            "The link is: "
+            ((:a :href href) link-text))))))
+</pre>
+
+<p>Just like in the Parenscript docs.
+
+<p>Enjoy!
+
+</body></html>

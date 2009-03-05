@@ -1,0 +1,383 @@
+\documentclass[a4paper]{article}
+\usepackage{html}
+
+\usepackage{makeidx}
+
+\makeindex
+
+\title{And Now For Something Completly Different \\
+- or -\\
+How I Learned to Stop Worrying and Love Web Apps}
+\author{Marco Baringer <mb@bese.it>}
+\date{}
+
+\newcommand{\ucw}{\textsc{UCW}}
+\newcommand{\UCW}{\textsc{UnCommon Web}}
+\newcommand{\sym}[1]{\textsc{#1}}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction to the Introduction}
+
+\UCW{} is web framework\footnote{or platform or library or toolkit or
+  whatever you want to call it} which provides developers with a new
+paradigm for developing web based applications. The goal of this
+document is to explain what \ucw{} is, what isn't and how to write
+applications with it.
+
+We begin with a brief introduction to Common Lisp, continuations and
+web applications in general. Then we delve into UnCommon Web and its
+component based GUI toolkit and continuation based web flow control
+(don't worry if this doesn't make any sense yet, it will
+later). Finally we provide a small real world example.
+
+\subsection{Why \ucw{}?}{Distinguishing Features}
+
+According to a recent study there are 18,004 web frameworks available,
+what's so special about \ucw{}?
+
+\subsubsection{Common Lisp}
+
+Yes, Common Lisp is a feature, not a bug. Common Lisp has been called
+``the programmable programming language,'' what this means is that
+whatever interesting and usefull paradigm is developed in the future
+Common Lisp, and therefore \ucw{} will probably be able to absorb it
+in a cleanly and without requiring anything other downloading a new
+version of the library.
+
+Common Lisp was the first ``write once, run anywhere'' language. The
+Common Lisp standard provides the equivalent of avery high level
+Virtual Machine and the Common Lisp implementers have done an
+excellent job of providing cross-platform OS libraries for things such
+as sockets, threads and file system access.
+
+\subsubsection{Component Oriented UI}
+
+Like functions allow us to abstract and reuse behaviour, like classes
+allow us to abstract and reuse a concect, components allow us to
+abstract and resuse graphical user interfaces. Components are regular
+CLOS objects which represent the behaviour and the appearence of a
+part of the UI.
+
+\subsubsection{Continuations}
+
+You probably first heard about \UCW{} in the context of something
+called ``continuations.'' Simply put continuations are a way to
+suspend the execution of a program and restart it later when (if) we
+need to. When we look at web applications from the right angle
+continuations suddenly become a very powerfull yet almost invisible
+tool.
+
+This is important so I'll repeat myself: While continuations are the
+reason \ucw{} is so powerfull you never need to think about
+continuations when developing \ucw{} apps.
+
+\section{Getting Started}
+
+Every \ucw{} application starts with a component which represents the
+browser's window:
+
+\begin{verbatim}
+(defcomponent my-window (simple-window-component)
+  ())
+\end{verbatim}
+
+This defines a class called my-window, and makes it a subclass of the
+standrad ucw component simple-window-component. simple-window-component
+
+\section{Components}
+
+\ucw{} applications have a GUI. We use the term \textit{component} to
+refer to a server side object which represents the GUI. Rarely will a
+single component object be used for the entire GUI, generally we will
+have multiple component tied together (we'll so how in just a second),
+each component will be responsible for one specrific part of the
+GUI. For example, we'll have a \textit{window} component which will
+take up the entire browser window and set http headers, stylesheets
+and include various javascript files, the window component will then
+pass off to a navigation component which deals with setting up the
+menus and the likns for moving around the application. The navigation
+component will pass control off to a content component which will
+dispaly the current content of the window. This content component may
+use a tabbed-pane component or a form component. etc.
+
+Every component has a state which is represented by the current values
+of its slots (member variables or attributes in standard OO
+parlance). Every component also has a set of actions (methods).
+
+\section{Actions}
+
+Component objects are active, this means that they can react to input
+(like following a link or submitting a form) and they can take some
+kind of action in response to the input. Actions are blocks of common
+lisp code which get called when a user interacts with a component.
+
+Actions generally do one of three things:
+
+\begin{itemize}
+\item Change the state (either GUI or system) of the application. For
+  example: A validation component may simply set a good/bod flag in
+  some other form component; or a login form component may simply set
+  a few variables in the current session.
+\item Create another component and let this new component do
+  something. For example: A search component may collect the search
+  criteria and then ask a result listing component to display the
+  results; A result litsing component may ask an object editor
+  component to display a form and allow the user to edit an object.
+\item Return to the previous component. For example: The user may tell
+  the editor component that they're done editing the object and the
+  editor component can let the result listing component take over
+  again.
+\end{itemize}
+
+Whenever one component, through an approiatly defined action, asks
+another component to do something we say that the first component has
+``CALLed'' the other. When the other component is done and wants to
+return control to the first component we say that the other component
+``ANSWERs''. Surprisingly enough \ucw{} provides to operators,
+\sym{CALL} and \sym{ANSWER} for just this purpose. Example:
+
+\begin{verbatim}
+(CALL 'login)
+(CALL 'welcome-page)
+\end{verbatim}
+
+\begin{verbatim}
+(when (and (string= "marco" username)
+           (string= "marco" password))
+  (ANSWER t))
+\end{verbatim}
+
+\subsection{Actions and Forms}
+
+In most web frameworks a form, or an href with parameters, puts the
+various inputs in the request and then calls a ``handler'' (be it a
+script a servelt or whatever) which takes, conceptually, one
+parametetr: the request object and returns the response object. This
+is not how \ucw{} actions are generally used (though fou can do this
+if you wish). \ucw{} actions are methods which take parameters,
+grabbing these parameters from the request object is handled by Vodoo
+Majik.
+
+\begin{verbatim}
+(defaction login ((c login-component) username password)
+  (when (and (string= "user" username)
+             (string= "secret" password))
+    (answer t)))
+
+(defmethod render-on ((response response) (c login-component))
+  (let ((username "")
+        (password ""))
+    (<ucw:form :action (login c username password)
+      "Username: " (<ucw:text :accessor username)
+      "Password: " (<ucw:text :accessor password)
+      (<ucw:submit :value "Login"))))
+\end{verbatim}
+
+Note how the username and password strings are passed directly to the
+login action. This makes it much easier to know what inputs a
+particular action needs and it allows us to simplfy combining actions:
+
+\begin{verbatim}
+(defaction foo ((c component) ...)
+  ...
+  (login c username password)
+  ...)
+\end{verbatim}
+
+
+\section{Bits 'n Pieces}
+
+\subsection{Sessions}
+
+A \ucw{} application is just like a regular program with function
+calls and return statements. Like a regular program shared globals
+are, generally, frowned upon. \ucw{} applications store objects in the
+session about as much as a regular program stores state in global
+variables.
+
+\subsection{Request Query Parameters}
+
+Most web applications are litered with statements whcih grab a string
+from the incoming request object. \ucw{} applications don't do that,
+they use web accessors and closures instead. This has 2 advantages: 1)
+you needn't worry about chosing independent names for parameters when
+combining multiple components into a single form and 2) you can pass
+``live'' lisp objects to the client and back (though no object
+marshalling ever actually occurse. The main disadvantage to this is
+that we've added a layer of Vodoo Majik.
+
+\section{A Typical UCW Application}
+
+Every \UCW{} application lives inside a \ucw{} server which, generally
+speaking, is composed of:
+
+\begin{itemize}
+\item A lisp system. Currently \ucw{} supports CMUCL, SBCL, OpenMCL,
+  CLISP and Allegro.
+\item A web server. \ucw{} does not, directly, understand the HTTP
+  protocol. Currently \ucw{} can work with Araneida, Aserve (and
+  portableaserv) and or Apache (through mod\_lisp).
+\item The \UCW{} system itself.
+\end{itemize}
+
+Within a single \ucw{} installation we can have multiple, relativly
+independant, \ucw{} applications. Each application consists of:
+
+\begin{itemize}
+\item An application object.
+\item A collection of \textit{entry-points} which are the publicly
+  accessable urls of the application. Users will start interacting
+  with a \ucw{} application by requesting an entry-point's url.
+\item A collection of \textit{component}s which provide the application's
+  graphical user interface.
+\item A collection of \textit{action}s which specify how the
+  application reacts to user input.
+\item The core application itself (everything not related to the GUI).
+\end{itemize}
+
+\subsection{The Application Object}
+
+While an essential component of every \ucw{} app the application
+object isn't really that interesting (until we start customizing
+\ucw{} internals). It mainly serves as a container for the \ucw{}
+infrastructure and deals with, among other things:
+
+\begin{itemize}
+\item Looking up TAL template files.
+\item Telling the backend where to find static resources (stylesheets,
+  .html files, images, etc.)
+\item Managing all the user sessions.
+\item Managing the entry-points.
+\end{itemize}
+
+See the documentation of the \sym{APPLICATION} class for more details
+on what this object does.
+
+\subsection{The Components}
+
+Every application will have ``something'' which specifies how the GUI
+looks and acts, these ``things'' are called
+\textit{component}s. Component objects provide the application with
+its user interface and control, through appropiately defined methods,
+how the application reacts user input.
+
+\subsection{Actions}
+
+Every time the user clicks on a link or submits a form \ucw{} will
+call an action (the obvious exception to this rule are
+entry-points). An action is a CLOS method specialized on a component
+which does ``stuff'' (whatever the application needs to do) and can,
+should the need arise, transfer control to other components.
+
+Actions can either pass control to another action, via the macro
+\sym{CALL} or the method \sym{CALL-COMPONENT}, or they can return
+control using the macro \sym{ANSWER} or the method
+\sym{ANSWER-COMPONENT}.
+
+\subsubsection{Entry Points}
+
+Entry points are just like actions in that they can do ``stuff'' and
+can pass control to components. The difference is that entry-points
+are associated with urls as opposed to components and entry-points can
+not \sym{ANSWER}.
+
+\section{Call backs}
+
+\subsection{MIME Parts}
+
+[NB: This is only implemented with the mod\_lisp backend]
+
+When using POST requests with a mime-type of url-encoded all the
+values passed to callbacks will be strings. When using
+multipart/form-data however we have a value (the body of the part) and
+a set of mime headers.
+
+\section{REQUEST-CONTEXTs}
+
+Everything un \ucw{} happens within a particular request
+context. Request contexts contains, among other things, the request
+object (which is used to locate the proper action and callbacks), the
+response object (which contains the stream to whcih output should go),
+the current application object, etc.
+
+\section{Forms}
+
+\subsection{Accessing input values}
+
+There are quite a few ways to get the values passed by a client in a
+form:
+
+The most common way is to use ucw's :accessor attributes. Accessors
+can either be tied to lexcial variables defined in the render-on
+method (in which case we lose backtracking) or to slots in the
+component(s).
+
+We can always just ignore ucw's callback machinery and use regular
+input tags with named parameters and the get-parameter method.
+
+\section{The Standard Component Library}
+
+\ucw{} includes a library of generic components. All of the standard
+components provide developers with some functionality (implemenented
+via methods or actions) and most provide a default render-on method.
+Generally developers will not want to use the standard components
+directly but will subclass the components and customize them by
+defining methods and actions. In particular the login and container
+components must be subclassed to be usefull and all components should
+be subclassed when changing the render-on method.
+
+\begin{description}
+\item[container] An component for allowing multiple components to
+  share the same piece of GUI real estate.
+\item[date-picker] A very simple date selection component.
+\item[error] Showing errors and the associated back trace.
+\item[login] A dialog asking the user for authentication information
+  and validating it. The login component must be subclassed in order
+  to be used.
+\item[option-dialog] A multiple choice dialog.
+\item[range-view] A component for showing a large set of data one
+  sub-set at a time.
+\item[tabbed-pane] A container which attempts to provide a GUI similar
+  to the tabbed-panes found in other GUIs.
+\item[ucw-inspector] An html object inspector based on SLIME's
+  inspector.
+\end{description}
+
+For more details on how to use each component see the class
+documentation.
+
+\section{The Backend}
+
+\ucw{} does not provide an http server but instead relies on a backend
+to deal with the underlying HTTP issues. \ucw{} currently supports 3
+different backends,
+
+\begin{description}
+\item[mod\_lisp] The mod\_lisp backend provides the neccessary code to
+  a talk to a mod\_lisp enabled Apache server.
+\item[aserve] Uses the portable version of franz's excellent aserve
+  package.
+\item[araneida] UCW can run inside an araneida v0.9 server. UCW
+  applications and non-ucw applications can co-exist within the same
+  araneida image (though they can't communicatie with each other).
+\end{description}
+
+Every \ucw{} server is tied to exactly one backend though applications
+can, theoretically, be registered in multiple server. This particular
+functionality is completely untested.
+
+\section{Vodoo Majik}
+
+In a couple of places in this article we have refered to \ucw{}'s
+``Vodoo Majik,'' there is no Vodoo Majik in \ucw{}. No goats nor
+virgins are required for running \ucw{} applications. What we mean by
+Vodoo Majik is simply something that \ucw{} does for you without you
+having to worry about how it works, the interested can (and probably
+should) go and read the code to figure what's really going on.
+
+\end{document}

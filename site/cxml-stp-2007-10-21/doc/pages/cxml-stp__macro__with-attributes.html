@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Macro with-attributes</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-stp</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-stp.html">cxml-stp</a></p>
+      <h2 class="page-title">
+	  Macro
+	  with-attributes</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Lambda List</h3>
+          <div class="indent">
+<tt>with-attributes</tt> (<b>(&amp;rest entries)</b> <b>element</b> <b>&amp;body</b> <b>body</b>)</div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">Evaluate body with the specified attributes bound lexically as if they
+   were variables.<br><br>   Each entry in <tt>entries</tt> is a list of the form   <i>(variable-name attribute-name &amp;optional uri)</i>, where   <tt>variable-name</tt>   is a symbol and <tt>attribute-name</tt> and <tt>uri</tt> are strings.<br><br>   The macro with-attributes invokes <a href="cxml-stp__fun__attribute-value.html"><tt>attribute-value</tt></a>
+   to access the attributes. specified by each entry.   Both setf and setq can be used to set the value of the attribute.</div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>See also</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-stp__fun__attribute-value.html">
+                  <tt>attribute-value</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

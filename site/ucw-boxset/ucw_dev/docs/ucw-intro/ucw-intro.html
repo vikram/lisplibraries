@@ -1,0 +1,1448 @@
+<html>
+  <head>
+    <title>UCW intro</title>
+    <link rel='stylesheet' type='text/css' href='style.css'>
+  </head>
+    <!--Creative Commons License-->
+    <a rel="license"
+      href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img
+      alt="Creative Commons License"
+      align='right'
+      src="http://creativecommons.org/images/public/somerights20.png"
+      border="0">
+    </a>
+    <!--/Creative Commons License--><!-- <rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <Work rdf:about="">
+    <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.5/" />
+    <dc:title>UCW intro</dc:title>
+    <dc:date>2006</dc:date>
+    <dc:description>You don't have to mention
+    my name or where you got the content from if you want to use this
+    work for your own purposes, just keep by this license (why would of
+    course be another question ;)). If you want
+    to use any of this for commercial use or in another way that's not
+    covered by the licence, just send me an email (see somewhere on the
+    page if present) and we can probably work something out.</dc:description>
+    <dc:creator><Agent><dc:title>Ties Stuij</dc:title></Agent></dc:creator>
+    <dc:rights><Agent><dc:title>Ties Stuij</dc:title></Agent></dc:rights>
+    <dc:source rdf:resource="www.fallenfrukt.com" />
+    </Work>
+    <License
+    rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.5/"><permits
+    rdf:resource="http://web.resource.org/cc/Reproduction"/><permits
+    rdf:resource="http://web.resource.org/cc/Distribution"/><requires
+    rdf:resource="http://web.resource.org/cc/Notice"/><requires
+    rdf:resource="http://web.resource.org/cc/Attribution"/><prohibits
+    rdf:resource="http://web.resource.org/cc/CommercialUse"/><permits
+    rdf:resource="http://web.resource.org/cc/DerivativeWorks"/><requires
+    rdf:resource="http://web.resource.org/cc/ShareAlike"/></License></rdf:RDF> -->
+  <body>
+    <h1>UCW intro</h1>
+    <p>advertisement: ucw is now easily installable!! (experimental) 
+    <br>
+    
+    Get <a href='http://common-lisp.net/project/ucw/ucw-boxset.tar.gz'>http://common-lisp.net/project/ucw/ucw-boxset.tar.gz</a>, untar it, cd into the dir and execute:</p>
+    <pre>
+YOURLISPHERE (-)-load start.lisp
+    </pre>
+    <p>last modified 4th of may 2006</p>
+    <p>- added ucw-boxset info 
+    <br>
+    
+    - added debugging tools chapter 
+    <br>
+    
+    - added tabbed pane info in the templating chapter 
+    <br>
+    
+    - added info on slightly changed startup procedure 
+    <br>
+    
+    - fixed bugs concerning variable passing between pages in basics.lisp 
+    <br>
+    
+    - fixed little bug in the spliced-href slot</p>
+    <p>table of content: 
+    
+    <ul>
+      <li><a href='#intro'>Introduction</a></li>
+      <li><a href='#install'>Installation</a></li>
+      <li><a href='#extra'>Add-ons</a></li>
+      <li><a href='#testing'>Testing/Quickstart</a></li>
+      <li><a href='#configure'>Configuration</a></li>
+      <li><a href='#environment'>Setting up the environment (and a hello world on the side)</a></li>
+      <li><a href='#mechanics'>Basic ucw mechanics</a></li>
+      <li><a href='#templating'>Templating: nested components, containers and TAL</a></li>
+      <li>Login sessions</li>
+      <li>Downloading files</li>
+      <li>Advanced form handling</li>
+      <li>To backtrack or not to backtrack</li>
+      <li>Ajax</li>
+      <li>Really, really, really cool example application</li>
+      <li><a href='#debugging'>Debugging tools</a></li>
+      <li><a href='#source'>Source</a></li>
+      <li><a href='#miscellaneous'>Miscellaneous</a></li>
+    </ul>
+    </p>
+    <p><span id='intro'></span></p>
+    <h2>Introduction</h2>
+    <p>This text will introduce you in a mild mannered pace to the ways of this as of yet UnCommon Web
+    framework, which is a framework to write web applications as you would write normal applications; e.g. with state. Check ucw's
+    <a href='http://common-lisp.net/project/ucw/features.html'>features page</a> to get an impression of its features. Ucw is an
+    open source project. Various people donate code on a regular basis. Check the
+    <a href='http://common-lisp.net/cgi-bin/mailman/listinfo/bese-devel'>mailing list</a> for a flavour of the current topics. If you're
+    wondering about the merits and weaknesses of either state or stateless web development check
+    <a href='http://common-lisp.net/project/ucw/docs/html/rest/rest.html'>this rather nice one-page email conversation</a>
+    between the creator of ucw and a non-believer. If you want to use ucw on a windows machine, I have got no experience or information on
+    workability, but i would very much like to hear about your experiences.</p>
+    <p>This introduction wants to introduce UCW in a slow and concise manner. We will start with
+    the installation and an initial setup. Then slowly, through simple examples, the reader will be introduced to the
+    various components. We will delve from the outside in and will perhaps some day hit upon the burning hot core. For the
+    brilliant and the impatient this pace will just be to damn slow. Them I advice to read and watch some
+    other tutorials and documentation. They are:</p>
+    <ul>
+      <li><a href='http://www.cliki.net/ucw%20Tutorial'>UCW Tutorial</a> - a cliki tutorial in progress, not dissimilar to mine, which
+      sets up a quick working environment and explains the different components with a lot of code.</li>
+      <li><a href='http://common-lisp.net/project/ucw/documentation.html'>the ucw documentation page</a> - diverse documentation sources
+      which are a bit out of date. The email conversations are very interesting to get a good grasp of the use and limitations of ucw, and the
+      video, although out of date, is interesting because you get to see ucw in action. Be warned: the source-code and the wiki example are a bit
+      out of date last time I checked. Better to just download the source code, in which you will also find the wiki example.</li>
+      <li>the source code  - the docs section of the source code unlocks apache setup code, two quickstarts which may be a bit out of date, and
+      more. Also check the examples directory relative to the root. It gives you a good idea how to code up various aspects of ucw and it harbors
+      the wiki-example. It might just be a bit obvious but in the source code you can also read the source code; it offers great insight in the way ucw is put together.</li>
+    </ul>
+    <p><span id='install'></span></p>
+    <h2>Installation</h2>
+    <p>First off UCW doesn't do version numbers. Some people may remember it did and it did, but it doesn't anymore. Still there are two versions
+    of UCW to choose from: ucw_dev and ucw_public, both held in a Darcs repository. ucw_dev is controlled by Marco Baringer, creator of
+    ucw. Ucw_public is world writable. At the moment I would advise to go with ucw_dev which is also the focus of this intro. _public is not always in sync with _dev, although lately it does a good job of keeping up.</p>
+    <h3>The (experimental) easy way</h3>
+    <p>There's a shortcut nowadays.  Marco Baringer made a UCW candybox
+    with all the dependencies boxed up and ready to fire. At the moment
+    it's quite experimental, but if it doesn't work at least you've got all
+    the dependencies in one go. Try:</p>
+    <p>wget <a href='http://common-lisp.net/project/ucw/ucw-boxset.tar.gz'>http://common-lisp.net/project/ucw/ucw-boxset.tar.gz</a>
+    tar -zxf ucw-boxset.tar.gz
+    cd ucw-boxset
+    YOURLISPHERE (-)-load start.lisp</p>
+    <p>This will start UCW with the built in httpd server backend. But if you
+    want to get the dependencies seperately or want a different initial setup,
+    read and get some of the following:</p>
+    <h3>The (old and boring) hard way</h3>
+    <p>To get _dev or _public, install Darcs on your computer and execute:</p>
+    <pre>
+darcs get http://common-lisp.net/project/ucw/repos/ucw_dev
+    </pre>
+    <p>or</p>
+    <pre>
+darcs get http://common-lisp.net/project/ucw/repos/ucw_public
+    </pre>
+    <p>Daily snapshots for ucw_dev are available at
+    <a href='http://common-lisp.net/project/ucw/tarballs/ucw_dev-latest.tar.gz'>http://common-lisp.net/project/ucw/tarballs/ucw_dev-latest.tar.gz</a></p>
+    <p>Daily snapshots for ucw_public are available at
+    <a href='http://common-lisp.net/project/ucw/tarballs/ucw_public-latest.tar.gz'>http://common-lisp.net/project/ucw/tarballs/ucw_public-latest.tar.gz</a></p>
+    <p>Now it is time for the dependencies. A word of caution: ucw has it's own versions for a number of libraries so even if
+    you already have the latest version of some package, check this documentation or the readme supplied with the
+    sources. As a rule of thumb, get the latest of everything and the ucw version if supplied.</p>
+    <p>At the moment UCW requires the following
+    dependencies:</p>
+    <ul>
+      <li><a href='#implementation'>a lisp implementation - one of the following: sbcl, cmucl, allegro, lispworks, openmcl</a></li>
+      <li><a href='#arnesi'>arnesi - an all purpose lisp toolkit</a></li>
+      <li><a href='#yaclml'>yaclml - yet another common lisp markup language</a></li>
+      <li><a href='#parenscript'>parenscript - javascript in common-lisp</a></li>
+      <li><a href='#iterate'>iterate - a lispy loop</a></li>
+      <li><a href='#rfc2388'>rfc2388 - implements multipart/form specification</a></li>
+      <li><a href='#rfc2109'>rfc2109 - implements cookie specification</a></li>
+      <li><a href='#split-sequence'>split-sequence - splits sequences</a></li>
+      <li><a href='#slime'>slime - Superior Lisp Interaction Mode for Emacs</a></li>
+      <li><a href='#cl-ppcre'>cl-ppcre - regular expressions lib</a></li>
+      <li><a href='#trivial-sockets'>trivial-sockets - handles stream sockets for undemanding network applications</a></li>
+      <li><a href='#puri'>net.uri or PURI - parses URI's according to the RFC 2396 specification</a></li>
+      <li><a href='#cl-fad'>cl-fad - a portable pathname library based on code from PCL</a></li>
+      <li><a href='#cl-launch'>cl-launch - invokes lisp code from the command line</a></li>
+      <li><a href='#detachtty'>detachtty - a screen-like detachment tool to be able to detach and reattach the lisp server from and to a console</a></li>
+      <li><a href='#backend'>a server backend - be it mod_lisp (apache 1 or 2), araneida, allegroserve, portable aserve or the built in httpd server</a></li>
+      <li><a href='#asdf'>asdf - a package loader facility</a></li>
+    </ul>
+    <p>A note on compatibility: Some configurations of implementation and server work better than others. Just report your bugs in the
+    <a href='http://common-lisp.net/cgi-bin/mailman/listinfo/bese-devel'>mailinglist</a>, the list is quite responsive. As a pointer, an
+    implementation/server-pair of sbcl or openmcl and mod_lisp seem too see the heaviest testing. The built-in httpd server also works well but
+    isn't fit for production use.</p>
+    <p><span id='implementation'></span></p>
+    <h4>Implementation.</h4>
+    <p>Pick one in the list above.</p>
+    <h4>Debian</h4>
+    <p>Someone from Debian (Luca Capello) is working hard to to support ucw out of the box, but he is not quite there yet. Keep an eye on the
+    cl-debian mailing list
+    (<a href='http://common-lisp.net/pipermail/cl-debian/2006-March/001113.html'>UCW status, seeing the light at the end of the tunnel</a>) for the latest developments.</p>
+    <p><span id='arnesi'></span></p>
+    <h4>Dependencies</h4>
+    <h5>arnesi</h5>
+    <p>Arnesi is a Common Lisp utility suite. It contains various "bits 'n 
+    pieces" of code which were useful while developing other code. It can
+    be found on <a href='http://common-lisp.net/project/bese/arnesi.html'>http://common-lisp.net/project/bese/arnesi.html</a>.</p>
+    <p>You will need the latest version:</p>
+    <pre>
+darcs get http://common-lisp.net/project/bese/repos/arnesi_dev/
+    </pre>
+    <p>Daily snapshots are available at
+    <a href='http://common-lisp.net/project/bese/tarballs/arnesi_dev-latest.tar.gz'>http://common-lisp.net/project/bese/tarballs/arnesi_dev-latest.tar.gz</a></p>
+    <p><span id='yaclml'></span></p>
+    <h5>yaclml</h5>
+    <p>yaclml is a collection of macros and utilities for generating XML/HTML
+    like markup from lisp code. It can be found on
+    <a href='http://common-lisp.net/project/bese/yaclml.html'>http://common-lisp.net/project/bese/yaclml.html</a>. </p>
+    <p>You will need the latest version:</p>
+    <pre>
+darcs get http://common-lisp.net/project/bese/repos/yaclml/
+    </pre>
+    <p>Daily snapshots are available at: <a href='http://common-lisp.net/project/bese/tarballs/yaclml-latest.tar.gz'>http://common-lisp.net/project/bese/tarballs/yaclml-latest.tar.gz</a></p>
+    <p><span id='parenscript'></span></p>
+    <h5>parenscript - ucw version</h5>
+    <p>Parenscript is a javascript compiler. You will need to get the latest development version:</p>
+    <pre>
+darcs get http://common-lisp.net/project/ucw/repos/parenscript/
+    </pre>
+    <p>Daily snapshots are available at: <a href='http://common-lisp.net/project/ucw/tarballs/parenscript-latest.tar.gz'>http://common-lisp.net/project/ucw/tarballs/parenscript-latest.tar.gz</a></p>
+    <p><span id='iterate'></span></p>
+    <h5>iterate</h5>
+    <p>Iterate is an iteration construct for Common Lisp. It can be found on</p>
+    <a href='http://common-lisp.net/project/iterate/'>http://common-lisp.net/project/iterate/</a>
+    <p>Download link: <a href='http://common-lisp.net/project/iterate/releases/iterate-current.tar.gz'>http://common-lisp.net/project/iterate/releases/iterate-current.tar.gz</a></p>
+    <p><span id='rfc2388'></span></p>
+    <h5>rfc2388 - ucw version</h5>
+    <p>Rfc2388 is a lisp implemantation of RFC 2388, which is used to process form
+    data posted with HTTP POST method using enctype "multipart/form-data".</p>
+    <p>UCW uses its own fork of rfc2388. You can get the latest code from the
+    darcs repository located at
+    <a href='http://common-lisp.net/project/ucw/repos/rfc2388'>http://common-lisp.net/project/ucw/repos/rfc2388</a>:</p>
+    <pre>
+darcs get http://common-lisp.net/project/ucw/repos/rfc2388/
+    </pre>
+    <p>Daily snapshots are available at <a href='http://common-lisp.net/project/ucw/tarballs/rfc2388-latest.tar.gz'>http://common-lisp.net/project/ucw/tarballs/rfc2388-latest.tar.gz</a></p>
+    <p><span id='rfc2109'></span></p>
+    <h5>rfc2109 - ucw version</h5>
+    <p>Rfc2109 is the lisp implementation of the cookie protocol. You can get
+    it at:
+    <a href='http://common-lisp.net/project/rfc2109'>http://common-lisp.net/project/rfc2109/</a>:</p>
+    <pre>
+darcs get http://common-lisp.net/project/rfc2109/rfc2109
+    </pre>
+    <p>Daily snapshots are available at
+    <a href='http://www.common-lisp.net/project/rfc2109/release/rfc2109-latest.tar.gz '>http://www.common-lisp.net/project/rfc2109/release/rfc2109-latest.tar.gz </a></p>
+    <p><span id='split-sequence'></span></p>
+    <h5>split-sequence</h5>
+    <p>splits sequences</p>
+    <p>info: <a href='http://www.cliki.net/SPLIT-SEQUENCE'>http://www.cliki.net/SPLIT-SEQUENCE</a></p>
+    <p>download: <a href='http://ww.telent.net/cclan/split-sequence.tar.gz'>http://ww.telent.net/cclan/split-sequence.tar.gz</a>
+    (you might have to select a mirror first)</p>
+    <p>If said link is dead, go to <a href='http://ww.telent.net/cclan-choose-mirror'>http://ww.telent.net/cclan-choose-mirror</a>
+    to delete your CCLAN-SITE cookie and choose another mirror. At least some of them are definitely working. </p>
+    <p><span id='slime'></span></p>
+    <h5>SLIME</h5>
+    <p>The Superior Lisp Interaction Mode for Emacs.</p>
+    <p>Download and install the latest CVS version of SLIME from
+    <a href='http://common-lisp.net/project/slime'>http://common-lisp.net/project/slime</a>.</p>
+    <p>To checkout from CVS you must first login to the repository:</p>
+    <pre>
+export CVSROOT=:pserver:anonymous@common-lisp.net:/project/slime/cvsroot
+cvs login
+    </pre>
+    <p>Enter anonymous when prompted for the password. You can then check out the latest version with:</p>
+    <pre>
+cvs checkout slime
+    </pre>
+    <p>It's swank you want to add to your asd systems dir. To solve a current problem
+    with cl-launch you might want to overwrite your swank.asd file with this one:</p>
+    <a href='http://cl-debian.alioth.debian.org/repository/pvaneynd/slime/debian/swank.asd'>http://cl-debian.alioth.debian.org/repository/pvaneynd/slime/debian/swank.asd</a>
+    <p>Check the description on cl-launch to see why.</p>
+    <p><span id='cl-ppcre'></span></p>
+    <h5>cl-ppcre</h5>
+    <p>Edi Weitz's regular expression library:  <a href='http://www.weitz.de/cl-ppcre/'>http://www.weitz.de/cl-ppcre/</a>.</p>
+    <p>Download the latest version: <a href='http://weitz.de/files/cl-ppcre.tar.gz'>http://weitz.de/files/cl-ppcre.tar.gz</a></p>
+    <p><span id='trivial-sockets'></span></p>
+    <h5>trivial-sockets</h5>
+    <p>Networking library to create small server applications. Download the latest version from:
+    <a href='http://ww.telent.net/cclan/trivial-sockets.tar.gz'>http://ww.telent.net/cclan/trivial-sockets.tar.gz</a>
+    (you might have to select a mirror first.</p>
+    <p>If said link is dead, go to <a href='http://ww.telent.net/cclan-choose-mirror'>http://ww.telent.net/cclan-choose-mirror</a>
+    to delete your CCLAN-SITE cookie and choose another mirror. At least some of them are definitely working. </p>
+    <p>Or use asdf install.</p>
+    <p><span id='puri'></span></p>
+    <h5>net.uri/PURI</h5>
+    <p>All of the backends (except araneida) depend on Franz's open-source
+    net.uri library. It only works on Allegro but Kevin Rosenberg has made a portable version called PURI.</p>
+    <p>For allegro users, NET.URI can be downloaded from here (it may be included in your
+    version of acl):
+    <a href='http://opensource.franz.com/uri/index.html'>http://opensource.franz.com/uri/index.html</a> </p>
+    <p>If you're not using allegro you'll need puri which can be
+    downloaded from <a href='http://puri.b9.com/download.html'>http://puri.b9.com/download.html</a></p>
+    <p><span id='cl-fad'></span></p>
+    <h5>cl-fad</h5>
+    <p>A portable pathname library based on code from Peter Seibels book Practical Common Lisp. </p>
+    <p>info: <a href='http://www.cliki.net/CL-FAD'>http://www.cliki.net/CL-FAD</a></p>
+    <p>download: <a href='http://weitz.de/files/cl-fad.tar.gz'>http://weitz.de/files/cl-fad.tar.gz</a></p>
+    <p><span id='cl-launch'></span></p>
+    <h5>cl-launch</h5>
+    <p>A bash script to make your Lisp software easily invokable from the shell command-line.</p>
+    <p>info: <a href='http://www.cliki.net/cl-launch'>http://www.cliki.net/cl-launch</a></p>
+    <p>download page: <a href='http://fare.tunes.org/files/cl-launch/'>http://fare.tunes.org/files/cl-launch/</a></p>
+    <p>Download and add to your shell executable search path so ucw can find it while loading. Cl-launch can either be called cl-launch or
+    cl-launch.sh, ucw will check for both. Also cl-launch depends on swank behavior other than that of the current cvs code, at least under sbcl, eg via swank-loader it looks for files under the load path, which is not what you want if you made a symbolic link to another dir. The easiest way to get around this problem is to overwrite your swank.asd file (in the slime directory root), with this one:</p>
+    <a href='http://cl-debian.alioth.debian.org/repository/pvaneynd/slime/debian/swank.asd'>http://cl-debian.alioth.debian.org/repository/pvaneynd/slime/debian/swank.asd</a>
+    <p>The downside might be that swank won't work anymore as it should, although i haven't heard anyone about this yet. Another approach is to copy your swank*.fasls from the slime directory to the relevant shadow directory under ~/.cache/...</p>
+    <p>Check this thread for more info:</p>
+    <a href='http://common-lisp.net/pipermail/slime-devel/2006-March/004664.html'>http://common-lisp.net/pipermail/slime-devel/2006-March/004664.html</a>
+    <p>Yes, ucw is bleeding edge ;)</p>
+    <p><span id='detachtty'></span></p>
+    <h5>detachtty - ucw version</h5>
+    <p>A screen-like detachment tool to be able to detach and re-attach the lisp server from and to a console. 
+    Ucw uses a custom detachtty version, e.g. detachtty-9 plus a patch by Kevin Rosenberg. It accepts an eval argument when
+    invoking a lisp, with obvious benefits. Get it through Darcs:</p>
+    <pre>
+darcs get http://common-lisp.net/project/bese/repos/detachtty/
+    </pre>
+    <p>Go to the directory root and compile and install:</p>
+    <pre>
+make
+make install
+    </pre>
+    <p><span id='backend'></span></p>
+    <h4>the backend</h4>
+    <p>Ucw supports all the popular lisp backends. Whichever floats your boat. If you've got no clue which to choose I'd advice
+    to go for mod_lisp. It works well with other languages, you get the benefit of apaches options and extras and all it does
+    is pump the code straight to ucw so there's no trouble with quirks in the intermediate layer. Apache requires some work
+    to function correctly, read the text below. The other backends should work out of the box, as long as they're recognized by
+    asdf. aserve as well as portable aserve are in the package systems of gentoo and debian. Gentoo also supports mod_lisp
+    and mod_lisp2 for apache and araneida. Read <a href='http://bc.tech.coop/blog/051219.html'>this blog post</a> by
+    Bill Clementson to form a more balanced opinion.</p>
+    <h5>mod_lisp/mod_lisp2 for apache</h5>
+    <p>You can choose between apache 1 and 2. First of course you have to have a Apache web
+    server up and runnnig; then you have to add the mod-lisp module by Marc
+    Battyani which you find at <a href='http://www.fractalconcept.com/asp/html/mod_lisp.html'>http://www.fractalconcept.com/asp/html/mod_lisp.html</a></p>
+    <p>First download the mod_lisp c file. Watch out, don't follow the logic of the website. Except for the windows version the
+    info is outdated concerning the apache 1 version and info about apache 2 is non-existent. Go to subversion from the
+    download page or click the links below:</p>
+    <ul>
+      <li>apache 1 .c file -
+      <a href='http://www.fractalconcept.com:8000/public/open-source/mod_lisp/mod_lisp.c'>mod_lisp.c</a></li>
+      <li>apache 1 binaries for windows - there is a link on the site for version 2.32 but it leads to nowhere</li>
+      <li>apache 2 .c file - <a href='http://www.fractalconcept.com:8000/public/open-source/mod_lisp/mod_lisp2.c'>mod_lisp2.c</a></li>
+      <li>apache 2 windows binary -
+      <a href='http://www.fractalconcept.com:8000/public/open-source/mod_lisp/windows/mod_lisp2.zip'>mod_lisp2.zip</a></li>
+    </ul>
+    <p>As stated in the intro, if you want to use ucw on a windows machine you're on your own. I have got no experience or information.</p>
+    <p>If you went for the c module on a unix clone, use the command.</p>
+    <pre>
+apxs -i -c mod_lisp.c
+    </pre>
+    <p>or</p>
+    <pre>
+apxs2 -i -c mod_lisp2.c
+    </pre>
+    <p>for respectively apache 1 or 2. This will install the module in the appropriate apache directory. Debian users using apt-get should get one
+    of the apache dev versions to get apxs(2) installed. Then add the following lines to 'httpd.conf' or other relevant configure file in your
+    apache configuration directory for both apache 1 and 2. Just be sure to change mod_lisp.so to mod_lisp2.so for apache 2.</p>
+    <pre>
+LoadModule lisp_module /path/to/modules/directory/mod_lisp.so
+    </pre>
+    <pre>
+LispServer 127.0.0.1 3001 ucw
+    </pre>
+    <pre>
+&lt;LocationMatch "/path/.*\.ucw"&gt;
+               SetHandler lisp-handler
+&lt;/LocationMatch&gt;
+    </pre>
+    <p>This means that ucw INTERNALLY talks to apache on port 3001 at the internet address 127.0.0.1 (so in this case your
+    localhost). The locationmatch part redirects all traffic from (in this case) 127.0.0.1 with prefix "/path/" and files ending
+    on .ucw to ucw. So http://127.0.0.1/path/something.ucw as well as
+    http://127.0.0.1/path/anotherpath/somethingelse.ucw will be redirected, but not http://127.0.0.1/somethingfaulty.ucw or
+    http://127.0.0.1/path/somethingfaulty.html .</p>
+    <h5>allegroserve or portableaserve</h5>
+    <p>Should you want to use the aserve backend you will need to download
+    and install either the AllegroServe if you use acl or portableaserve for any other. AllegroServe doesn't seem to have an
+    asdf file, you're going to have to load it manually or however AllegroServe handles it's own files. Portableaserve does however.</p>
+    <p>AllegroServe can be downloaded from here (it may be included in
+    your version of acl): <a href='http://opensource.franz.com/aserve/'>http://opensource.franz.com/aserve/</a></p>
+    <p>portableaserve is hosted on sourceforge: <a href='http://portableaserve.sf.net'>http://portableaserve.sf.net</a></p>
+    <p>portableaserve download: <a href='http://constantly.at/lisp/aserve.tar.gz'>http://constantly.at/lisp/aserve.tar.gz</a></p>
+    <p>To use portableaserve you'll also need the Allegro Common Lisp compatibility package (acl-compat). It's part of
+    portableaserve and so it's home is also the before-mentioned sourceforge site.</p>
+    <p>acl-compat download: <a href='http://constantly.at/lisp/acl-compat.tar.gz'>http://constantly.at/lisp/acl-compat.tar.gz</a></p>
+    <h5>araneida</h5>
+    <p>Should you want to use the araneida backend you will need to download araneida. Get the latest version just to be on the
+    safe side. Originally araneida was meant to live behind apache and it can of course still be configured as
+    such. Explaining this is beyond the scope of this document but have a look at this
+    <a href='http://www.accela.net/~dankna/guide.html'>site</a> for more info.</p>
+    <p>info: <a href='http://www.cliki.net/Araneida'>http://www.cliki.net/Araneida</a>}</p>
+    <p>download: <a href='http://common-lisp.net/project/araneida/release/araneida-latest.tar.gz'>http://common-lisp.net/project/araneida/release/araneida-latest.tar.gz</a></p>
+    <p>or use darcs, although the connection seems a bit slow:</p>
+    <pre>
+darcs get http://verisons.telent.net/araneida/
+    </pre>
+    <h5>httpd</h5>
+    <p>Ucw's in-house server. It's a simple server bundled with ucw. Nice for testing.</p>
+    <p><span id='asdf'></span></p>
+    <h3>asdf</h3>
+    <p>To download it or read up on it go to  <a href='http://cliki.net/ASDF'>http://cliki.net/ASDF</a></p>
+    <p>Asdf makes sure common lisp packages and the files in those packages get loaded in the correct order. I would
+    suggest you read the manual at
+    <a href='http://constantly.at/lisp/asdf/'>http://constantly.at/lisp/asdf/</a>. Really the first
+    <a href='http://constantly.at/lisp/asdf/Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20system'>link</a>
+    is all you need to know right now.</p>
+    <p>Basically every lisp package you downloaded so far has defined an .asd file. Usually in the root of the directory. This
+    file has to appear in the search path of asdf, which is a list of directories defined by the special variable
+    asdf:*central-registry*. The directories are typically called "systems". Under a unix clone, make a symbolic link to a systems dir
+    as described in the document or as shown below. If a package defines
+    more than one .asd file, just shove the whole dir on the *central-registry*, again as described in the document or as shown below.</p>
+    <p>For example: on some linux installations the directory /usr/share/common-lisp/systems is in the list of asdf:*central-registry*.
+    Now create a symlink from a particular .asd file to
+    /usr/share/common-lisp/systems :</p>
+    <pre>
+ln -s /path/to/library/lib.asd /usr/share/common-lisp/systems
+    </pre>
+    <p>To shove a whole directory on the *central-registry* do the following in your lisp startup file or in the repl:</p>
+    <pre>
+(push #P"/path/to/asd/files/" asdf:*central-registry*)
+    </pre>
+    <p>All the required packages need to be recognized by asdf if you don't want to load every file by yourself.</p>
+    <p><span id='extra'></span></p>
+    <h2>Add-ons</h2>
+    <p>Ucw also provides some packages which are kept out of the core so as not to bloat the program. Well two to be exact: the ucw presentations package and the ucw forms package.</p>
+    <h5>presentations</h5>
+    <p>An advanced CRUD interface for UCW.</p>
+    <pre>
+darcs get http://common-lisp.net/project/ucw/repos/ucw-presentations
+    </pre>
+    <h5>forms</h5>
+    <p>A more advanced HTML form toolkit for ucw than the one that is used in the core package, uses yaclml and dojo.</p>
+    <pre>
+darcs get http://common-lisp.net/project/repos/ucw-forms
+    </pre>
+    <p><span id='testing'></span></p>
+    <h2>Testing/Quickstart (for the non-boxset way)</h2>
+    <p>When you have set up all your dependencies correctly, you can test ucw by first creating the directory /etc/ucw/applications.d, firing up your favorite distribution and:</p>
+    <pre>
+(load "/path/to/ucw/etc/start.lisp")
+    </pre>
+    <p>If all went well, you have started ucw with the httpd backend. Surf to
+    <a href='http://127.0.0.1:8080'>http://127.0.0.1:8080</a> and again if all went well you should see the example page. That's it! Start hacking!!</p>
+    <p><span id='configure'></span></p>
+    <h2>Configuration</h2>
+    <p>At the moment the methods to configure and start ucw are a bit under development. But things seem to be stabling out. The elegant production compliant way of starting ucw is by launching ucwctl, found in /path/to/ucw/bin/ucwctl. This will start your lisp as a deamon. To let ucw find the proper configuration files, copy the files under /path/to/ucw/etc/ to either /your/home/.ucw or /etc/ucw.</p>
+    <p>Ucwctl depends on cl-launch, to which a number of ucwtl's configure options are passed. It provides a suite of launch options to invoke lisp from the command-line. Be sure to put a link to cl-launch somewhere in your application search path. For general cl-launch understanding, read the cl-launch documentation.</p>
+    <p>It's of course convenient to put ucwctl in the *nix executable search path but contrary to cl-launch it is not mandatory. Here's the configuration part of the ucwctl help output; -a, -c, -l, -k, -s and -t are passed to cl-launch:</p>
+    <pre>
+-a, --asdf-root DIRECTORY   Register asdf search DIRECTORY
+-c, --config-file FILE      Read FILE as config file.
+-h, --help                  Display this help and exit.
+-k, --stop-file FILE        Use FILE as stop file.
+-l, --lisp NAME             Use NAME (without PATH) as Common Lisp
+                            implementation.
+    --log-root DIRECTORY    Save the logs in DIRECTORY, overriding the
+                            --var-root option.
+    --run-root DIRECTORY    Created pid/socket in DIRECTORY, overriding the
+                            --var-root option.
+-s, --start-file FILE       Use FILE as start file.
+-t, --timeout SECONDS       Set timeout in SECONDS when trying to stop a
+                            a running session.
+-u, --ucwctl-file FILE      Read FILE as the ucwctl.conf file.
+    --var-root DIRECTORY    Save the logs in DIRECTORU/log/ucw and create
+                            pid/socket in DIRECTORY/run/ucw, if the two
+                            options --log-root and --run-root are not set.
+    </pre>
+    <p>In /path/to/configdir/ucwctl.conf default values are provided except for the lisp implementation and the .asd directory. So at the least you'd want to change them to point to the proper lisp and dir, or just specify those on the commandline. If you want to specify different paths for --log-root and --run-root in your config file, add LOGROOT=/path/to/log-root and RUNROOT=/path/to/run-root, leaving VARROOT empty.  If you run ucwctl as user and didn't change ucwctl or supplied different paths for log-root and run-root (which default to paths under /var) on the commandline, they will default to paths under /your/home/dir/var. You can also specify a different ucwctl.conf file instead of /path/to/config-dir.</p>
+    <p>To be clear this is the hierarchy of where ucwctl will pick its configuration from. Higher up the list will be chosen over lower on the list:</p>
+    <p>1) command line options 
+    <br>
+    
+    2) -u|--ucwctl-file (if specified, exit if it cannot be read) 
+    <br>
+    
+    3) ~/.ucw/ucwctl.conf (if it exists) 
+    <br>
+    
+    4) /etc/ucw/ucwctl.conf (if it exists)</p>
+    <p>A deeper discussion is available at:</p>
+    <p>http://common-lisp.net/pipermail/bese-devel/2006-April/001932.html 
+    <br>
+    
+    http://common-lisp.net/pipermail/bese-devel/2006-April/001961.html 
+    <br>
+    </p>
+    <p>Now you can start ucw by invoking:</p>
+    <pre>
+ucwctl start
+    </pre>
+    <p>Without having configured anything (in /path/to/conf.lisp) this will start ucw with the built-in httpd server, just as with cl-launch. But
+    now you have log files and more importantly you are not tied to a particular console. Point your browser at
+    <a href='http://127.0.0.1:8080/'>http://127.0.0.1:8080/</a> and hope for the best. Hook up slime through port 4005 if you also actually want to code something.</p>
+    <p>To stop ucw type:</p>
+    <pre>
+ucwctl stop
+    </pre>
+    <p>To attach to a running ucw server type:</p>
+    <pre>
+ucwctl attach
+    </pre>
+    <p>This calls attachtty, installed alongside detachtty, and passes attachy the socket, the path of which is defined in the ucwctl startup script. De-attach attachtty by giving it a sighup signal, eg by closing your terminal window or by pressing ctl-\. Note that you should be a bit careful when you attach to a socket and you start typing away at the repl. By default cl-launch will terminate the running process when the debugger is invoked. This behavior is changeable; check the cl-launch script (or not, someone on the mailing-list pointed out a bug).</p>
+    <p>To test if ucw works with your chosen backend open /path/to/conf.lisp (to be found in /etc/ucw/conf.lisp if you copied it from
+    /path/to/ucw_dev/bin/etc/) and change:</p>
+    <pre>
+(setf *ucw-backend-type* ':httpd)
+(setf *ucw-backend-host* "127.0.0.1")
+(setf *ucw-backend-port* 8080)
+    </pre>
+    <p>to:</p>
+    <pre>
+(setf *ucw-backend-type* ':mod-lisp)
+(setf *ucw-backend-host* "127.0.0.1")
+(setf *ucw-backend-port* 3001)
+    </pre>
+    <p>or to:</p>
+    <pre>
+(setf *ucw-backend-type* ':araneida)
+(setf *ucw-backend-host* "127.0.0.1")
+(setf *ucw-backend-port* 8080)
+    </pre>
+    <p>or to:</p>
+    <pre>
+(setf *ucw-backend-type* ':aserve)
+(setf *ucw-backend-host* "127.0.0.1")
+(setf *ucw-backend-port* 8080)
+    </pre>
+    <p>Repeat your chosen startup procedure for ucwctl with th note that if you use mod_lisp you have
+    to point your browser at
+    <a href='http://127.0.0.1/index.ucw'>http://127.0.0.1/path/you/specified/in/apache/this/link/goes/to/the/root/index.ucw</a>, without
+    the 8080 (defaults to the server root here).</p>
+    <p>note also that the default conf.lisp configuration defaults to the configuration in /path/to/ucw_dev/src/default.lisp which is the default
+    configuration ;-) So if you don't change anything in conf.lisp you might just as well omit it. </p>
+    <p>The variables in conf.lisp that we didn't cover yet are:</p>
+    <pre>
+(setf *ucw-swank-port* 4005)
+    </pre>
+    <p>- used to connect to emacs, et al.</p>
+    <pre>
+(setf *ucw-server-class* 'standard-server)
+    </pre>
+    <p>- leave as is. I'm not even sure if there is a non-standard server we should be interested in.</p>
+    <pre>
+(setf *ucw-inspector* t)
+    </pre>
+    <p>- let's you inspect ucw inside the html pages you made when set to t. Seeing is believing. Set to nil to see the page as normal.</p>
+    <pre>
+(setf *ucw-debugger* t)
+    </pre>
+    <p>- sends debugging html to the client when set to t. Seeing is believing. Set to nil to not send debugging info to the client and to invoke the debugger in your editor.</p>
+    <pre>
+(setf *ucw-log-level* '+INFO+)
+    </pre>
+    <p>- Sets the log-level threshold for the information that will be logged by the base ucw logger and which will be pumped to the ucw.log
+      file. these are the log levels to choose from, together with their value:</p>
+    <p>+dribble+ = 0
+    <br>
+    
+    +debug+  = 1
+    <br>
+    
+    +info+   = 2
+    <br>
+    
+    +warn+   = 3
+    <br>
+    
+    +error+  = 4
+    <br>
+    
+    +fatal+  = 5</p>
+    <p>So in our example debug info and dribble will not be logged to ucw.log.</p>
+    <pre>
+(setf *ucw-applications-directory* "/etc/ucw/applications.d/")
+    </pre>
+    <p>- sets the applications directory, see next chapter</p>
+    <pre>
+(setf *ucw-systems* '(:ucw.admin :ucw.examples))
+(setf *ucw-applications* '(it.bese.ucw::*admin-application*
+	   		       it.bese.ucw-user::*example-application*))
+    </pre>
+    <p>- supply ucw applications to load. See next chapter.</p>
+    <p><span id='environment'></span></p>
+    <h2>Setting up the environment (and a hello world on the side)</h2>
+    <p>Note that this procedure is not strict necessary, you could just fiddle around in ucw-user, but you will want to have
+    your own proper environment sooner or later. To get the best of both worlds (being lazy and having a proper set up
+    environment), just download the <a href='ucw-intro_source.tar'>code</a> we're going to create below (mod_lisp
+    users, check the www-dir stuff below for a correct setup). For the less lazy, create a directory where you want
+    to keep your application code. (halfway ripped from the cliki tutorial. thanks ;-)).</p>
+    <p>Create an asdf file called ucw-intro.asd will contain:</p>
+    <pre>
+(defpackage :ucw.intro.system
+  (:use :cl :asdf))
+    </pre>
+    <pre>
+(in-package :ucw.intro.system)
+    </pre>
+    <pre>
+(defsystem ucw-intro
+  :version "0.0.0.0.1"
+  :depends-on (:ucw)
+  :author "a lonely clown"
+  :components ((:file "packages")
+               (:file "config"      :depends-on ("packages"))
+               (:file "hello-world" :depends-on ("config"))))
+    </pre>
+    <p>and a package file called packages.lisp:</p>
+    <pre>
+(in-package :cl-user)
+    </pre>
+    <pre>
+(defpackage :ucw-intro
+  (:use :common-lisp
+        :it.bese.ucw
+        :it.bese.arnesi
+        :it.bese.yaclml))       
+    </pre>
+    <p>make a symlink from your asd file to the applications.d dir you defined in the last chapter.</p>
+    <p>Important:  when ucw loads it checks this directory for .asd files of your ucw applications. To let them load
+    correctly you have to synchronize four names in your applications with standard pre- and suffixes:
+    
+    <ul>
+      <li>the name of your applications asd file: name.asd (in this case ucw-intro.asd)</li>
+      <li>the name of your applications package: :name (in this case :ucw-intro)</li>
+      <li>the name of your application: *name-application* (in this case *ucw-intro-application*, see below in the ucw-intro.lisp code)</li>
+      <li>the asdf system name of your package as defined with defsystem: :name (in this case :ucw-intro)</li>
+    </ul>
+    </p>
+    <p>This procedure might be streamlined in the future, but for now we have to deal with it.</p>
+    <p>There is also an alternative way of loading your applications when loading ucw. In  /etc/ucw/conf.lisp (or where-ever you decided
+    to put the file), push the name of your applications asd system name on *ucw-systems* and push it's application name (see below in the
+    ucw-intro.lisp code), on *ucw-applications* like it's done for the ucws example applications:</p>
+    <pre>
+(defvar *ucw-systems* '(:ucw.admin :ucw.examples))
+(defvar *ucw-applications* '(it.bese.ucw::*admin-application*
+	    		         it.bese.ucw-user::*example-application*))
+    </pre>
+    <p>If you don't want them to load, take them away from both conf.lisp and /path/to/ucw_dev/src/default.lisp.</p>
+    <p>Just loading the three files we define(d) in this chapter while ucw is running will also register them correctly, no matter how we name the
+    before-mentioned names.</p>
+    <p>We also need a www root directory. This is the directory where we store static files for the http server to see: css and
+    javascript files, pictures and the like. Lisp servers handle the www directory a bit different than mod_lisp so we have
+    to make apt provisions. Lisp servers can themselves map a path from an incoming uri to the underlying directories on a
+    server. When we use mod_lisp we have to tell apache as well as lisp where to go.</p>
+    <p>When you use a lisp server backend, just create a directory in the tutorial root and call it www if you
+    want to be in sync with this tutorial. With mod_lisp make a link from a directory somewhere in the apache www tree and in range of
+    the mod_lisp search path as explained in the installation section. With apache 2 a typical path would be
+    /var/www/locahost/htdocs/. The apache 1 www root normally also lies somewhere within that vicinity.</p>
+    <pre>
+ln -s /path/to/ucw-intro/www var/www/localhost/htdocs/ucw-intro
+    </pre>
+    <p>Or link the other way around. </p>
+    <p>Now we create two new file in our example application root called ucw-intro.lisp and config.lisp. config.lisp:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defvar *www-root*
+  (merge-pathnames
+   (make-pathname :directory '(:relative "www"))
+   (asdf:component-pathname (asdf:find-system :ucw-intro))))
+    </pre>
+    <pre>
+(defparameter *ucw-intro-application*
+  (make-instance 'cookie-session-application
+                 :url-prefix "/ucw-intro/"
+                 :www-roots (list *www-root*)
+                 :dispatchers (list (make-instance 'ucw::action-dispatcher)
+                                    ;; hello world
+                                    (url-dispatcher "hello-world.ucw"
+                                      (call 'hello-world)))
+                 :debug-on-error t))
+    </pre>
+    <p>hello-world.lisp:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defcomponent hello-world (simple-window-component) ()
+              (:default-initargs :title "hi"
+              :stylesheet '("stylesheet.css" "stylesheet2.css")
+              :content-type "text/html; charset=utf-8;"
+              :javascript '((:src "dojo.js")
+                            (:js (dojo.require "dojo.event.*"))
+                            (:script "var foo = 3;")))
+;;            (:entry-point "hello-world.ucw" (:application *ucw-intro-application* :class url-dispatcher))
+              (:render () (&lt;:as-html "hello world")))
+    </pre>
+    <p>Load the files into your image and surf to http://127.0.0.1(:8080)/ucw-intro/hello-world.ucw, cross your fingers... and... now you've printed "hello world"! (If the heavens are willing).</p>
+    <p>In the next chapter we will see what applications actually are, and  we will examine the contents of ucw-intro.lisp. Also we will discuss
+    the mechanics of ucw. Actually the next chapter is the most important chapter of this intro. Finally the foreplay is
+    over.</p>
+    <p><span id='mechanics'></span></p>
+    <h2>Basic ucw mechanics</h2>
+    <p>In the course of this chapter we will take a flight through website-making history. We begin with traditional website-making
+    techniques and we will quickly work our way up. In the process you
+    can't help but be introduced to the basic building blocks of a ucw program: components, actions, entry-points, applications and
+    render methods. <a href='ucw-intro_source.tar'>Ready made source</a> is available.</p>
+    <h4>Components, render methods, applications and entry points</h4>
+    <h5>Components</h5>
+    <p>Component have more than one role. First they act as your
+    basic storage unit. They are classes and you can define them in the same way, but they have added
+    functionality given through meta object protocol modifications. To explain these modifications we need some background
+    on the inner workings of ucw:  When ucw receives a http request it checks if the request is a part of user session
+    already in progress. If not it creates a new one. Such a session is made up of frames. Every new request makes a new
+    frame which is referenced by a random string. Every frame copies the values of relevant components and their slots from
+    the frame before, except of course when the values of a given class have changed. If a user wants to go back to a
+    previous page, the appropriate frame is looked up with the help of the identifier string (be it through get or a cookie),
+    and the original values are restored. So frames are the memory of a ucw session. Some of the modifications made to
+    components facilitate this process of getting and setting values in frames under the cover.</p>
+    <p>Components are also clothes-hangers for html output. You generate html by defining render methods on them. In the case of
+    our example the method renders (as you say) the simple-window-component hello-world, which is a pre-defined component to create an empty
+    canvas. You can nest render methods of other components, in which case you piece the data together to form a complete page. With this
+    information we can step through conf.lisp and hello-world.lisp from the last chapter:</p>
+    <p>config.lisp:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defvar *www-root*
+  (merge-pathnames
+   (make-pathname :directory '(:relative "www"))
+   (asdf:component-pathname (asdf:find-system :ucw-intro))))
+    </pre>
+    <pre>
+(defparameter *ucw-intro-application*
+  (make-instance 'cookie-session-application
+                 :url-prefix "/ucw-intro/"
+                 :www-roots (list *www-root*)
+                 :dispatchers (list (make-instance 'ucw::action-dispatcher)
+                                    ;; hello world
+                                    (url-dispatcher "hello-world.ucw"
+                                      (call 'hello-world)))
+                 :debug-on-error t))
+    </pre>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <p>hello-world.lisp:</p>
+    <pre>
+(defcomponent hello-world (simple-window-component) ()
+              (:default-initargs :title "hi"
+              :stylesheet '("stylesheet.css" "stylesheet2.css")
+              :content-type "text/html; charset=utf-8;"
+              :javascript '((:src "dojo.js")
+                            (:js (dojo.require "dojo.event.*"))
+                            (:script "var foo = 3;")))
+;;            (:entry-point "hello-world.ucw" (:application *ucw-intro-application* :class url-dispatcher))
+              (:render () (&lt;:as-html "hello world")))
+    </pre>
+    <h5>Applications</h5>
+    <p>First we define the filesystem directory which is going to function as www-root for static data such as images, style-sheets and
+    the like. We feed it to the definition of our
+    first application object. An application is an arbitrary conceptual construct with which you define a number of
+    options for a block of web-pages/site-logic. It lets you specify if you want to use cookies, what charset you want to use,
+    etc. A quick tour of the chosen options: In this instance we want to use cookies, which means that ucw starts searching
+    for certain cookie information after it has looked for information in other places. The url
+    prefix is the browser path relative to the server root. Www-roots is a list of pathnames the application searches to get
+    to static data relative to the the APPLICATION root. They are set relative to the
+    url-prefix, eg in this example from the outside the www-root of ucw-intro is 127.0.0.1/ucw-intro/. Debug-on-error will or will not throw you in the debugger when things go wrong in this application, depending on if it is set to t or nil. The dispatchers we will cover later on.</p>
+    <h5>defcomponent and render methods</h5>
+    <p>The simple-window-component class and the defmethod macro that defines it can together be seen as as a convenience layer which
+    constructs the underlying building blocks a standard application wants to have. In this section you will learn the
+    semantics of both and you will learn how to define the building blocks without them.</p>
+    <p>A simple-window-component sets up your basic html layout. You can feed a title, stylesheets, content-types, and
+    different ways to insert javascript to :default-initargs.  All of them accept a list as well as a
+    basic unit suitable for the keyword, although you probably don't want to pass a list to the title argument as that will just print a quoted
+    list. You can specify one or more javascript source files with the :src key, using :script lets you insert javascript as
+    is and :js lets you insert javascript in parenscript syntax. With this information it sets up a whole page, except for
+    the body. That's left for the render method.</p>
+    <p>Defcomponent defines components almost the same as defclass defines classes. :default-initargs, slots, etc... are simply passed
+    to the underlying defclass. But it has some extra options. You can supply a default backtrack function with :default-backtrack, you can supply a render method with :render, you can supply an entry-point with
+    :entry-point and you can supply an action with :action. More on those last two in the next section, and more on :default-backtrack in a future chapter.</p>
+    <p>As stated before, a render method is a regular method that specializes on a given component to output html. It is called when the program
+    decides when it's time to put together a page to show the user. More on program flow in the next section of this chapter. The
+    defcomponent macro passes the arguments from the :render form to a defmethod and let's it specialize on the name given
+    to defcomponent. If no name is given the name defaults to the name given to defclass. There are two standard ways to
+    output html in a render method. First you can use the &lt;:as-html (or &lt;:ah) macro and just type big slabs of html-escaped text or use &lt;:as-is (or &lt;:ai) to produce un-html-escaped text, but you know as well as I that lispers would rather be tortured for weeks by the US government than not lispify foreign syntax. Ucw uses yaclm for this, which is the in-house html markup lispifier. Html tag names start with &lt;:, attributes are keywords followed by their value. The standard html format that ucw spits out is xhtml 1 (eg html 4 but more strict). The whole of xhtml 1 is defined in yaclml and work has just started on svg tags. That's all there is to it.</p>
+    <p>Without defcomponent and simple-window-component you could have written the code like this:</p>
+    <pre>
+(defclass hello-world () ()
+  (:metaclass standard-component-class))
+    </pre>
+    <pre>
+(defentry-point "hello-world.ucw"
+  (:application *ucw-intro-application* :class url-dispatcher)
+  () (call 'hello-world))
+    </pre>
+    <pre>
+(defmethod render ((hello-world hello-world))
+  (&lt;:as-is "&lt;!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/transitional.dtd\"&gt;"
+	       #\Newline)
+  (&lt;:html
+   (&lt;:head
+    (&lt;:meta :http-equiv "Content-Type" :content "text/html; charset=utf-8;")
+    (&lt;:title (&lt;:as-html "hi"))
+    (&lt;:link :rel "stylesheet"
+            :href "stylesheet.css"
+            :type "text/css")
+    (&lt;:link :rel "stylesheet"
+            :href "stylesheet2.css"
+            :type "text/css")
+    (&lt;:script
+     ;; most browsers (firefox, safari and ie at least) really,
+     ;; really, really don't like empty script tags. The "" forces
+     ;; yaclml to generate a seperate closing tag.
+     :type "text/javascript" :src "dojo.js" "")
+    (&lt;:script :type "text/javascript" (&lt;:as-is (js:js* '(dojo.require "dojo.event.*"))))
+    (&lt;:script :type "text/javascript" (&lt;:as-is "var foo = 3;")))
+   (&lt;:body (&lt;:as-html "hello world"))))
+    </pre>
+    <p>What we have omitted in this example is giving the components extra slots. Declaring slots in components is like defining slots for regular
+    classes with two extra options which are :component and :backtrack. The former is for nesting components, the latter for backtracking values
+    in other frames. Both will be discussed in future chapters. </p>
+    <h5>Entry points, actions, forms and control flow</h5>
+    <p>You might have heard some fellow that touted ucw as being hard. Well,
+    this is the hard part. That is, to figure out how it ticks. But we don't need to know that right now. We just
+    need a working model of basic control mechanics.</p>
+    <p>First, to clear some confusion. You have already seen the :dispatchers part of cookie-session-application, the commented out :entry-point part of defcomponent and the commented out defentry-point. They all do the same thing. :entry-point and defenty-point are the old way of adding a new page to an application. The :dispatcher way centralizes things a bit and is intended to replace defentry-point. The old way was reintroduced as a macro to not break existing applications to much. In this tutorial :dispatchers is used as default in explanations with commented out defentry-points and :entry-point to show the alternative way.</p>
+    <p>When a user calls a ucw page for the first time, without being redirected by
+    another ucw page and without information by some ucw cookie that hasn't timed out yet, the machinery checks the last
+    form you just typed at the :dispathers part of your application constructor, in this case (call 'hello-world). It calls the component hello-world, which means it locks that component as being the main component to be rendered to the
+    user. Whenever ucw gets user input it makes a new frame and after the preliminaries are over, it calls the render method on the component
+    that's at that moment the main component and the page is served. The end part of the :dispathers thingy and so called actions handle the control flow of a ucw program between page calls. You can type any number of forms, which will be parsed as a body.</p>
+    <p>Btw, at the end part of defentry-points you have an empty form before the last one. We will turn to it later.</p>
+    <p>On the face of it that call to hello-world doesn't seem to do so much out of the ordinary, and that's the whole point. As you might know the
+    web poses some problems for standard program execution because web-pages slash your flow in pieces. Those pieces have to be pieced together
+    again somehow. It turns out that cps (continuation programming style) is quite handy for this purpose. Basically it means being able to
+    capture the state of your program anywhere you want in a function. You can call that function again whenever you want and how often you want
+    to pick up the execution of your program where you left off. Some languages have facilities built in to just capture a program state like that but lisp doesnt. You have
+    to transform the code to be able to do this. You could do this by hand if you're mad, but ucw has a cps transformer on board that does it for
+    you. This information might be a bit vague. If you want to read up on the subject i suggest you read
+    <a href='http://www.bookshelf.jp/texi/onlisp/onlisp_20.html'>chapter 20 of On Lisp</a>.</p>
+    <p>Now all of this transforming is done under the cover so you
+    won't have so much to do with cps transformation but there is actually also a practical purpose for
+    knowing this, and to explain that we need yet some more theory. A cps transformer must sort of understand the semantics of the code it's
+    working with so it needs a code walker to interpret for example if forms are macros or how to keep track of environment variables. Every
+    implementation obviously has one but language users don't have access to it. You have to roll your own and ucw did. But walking code ain't
+    as easy as it not sounds. Code walkers usually don't capture lisp perfectly and the ucw one is no exception. Usually stuff works out fine
+    but don't be surprised if your code doesn't do what it should at the end of a dispatcher in the :dispatchers list or inside an action. When you have to handle a
+    lot of code inside an action, try to delegate as much as possible to function calls, because functions outside an action are not subject to
+    these laws of an alternate lisp universe.</p>
+    <p>Just some more theory so you fully appreciate the example beneath. At some point a dispatcher should call a component with
+    (call ... , which initializes the component with initargs passed to it and the component is set as THE component for that frame. It is
+    rendered, perhaps together with sub-components it specifies to render in it's render method. As the user is presented with a page,
+    she/he gets her/his first chance to interact with the program through the usual mechanics: forms, links, buttons. The user clicks or writes
+    something and another request is inbound. The traditional (some whisper 'pre-ucw') way to handle a request is to check get and post values
+    and act on them. Ucw sports this facility. In our example the form before the call to hello-world is empty. In that form you could have
+    specified which parameters from the page you want to use. If you want to give the parameter a default value you can put parameter and
+    default between parenthesis. These values are now available for use in the forms you write after them.</p>
+    <p>But of course ucw has more tricks up it's sleeve. For some html tags ucw has it's own yaclml equivalent with extended functionality: a,
+    area, button, form, select, option, textarea and input. For convenience ucw gives the input attributes text, password and submit their own
+    tag. Furthermore ucw sports such outlandish tag-names as integer-range-select, month-day-select, render-component and script. These last
+    ones we will cover in a later chapter. All these tags become invocable macro-forms by putting &lt;ucw: in front of them. See the example.</p>
+    <p>The extra functionality comes from the extra keywords you can pass them: :action, :accessor, :reader and writer. The macro's can handle
+    one or more of these, depending on the macro, but the keywords are mutually exclusive. With the :action keyword you can specify an action
+    form which will be executed with the relevant parameters when the form returns. With :accessor you can specify a place. It's value is the
+    initial value of the specified tag. If the tag returns a value, the place will store it. :reader and :writer are used as a
+    team to provide more flexibility than :accessor does. If provided, the value of :reader is used as the initial value of
+    place. The value of writer should be a function which accepts one argument: the value returned by the tag.</p>
+    <p>Continuing our control flow we assume the user uses one of the before-mentioned ucw forms to once again bother the server with info. If the
+    user hasn't sparked off one of the ucw forms with one of those so-called actions attached to them, the current component stays in
+    place. When a new page is rendered, the render method will again specify on this component. When an action is called it can do a lot of
+    things but seen through this prism, the options split up in three: an action can execute code without ever calling a call to another component, it can somewhere along the line call another component or it can answer a component. When it never calls</p>
+    <pre>
+(call ...
+    </pre>
+    <p>or answer</p>
+    <pre>
+(answer ....
+    </pre>
+    <p>the component stays in place. When it calls another component, that component gets focus and ucw stores a continuation of where
+    that action got interrupted in that component. When an action answers, ucw restores the component that was in focus before it called the
+    component that just answered (heh). The continuation that was stored in that component is called with an optional value which is the value
+    that's returned by the call form. The action in which the call was made continues untill it either calls a component, answers a
+    component or ends, in which case the component connected to the action gets rendered.</p>
+    <p>'But how should i interpret dispatchers', you might wonder. Well dispatchers are called when ucw tries to figure out what to do with an incoming request. You specify what ucw should look at when you construct an application (or when you use a defentry-point. You can use them in conjunction.) First on your list should be an action-dispatcher, e.g.: (make-instance 'ucw::action-dispatcher). It will check if an action parameter is present in the url. If so it will try to look if it can match it against a relevant action and if it finds one it will execute it. Furthermore you should add a url-dispatcher or a regexp-dispatcher to the list for every page you want to use as an entry-point into you application. You specify url-dispatcher or regexp-dispatcher for plain url names or regular expressions relative to the application root, the string of the url or the regular expression and the set of forms you want it to execute, which should at some point at least call one component to render. Since the dispatchers (and entry-points) are the entry-points into your application they have no component to answer to. When the set of forms finishes it returns to the first form, and again, and again, e.g. they are in an infinite loop.</p>
+    <p>It's high noon for an example. Add these to the dispather list of your config.lisp file:</p>
+    <pre>
+;; basics
+(regexp-dispatcher "^(basics.ucw|)$"
+  (call 'basics))
+(regexp-dispatcher "^(get.ucw|)$"
+  (with-request-params ((cow "moo"))
+      (context.request *context*)
+    (let ((cow (concatenate 'string "mighty " cow)))
+      (call 'basics :cow cow))))
+    </pre>
+    <p>Add this to your ucw-intro.asd file:</p>
+    <pre>
+(:file "basics"      :depends-on ("config"))
+    </pre>
+    <p>And define the file basics.lisp like so:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defcomponent basics (simple-window-component)
+  ((cow :initarg :cow :accessor cow :initform "aspacia")
+   (pig :initarg :pig :accessor pig :initform "knorrie"))
+  (:default-initargs :title "hi")
+  (:render ()
+           (with-slots (cow pig)
+               basics
+             (&lt;:as-is "in the old days, to update the name of your lovely cow named &lt;b&gt;" #\Newline)
+             (&lt;:as-html cow)
+             (&lt;:as-is "&lt;/b&gt; you would update it like so: ")
+             (&lt;:form :action "get.ucw"
+                     :method "GET"
+                     (&lt;:text :name "cow")
+                     (&lt;:submit :value "name your cow"))
+             (&lt;:p (&lt;:a :href "get.ucw" "go to get without any value to get to the default value of the entry point"))
+             (&lt;:p
+              (&lt;:as-html "but we have left them behind. In the brave new world we will update the name of our lovely pig like: ")
+              (&lt;ucw:form :method "POST"
+                         :action (refresh-component basics)
+                         (&lt;ucw:text :accessor pig)
+                         (&lt;:submit :value "name your pig")))
+             (&lt;:p
+              (&lt;:as-html "to pass a value and control to another component we do like so:")
+              (let ((stuff-to-say ""))
+                (&lt;ucw:form :action (get-stuff-to-say basics stuff-to-say)
+                           :method "POST"
+                           (&lt;ucw:textarea :accessor stuff-to-say)
+                           (&lt;:br)
+                           (&lt;:submit :value "have something to say")))))))
+    </pre>
+    <pre>
+;;(defentry-point "get.ucw"
+;;    (:application *ucw-intro-application*)
+;;    ((cow "moo"))
+;;  (+ 2 2)
+;;  (let ((cow (concatenate 'string "mighty " cow)))
+;;    (call 'basics :cow cow)))
+    </pre>
+    <pre>
+(defaction get-stuff-to-say ((basics basics) stuff-to-say)
+  (let ((stuff-to-say (concatenate 'string stuff-to-say " (boring!!!)")))
+    (setf (cow basics) (call 'the-other-one :stuff-to-say stuff-to-say))))
+    </pre>
+    <pre>
+(defaction ok ((c component) &amp;optional (value c))
+  (answer value))
+    </pre>
+    <pre>
+(defcomponent the-other-one (simple-window-component)
+  ((stuff-to-say :initarg :stuff-to-say :accessor stuff-to-say))
+  (:default-initargs :title "hi"
+    :content-type "text/html; charset=utf-8;")
+  (:render ()
+           (&lt;:p
+            (&lt;:as-html "- "(stuff-to-say the-other-one)))
+           (&lt;:p
+            (&lt;:as-html "yeah, very 'enlightning'. Dazzle me some more: "))
+           (&lt;ucw:form :method "POST"
+                      :action (refresh-component the-other-one)
+                      (&lt;ucw:textarea :reader (stuff-to-say the-other-one)
+                                     :writer #'(lambda (x)(setf (stuff-to-say the-other-one) (concatenate 'string x " (boring  
+                                     !!!!!)"))))
+                      (&lt;:br)
+                      (&lt;:submit :value "have something to say"))
+           (&lt;:br)
+           (&lt;ucw:a :action (ok the-other-one "nice to be back") "back to the last component")))
+    </pre>
+    <p>First we observe the added slot to the basics component called cow. We use it to store the values passed by our forms. The first form shows the old
+    way: The name cow is picked up by the relevant url dispatcher, which we also let calculate 2 + 2 for no reason at all and in which we add
+    mighty or puny to cow. The link below it shows that if no parameter named cow turns up the value of cow is set to moo. Notice
+    however that if an empty form is submitted the name of cow is set to zero and our cow is nameless but still mighty or puny. Our second form
+    has to be an ucw form if we want the &lt;ucw:text tag to work. The text tag only needs :accessor and a refresh-component action to work correctly; no need for pages to redirect to and no need for a name. The submit button could have been omitted, just as with the normal form. The :accessor method circumvents the entry-point for the value of pig and the refresh component action refreshes the current component. The form method could have been either get or post. For the correct working of ucw it doesn't matter which you choose. If you click the back to entry point link, you pass control back to the entry-point action. which proceeds to it's next call. The ok defaction is already provided by ucw.</p>
+    <p>The third form shows how to pass control
+    to another component. We (I at least) want to fill the slot stuff-to-say of component the-other-one with a value passed by the form. Since
+    they of course don't share the same slot we make a temporary variable to have something to hang on to. When we submit the form we execute
+    the action get-stuff-to-say which passes control to stuff-to-say with the slightly modified stuff-to-say. So now we can contain
+    the generalized behavior of an entry-point within a function which can be tailor-made to fit one tag. Notice it doesn't matter if you call
+    the next component in either hello-world.ucw or get.ucw. The only interesting thing in the form on the the-other-one page is that it uses reader and writer. The link  below it gives control back to basics.  As you can see you can give ok and answer an extra value which will be
+    the value returned by the call form. Notice the value of pig is how you left it. If you hadn't changed the name of your cow it would also still be the same.</p>
+    <p>Btw, as you can see, the way to specify parameters to be picked up in a dispatch method is a bit more complicated than when you use a defentry-point. The defentry-point simply lets you specify the parameters in it's third argument. The parameter is transformed into the with-parameters macro that is called in the dispatch way. The parameters can be supplied as a symbol if you don't care about giving it an initial value or as a list of a symbol and a string if you do want to give it an initial value.</p>
+    <p>There you have it. You mastered the basic ucw mechanics, but of course you would like some more tools in your kit to let ucw work on code in
+    stead of you. As you saw in the index: templating, extended form handling, login code and more is provided. This kind of
+    functionality is the subject of the next few chapters.</p>
+    <p><span id='templating'></span></p>
+    <h2>Templating: nested components, containers and tal</h2>
+    <p>There are two ways of templating in this chapter that scramble for the same namespace. The first is concerned with component manipulation;
+    this includes nested components and containers. The second, the ucw TAL (Template Attribute Language) implementation, is a tool used by ucw
+    to insert (almost) plain html into ucw code so that non-lispers (for example designers) can easily contribute to a ucw project. Get the
+    <a href='ucw-intro_source.tar'>code</a>.</p>
+    <h3>nested components</h3>
+    <p>Nested components are components that occupy the slot of another component. They are not that different from regular slot values except for
+    that you want them to inherit the proper values from past frames. To set these values, nested components use :component as their
+    initialization keyword when placed in a component's slot. In day to day use they behave just as other slot values. If you want to use them
+    to nest html layout, define a render method on them and invoke it in their parents render method.</p>
+    <h5>containers</h5>
+    <p>Containers are used to store components. Their main use is to be able to select one of those components as the
+    component to be rendered to the user. The components in the container are stored as a list and can be referenced by key or index. This is
+    done through several methods associated with containers to manipulate their contents.</p>
+    <p>Containers come in three flavors: container, simple-container and list-container. A bog-standard container is a component with three extra
+    slots:
+    
+    <ul>
+      <li>contents - An alist of (key . component) holding the components - accessor = container.contents</li>
+      <li>key-generator - A lambda that generates the keys from a component when they are not specified. Defaults to identity - accessor = container.key-generator</li>
+      <li>key-test - A function used to compare two keys which defaults to eql - accessor = container.key-test</li>
+    </ul>
+    </p>
+    <p>Containers are very nice for letting people navigate a site. You nest one inside a window-component with :component and present the user
+    with a list of navigation links to which you attach a switch-component action (already provided by ucw) which accepts a so called switching-container and a key name as an argument. The action sets the key of the component which is associated by key as the
+    current-component-key. </p>
+    <p>The switching-container component class is generally used as the super class for navigatation components and tabbed-pane like components. it's like the regular container but serves to manage a set of components which share the same place in the user interface. It provides an implementation of render which simply renders its current component. It adds one extra slot called current-component-key, which is referenced to render the appropriate component.</p>
+    <p>A list-container is a child of container-component as well as widget-component. It's render method renders the components in the container as an ordered list. A list container has a custom initialize-instance method defined on it, which accepts an additional orientation
+    keyword which can be set to either :horizontal or :vertical. If one of these keywords is supplied, it is added to that component's css
+    class list (see the widget-component documentation in chapter to-be-written). </p>
+    <p>The container-manipulating methods are in order of appearance:
+    
+    <ul>
+      <li>clear-container - accepts a container - clears contents of container</li>
+      <li>find-component - accepts a container and a key - returns the component and t if the component is present. Otherwise nil and nil.</li>
+      <li>(setf find-component) - (setf (container key) component) - sets a component at the position of key. If no such key exists,
+      the key and component are added at the end of the contents list.</li>
+      <li>add-component - accepts a container a component and an optional symbol as key name - adds a component to the end of the contents
+      list. If key is supplied, key is used as key for component, otherwise the index of the component in the contents list is used.</li>
+      <li>component-at - accepts a container and an index. If a component is set at the index of integer in the contents list, the component is
+      returned, together with t, otherwise nil and nil are returned.</li>
+      <li>(setf component-at) - (setf (container index optional-key) component) - Overrides the current component in list if it's available. In
+      which case key isn't used. If the provided index is one past the last component, component is set at end of list with key as key if
+      provided, otherwise index is used as key. If the index given is two or more past the last item in the list, a recoverable
+      error is signaled.</li>
+      <li>container.current-component - accepts a container - returns component with key of current-component-name as with find-component</li>
+      <li>ensure-valid-component-key - accepts a container and a key - Returns t if key names one of the components in container,
+      otherwise a restartable error is signaled.</li>
+      <li>map-contents - accepts a function and a container - applies a two argument function to the key and the component of every
+      key-component pair in contents of container.</li>
+    </ul>
+    </p>
+    <p>The following example demonstrates the use of a simple-container, nested in a window-component. It's a simple mock tragic adventure
+    fragment. When all drawers are checked, a new component is shoved onto the containers contents list. The flet at the end and the
+    simple-container initialization in the room class are the most interesting. The switching-container mechanics code is mostly
+    taken from the example application, bundled with ucw. Start it up to see a more traditional use of containers.</p>
+    <p>First add this to your ucw-intro.asd file:</p>
+    <pre>
+(:file "containers"      :depends-on ("config"))
+    </pre>
+    <p>Add this to the list of dispatchers in your config.lisp file:</p>
+    <pre>
+;; containers
+(regexp-dispatcher "^(containers.ucw|)$"
+  (call 'office))
+    </pre>
+    <p>And then define containers.lisp like so:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defcomponent timeline (widget-component)
+  ((history :initarg :history :accessor history))
+  (:render () (&lt;:as-html (history timeline))))
+    </pre>
+    <pre>
+(defcomponent drawer (widget-component)
+  ((contents :initarg :contents :accessor contents))
+  (:render () (&lt;:as-html (contents drawer))))
+    </pre>
+    <pre>
+(defcomponent office (simple-window-component)
+  ((what-happened :initform '(0 0 0) :accessor what-happened)
+   (closet :component (switching-container
+                       :current-component-key 'in-office
+                       :contents
+                       `((in-office       . ,(make-instance 'timeline :history "You stand alone in the office of your evil boss. In
+                       front of you you see a closet in which you are sure you will find valuables with which you can pay off your
+                       insurmountable debts."))
+                         (top-drawer    . ,(make-instance 'drawer
+                                                          :contents "you find memoirs of a broken soul"))
+                         (middle-drawer . ,(make-instance 'drawer
+                                                          :contents "you find an agenda of grinding daily chores"))
+                         (bottom-drawer . ,(make-instance 'drawer
+                                                          :contents "you find an ointment to take the edge off"))))
+           :accessor closet))
+  (:render ()
+           (with-slots (what-happened closet)
+               office
+             (unless (find-component closet 'leave) 
+               (case (container.current-component-key closet)
+                 ('top-drawer (setf (car what-happened) 1))
+                 ('bottom-drawer (setf (cadr what-happened) 1))
+                 ('middle-drawer (setf (caddr what-happened) 1)))
+               (when (and (= (car what-happened) 1)
+                          (= (cadr what-happened) 1)
+                          (= (caddr what-happened) 1))
+                 (add-component closet
+                                (make-instance 'timeline :history "You leave the office ashamed and angry. You know now your evil boss
+                               is also a human being and you will have to feel compassion for him forever.")
+                                'leave)))
+             (render closet)
+             (&lt;:br)
+             (&lt;:as-html "What will you do next?")
+             (&lt;:br)
+             (if (eql (container.current-component-key closet) 'leave)
+               (flet ((drawer-link (name text)
+                        (&lt;ucw:a :action (switch-component (closet office) name)
+                                (&lt;:as-html text))))
+                 (&lt;:ul
+                  (&lt;:li (drawer-link 'top-drawer "inspect top drawer"))
+                  (&lt;:li (drawer-link 'middle-drawer "inspect middle drawer"))
+                  (&lt;:li (drawer-link 'bottom-drawer "inspect bottom drawer"))
+                  (&lt;:li (drawer-link 'in-office "recall what your doing here"))
+                  (when (find-component closet 'leave)
+                    (&lt;:li (drawer-link 'leave "leave")))))
+               (&lt;:ai "&lt;br/&gt;Nothing, just stand here a bit")))))
+    </pre>
+    <h4>Tabbed-panes</h4>
+    <p>UCW also has a convenience class on board to quickly render different components/pages in a tabbed-pane, which builds upon switching-container. It basically spits out a main wintod and an options row/colomn of choosable components, all wrapped in divs, so you can style them every way you want. An example that wraps all the components we made thus far, and the tal components later in this chapter in a tabbed pane:</p>
+    <pre>
+(defcomponent pane (tabbed-pane simple-window-component) ()
+              (:default-initargs
+                :title "pane"
+                :stylesheet "sheet.css"
+                :contents `(("hello world" . ,(make-instance 'hello-world))
+                            ("basics" . ,(make-instance 'basics))
+                            ("tal" . ,(make-instance 'tal-component))
+                            ("more tal" . ,(make-instance 'more-tal)))
+                :current-component-key "hello world")
+              (:render ()
+                       (call-next-method)))
+    </pre>
+    <p>There you go. We also let our component inherit from the simple-window-component so it will render a whole page and not just a div. The initialization part is the same as a normal switching-container, but it has a render-method defined on it that wraps the divs, and assigns actions. So we just call the next method in our render method. Use the sheet.css in the supplied sources to conjure up a nicely formatted tabbed-pane. This example is a bit wasteful cause now you're wrapping whole html pages in divs, but you get the picture.</p>
+    <h3>TAL</h3>
+    <p>Ucw's template attribute language is loosely based on
+    <a href='http://www.zope.org/Wikis/DevSite/Projects/ZPT/TAL'>Zope's TAL</a>. It also uses xml to express it's intentions and it uses a few of it operators. Moreover it uses its idea: a way to embed a few programming constructs in xml so that the xml can be parsed back into the language as a design template with some flexibility. Programmers can easily modify the html/xml that designers present to make it fit for code. As can the designers themselves up until a point.</p>
+    <h5>How it works</h5>
+    <p>Tal code is confined in .tal files. Those files are called from lisp code to render a page on a component, much like a render method. You can either replace a render method or embed tal files in a render method. You can also embed render methods in tal files, tal files in render methods and you can embed tal files in other tal files. Tal files can harbor control structures, variables and lisp code. When a component is rendered, the  the tal control structures, variables and lisp code in a tal file are evaluated and the specified tal files are transformed into yaclml code, which on it's turn is transformed into xml/html.</p>
+    <p>An example. First add the tal-generator key-value pair to the make-instance of our *ucw-intro-application* in config.lisp and add two entry-point to our dispatcher list. With the stuff added in previous chapters it should look something like this:</p>
+    <pre>
+(defparameter *ucw-intro-application*
+  (make-instance 'cookie-session-application
+                 :url-prefix "/ucw-intro/"
+                 :www-roots (list *www-root*)
+                 :tal-generator (make-instance 'yaclml:file-system-generator
+                                               :cachep t
+                                               :root-directories (list *www-root*))
+                 :dispatchers (list (make-instance 'ucw::action-dispatcher)
+                                    ;; hello world
+                                    (url-dispatcher "hello-world.ucw"
+                                      (call 'hello-world))
+                                    ;; basics
+                                    (regexp-dispatcher "^(basics.ucw|)$"
+                                      (call 'basics))
+                                    (regexp-dispatcher "^(get.ucw|)$"
+                                      (with-request-params ((cow "moo"))
+                                          (context.request *context*)
+                                        (let ((cow (concatenate 'string "mighty " cow)))
+                                          (call 'basics :cow cow))))
+                                    ;; containers
+                                    (regexp-dispatcher "^(containers.ucw|)$"
+                                      (call 'office))
+                                    ;; tal
+                                    (regexp-dispatcher "^(tal.ucw|)$"
+                                      (call 'tal-component))
+                                    (regexp-dispatcher "^(more-tal.ucw|)$"
+                                      (call 'more-tal)))
+                 :debug-on-error t))
+    </pre>
+    <p>Then we create the first part of tal.lisp:</p>
+    <pre>
+(in-package :ucw-intro)
+    </pre>
+    <pre>
+(defcomponent tal-component (template-component)
+  ((page-name :initarg :page-name :accessor page-name)
+   (contents :initarg :contents :accessor contents))
+  ;;  (:entry-point "^(|tal.ucw)$" (:application *ucw-intro-application* :class regexp-dispatcher))
+  (:default-initargs :template-name "intro.tal" :page-name "Que tal!" :contents "&lt;blink&gt;Qual blink!!!&lt;/blink&gt;"
+                     :flag t))
+    </pre>
+    <p>Observe the :tal-generator bit in the application constructor, which specifies the root directories of the search paths to the tal files. Furthermore we let tal-component inherit from template-component, which adds the :template-name slot to standard component, next to some custom methods that do undercover work. In default-initargs you specify your tal file to render. Let's make that file:</p>
+    <pre>
+&lt;html xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+      tal:in-package=":ucw-intro"&gt;
+  &lt;head&gt;
+    &lt;title tal:content="$page-name"&gt;page name goes here&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1 tal:content="(content $component" tal:escape-html="nil"&gt;content goes here&lt;/h1&gt;
+    &lt;h1 tal:replace="$contents" tal:escape-html="t"&gt;content goes here&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    <p>In the html tag you see the xmlns bits. They are xml name spaces. You can look them up in your browser but they lead to nowhere. But inside lisp they are mapped to different packages where custom defined tags, attributes and parameters reside. In this case :it.bese.yaclml.tal. tal:in-package of course maps to in-package. We for example reach the tal tag and attribute definitions by putting tal: in front of them. They are:</p>
+    <ul>
+      <li>tags: tal, lisp, include</li>
+      <li>attributes: content, replace, when, dolist, in-package</li>
+    </ul>
+    <p>When a tag (a tal tag, or a html/xml tag) is parsed, tal checks, from left to right, if the tag and/or any of it's attributes are part of a namespace which begs them to be evaluated by tal. A tag can contain multiple tal attributes and they can be mixed with html/xml attributes. If so tal determines which handler is fit and hands it the tag to be operated upon. (For your understanding, when it concerns an attribute, tal usually eats that attribute, performs the specified operation, and processes the tag again without it.)</p>
+    <p>To continue the treatment of our example, we examine the attributes content and replace. Content replaces the content of the tag it's a part of (in this case "content goes here") with what's contained in it's variable (the result of "(contents $component). Replace replaces the complete tag with what's in it's variable. They both check for the value of escape-html which doesn't escapes html if the value is nil and which does escape html whenever the value is non-nil. If escape-html isn't supplied it defaults to t.</p>
+    <p>For completeness: we could also have had our  tal-component class inherit from simple-component and leave out everything except for the contents of the body, and ucw would have added the code around it.</p>
+    <p>But where are variables defined? How can tal interact with the class it renders? And what about those other tags and attributes? Enter the next section:</p>
+    <h5>Tal and lisp</h5>
+    <p>Basically where a tag or an attribute accepts some sort of parameter you usually have a window into lisp. This is the case with lisp, content, replace, when and dolist. The text inside " and " is evaluated, except for tal:lisp which evaluates the text inside its beginning- and end-tag. Variables start with the character $ and are matched against values inside the so-called tal environment. This environments equates to a collection of supplied classes, alists and hash-tables in which tal tries to match the variable. When it does it returns the value. In our example some methods on template-component make sure the component that the tal file is rendered on is included and can be referenced with $component. As you can see you can either use the slot function of contents or you can refer to contents directly by pasting a $ to its front, as you can refer directly to the key of a cons in an a-list or the key in a hash table. Later on you will see ways to extend the tal environment.</p>
+    <p>Sometimes you want to use a variable, or the output of some lisp code in an ordinary attribute. You can do that by putting "${..your lisp code...}" after the attribute (see the next example). If you for some reason want to splice the contents of a list after an attribute you can replace the $ with a @.</p>
+    <p>Let's review the rest of the tal tags and attributes. We start of with another example. This time we create a component called more-ucw, two simple classes and a hash table for use with the tal file:</p>
+    <pre>
+(defcomponent more-tal (template-component)
+  ((flag :initarg :flag :accessor flag)
+   (da-var :initform "da-var from more-tal class" :accessor da-var)
+   (tal-name :initform "more-wrapper.tal" :accessor tal-name)
+   (another-var :initform "another-var from more-tal class" :accessor another-var)
+   (a-href :initform "http://planet.lisp.org" :accessor a-href)
+   (a-class :initform (make-instance 'in-list) :accessor a-class)
+   (spliced-href :accessor spliced-href :initform '("http://" "planet." "lisp." "org"))
+   (my-list :accessor my-list
+            :initform `((,(make-instance 'in-list)
+                         ,(make-instance 'another-in-list))
+                        (((da-var . "da-var from a-list") (another-var . "another-var from a-list")))
+                        (,(make-instance 'in-list :da-var "da-var from class in another bullet")
+                         ((da-var . "da-var from another a-list") (another-var . "another-var from another alist")))
+                        (,*tal-table*))))
+  ;;  (:entry-point "^(|more-tal.ucw)$" (:application *ucw-intro-application* :class regexp-dispatcher))
+  (:default-initargs :template-name "more-tal.tal" :flag nil))
+    </pre>
+    <pre>
+(defclass in-list ()
+  ((da-var :initarg :da-var :initform "da-var from in-list class" :accessor da-var)))
+    </pre>
+    <pre>
+(defclass another-in-list ()
+  ((another-var :initform "another-var from in-list class" :accessor another-var)))
+    </pre>
+    <pre>
+(defparameter *tal-table* (make-hash-table))
+    </pre>
+    <pre>
+(setf (gethash 'another-var *tal-table*) "another-var from hash")
+    </pre>
+    <p>and we make a .tal file called more-tal.tal:</p>
+    <pre>
+&lt;html xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+  xmlns:ucw="http://common-lisp.net/project/ucw/core"
+  xmlns:param="http://common-lisp.net/project/bese/tal/params"
+  tal:in-package=":ucw-intro"&gt;
+  &lt;head&gt;
+    &lt;title&gt;more tal&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;tal:include tal:name="more-wrapper.tal" param:little-class="(a-class $component)"&gt;
+    &lt;param:contents&gt;
+      &lt;div tal:when="$flag" tal:content="$another-var"&gt;
+        flag is set?
+      &lt;/div&gt;
+      &lt;ul&gt;   
+        &lt;li tal:dolist="$my-list"&gt;
+          &lt;b tal:content="$da-var"&gt;&lt;/b&gt;&lt;br/&gt;
+            &lt;tal:tal tal:content="$another-var"&gt;another var&lt;/tal:tal&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;      
+      &lt;p&gt;&lt;a href="${(a-href $component)}"&gt;attribute insertion&lt;/a&gt;&lt;/p&gt;      
+      &lt;p&gt;&lt;a href="@{(spliced-href $component)}"&gt;spliced attribute insertion&lt;/a&gt;&lt;/p&gt;
+      &lt;tal:lisp&gt;
+        (setf (a-href $component) "http://www.cliki.net")
+      &lt;/tal:lisp&gt;
+      &lt;a href="${(a-href $component)}"&gt;new value of href&lt;/a&gt;      
+    &lt;/param:contents&gt;
+  &lt;/tal:include&gt;
+&lt;/html&gt;
+    </pre>
+    <p>We leave tal:include and the param: tag and attribute alone for a moment because they need some extra code to explain. We explain the rest first:</p>
+    <ul>
+      <li>tal:when - an attribute - which is of course not dissimilar to lisps when. When the value produced by the expression inside the quotation marks equates to nil, attributes after the when tag are not processed. If this means that no tal attribute will supply the tag with content, the whole tag, and it's contents are removed. If a previous attribute already supplied the tag with content through tal:content the tag will not be removed and that content will be shown. If content was previously supplied with tal:replace the tag will be replaced by the content of tal:replace, as this is the behaviour of tal:replace</li>
+      <li>tal:dolist - an attribute - This is a rather cool and nifty tag. It works not dissimilar to dolist. The code between the quotation marks of dolist should equate to a list of lists containing alists, classes hash-tables or a combination of the former. Dolist iterates over the list of lists. On each iteration the tag dolist is a part of and it's children are evaluated and added to the yaclml tree in the pending tal environment extended with the list which is at that point the list dolist is iterating over. See the initform of the my-list slot of the more-tal component to get a feel for it.</li>
+      <li>tal:tal - a tag - In the dolist tag tree in more-tal.tal you see tal:tal which is simply a placeholder for attributes that doesn't show up in the html/xml code you want to produce.</li>
+      <li>the $ AND @ ones after a normal attribute - as discussed earlier these are used when you want to use the result of some lisp code output or a list of some lisp code output respectively after an ordinary attribute.</li>
+      <li>tal:lisp - a tag - The text enclosed within a tal:lisp tag is processed for side effects. No output is passed back into the tag tree.</li>
+    </ul>
+    <p>Now to explain tal:include, which basically does what you expect. Tal:include extends the current tal environment with the parameters that are in the param name-space and that are enclosed in the include tag (so everything with param: in front of it). This environment is passed to the calling tal file which it uses to evaluate it's own tal tags and attributes. You can pass param: tags and param: attributes, which behave differently. Param tags (you may call them whatever you wish) stuff all the evaluated content enclosed in them in a variable. (in the case of our example  this will be in $contents). All the tags enclosed in the include tag are evaluated together with their attributes and the attributes of the param: tag before they are passed to the included tal file. So the content of $contents will be a big (or a little) string. By using attributes on the other hand, you can pass variables that refer to lisp objects. The value of the variable is the value returned by the code enclosed within the quotations that stick to it via the equal sign. The template that tal:include calls can be specified by either a tal:name or tal:name-expression attribute. Tal:name simply maps to the specified tal file. Name-expression evaluates the expression typed inside it's quotation marks, which should equate to a valid tal-file path. With this information we look at the .tal file we call from more-tal, called more-wrapper:</p>
+    <pre>
+&lt;body
+  xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+  xmlns:ucw="http://common-lisp.net/project/ucw/core"
+  tal:in-package=":ucw-intro"&gt;
+  &lt;tal:tal tal:content="$contents" tal:escape-html="nil"&gt;here goes more-tal&lt;/tal:tal&gt;
+  &lt;tal:lisp&gt;
+    (setf (da-var $little-class) "this is the new and quite boring contents of little class")
+  &lt;/tal:lisp&gt;
+  &lt;p tal:content="(da-var $little-class)"&gt;contents of little-class&lt;/p&gt;
+&lt;/body&gt;
+    </pre>
+    <p>Should be pretty clear. For some more clarity, you could also have specified the file to include with:</p>
+    <pre>
+tal:name-expression="more${(print (string-downcase '-wrapper.tal))}"
+    </pre>
+    <p>Now granted, this looks rather useless and hackerish, but the point is to show how you can use arbitrary expressions enclosed in ${} to get to your filename.</p>
+    <p>But when would you want to use name-expression? Well, imagine you want to reference a tal file based on the a component you have in a certain slot of the component you are rendering. Then you could write:</p>
+    <p>&lt;tal:include tal:name-expression="details/${ (class-name (class-of (datum $component))) }"
+                param:datum="(datum $component)"/&gt;</p>
+    <p>This will include a different file in the details directory, depending on the class of the datum slot, and pass the datum object itself to the included file. (example and explanation from Marco Baringer)</p>
+    <p>Note that the code inside ${} will only return the name of a class. tal:name-expression automagically appends .tal to the end if it's not already present, as does tal:name.</p>
+    <h5>Ucw-specific tal</h5>
+    <p>Ucw also has a couple of custom defined tal attributes and tags. They are:</p>
+    <ul>
+      <li>ucw:select - tag</li>
+      <li>ucw:option - tag</li>
+      <li>ucw:action - attribute</li>
+      <li>ucw:accessor - attribute</li>
+      <li>ucw:render-component - tag</li>
+    </ul>
+    <p>Which simply map to their yaclml equivalent, except for render-component which doesn't have one. Surprisingly enough it allows you to render a component from within tal. Typical well-formed tal strings using ucw would and actually do look like the tags below because they're straight from tal files found in the source code:</p>
+    <pre>
+&lt;a href="" ucw:action="(respond $component $value)" tal:content="$text"&gt;text&lt;/a&gt;
+&lt;input type="file" ucw:accessor="(file-upload-example.file $component)"/&gt;
+&lt;ucw:render-component ucw:component="$selected-component"/&gt;
+    </pre>
+    <p>Well, it should all be self-explanatory. Only render-component is slightly out of context, but even my obsessive over-explaining-gene doesn't feel the need to explain it.</p>
+    <h5>Rendering tal files from within render methods</h5>
+    <p>Sometimes you want to render tal files from within render methods. You can do this by using the render-template method, which is also used under the cover for children of template-component. A render-template method expects a request-context class, the location of a tal file and a tal environment. A basic one looks like this:</p>
+    <pre>
+(render-template ucw:*context* "tal-file.tal" nil)
+    </pre>
+    <p>In this example the method grabs the standard ucw context, but what is a context? From the source code:</p>
+    <p>A request-context object contains all the information associated with one particular request/response loop. The request context is usually accessed via the special variable *context* and contains the currently relevant application, session, session-frame, request and response object.</p>
+    <p>So you should almost always use ucw:*context*, unless you let the code do things advanced enough you don't need to read this tutorial to explain this particular aspect.</p>
+    <p>Furthermore our example above specifies a tal file and a request context of nil. So if you want to render that particular tal file, all variables you want the file to look up in the request context will equate to nil.</p>
+    <p>For explanations sake, we change the  tal-component component so it doesn't inherit from template-component anymore, eg change:</p>
+    <pre>
+(defcomponent  tal-component ()
+  ...
+    </pre>
+    <p>to:</p>
+    <pre>
+(defcomponent tal-component (template-component)
+  ...
+    </pre>
+    <p>Then we define a render method on the component:</p>
+    <pre>
+(defmethod render ((component tal-component))
+        (render-template ucw:*context* "intro.tal" nil))
+    </pre>
+    <p>Now this one will actually report an error. Since our tal environment is nil, intro.tal tries to get to the slot component of an inexistent class. Let's add a class to our environment:</p>
+    <pre>
+(defmethod render ((component tal-component))
+  (render-template ucw:*context* "intro.tal"  `(((component . ,component)))))
+    </pre>
+    <p>Since a tal-environment consists of lists of alists, components and hash tables intro.tal now finds our component by referencing the specified alist in the tal-environment. The $contents variable in the tal file however equates to nil, because the component itself isn't listed as an object the tal-environment references to look up values. To add both the component itself and use it as a variable we might as well use the function make-standard-environment which is meant for this purpose:</p>
+    <pre>
+(defmethod render ((component tal-component))
+  (render-template ucw:*context* "intro.tal" (make-standard-environment `((component . ,component)) component)))
+    </pre>
+    <p>And now tal-component renders like before.</p>
+    <p>This pretty much rounds up tal, but this intro is way from complete... Will the horror never end?</p>
+    <p><span id='debugging'></span></p>
+    <h2>Debugging</h2>
+    <p>Next to your standard debugging aids, ucw sports a few extra methods like debugging output deferred to the callers web-page and calling components from the repl.</p>
+    <p>First for completeness the different debugging switches and levers described at their respective sections:
+    The ucw-inspector and ucw-debugger web-switch described in the configuration section, the log-level lever described in the configuration section, and the debug-on-error switch of an application described in the initial environment section. </p>
+    <p>Furthermore, your standard ucw-sources come supplied with an administration page that is divided in a few sections. Click UCW web-admin from the examples page and log in with guest:guest. Ah, just play around. It's got some info screens, configure switches, a web-repl and a web inspector.</p>
+    <p>Last but certainly not least: Perhaps you would like to test your components at the repl. There is a problem here because calling components requires you to include some context-information that's normally only present when ucw actually tries to handle incoming requests. To circumvent this problem ucw has a with-dummy-request macro on board. It accepts a list of keys and a body. The keys are :render :action and :application. Render defaults to t, which means the component will be rendered and the output will be shown on *trace-output*. If nill no output. If :action is true (by default), the body will be treated as an action, if not it will be wrapped in a progn. With application you can pass an application object. If it's not given, the macro will try *default-application*, else a standard-application will be created. With url-prefix /DUMMY/, although that is a bit irrelevant. The output of with-dummy-request-context is the output of the render method followed by the component under scrutiny, so you wish to inspect it:</p>
+    <pre>
+UCW-INTRO&gt; (with-dummy-context (:action nil :application *ucw-intro-application*)
+    (call 'tal-component))
+    </pre>
+    <pre>
+--&gt;
+16:36 UCW-LOGGER/+INFO+: CALL'ing to /#&lt;BASICS {AE183A1}&gt; 
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd"&gt;
+&lt;html
+  &gt;&lt;head
+...
+  &gt;&lt;/html
+&gt;
+#&lt;BASICS {AE183A1}&gt;
+    </pre>
+    <pre>
+UCW-INTRO&gt; (with-dummy-context ()
+             (get-stuff-to-say * "bla"))
+    </pre>
+    <pre>
+--&gt;
+16:40 UCW-LOGGER/+INFO+: Serving action (/#&lt;BASICS {B00FDA9}&gt;/UCW-INTRO::GET-STUFF-TO-SAY #&lt;BASICS {B00FDA9}&gt; "bla")
+16:40 UCW-LOGGER/+INFO+: CALL'ing to /#&lt;THE-OTHER-ONE {B1707B1}&gt; 
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd"&gt;
+&lt;html
+  &gt;&lt;head
+...
+  &gt;&lt;/html
+&gt;
+    </pre>
+    <pre>
+UCW-INTRO&gt; (with-dummy-context (:render nil :application *ucw-intro-application*)
+                      (call 'tal-component))
+    </pre>
+    <pre>
+--&gt;
+; in: LAMBDA NIL
+;     (IT.BESE.UCW:CONTEXT.WINDOW-COMPONENT IT.BESE.UCW:*CONTEXT*)
+; ==&gt;
+;   IT.BESE.UCW:*CONTEXT*
+; 
+; note: deleting unreachable code
+; 
+; compilation unit finished
+;   printed 1 note
+16:48 UCW-LOGGER/+INFO+: CALL'ing to /#&lt;TAL-COMPONENT {B6EEE21}&gt; 
+#&lt;TAL-COMPONENT {B6EEE21}&gt;
+    </pre>
+    <p><span id='source'></span></p>
+    <h2>Source</h2>
+    <p>is <a href='ucw-intro_source.tar'>here</a>.</p>
+    <p><span id='miscellaneous'></span></p>
+    <h2>Miscellaneous</h2>
+    <h5>Changes</h5>
+    <p>last modified 4th of may 2006</p>
+    <p>- added debugging tools chapter 
+    <br>
+    
+    - added info on slightly changed startup procedure 
+    <br>
+    
+    - added tabbed pane info in the templating chapter 
+    <br>
+    
+    - added ucw-boxset info 
+    <br>
+    
+    - fixed bugs concerning variable passing between pages in basics.lisp 
+    <br>
+    
+    - fixed little bug in the spliced-href slot</p>
+    <p>25th of april 2006: 
+    <br>
+    
+    - overhauled code examples and related text to make them easier to maintain/install/use 
+    <br>
+    
+    - changed text and code examples to reflect dispatch methods/changed defentry-point due to big backend code-changes 
+    <br>
+    
+    - changed text and code examples to reflect new container behaviour 
+    <br>
+    
+    - changed text to conform to changed configuration options
+    - added &lt;:ah + &lt;:ai info 
+    <br>
+    
+    - removed legacy ucw-install 
+    <br>
+    
+    - fixed some minor bugs</p>
+    <p>21th of april 2006 - added tal explanation section 
+    <br>
+    
+    15th of april 2006 - fixed mod_lisp install errors 
+    <br>
+    
+    11th of april 2006 - updated install instructions and a lot of minor fixes 
+    <br>
+    
+    5th of april 2006 - first buggy version, landed on the net by accident</p>
+    <h5>Todo</h5>
+    <p>The rest</p>
+    <h5>Contact</h5>
+    <p>to mail, put these in the right order: <b>at dot fallenfrukt stuij</b>  </p>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<!-- -*- html -*- -->
+
+<div xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+     xmlns:param="http://common-lisp.net/project/bese/tal/params"
+     xmlns:ucw="http://common-lisp.net/project/ucw/core"
+     tal:in-package="it.bese.ucw">
+    <h2>REPL</h2>
+    <form ucw:action="(submit $component)" method="POST">
+    <p>Package: <ucw:render-component ucw:component="(package-select $component)"/></p>
+
+    <p>The form: <tt tal:content="(value (input $component))">the form</tt>.</p>
+
+    <p>Returned:</p>
+
+<pre tal:content="(safe-print-repl-value $component)">
+the value
+</pre>
+
+    <p><a ucw:action="(call-inspector $component $form-value)">Inspect it</a>.</p>
+
+    <hr/>
+    <ucw:render-component ucw:component="(input $component)"/>
+    <br/>
+    <input type="submit" value="Execute"/>
+    </form>
+    <hr/>
+    <a ucw:action="(new-repl $component)">new repl.</a>
+</div>

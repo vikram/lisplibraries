@@ -1,0 +1,9 @@
+Revision: pxmlutils--dev--1.0--patch-9
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Feb 17 16:00:47 CET 2004
+Standard-date: 2004-02-17 15:00:47 GMT
+Modified-files: pxml1.cl pxml2.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-9
+Summary: Finish implementing readtable-case reading symbol interning
+

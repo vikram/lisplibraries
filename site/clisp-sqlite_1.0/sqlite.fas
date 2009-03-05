@@ -1,0 +1,355 @@
+(|SYSTEM|::|VERSION| '(20050505.))
+#0Y |CHARSET|::|UTF-8|
+#Y(#:|1 8 (DEFPACKAGE :SQLITE.RAW (:USE :FFI :CL ...) ...)-1-1|
+   #18Y(00 00 00 00 00 00 00 00 00 01 DA 01 04 31 E1 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "SQLITE.RAW")
+#Y(#:|1 8 (DEFPACKAGE :SQLITE.RAW (:USE :FFI :CL ...) ...)-1-2|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA DB 31 DE 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   ("FFI" "COMMON-LISP" "EXT") "SQLITE.RAW")
+#Y(#:|1 8 (DEFPACKAGE :SQLITE.RAW (:USE :FFI :CL ...) ...)-1-3|
+   #19Y(00 00 00 00 00 00 00 00 00 01 DA DB 63 2D 03 02 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   ("SQLITE_OPEN" "SQLITE_CLOSE" "SQLITE_EXEC" "SQLITE_LAST_INSERT_ROWID"
+    "SQLITE_CHANGES" "SQLITE_COMPLETE")
+   "SQLITE.RAW" |SYSTEM|::|INTERN-EXPORT|)
+#Y(#:|1 8 (DEFPACKAGE :SQLITE.RAW (:USE :FFI :CL ...) ...)-1-4|
+   #15Y(00 00 00 00 00 00 00 00 00 01 DA 31 CE 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|) "SQLITE.RAW")
+#Y(#:|9 19 (DEFPACKAGE :SQLITE (:USE :FFI :CL ...) ...)-2-1|
+   #18Y(00 00 00 00 00 00 00 00 00 01 DA 01 04 31 E1 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "SQLITE")
+#Y(#:|9 19 (DEFPACKAGE :SQLITE (:USE :FFI :CL ...) ...)-2-2|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA DB 31 DE 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   ("FFI" "COMMON-LISP" "EXT" "SQLITE.RAW") "SQLITE")
+#Y(#:|9 19 (DEFPACKAGE :SQLITE (:USE :FFI :CL ...) ...)-2-3|
+   #19Y(00 00 00 00 00 00 00 00 00 01 DA DB 63 2D 03 02 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   ("SQL" "DATABASE-OPENP" "DATABASE-NAME" "DATABASE-ADDRESS" "WITH-QUERY"
+    "SQLITE-LAST-INSERT-ROWID" "SQLITE-OPEN" "WITH-OPEN-DB" "SQLITE-CLOSE")
+   "SQLITE" |SYSTEM|::|INTERN-EXPORT|)
+#Y(#:|9 19 (DEFPACKAGE :SQLITE (:USE :FFI :CL ...) ...)-2-4|
+   #15Y(00 00 00 00 00 00 00 00 00 01 DA 31 CE 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|) "SQLITE")
+#Y(#:|21 22 (IN-PACKAGE :SQLITE.RAW)-3|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA 31 E6 0F 01 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "SQLITE.RAW"
+   |COMMON-LISP|::|*PACKAGE*|)
+#Y(#:|23 23 (DEFAULT-FOREIGN-LANGUAGE :STDC)-4|
+   #36Y(03 00 01 00 00 00 00 00 00 01 DA DB 38 05 72 51 53 08 63 AF 30 02 C8 0F
+        04 54 64 67 00 00 00 30 02 55 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   #.#'|EXT|::|PACKAGE-LOCK| ("FFI")
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|EXT|::|PACKAGE-LOCK|) :|STDC|
+   |FFI|::|*FOREIGN-LANGUAGE*|)
+#Y(#:|24 24 (DEF-C-TYPE SQLITE-PTR C-POINTER)-5-1|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA DB 30 02 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |FFI|::|C-POINTER| |SQLITE.RAW|::|SQLITE-PTR| |FFI|::|PARSE-C-TYPE|)
+#Y(#:|24 24 (DEF-C-TYPE SQLITE-PTR C-POINTER)-5-2|
+   #13Y(00 00 00 00 00 00 00 00 00 01 C5 19 01) |COMMON-LISP|::|NIL|
+   |SQLITE.RAW|::|SQLITE-PTR|)
+#Y(#:|26 34 (DEF-CALL-OUT SQLITE_OPEN (:LIBRARY "libsqlite.so") ...)-6|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "sqlite_open"
+   "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |FFI|::|C-POINTER|
+     #(|FFI|::|C-STRING| 1. |FFI|::|SINT32| 0.
+       #(|FFI|::|C-PTR| |FFI|::|C-STRING|) 17.)
+     1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_OPEN|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   "Attempt to open a database. Returns a
+database-pointer and nil on success, or nil and an error string on
+failure. You must free the error message with foreign-free. The first
+argument is the name of the database file to open, the second argument
+is ignored, but pass zero for safety."
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|36 39 (DEF-CALL-OUT SQLITE_CLOSE (:LIBRARY "libsqlite.so") ...)-7|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "sqlite_close"
+   "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |COMMON-LISP|::|NIL| #(|FFI|::|C-POINTER| 0.) 1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_CLOSE|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   "Close a database. Pass a database handle returned
+by sqlite_open, and don't use it again."
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|41 46 (DEF-C-TYPE SQLITE-CALLBACK (C-FUNCTION # #))-8-1|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA DB 30 02 3E 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   (|FFI|::|C-FUNCTION|
+    (:|ARGUMENTS| (|SQLITE.RAW|::|ANY| |FFI|::|C-POINTER|)
+     (|SQLITE.RAW|::|ARGC| |FFI|::|SINT32|)
+     (|EXT|::|ARGV| (|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|))
+     (|SQLITE.RAW|::|COLUMN-NAMES| (|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|)))
+    (:|RETURN-TYPE| |FFI|::|SINT32|))
+   |SQLITE.RAW|::|SQLITE-CALLBACK| |FFI|::|PARSE-C-TYPE|)
+#Y(#:|41 46 (DEF-C-TYPE SQLITE-CALLBACK (C-FUNCTION # #))-8-2|
+   #13Y(00 00 00 00 00 00 00 00 00 01 C5 19 01) |COMMON-LISP|::|NIL|
+   |SQLITE.RAW|::|SQLITE-CALLBACK|)
+#Y(#:|48 65 (DEF-CALL-OUT SQLITE_EXEC (:LIBRARY "libsqlite.so") ...)-9|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "sqlite_exec"
+   "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |FFI|::|UINT32|
+     #(|FFI|::|C-POINTER| 0. |FFI|::|C-STRING| 1.
+       #(|FFI|::|C-FUNCTION| |FFI|::|SINT32|
+         #(|FFI|::|C-POINTER| 0. |FFI|::|SINT32| 0.
+           #(|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|) 1.
+           #(|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|) 1.)
+         1024.)
+       0. |FFI|::|C-POINTER| 0. #(|FFI|::|C-PTR| |FFI|::|C-STRING|) 17.)
+     1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_EXEC|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   "Run a query, generating a callback on each returned
+row. Arg0 is a database handle returned by sqlite_open. Arg1 is an SQL
+query string. Callback is a function whose arguments are (any argc
+vals coldata), where any is the same any passed to sqlite_exec,
+integer argc is the length of the vals vector, string vector vals
+represents column data, and string vector coldata is argc column names
+followed by argc column types. The callback function should return 0
+on success or nonzero if the query should terminate. Lastly,
+sqlite_exec returns 0 and nil on success or an error code and string
+error message on failure. You must free the error message with
+foreign-free. The error code is one of the +sqlite-..+ constants."
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|67 70 (DEF-CALL-OUT SQLITE_LAST_INSERT_ROWID (:LIBRARY "libsqlite.so") ...)-10|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   "sqlite_last_insert_rowid" "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |FFI|::|SINT32| #(|FFI|::|C-POINTER| 0.) 1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_LAST_INSERT_ROWID|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS| "Return the id of the last inserted row"
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|72 76 (DEF-CALL-OUT SQLITE_CHANGES (:LIBRARY "libsqlite.so") ...)-11|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "sqlite_changes"
+   "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |FFI|::|SINT32| #(|FFI|::|C-POINTER| 0.) 1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_CHANGES|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   "The numbers of rows inserted, deleted, modified by
+sqlite_exec or since the last sqlite_compile."
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|78 82 (DEF-CALL-OUT SQLITE_COMPLETE (:LIBRARY "libsqlite.so") ...)-12|
+   #38Y(00 00 00 00 00 00 00 00 00 01 DA DB 6F 02 63 DD 6E 04 04 93 00 0D DF 2F
+        06 E1 DF E2 2D 03 09 DF AD 32 83 CA 19 02)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "sqlite_complete"
+   "libsqlite.so" |FFI|::|FOREIGN-LIBRARY|
+   #(|FFI|::|C-FUNCTION| |COMMON-LISP|::|BOOLEAN| #(|FFI|::|C-STRING| 1.)
+     1024.)
+   |FFI|::|FOREIGN-LIBRARY-FUNCTION| |SQLITE.RAW|::|SQLITE_COMPLETE|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   "Returns true if the sql query is complete (may not
+detect syntax errors)."
+   |COMMON-LISP|::|FUNCTION|
+   #.(|SYSTEM|::|GET-SETF-SYMBOL| '|CLOS|::|DOCUMENTATION|))
+#Y(#:|84 84 (IN-PACKAGE :SQLITE)-13|
+   #17Y(00 00 00 00 00 00 00 00 00 01 DA 31 E6 0F 01 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "SQLITE"
+   |COMMON-LISP|::|*PACKAGE*|)
+#Y(#:|85 97 (DEFCLASS DATABASE NIL ...)-14|
+   #93Y(00 00 00 00 00 00 00 00 00 01 6B 00 99 01 DC DD 63 DE DF E0 E1 E2 E3 E4
+        E5 63 E6 63 6F 0D E8 E9 7B 0C DF EA E1 EB E3 EC E5 63 E6 63 6F 0D E8 ED
+        7B 0C DF EE E1 EF E3 F0 E5 63 E6 63 6F 0D E8 F1 7B 0C 7B 03 F2 B3 F3 F4
+        63 E8 63 F5 64 7B 06 33 02 22 37 07 16 01 DC 38 02 32 2A 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |CLOS|::|<STANDARD-CLASS>| |CLOS|::|ENSURE-CLASS| |SQLITE|::|DATABASE|
+   :|DIRECT-SUPERCLASSES| :|DIRECT-SLOTS| :|NAME| |EXT|::|ADDRESS| :|READERS|
+   (|SQLITE|::|DATABASE-ADDRESS|) :|INITARGS| (:|ADDRESS|) :|INITFORM|
+   :|INITFUNCTION| |SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| :|DOCUMENTATION|
+   "Stores the foreign address of the database connection." |SQLITE|::|OPENP|
+   (|SQLITE|::|DATABASE-OPENP|) (:|OPENP|) "Is the current address open?"
+   |SQLITE|::|NAME| (|SQLITE|::|DATABASE-NAME|) (:|NAME|)
+   "The print name of the database" :|METACLASS|
+   (:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|) :|DIRECT-DEFAULT-INITARGS|
+   :|GENERIC-ACCESSORS|)
+#Y(#:|99 101 (DEFMETHOD PRINT-OBJECT (# STREAM) ...)-15|
+   #48Y(00 00 00 00 00 00 00 00 00 01 DA DB 38 01 8F 85 03 DA 2F 02 DA DD DE 63
+        DF E0 E1 E2 E3 E4 38 02 72 2A 64 38 02 72 2A 7B 02 7B 08 2D 03 0B 19
+        01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |CLOS|::|PRINT-OBJECT| |SYSTEM|::|TRACED-DEFINITION| |SYSTEM|::|UNTRACE1|
+   #Y(#:|99 101 (DEFMETHOD PRINT-OBJECT (# STREAM) ...)-15-1|
+      #15Y(00 00 00 00 01 00 00 00 00 02 DA C6 5D 19 02)
+      (|COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|)
+      #Y(#:|99 101 (DEFMETHOD PRINT-OBJECT (# STREAM) ...)-15-1-1|
+         #34Y(00 00 00 00 02 00 00 00 00 03 AD DA B0 72 29 6F 01 B1 6F 02 B2 88
+              03 07 CA 14 2D 05 06 19 03 C9 1B 77)
+         (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+         #Y(#:|99 101 (DEFMETHOD PRINT-OBJECT (# STREAM) ...)-15-1-1-1|
+            #70Y(00 00 00 00 04 00 00 00 01 1A DA B2 38 02 31 8B B1 2F 01 10 02
+                 B3 B5 31 83 11 B1 2F 03 DE B2 31 8A B1 2F 01 10 02 B2 B5 31 83
+                 11 B1 2F 03 DE B2 31 8A B1 2F 01 10 02 B1 B5 31 83 11 B1 2F 03
+                 DF B2 31 8A 9E 19 06)
+            (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) "#<"
+            |SYSTEM|::|STREAM-START-S-EXPRESSION|
+            |COMMON-LISP|::|*PRINT-RIGHT-MARGIN*|
+            |SYSTEM|::|STREAM-END-S-EXPRESSION| #\Space #\>)
+         |CLOS|::|CLASS-NAME| |SQLITE|::|DATABASE-NAME|
+         |SQLITE|::|DATABASE-OPENP| :|OPEN| :|CLOSED| |COMMON-LISP|::|FORMAT|)
+      (|COMMON-LISP|::|T|))
+   :|QUALIFIERS| :|LAMBDA-LIST| (|SQLITE|::|DB| |COMMON-LISP|::|STREAM|)
+   |CLOS|::|SIGNATURE|
+   #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+     |COMMON-LISP|::|NIL|)
+   :|SPECIALIZERS| |SQLITE|::|DATABASE| |CLOS|::|DO-DEFMETHOD|)
+#Y(#:|103 107 (DEFUN SQLITE-CLOSE (DB) ...)-16|
+   #26Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC DD 2D 03 04 DA DF 32 83 C5
+        19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-CLOSE| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   |COMMON-LISP|::|FUNCTION| "Close a database connection."
+   |SYSTEM|::|%SET-DOCUMENTATION|
+   #Y(|SQLITE|::|SQLITE-CLOSE|
+      #23Y(00 00 00 00 01 00 00 00 00 02 AD 6F 00 2F 01 AD DC 63 32 3F 9E 19
+           02)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |SQLITE|::|DATABASE-ADDRESS| |SQLITE.RAW|::|SQLITE_CLOSE|
+      |SQLITE|::|OPENP|))
+#Y(#:|109 117 (DEFUN SQLITE-EXEC (DB QUERY CALLBACK ...) ...)-17|
+   #20Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC 32 83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-EXEC| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   #Y(|SQLITE|::|SQLITE-EXEC|
+      #37Y(00 00 00 00 03 00 01 00 00 0A 3D 01 B0 6F 00 B0 B0 B0 2D 04 01 42 02
+           AD 8F 92 03 02 19 07 DC AE AE B4 33 03 1D)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |SQLITE|::|DATABASE-ADDRESS| |SQLITE.RAW|::|SQLITE_EXEC|
+      "sql error ~s: ~s. Offending query: ~s"))
+#Y(#:|119 120 (DEFUN SQLITE-LAST-INSERT-ROWID (DB) ...)-18|
+   #20Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC 32 83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-LAST-INSERT-ROWID| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   #Y(|SQLITE|::|SQLITE-LAST-INSERT-ROWID|
+      #17Y(00 00 00 00 01 00 00 00 00 02 AD 6F 00 2F 01 19 02)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |SQLITE|::|DATABASE-ADDRESS| |SQLITE.RAW|::|SQLITE_LAST_INSERT_ROWID|))
+#Y(#:|121 122 (DEFUN SQLITE-CHANGES (DB) ...)-19|
+   #20Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC 32 83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-CHANGES| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   #Y(|SQLITE|::|SQLITE-CHANGES|
+      #17Y(00 00 00 00 01 00 00 00 00 02 AD 6F 00 2F 01 19 02)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |SQLITE|::|DATABASE-ADDRESS| |SQLITE.RAW|::|SQLITE_CHANGES|))
+#Y(#:|123 124 (DEFUN SQLITE-COMPLETE (SQL) ...)-20|
+   #20Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC 32 83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-COMPLETE| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   #Y(|SQLITE|::|SQLITE-COMPLETE|
+      #15Y(00 00 00 00 01 00 00 00 00 02 AD 2F 00 19 02)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |SQLITE.RAW|::|SQLITE_COMPLETE|))
+#Y(#:|126 132 (DEFUN SQLITE-OPEN (NAME &OPTIONAL #) ...)-21|
+   #26Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC DD 2D 03 04 DA DF 32 83 C5
+        19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|SQLITE-OPEN| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   |COMMON-LISP|::|FUNCTION| "Open a database, checking for errors."
+   |SYSTEM|::|%SET-DOCUMENTATION|
+   #Y(|SQLITE|::|SQLITE-OPEN|
+      #43Y(00 00 00 00 01 00 01 00 00 08 3B 01 02 C5 F9 AE 71 F6 AE 30 01 42 02
+           92 00 0C DD DE AF DF B4 E0 64 2D 07 07 19 05 DC AD 33 01 1D)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) 0.
+      |SQLITE.RAW|::|SQLITE_OPEN| "sqlite_open: ~s" |SQLITE|::|DATABASE|
+      :|ADDRESS| :|NAME| :|OPENP| |CLOS|::|MAKE-INSTANCE|))
+#Y(#:|134 139 (DEFMACRO WITH-OPEN-DB (# &BODY BODY) ...)-22|
+   #28Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC DD 2D 03 04 DA DF 6F 06 32
+        83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|WITH-OPEN-DB| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   |COMMON-LISP|::|FUNCTION|
+   "Convenience function for making sure database handles get freed."
+   |SYSTEM|::|%SET-DOCUMENTATION|
+   #Y(|SQLITE|::|WITH-OPEN-DB|
+      #81Y(00 00 00 00 02 00 00 00 00 03 AE 6F 00 DB 90 01 2F 2C 9F 5C 78 AC 6F
+           00 DB 90 01 2E 26 AC 94 00 9E 5C 78 A3 5C 79 E4 AF E5 B0 7B 02 7B 02
+           7B 01 E6 E7 A1 7A E8 B3 7B 02 7B 03 61 03 19 08 AE 2F 02 19 03 DD DE
+           B1 DF B0 E0 6F 07 E2 B3 E3 33 07 1E)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |EXT|::|LIST-LENGTH-DOTTED| 2. |SYSTEM|::|MACRO-CALL-ERROR|
+      |EXT|::|SOURCE-PROGRAM-ERROR| :|FORM| :|DETAIL|
+      "~S: ~S does not match lambda list element ~:S" |SYSTEM|::|TEXT|
+      |SQLITE|::|WITH-OPEN-DB| (|SQLITE|::|DB| |SQLITE|::|FILENAME|)
+      |COMMON-LISP|::|LET| |SQLITE|::|SQLITE-OPEN|
+      |COMMON-LISP|::|UNWIND-PROTECT| |COMMON-LISP|::|PROGN|
+      |SQLITE|::|SQLITE-CLOSE|)
+   |SYSTEM|::|MAKE-MACRO|)
+#Y(#:|141 154 (DEFUN SQL (DB QUERY) ...)-23|
+   #26Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC DD 2D 03 04 DA DF 32 83 C5
+        19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|) |SQLITE|::|SQL|
+   |SYSTEM|::|REMOVE-OLD-DEFINITIONS| |COMMON-LISP|::|FUNCTION|
+   "Execute an sql query. If *sql-convert-values* is set, then the
+result strings will be interpreted by sql-dtranslate. This function is
+fairly inefficient because it aggregates the whole table by pushing
+the results onto a list and reversing them just before returning, but
+good for interacting with the prompt. It's probably better to use
+with-query in production code."
+   |SYSTEM|::|%SET-DOCUMENTATION|
+   #Y(|SQLITE|::|SQL|
+      #34Y(00 00 00 00 02 00 00 00 00 03 00 2B 01 00 0B 00 00 AC 6D 00 01 B0 B0
+           AE 2D 03 01 68 01 00 32 4A 19 05)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      #Y(|SQLITE|::|SQL-1|
+         #24Y(00 00 00 00 04 00 00 00 00 05 AE DB 72 2B 07 00 01 5D 0C 00 01 C7
+              19 05)
+         (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+         |COMMON-LISP|::|NIL| |COMMON-LISP|::|LIST| 0.)
+      |SQLITE|::|SQLITE-EXEC|))
+#Y(#:|156 183 (DEFMACRO WITH-QUERY (# &BODY BODY) ...)-24|
+   #28Y(00 00 00 00 00 00 00 00 00 01 DA 2F 01 DA DC DD 2D 03 04 DA DF 6F 06 32
+        83 C5 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   |SQLITE|::|WITH-QUERY| |SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+   |COMMON-LISP|::|FUNCTION|
+   "A thoroughly useful function, your body is executed for each row
+returned by query. The columns in the result are assigned to the
+variables in arg-list so they can be easily accessed."
+   |SYSTEM|::|%SET-DOCUMENTATION|
+   #Y(|SQLITE|::|WITH-QUERY|
+      #221Y(00 00 00 00 02 00 00 00 00 03 AE 6F 00 DB 90 01 2F 80 69 9F 5C 78
+            AC 6F 00 DD 90 01 2F 80 62 AC 94 00 9E 5C 78 9F 5C 5C 78 A0 5C 5C
+            79 A5 5C 79 38 01 72 90 38 01 72 90 38 01 72 90 38 01 72 90 38 01
+            72 90 38 01 72 90 38 01 72 90 E5 B2 92 0A 80 43 B7 8E 0D 80 4D A8
+            14 7B 02 B2 E8 BA A9 5D 7A 7B 02 B5 E8 B1 B4 B6 B5 7B 04 E9 EA B4
+            B7 B7 7B 04 7B 02 EB EC BF 01 02 1B 80 40 AE 2F 02 19 03 DE DF B1
+            E0 B0 E1 6F 08 E3 B3 E4 33 07 1E E7 AB 37 00 1B 07 E6 63 B9 8E 0D
+            74 AA 14 AA 5D 5D 5D 1B FF B4 E7 A9 37 00 1B FF AD 87 02 01 14 ED
+            BD B2 7B 03 7B 02 84 00 85 03 83 02 AE 8D 94 6B AC 31 A6 16 03 F8
+            04 10 5D 7A D9 5D 5D 5D 7A 7B 02 7B 03 EF BA B5 B7 7B 04 61 03 19
+            11)
+      (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+      |EXT|::|LIST-LENGTH-DOTTED| 2. |SYSTEM|::|MACRO-CALL-ERROR| 3.
+      |EXT|::|SOURCE-PROGRAM-ERROR| :|FORM| :|DETAIL|
+      "~S: ~S does not match lambda list element ~:S" |SYSTEM|::|TEXT|
+      |SQLITE|::|WITH-QUERY|
+      (|SQLITE|::|DB| |SQLITE|::|ARG-LIST| |SQLITE|::|QUERY|
+       |COMMON-LISP|::|&REST| |SQLITE|::|QARGS|)
+      |COMMON-LISP|::|LET*| |COMMON-LISP|::|FORMAT| #.#'|EXT|::|STRING-CONCAT|
+      |COMMON-LISP|::|LAMBDA| |COMMON-LISP|::|DECLARE| |COMMON-LISP|::|IGNORE|
+      |COMMON-LISP|::|LET| 0. |COMMON-LISP|::|AREF| (0.)
+      |SQLITE|::|SQLITE-EXEC|)
+   |SYSTEM|::|MAKE-MACRO|)
+#Y(#:|185 186 (DEFVAR *SQL-CONVERT-VALUES* NIL ...)-25|
+   #30Y(00 00 00 00 00 00 00 00 00 01 DA 31 5A DB 8C 4F 04 DB 63 31 52 DB DC DD
+        2D 03 04 C6 19 01)
+   (|COMMON-LISP|::|T| |COMMON-LISP|::|T| |COMMON-LISP|::|T|)
+   (|COMMON-LISP|::|SPECIAL| |SQLITE|::|*SQL-CONVERT-VALUES*|)
+   |SQLITE|::|*SQL-CONVERT-VALUES*| |COMMON-LISP|::|VARIABLE|
+   "If non-nil, values returned from sql will be converted from strings to lisp types"
+   |SYSTEM|::|%SET-DOCUMENTATION|)

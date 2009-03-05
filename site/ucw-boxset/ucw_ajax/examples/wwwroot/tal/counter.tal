@@ -1,0 +1,33 @@
+<!-- -*- html -*- -->
+<table xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+       xmlns:ucw="http://common-lisp.net/project/ucw/core"
+       tal:in-package="it.bese.ucw-user"
+       border="2">
+  <tr><td colspan="2" tal:content="(strcat &quot;Current frame is: &quot; (ucw::frame.id (ucw::context.current-frame *context*)))"></td></tr>
+  <tr>
+    <td>Current value:</td>
+    <td tal:content="$value">CURRENT VALUE</td>
+  </tr>
+  <tr>
+    <td>
+      <a href="" ucw:action="(increment/cc $component)">Increment</a>
+    </td>
+    <td>
+      <a href="" ucw:action="(decrement/cc $component)">Decrement</a>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <!-- this action is executed in the same frame it was rendered and may not use call/answer or anything else that needs with-call/cc feature -->
+      <a href="" ucw:ajax-action="(increment $component)
+                               (render-nearest-ajax-component $component)">Increment with AJAX</a>
+    </td>
+    <td>
+      <!-- a new frame is created with this action, so it's free to use any with-call/cc feature including call/answer
+            :invalidate $component is equivalent to (render-nearest-ajax-component $component), but :invalidate may be also a list of components -->
+      <a href="" ucw:ajax-action="(:with-call/cc (decrement/cc $component)
+                                :invalidate $component)">Decrement with AJAX</a>
+    </td>
+  </tr>
+</table>

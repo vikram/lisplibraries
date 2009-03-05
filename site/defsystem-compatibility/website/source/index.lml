@@ -1,0 +1,57 @@
+;;; -*- Mode: Lisp -*-
+
+(in-package #:rw)
+
+(html-file-page ("index")
+  (html
+   (:head (:title "defsystem-compatibility")
+          (generate-shared-headers))
+   (:body
+    (generate-two-line-header
+     "defsystem-compatibility" "Has anybody seen my jujubees?")
+    
+    ((:div :class "contents")
+     (generate-system-sidebar)
+     
+     ((:div :class "system-description")
+      (:h3 "What it is")
+      "Defsystem-compatibility is a compatibility layer that helps make different system definitions play nicely using the same rules. It also builds a few helpful higher level tools on top of the foundation."
+      
+      (:h3 "What it does")
+      (:p "There are a " (:em "lot") " of Common Lisp defsystems in the world. The venerable mk-defsystem and another system-definition facility are the most popular but there is also Allegro's built in one, GBBOpen's mini-module system, the EKSL Generic Load Utilities, Yet Another Define System and so on.")
+      
+      (:p "Defsystem-compatibility papers over the differences between systems and also provides a small set of relective capabilities to help system groveling tools become more portable.")
+      
+      (:p "It currently works only with ASDF. I'll be adding support for MK-Defsystem in sidereal time unless there is a request from the ether in which case it might happen more quickly.")
+      
+      ((:a :name "mailing-lists"))
+      (:h3 "Mailing Lists")
+      (:p "defsystem-compatibility isn't a separate project at this point but if you have
+questions, comments or concerns, just drop " (rw:link :mail-gwking :title "Gary King") 
+          " a line.")
+      
+      ((:a :name "downloads"))
+      (:h3 "Where is it")
+      (:p "A " (rw:link :darcs) " repository is available. The darcs command is listed below:")
+      
+      (:pre " darcs get http://common-lisp.net/project/cl-containers/defsystem-compatibility/darcs/defsystem-compatibility ") 
+      
+      (:p "defsystem-compatibility is also " (rw:link :asdf-install :title "ASDF installable") ". Its CLiki home is right " (rw:link :defsystem-compatibility-cliki :title "where") " you'd expect.")
+      
+      (:p "There's also a handy " (rw:link :defsystem-compatibility-package :title "gzipped tar file") ". " (rw:link :tinaa :title "Tinaa") " documentation is also "
+          (rw:link :defsystem-compatibility-tinaa :title "available."))
+      
+      ((:a :name "news")) 
+      (:h3 "What is happening")
+      ((:table :class "system-news") 
+       (:tr
+        (:th "4 March 2007")
+        (:td "Minor updates to show that we're not dead yet."))
+       (:tr
+        (:th "31 Dec 2005")
+        (:td "Packaged up for the first time. Happy New Year.")))))
+    
+    ((:div :class "footer")
+     (generate-button-row 
+      (format nil "Last updated: ~A" 
+              (format-date "%A, %e %B %Y" (get-universal-time))))))))

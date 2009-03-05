@@ -1,0 +1,169 @@
+;-*- Mode: Common-lisp; Package: ytools; -*-
+(in-package :ytools)
+
+;;; Copyright (C) 1976-2003 
+;;;     Drew McDermott and Yale University.  All rights reserved
+;;; This software is released under the terms of the Modified BSD
+;;; License.  See file COPYING for details.
+
+(defparameter ytools-package* (find-package :ytools))
+(defparameter lisp-package* (find-package :common-lisp))
+(defparameter cl-user-package* (find-package :common-lisp-user))
+
+(declaim (special lisp-object-extn* lisp-source-extn*))
+
+(push ':newfangled *features*)
+
+#-excl
+(eval-when (:compile-toplevel :load-toplevel :execute)
+   (defvar readtable-table*
+           (list (list ':lisp lisp-readtable*)
+		 (list ':ytools ytools-readtable*)))
+   (defun named-readtable (name &optional errorp)
+      (setq name (intern (symbol-name name) :keyword))
+      (let ((e (assoc name readtable-table*)))
+	 (cond (e (cadr e))
+	       (errorp
+		(error "There is no readtable named ~s" name))
+	       (t nil))))
+   (defun (setf named-readtable) (rt name &optional errorp)
+      (declare (ignore errorp))
+      (setq name (intern (symbol-name name) :keyword))
+      (let ((e (assoc name readtable-table*)))
+	 (cond ((not e)
+		(setq e (list name nil))
+		(setq readtable-table*
+		      (cons e readtable-table*))))
+	 (setf (cadr e) rt)
+	 rt)))
+
+#+excl
+(eval-when (:compile-toplevel :load-toplevel :execute)
+   (import 'excl:named-readtable))
+
+(setf (named-readtable ':ytools) ytools-readtable*)
+
+(defparameter ytools-core-files*
+    '("base" "datafun" "pathname" "module" "slurp" "files" "depend"))
+
+(defparameter bin-idio-dir*
+   (cond ((equal bin-idio* "")
+	  '())
+	 (t
+	  (let ((pn (parse-namestring bin-idio*)))
+	     (let ((dir (pathname-directory pn)))
+		(cond ((and (consp dir)
+			    (eq (car dir) ':relative))
+		       (cdr dir))
+		      (t
+		       (cerror "I will assume there is no special bin subdirectory for this Lisp"
+			       "Illegal as bin subdirectory: ~s"
+			       bin-idio)
+		       '())))))))
+
+(defparameter ytools-bin-relative*
+              (append (pathname-directory (parse-namestring ytools-bin-path*))
+		      (cond ((string= bin-idio* "") '())
+			    (t (cdr (pathname-directory (parse-namestring bin-idio*)))))
+		      '("ytools")))
+
+;;;;	     '(:relative :back "bin" "ytools")
+
+(defparameter dir-delim*
+     (cond ((= (length ytools::directory-delimiter*)
+	       1)
+	    (elt ytools::directory-delimiter* 0))
+	   (t
+	    (error "YTools requires directory-delimiter to be ~
+                    exactly one character, not ~s"
+		  ytools::directory-delimiter*))))
+
+
+;;;;(defparameter ytools-home-dir* "~/CVSified/prog/ytools/")
+;;;;(defparameter lisp-object-extn* "fasl")
+
+(defparameter ytools-dir-pathname*
+              (parse-namestring ytools-home-dir*))
+
+(defparameter ytools-bin-dir-pathname*
+(let ((dirs (pathname-directory (pathname ytools-bin-path*))))
+      (cond ((and (not (null dirs)) (eq (car dirs) ':relative))
+	     (setq dirs (cdr dirs))
+	     (let ((down-layers '())
+		   (yt-dirs (reverse (pathname-directory ytools-dir-pathname*))))
+		(loop
+		   (cond ((or (null yt-dirs)
+			      (member (car yt-dirs) '(:relative :absolute)))
+			  (error "Can't build ytools-bin-dir-pathname* from ~s and ~s"
+				 ytools-dir-pathname* (pathname ytools-bin-path*))))
+		  (format t "down-layers = ~s~%  yt-dirs = ~s~%   dirs = ~S~%"
+			    down-layers yt-dirs dirs)
+		   (cond ((or (null dirs)
+			      (not (member (car dirs) '(:up :back))))
+			  (let ((final-dirs
+				   (append (reverse yt-dirs)
+					   dirs
+					   (cond ((string= bin-idio* "")
+						  '())
+						 (t (cdr (pathname-directory
+							    (parse-namestring
+							       bin-idio*)))))
+					   down-layers)))
+			     (format t "Final dirs = ~S~%" final-dirs)
+			     (return
+				(ensure-directories-exist
+				   (merge-pathnames
+				      (make-pathname
+					 :directory final-dirs)
+				      ytools-dir-pathname*))))))
+		  (setq down-layers (cons (car yt-dirs) down-layers))
+		  (setq yt-dirs (cdr yt-dirs))
+		  (setq dirs (cdr dirs)))))
+	    (t
+	     (error "Can't build ytools-bin-dir-pathname* from ~s"
+		    (pathname ytools-bin-path*))))))
+
+(setq *features* (adjoin ':ytools *features*))
+
+(cl:defun load-core ()
+      (dolist (bf ytools-core-files*)
+	 (load (merge-pathnames
+		  (make-pathname :name bf :type lisp-object-extn*)
+		  ytools-bin-dir-pathname*)))
+;;;;      (format t "Before loading ytinit, config-directory* = ~s~%"
+;;;;	      config-directory*)
+)
+     
+(cl:defun compile-core ()
+   (dolist (bf ytools-core-files*)
+      (let ((lisp-file
+	       (merge-pathnames
+		  (make-pathname :name bf :type "lisp")
+		  ytools-dir-pathname*))
+	    (fasl-file
+	       (ensure-directories-exist
+		  (merge-pathnames
+		     (make-pathname :name bf :type lisp-object-extn*)
+		     ytools-bin-dir-pathname*))))
+	 (compile-file lisp-file :output-file fasl-file)
+	 (load fasl-file))))
+     
+(cl:defun use-ytools (&optional (pkg *package*))
+   (shadowing-import '(ytools::defun ytools::defmacro ytools::eval-when)
+		     pkg)
+   (use-package :ytools pkg))
+
+(eval-when (:load-toplevel :execute)
+  (export '(use-ytools named-readtable in-ytools)))
+
+(setq *features* (adjoin ':ytools *features*))
+
+(shadowing-import 'ytools :cl-user)
+
+(defun in-ytools ()
+   (setq *readtable* ytools-readtable*)
+   (in-package :ytools))
+
+(pushnew ':pre-chunk *features*)
+
+(defconstant +ytools-version+ "1.4.10")

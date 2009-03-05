@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    17
+	    --
+	    Extra Namespaces</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Extra Namespaces</h1>
+    Sometimes namespaces are referenced where we can't tell:
+    <pre class="code">&lt;report xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xsl:version="1.0"
+	xmlns:<b>xhtml</b>="http://www.w3.org/1999/xhtml"&gt;
+  &lt;xsl:for-each select="//<b>xhtml</b>:p"&gt;
+    Paragraph found! 
+  &lt;/xsl:for-each&gt;
+&lt;/report&gt;</pre>
+    <br>
+    Those namespaces can be declared explicitly.
+    <pre class="code">(defun add-extra-namespace (element prefix uri) ...)
+(defun remove-extra-namespace (element prefix) ...)
+(defun find-extra-namespace (prefix element) ...)
+(defun map-extra-namespaces (fn element) ...)</pre>
+
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="16.html">⬖</a>17/24<a class="icon" href="18.html">⬗</a>
+</div>
+</body>
+</html>

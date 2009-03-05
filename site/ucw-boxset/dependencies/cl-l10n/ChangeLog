@@ -1,0 +1,172 @@
+2006-04-27 Sean Ross	<sross@common-lisp.net>
+	* parse-number.lisp: Changed parse-error to extend parser-error
+	* parse-time.lisp: Changed uses of eq to eql when using numbers
+	or characters.
+	* printers.lisp: Default length fraction digits to 0 if it can't 
+	be found in the current locale. Fixed printers of %R time format directive.
+	* load-locale.lisp: Search environment variable LANG before trying using 
+	POSIX locale when loading default locale.
+	Add shadowing-format which shadows format and formatter into the current package.
+	* package.lisp: Export load-default-locale
+	
+2006-04-15 Luís Oliveira  <loliveira@common-lisp.net>
+	* doc/cl-l10n.texi: Rename the Index node to Comprehensive Index in 
+	order to avoid a name clash with index.html on platforms with 
+	case-insensitive filesystems.  Prettify the copyright notice.
+	* doc/Makefile, doc/style.css, doc/gendocs.sh, doc/gendocs_template, doc/style.css: 
+	New files. 
+
+2006-04-15 Luís Oliveira  <loliveira@common-lisp.net>
+	* load-locale.lisp (load-locale): Specify an explicit 
+	external-format for CLISP
+	* test.lisp: Fix indentation of deftest forms.
+	(time.2): Obtain the o-with-diaeresis in a slightly more portable way. 
+	
+2006-03-20 Sean Ross	<sross@common-lisp.net>
+	* locale.lisp: Changed definition of *locale-path* to use
+	asdf:component-pathname of cl-l10n rather than the load path.
+	This resolves problems finding the locale files when fasl's are
+	not in the same directory as the source files.
+	Patch by Aycan iRiCAN
+	
+2005-05-25 Sean Ross	<sross@common-lisp.net>
+	* locales/ar_SA: revert.
+	* load-locale.lisp, printers.lisp: Added support for the .1 in the ar_SA locale.
+	
+2005-05-18 Sean Ross	<sross@common-lisp.net>
+	load-all-locales now works.
+	* cl-l10n.asd: Added dependency to cl-fad
+	* load-locale.lisp: Only do printer creation if LC_MONETARY
+	and LC_NUMERIC exist.
+	Added a check for a funny #\E in some locales date fields.
+	Only do date-parsers if LC_TIME Exists.
+	Fixed line parser to handle normal characters in locale files,
+	now "%d<U0020>" parses correctly.
+	* utils.lisp: Removed awhen, awhile.
+	* printers.lisp: Added a check for #\E in date printing.
+	* locales/ar_SA: This locale has a .1 in front of
+	various time printing directives. I have no idea what these
+	mean....
+	
+	
+2005-03-31 Sean Ross	<sross@common-lisp.net>
+	Version 0.3 Release
+	* parse-time.lisp, load-locale.lisp: Create
+	more comprehensive time parsers for each locale
+	at locale load time. 02/03/04 now parses correctly.
+	* tests.lisp: Added tests for the time parser.
+	* printers.lisp: Added a time-zone argument to format-time
+	and print-time.
+	* parse-number.lisp: Changed invalid-number condition to
+	parser-error condition.
+	* parse-time.lisp: Changed errors which are signalled during
+	parsing to be of type parser-error.
+	* locale.lisp: Changed superclass of locale-error to be error.
+	* tests.lisp: Changed all time related tests to use
+	a default time zone since they were crashing when running
+	in a zone other than +0200 (-2 CL Zone).
+	* doc/cl-l10n.texi: Made current and added full listing of 
+	locale accessor functions and time format control characters.
+	
+2005-03-30 Sean Ross	<sross@common-lisp.net>
+	* parse-time.lisp: New file borrowed from cmucl with
+	minor changes to be less hostile towards non english 
+	dates and times. 
+	* package.lisp: Exported parse-time and various pattern
+	symbols.
+
+2005-03-29 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Fix to %z time format directive, 0 time zone 
+	was printed as -0000, should be +0000
+	
+2005-03-24 Sean Ross	<sross@common-lisp.net>
+	* cl-l10n.asd, load-locale.lisp: Moved loading of initial locale
+	to the asdf load-op.
+	* load-locale.lisp: Bug fix, incorrect order of arguments to 
+	get-category in copy-category.
+	
+2005-03-23 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Fixed the %w, %e, %x, %X, %d and %j time format directives.
+	* tests.lisp: Added a test for each supported time format directive.
+	
+2005-03-17 Sean Ross	<sross@common-lisp.net>
+	* doc/cl-l10n.texi: Cleaned up so that it works with makeinfo.
+	
+2005-02-22 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Added a format compiler macro 
+	to remove unnecessary calls to parse-fmt-string.
+	* load-locale.lisp: Added a loader for the locale 
+	function which will be called if passed in.
+	
+2005-02-17 Sean Ross	<sross@common-lisp.net>
+	* locale.lisp: Added support for Allegro CL.
+
+2005-02-01 Sean Ross	<sross@common-lisp.net>
+	* load-locale.lisp: Revert to a default thousands separator
+	if the the locale to be loaded doesn't have one.
+	* printers.lisp: Fixed bug in float padding.
+
+2005-01-04 Sean Ross	<sross@common-lisp.net>
+	* locale.lisp: Changed get-category, get-locale to generic-functions
+	Changed macro get-cat-val to method category-value.
+	* load-locale.lisp: Added *locale-type* and *category-type*. 
+
+2004-12-30 Sean Ross	<sross@common-lisp.net>
+	Version 0.2 Release
+	* printers.lisp, load-locale.lisp: Changed format-number and
+	format-money to use a format string created at locale load time.
+	* printers.lisp: Added rounding of monetary values
+	* locale.lisp: Cache Getter functions.
+	
+2004-12-20 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Added formatter.
+	
+2004-12-17 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Fixed incorrect sign when printing 
+	numbers and money.
+	* printers.lisp: The :no-dp arg whas ignored when 
+	printing numbers, fixed.
+	* printers.lisp: Added *float-digits*. Used when printing
+	numbers, when all numbers after the decimal point are zero
+	only *float-digits* zeros will be printed.
+	* printers.lisp: Fixed format to accept a function as the 
+	format control.
+
+2004-12-08 Sean Ross	<sross@common-lisp.net>
+	* printers.lisp: Added format which can be shadow imported
+	to provide 3 new format directives ~u(universal-time), ~m(monetary)
+	and ~n(numeric), all other directives are unchanged.
+	* printers.lisp: Use locale-t-fmt if locale-t-fmt-ampm is an 
+	empty string.
+	* locale.lisp: Added support for ECL.
+	* parse-number.lisp, parsers.lisp: Added a basic number parser.
+	
+2004-12-07 Sean Ross <sross@common-lisp.net>
+	* utils.lisp: Patch for flonum-to-digits from Raymond Toy 
+	on cmucl-help (06 Dec 2004, Subject: Strange error).
+
+2004-12-01 Sean Ross <sross@common-lisp.net>
+	Version 0.1 Release
+	* i18n.lisp: Basic internationalisation support.
+	* tests.lisp: Basic tests for package.
+	* printers.lisp: Added format directive %s
+	
+2004-11-30 Sean Ross <sross@common-lisp.net>
+	* utils.lisp, printers.lisp:
+	Changed read-from-string to parse-integer.
+	* printers.lisp: implemented time format directives 
+	%c, %j, %u, %w, %x and fixed %a and %A directives.
+	* locales: Added new locales. 
+	* LICENCE, LGPL-2.1: Update licence to reflect that
+	the locale definition files are licenced under the 
+	LGPL.
+	* README: Basic readme file.
+	* load-locale.lisp: Fixed load-all-locales to really
+	load from a specific path and to signal a warning if loading 
+	a locale fails.
+	* locale.lisp: Changed the typecase for locale-des->locale
+	to etypecase.
+	
+2004-11-29 Sean Ross <sross@common-lisp.net>
+	* cl-l10n.asd, locale.lisp, load-locale.lisp, printers.lisp: 
+	Initial import into cvs

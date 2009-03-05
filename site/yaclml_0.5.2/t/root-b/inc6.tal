@@ -1,0 +1,1 @@
+<tal:include tal:in-package=":it.bese.yaclml.test" tal:name="inc7.tal" xmlns:tal="http://common-lisp.net/project/bese/tal/core"/>

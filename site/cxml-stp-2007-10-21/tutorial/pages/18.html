@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    18
+	    --
+	    Documents</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Documents</h1>
+    Create using <tt>make-document</tt>:
+    <br>
+    <pre class="repl">CL-USER&gt; (stp:make-document (stp:make-element "list"))</pre>
+    <pre class="result">#.(STP:DOCUMENT
+   :CHILDREN '(#.(STP:ELEMENT
+                  #| :PARENT of type DOCUMENT |#
+                  :LOCAL-NAME "list")))</pre>
+    Children: May have <span class="em">at most one document-type</span>, and
+    must have <span class="em">exactly one element</span> as a child (<span class="em">in this
+      order</span>). May also have comments and processing-instructions
+    anywhere.
+    <br>
+    <br>
+    Properties (and their <tt>setf</tt> functions):
+    <ul>
+      <li>
+	<tt>document-element</tt>: Returns (replaces) the child that
+	is an element.
+      </li>
+      <li>
+	<tt>document-type</tt>: Returns (adds or replaces) the child that
+	is a document-type, if any.
+      </li>
+    </ul>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="17.html">⬖</a>18/24<a class="icon" href="19.html">⬗</a>
+</div>
+</body>
+</html>

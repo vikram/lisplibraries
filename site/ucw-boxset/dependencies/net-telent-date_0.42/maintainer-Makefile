@@ -1,0 +1,20 @@
+all:
+	@echo "The makefile is here for my use, not yours.  Use the defsystem, Luke"
+
+LISP=sbcl --noprogramer --no-userinit # --no-sysinit 
+#LISP=lisp  -batch
+PACKAGE=net-telent-date
+test:
+	@echo You will need two things for the tests to succeed.
+	@echo '(1) Internet access '
+	@echo '(2) echo services on localhost'
+	@echo The echo services are often disabled for security reasons, so
+	@echo dont forget to put them back when finished.
+	echo '(mk:load-system (quote $(PACKAGE))) (rt:do-tests)' | $(LISP)
+
+clean:
+	-rm *.*f *.fasl a.out *.so *.err 
+
+deb:
+	CVSROOT=`cat CVS/Root` cvs-buildpackage -F -uc -us -rfakeroot -M $(PACKAGE)
+

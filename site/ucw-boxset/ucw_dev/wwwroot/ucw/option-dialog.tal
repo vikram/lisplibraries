@@ -1,0 +1,10 @@
+<!-- -*- html -*- -->
+<div xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+     xmlns:ucw="http://common-lisp.net/project/ucw/core"
+     tal:in-package="it.bese.ucw"
+     class="ucw-option-dialog">
+  <div class="ucw-option-dialog-message" tal:content="$message">question?</div>
+  <ul>
+    <li tal:dolist="$options"><a href="" ucw:action="(respond $component $value)" tal:content="$text">text</a></li>
+  </ul>
+</div>

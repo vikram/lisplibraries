@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Class node</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-stp</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-stp.html">cxml-stp</a></p>
+      <h2 class="page-title">
+	  Class node</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Superclasses</h3>
+          <div class="indent">
+<tt style="color: #777777">common-lisp:standard-object</tt>, <tt style="color: #777777">sb-pcl::slot-object</tt>, <tt style="color: #777777">common-lisp:t</tt>
+</div>
+          <h3>Documented Subclasses</h3>
+          <div class="indent">
+<a href="cxml-stp__attribute.html"><tt>attribute</tt></a>, <a href="cxml-stp__comment.html"><tt>comment</tt></a>, <a href="cxml-stp__document-type.html"><tt>document-type</tt></a>, <a href="cxml-stp__parent-node.html"><tt>parent-node</tt></a>, <a href="cxml-stp__processing-instruction.html"><tt>processing-instruction</tt></a>, <a href="cxml-stp__text.html"><tt>text</tt></a>
+</div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">The superclass of all nodes.<br><br>    Although only <a href="cxml-stp__document.html"><tt>document</tt></a> and <a href="cxml-stp__element.html"><tt>element</tt></a> allow children,
+    read-only functions accessing the list of children are available for
+    all nodes and always return zero children for other classes.<br><br>                                                                                                        </div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>Slot Access Functions</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-stp__parent.html">
+                  <tt>parent</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__base-uri.html">
+                  <tt>base-uri</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <h3>See also</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-stp__document.html">
+                  <tt>document</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__element.html">
+                  <tt>element</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__document.html">
+                  <tt>document</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__root.html">
+                  <tt>root</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__detach.html">
+                  <tt>detach</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__copy.html">
+                  <tt>copy</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__serialize.html">
+                  <tt>serialize</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__map-children.html">
+                  <tt>map-children</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__do-children.html">
+                  <tt>do-children</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__list-children.html">
+                  <tt>list-children</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__first-child.html">
+                  <tt>first-child</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__last-child.html">
+                  <tt>last-child</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__nth-child.html">
+                  <tt>nth-child</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__previous-sibling.html">
+                  <tt>previous-sibling</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__next-sibling.html">
+                  <tt>next-sibling</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__count-children.html">
+                  <tt>count-children</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__find-child.html">
+                  <tt>find-child</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__child-position.html">
+                  <tt>child-position</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__count-children-if.html">
+                  <tt>count-children-if</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__find-child-if.html">
+                  <tt>find-child-if</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__child-position-if.html">
+                  <tt>child-position-if</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__filter-children.html">
+                  <tt>filter-children</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__map-recursively.html">
+                  <tt>map-recursively</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__do-recursively.html">
+                  <tt>do-recursively</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__find-recursively.html">
+                  <tt>find-recursively</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-stp__filter-recursively.html">
+                  <tt>filter-recursively</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

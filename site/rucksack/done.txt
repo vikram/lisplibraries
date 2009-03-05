@@ -1,0 +1,106 @@
+* 2006-09-04
+
+- Take care of some differences between the MOP implementations of Lispworks
+  and SBCL.  Lispworks doesn't call (setf slot-value-using-class) in
+  SHARED-INITIALIZE, but SBCL does.  Lispworks calls FINALIZE-INHERITANCE
+  after a class is redefined and a new instance is created, but SBCL
+  doesn't.  All tests now work for Lispworks (5.0) and SBCL (0.9.16).
+
+- Some work on a copying GC.
+
+* 2006-09-03
+
+- Handle updates of in-memory persistent objects by writing a method
+  for Lisp's UPDATE-INSTANCE-FOR-REDEFINED-CLASS that marks the object
+  as dirty and calls Rucksack's
+  UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS.
+
+
+* 2006-09-01
+
+- Get rid of the Lispworks-specific PROCESS-A-SLOT-OPTION stuff and handle
+  the slot options in a way that's compatible with AMOP.
+
+- Removed INITARGS argument for UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS,
+  because it turns out not to be necessary (see details in notes.txt).
+
+- Add explanation to test-index-1a.lisp about the use of
+    (eval-when (:compile-toplevel :load-toplevel :execute) ...)
+
+- Replace *RUCKSACK* by RS in test-*.lisp.
+
+
+* 2006-08-31
+
+- Get rid of the Lispworks-specific PROCESS-A-CLASS-OPTION stuff and handle
+  the :INDEX class option in a way that's compatible with AMOP.
+
+- Write test cases for schema updates and user defined methods for
+  UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS.
+
+- Indexing: compare the specified slot/class indexes to the indexes that
+  exist in the Rucksack, *not* to the indexes specified in the previous
+  version of the class definition.  Otherwise we get inconsistencies
+  when we recompile class definitions from scratch with a Rucksack that
+  already exists.
+
+- Write test case for slots with redefined indexes.  This also tests
+  the default method for UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS.
+
+* 2006-08-30
+
+- FINALIZE-INHERITANCE: Compute slot diffs for obsolete schemas.
+
+- More work on UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS.
+
+* 2006-08-29
+
+- Partial implementation of UPDATE-PERSISTENT-INSTANCE-FOR-REDEFINED-CLASS
+  & friends.
+
+* 2006-08-29
+
+- Example-1: indexing should still work after recompiling.
+
+- RUCKSACK-UPDATE-SLOT-INDEXES: Remove indexes for old slots that
+  don't exist anymore.
+
+- Some work on schema updates.
+
+- Compute persistent slots at the right moment.
+
+
+* 2006-08-26
+
+- Make sure that indexing works correctly with subclasses.
+- Fix some more indexing bugs.
+
+
+* 2006-08
+
+- The class and slot indexes were normal hash tables, but they should be
+  persistent objects like everything else: I replaced them by btrees.
+
+- Get process-lock and process-unlock working on SBCL (thanks to Geoff Cant).
+
+
+* 2006-08
+
+- Save and load the index tables when closing/opening a rucksack.
+
+- Implement the :UNIQUE slot option.
+
+- Improve predefined slot index specs.
+
+
+* 2006-08
+
+- Add a SERIAL-TRANSACTION-RUCKSACK class that allows for only one transaction
+  at a time (by using a transaction lock).  This allows for a fast track
+  towards a working Rucksack implementation.  Then parallel transactions
+  can be added later.
+
+- Don't do any GC at all while a transaction is writing objects to disk.
+  Instead we keep track of the amount of disk space allocated by the committing
+  transaction.  Then we do a (partial) GC immediately after committing the
+  transaction.

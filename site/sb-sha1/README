@@ -1,0 +1,9 @@
+This module implements the RFC3174 "SHA-1" Message Digest Algorithm.
+
+The implementation draws heavily on the MD5 Message Digest Algorithm
+implementation by Pierre Mai.
+
+You should read the "Notes" section in contrib/sb-md5/README for 
+further information.
+
+Nathan Froyd <froydnj@cs.rice.edu>, 2003-08-08

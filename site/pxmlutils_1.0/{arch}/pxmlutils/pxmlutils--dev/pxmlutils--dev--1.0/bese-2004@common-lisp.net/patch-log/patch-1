@@ -1,0 +1,11 @@
+Revision: pxmlutils--dev--1.0--patch-1
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Mon Feb  2 11:16:38 CET 2004
+Standard-date: 2004-02-02 10:16:38 GMT
+Modified-files: pxml1.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-1
+Summary: Access the acl-xompat.excl package via it's full name and not
+         the nickname excl (which no longer exists in acl-compat) 
+Keywords:
+

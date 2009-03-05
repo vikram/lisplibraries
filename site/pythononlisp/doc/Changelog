@@ -1,0 +1,76 @@
+;;;;;; Bugfixes and new features:
+;;;
+;;;	2006-11-24
+;;;
+;;;	Fixed pygetarg to work with current versions of CFFI
+;;;
+;;;     2006-06-06
+;;;     
+;;;     Updated layout, bugs, and docs to reflect latest known compatible OS's and CL implementations
+;;;     
+;;;     2006-02-03
+;;;
+;;;     Fixed the message "NIL is not a Lisp string or pointer" by
+;;;     replacing the NIL's in the module table with
+;;;     (cffi:null-pointer). It was expecting a pointer, not a
+;;;     NIL. This bug should be fixed on Linux now, too, because
+;;;     that's where it was reported as occurring.
+;;;
+;;;     I got pythonlisp up and running in Lispworks on Windows. I
+;;;     noticed none of Python's printed text was making it to the
+;;;     Lispworks console, probably because stdout is not the same as
+;;;     in Clisp's console window (which I'd been testing it on). Now
+;;;     dumpstd outputs straight to the REPL window using print.
+;;;
+;;;     redirect-stdout is assumed to be set by default to avoid
+;;;     confusing first-time users who can't see anything being output
+;;;     by Python.
+;;;
+;;;     Removed that 'import' macro thing - it stopped pythonlisp.lisp
+;;;     loading into Lispworks 4.4 properly.
+;;;
+;;;     Now tested with Clisp (2.37/2.38) ACL 7.0 and Lispworks 4.4 on
+;;;     Windows with CFFI 060120
+;;;
+;;;     2006-02-04
+;;;
+;;;     Added the REPL toy, which lets you interact directly with
+;;;     Python, and even define indented blocks a la the official
+;;;     Python REPL
+;;;
+;;;     2006-02-05
+;;;
+;;;     Added get-mbox-messages which demonstrates making custom
+;;;     callback tables, and avoiding the use of intermediate
+;;;     variables to pass data between the two languages. Because
+;;;     Python and Lisp both have dynamically-allocated string
+;;;     classes, it is quite efficient to pass enormous strings
+;;;     between them without the usual security holes of using C
+;;;
+;;;     Made module arrays static allocations to avoid Python crashing
+;;;     when py is run with a module definition, then called again
+;;;     without it, but calling that module's functions.
+;;;
+;;;     Tidied up the pythonlisp function (and the entire code file)
+;;;
+;;;     Added 'secure' option to init-python
+;;;
+;;;     2006-02-19
+;;;
+;;;     New release! Lets you define Python functions with defpyfun
+;;;     (excuse the pun). I changed all the current module function
+;;;     definitions to use defpyfun, so look at those for examples of
+;;;     how to easily make callbacks.
+
+;;; Known bugs/problems:
+;;;
+;;;     2006-02-05
+;;;
+;;;     There's a way for a callback function (defined as
+;;;     METHOD_VARARGS, or 4) to say that the number of arguments
+;;;     passed to it was wrong, and then Python throws an error. I'll
+;;;     look into this soon, as it's not essential to a working system
+;;;     right now, but it is desirable.
+;;;
+;;;     There should be a way to just print stdout to the Lisp REPL,
+;;;     but not add it to a huge string. I'm working on it.

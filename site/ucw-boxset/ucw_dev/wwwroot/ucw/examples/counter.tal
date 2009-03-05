@@ -1,0 +1,18 @@
+<!-- -*- html -*- -->
+<table xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+       xmlns:ucw="http://common-lisp.net/project/ucw/core"
+       tal:in-package="it.bese.ucw-user"
+       border="2">
+  <tr>
+    <td>Current value:</td>
+    <td tal:content="$value">CURRENT VALUE</td>
+  </tr>
+  <tr>
+    <td>
+      <a href="" ucw:action="(increment $component)">increment</a>
+    </td>
+    <td>
+      <a href="" ucw:action="(decrement $component)">decrement</a>
+    </td>
+  </tr>
+</table>

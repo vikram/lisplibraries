@@ -1,0 +1,42 @@
+
+----------
+Pitfall #1
+----------
+
+Consider this code in a render method:
+
+(iter (for newval in '("a" "b" "c"))
+      (let ((newval-1 newval))
+        (<ucw:a :action (setf (value test) newval-1)
+          (<:as-html newval))))
+
+Seems like it should work fine, the variable is even rebound, but in fact it
+won't work due to something that can be considered a bug, but a non-trivial to
+fix one.
+
+segv            it's iterates 'fault'. iterate walks and macroexpands its body but
+                doesn't modify the lexical environment while it does that, so it causes with-call/cc
+                to get expanded with the iter's env, and not the iter's env + the let binding.
+attila_lendvai  ehh
+segv            (fwiw arnesi's own code walker doesn't do that either)
+segv            this explains why it works fine with loop and dolist
+segv            and dolist*
+attila_lendvai  is it easy to fix? i can push to iterate, but have no experience with envs
+segv            attila_lendvai: i requires looking through the various lisps to figure out how to
+                do that, and fixing iterate's code-walker to do the proper environment augmentation
+                for let, let*, flet, labels, macrolet and symbol-macrolet forms.
+segv            doable, but not trivial.
+segv            at that point it'd probbaly be easier to rework iterate to use arnesi's code walker
+                (which would be easier to fix since some of the non portable environment stuff is already there)
+attila_lendvai  hm, doesn't sound like something i would chop my axe in... :)
+attila_lendvai  iterate is non-trivial in itself
+segv            yup.
+
+Workarounds: 
+  - use loop or dolist until iterate is fixed.
+  - in the ajax branch you can disable with-call/cc wrapping (which is not needed here):
+    (iter (for newval in '("a" "b" "c"))
+          (let ((newval newval))
+            (<ucw:a :action (register-action () ;; :with-call/cc is #f by default
+                              (setf (value self) newval))
+                    (<:ah newval))))

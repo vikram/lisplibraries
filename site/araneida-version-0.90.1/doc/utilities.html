@@ -1,0 +1,47 @@
+<html><head><title>Araneida - Utilities</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - Advanced Utilities</title>
+</head><body>
+
+<h1>REPL Utilities</h1>
+<p>While you're working with an Araneida system, sometimes you find yourself
+wondering "what handlers do I have, and where are they attached?". Well, I find
+myself wondering that on a regular basis.
+
+<p>So I wrote SHOW-HANDLER-HIERARCHY and SHOW-LISTENER-HANDLERS.
+
+<p>Given a handler, SHOW-HANDLER-HIERARCHY will print out what handlers are below it.
+If a handler is an inexact matcher, an asterisk will be appended to the end of its name.
+
+<p>Given a listener, SHOW-LISTENER-HANDLERS will do the same as above.
+
+
+<pre>
+(show-listener-handlers *listener*)
+</pre>
+
+
+<h1>Programming Utilities</h1>
+<p>If you wish to declaratively define the handlers for URLs in Araneida (and you don't mind
+them all being inexact matchers), ATTACH-HIERARCHY is the macro for you.
+
+<p>The documentation is contained in convenience.lisp. It's quite easy, once you get used to it.
+
+<p>here is a small example, though:
+
+<pre>
+(attach-hierarchy (http-listener-handler *listener*) (parse-urlstring "http://example.com/")
+    ("/puppies-and-kittens" puppy-and-kitten-handler)
+    ("/lizards-and-fish" lizard-and-fish-simulator)
+    ("/orderform" order-form-dispatching-handler
+                  ("/order-a-whole-bunch-of-croppy" das-megacroppy-handler)
+		  ("/order-a-cute-kitten" kitten-feed-handler)))
+</pre>
+
+<p>Documentation is through the docstring, so you can also view it via:
+<pre>
+(documentation 'araneida:attach-hierarchy 'function)
+</pre>
+
+</body>
+</html>

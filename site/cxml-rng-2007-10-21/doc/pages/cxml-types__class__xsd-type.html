@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Class xsd-type</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-types.html">cxml-types</a></p>
+      <h2 class="page-title">
+	  Class xsd-type</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Superclasses</h3>
+          <div class="indent">
+<a href="cxml-types__class__data-type.html"><tt>data-type</tt></a>, <tt style="color: #777777">common-lisp:standard-object</tt>, <tt style="color: #777777">sb-pcl::slot-object</tt>, <tt style="color: #777777">common-lisp:t</tt>
+</div>
+          <h3>Documented Subclasses</h3>
+          <div class="indent">
+<a href="cxml-types__class__any-uri-type.html"><tt>any-uri-type</tt></a>, <a href="cxml-types__class__base64-binary-type.html"><tt>base64-binary-type</tt></a>, <a href="cxml-types__class__boolean-type.html"><tt>boolean-type</tt></a>, <a href="cxml-types__class__date-time-type.html"><tt>date-time-type</tt></a>, <a href="cxml-types__class__date-type.html"><tt>date-type</tt></a>, <a href="cxml-types__class__day-type.html"><tt>day-type</tt></a>, <a href="cxml-types__class__decimal-type.html"><tt>decimal-type</tt></a>, <a href="cxml-types__class__double-type.html"><tt>double-type</tt></a>, <a href="cxml-types__class__duration-type.html"><tt>duration-type</tt></a>, <a href="cxml-types__class__entities-type.html"><tt>entities-type</tt></a>, <a href="cxml-types__class__float-type.html"><tt>float-type</tt></a>, <a href="cxml-types__class__hex-binary-type.html"><tt>hex-binary-type</tt></a>, <a href="cxml-types__class__month-day-type.html"><tt>month-day-type</tt></a>, <a href="cxml-types__class__month-type.html"><tt>month-type</tt></a>, <a href="cxml-types__class__nmtokens-type.html"><tt>nmtokens-type</tt></a>, <a href="cxml-types__class__notation-type.html"><tt>notation-type</tt></a>, <a href="cxml-types__class__qname-type.html"><tt>qname-type</tt></a>, <a href="cxml-types__class__time-type.html"><tt>time-type</tt></a>, <a href="cxml-types__class__xsd-idrefs-type.html"><tt>xsd-idrefs-type</tt></a>, <a href="cxml-types__class__xsd-string-type.html"><tt>xsd-string-type</tt></a>, <a href="cxml-types__class__year-month-type.html"><tt>year-month-type</tt></a>, <a href="cxml-types__class__year-type.html"><tt>year-type</tt></a>
+</div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">The class of XML Schema built-in types.<br><br>
+    Subclasses of xsd-type provide the built-in types of    <a href="http://www.w3.org/TR/xmlschema-2/">      XML Schema Part 2: Datatypes Second Edition</a>    as specified in <a href="http://relaxng.org/xsd-20010907.html">Guidelines for    using W3C XML Schema Datatypes with RELAX NG</a>.<br><br>
+    The XSD type library    is named <tt>:|http://www.w3.org/2001/XMLSchema-datatypes|</tt>.<br><br>    <b>Parameters.</b> All XSD types accept regular expressions restricting
+    the set of strings accepted by the type.  The pattern parameter is    called <tt>"pattern"</tt>.  This parameter can be repeated to specify
+    multiple regular expressions that must all match the data.    As an initarg, specify <tt>:pattern</tt> with a list of regular expressions
+    as an argument.<br><br>    </div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>Slot Access Functions</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-types__fun__patterns.html">
+                  <tt>patterns</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <h3>Inherited Slot Access Functions</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-types__fun__type-name.html">
+                  <tt>type-name</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-types__fun__type-library.html">
+                  <tt>type-library</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-types__fun__type-context-dependent-p.html">
+                  <tt>type-context-dependent-p</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-types__fun__type-id-type.html">
+                  <tt>type-id-type</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

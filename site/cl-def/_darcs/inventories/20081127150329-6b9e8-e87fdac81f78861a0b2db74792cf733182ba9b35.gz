@@ -1,0 +1,92 @@
+Starting with tag:
+[TAG 2008-04-03
+attila.lendvai@gmail.com**20080403203839] 
+[def special-variable always behaves as if it were first C-cC-c'd: if it has a valu it'll overwrite the old binding, otherwise it creates an unbound special.
+attila.lendvai@gmail.com**20080415094759] 
+[fix swank related load issue by depending on cl-syntax-sugar and using asdf-system-connection for setting up swank's readtable alist
+attila.lendvai@gmail.com**20080427090830] 
+[fix bitrot in tests
+attila.lendvai@gmail.com**20080427091838] 
+[added a simple generic definer that can export the name at least
+attila.lendvai@gmail.com**20080505103058] 
+[added compiler-macro definer
+attila.lendvai@gmail.com**20080506205136] 
+[workaround bind bug
+attila.lendvai@gmail.com**20080511083228] 
+[support o flag for constructor definer
+attila.lendvai@gmail.com**20080511083244] 
+[smarter with-macro. *INVOMPATIBLE CHANGE* -body- is now (-body-)
+attila.lendvai@gmail.com**20080512202713] 
+[fix with-macro
+attila.lendvai@gmail.com**20080515221619] 
+[test definer supports d and o flags
+attila.lendvai@gmail.com**20080515221627] 
+[expand def constant into an eval-when (e.g. for lispworks)
+attila.lendvai@gmail.com**20080516135904] 
+[with-macro only adds the arguments to the generated macro if it's not empty
+attila.lendvai@gmail.com**20080517210125] 
+[fix constant test, and add a few with-macro tests
+attila.lendvai@gmail.com**20080519171522] 
+[more safe lookup of TRANSFORM-FUNCTION-DEFINER-OPTIONS
+attila.lendvai@gmail.com**20080520172744] 
+[added todo
+attila.lendvai@gmail.com**20080523123805] 
+[primary PRINT-OBJECT methods are supposed to return the object
+attila.lendvai@gmail.com**20080526102846] 
+[-self-
+levente.meszaros@gmail.com**20080529141756] 
+[added load-time-constant definer.
+attila.lendvai@gmail.com**20080529150714
+ 
+ it's like constant but uses a symbol-macro and load-time-value to emulate a constant. due to this, it supports values that can't be saved into fasl's
+] 
+[Load-time-constant fix
+levente.meszaros@gmail.com**20080530084401] 
+[With-macro*
+levente.meszaros@gmail.com**20080530084425] 
+[symbol-macro
+attila.lendvai@gmail.com**20080531155309] 
+[added TODO
+attila.lendvai@gmail.com**20080531160031] 
+[update lambda parsing in duplicates.lisp
+attila.lendvai@gmail.com**20080531223825] 
+[with with-macro's &key defaults quoting
+attila.lendvai@gmail.com**20080531223849] 
+[contextl
+attila.lendvai@gmail.com**20080608210503] 
+[def methods
+attila.lendvai@gmail.com**20080622184728] 
+[layered-methods
+attila.lendvai@gmail.com**20080622184749] 
+[added boolean-slot definer
+attila.lendvai@gmail.com**20080627153342] 
+[support docstring for symbol-macro
+attila.lendvai@gmail.com**20080804101857] 
+[added emacs/cl-def.el
+attila.lendvai@gmail.com**20080826193634] 
+[def function/cc for cl-delico
+attila.lendvai@gmail.com**20080904103523] 
+[integrated-export supports list of symbols
+attila.lendvai@gmail.com**20080904103535] 
+[Added cl-l10n integration for def resources.
+levente.meszaros@gmail.com**20081020121844] 
+[follow asdf-system-connections
+attila.lendvai@gmail.com**20081025173000
+ Ignore-this: 3b1c55d9e0c1bdb138f4f96c919751dd
+] 
+[don't use in-root-suite
+attila.lendvai@gmail.com**20081115193220
+ Ignore-this: 8549594b38a2d9cd6add36b637f397ec
+] 
+[use named-lambda for the generated lambda inside a with-macro
+attila.lendvai@gmail.com**20081116101122
+ Ignore-this: a5c8530585c87810bd2b8b70b093cc32
+] 
+[smarter with-macro: errors more at compile time, adds a block with the name...
+attila.lendvai@gmail.com**20081123141944
+ Ignore-this: 2708dc66f65af5f5a051bb34926c924d
+] 
+[with-macro tests
+attila.lendvai@gmail.com**20081123142043
+ Ignore-this: e0692c8fc999c83b22cee09161802e40
+] 

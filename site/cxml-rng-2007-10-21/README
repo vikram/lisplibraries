@@ -1,0 +1,17 @@
+
+   cxml-rng -- Relax NG for Closure XML
+
+   An implementation of Relax NG schema validation written in Common
+   Lisp, including support for compact syntax, DTD Compatibility, and the
+   XSD type library.
+
+   cxml-rng was written by David Lichteblau and is designed as an
+   add-on library for Closure XML. It is available under an X11-style
+   license.
+
+   Please send bug reports to cxml-devel@common-lisp.net
+   <http://common-lisp.net/cgi-bin/mailman/listinfo/cxml-devel>
+
+
+For more information, see doc/index.html or
+http://www.lichteblau.com/cxml-rng/

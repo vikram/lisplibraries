@@ -1,0 +1,98 @@
+;;; -*- Mode: Lisp -*-
+
+(in-package #:lml2)
+
+(html-file-page ("readme")
+  (html      
+   (:head
+    (:title "LML2 README")
+    ((:meta :http-equiv "Content-Type" :content "text/html; charset=iso-8859-1"))
+    ((:meta :name "Copyright" :content "Kevin Rosenberg 2002 <kevin@rosenberg.net>"))
+    ((:meta :name "description" :content "Lisp Markup Language Documentation"))
+    ((:meta :name "author" :content "Kevin Rosenberg"))
+    ((:meta :name "keywords" :content "Common Lisp, HTML, Markup Langauge")))
+
+   (:body
+    (:h1 "LML2 Documentation")
+    (:h2 "Overview")
+    (:p
+     ((:a :href "http://lml2.b9.com") "LML2")
+     " is a Common Lisp package for generating HTML and XHTML documents."
+     " LML2 is based on:")
+    
+     (:ul
+      (:li ((:a :href "http://lml.b9.com") "LML") " by "
+	   ((:a :href "mailto:kevin@rosenberg.net") "Kevin Rosenberg"))
+      (:li "htmlgen by "
+	   ((:a :href "http://www.franz.com") "Franz, Inc.")))
+
+     (:p
+      "The home page for LML2 is "
+      ((:a :href "http://lml2.b9.com/") "http://lml2.b9.com/")
+      ".")
+     
+     (:h2 "Prerequisites")
+     (:ul 
+      (:li ((:a :href "http://cliki.net/asdf") "ASDF"))
+      (:li ((:a :href "http://cliki.net/kmrcl") "KMRCL")))
+
+     (:h2 "Differences between LML2 and LML")
+     (:p "The syntax and HTML generation for LML2 are based on Franz's htmlgen macro. Personally, I like the syntax of LML better than LML2, but there are advantages of Franz's approach:")
+     (:ul
+      (:li "Faster compilation and runtime HTML generation")
+      (:li "Behavior of tags is extensible"))
+     
+     (:h2 "Differences between LML2 and htmlgen")
+     (:ul
+      (:li "LML2 is XHTML compatible with close tags so that (html :hr) now produces '&lt;hr /&gt;'")
+      (:li "Lowercase tag names so that (html ((:p class 'a))) now produces '&lt;p class=\"a\"&gt;&lt;/p&gt;")
+      (:li "Addition of new tags such as :insert-file, :nbsp, :jscript")
+      (:li "Removal of the if* macro from the htmlgen.lisp source code")
+      (:li "Incorporation of LML's standard site macro and other helper functions.")
+      (:li "Addition of special attribute tags (:if :when :optional :format :format")
+      (:li "Automatic quoting of attribute values for non-string values")
+      (:li "Post macroexpansion code walker to collape sequential write-string calls"))
+           
+     (:h2 "Installation")
+     (:p
+      "The easiest way to install LML is to use the "
+      ((:a :href "http://www.debian.org/") "Debian")
+      " GNU/Linux operating system. You can then use the command "
+      (:tt "apt-get install cl-lml2")
+      " to automatically download and install the LML2 package.")
+     (:p
+      "On a non-Debian system, you need to have "
+      ((:a :href "http://cclan.sourceforge.net/") "ASDF")
+      " installed to load the system definition file. You will need to change the source 
+       pathname in the system file to match the location where you have installed LML.")
+
+    (:h2 "Usage")
+    (:p
+     "Currently, there is no documentation on the functions provided by LML2. However, the source code is instructive and there are example files included in the LML2 package.")
+    
+    (:h2 "Examples")
+    ((:table :border 1 :cellpadding 3)
+     (:tbody
+      (:tr
+       ((:td :colspan 2 :style "color:#000;background-color:#ccc;font-weight:bold;")
+	"Iteration"))
+      (:tr
+       (:td 
+	(:pre
+"(html
+   (:i \"The square of the first five integers are: \")
+   (:b (loop as x from 1 to 5 
+           doing (html " " (:princ (* x x))))))"))
+       (:td
+	(:i "The square of the first five integers are: ")
+	(:b (loop as x from 1 to 5 
+		doing (html " " (:princ (* x x)))))))
+      ))
+    :hr
+    (:p
+     "View this page's "
+     ((:a :href "http://lml2.b9.com/") "LML2")
+     " "
+     ((:a :href "readme.lml") "source")
+     ".")
+    )))

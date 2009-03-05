@@ -1,0 +1,16 @@
+cl-sendmail is a hack of Christophe Rhodes' sendmail.lisp file found
+at
+http://www-jcsu.jesus.cam.ac.uk/~csr21/lisp/sendmail.lisp
+
+It currently only runs on SBCL and depends on the software found at
+these locations:
+http://files.b9.com/cl-base64/cl-base64-latest.tar.gz
+http://www.bobturf.org/software/cl-mime/
+http://common-lisp.net/project/xmls/
+http://www.bobturf.org/software/xmls-tools/
+
+
+Note, versions prior to 0.2.1 used Juri Pakaste's
+base64.lisp. Versions 0.2.1 and after use Kevin Rosenberg's cl-base64
+library.
+

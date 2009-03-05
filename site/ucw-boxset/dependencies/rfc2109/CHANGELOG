@@ -1,0 +1,205 @@
+Wed Aug  9 15:14:41 CDT 2006  Alan Shields <patches@alan.shields.name>
+  * rfc2109-version-0.4
+
+Wed Aug  9 15:12:24 CDT 2006  Alan Shields <patches@alan.shields.name>
+  * add a test for the cookie-to-short bug
+
+Tue Aug  1 05:29:05 CDT 2006  marijnh@gmail.com
+  * prevent error for short cookie strings
+
+Wed Aug  9 14:58:18 CDT 2006  Alan Shields <patches@alan.shields.name>
+  * easily strip RFC from rfc2109 for copyright concerns
+
+Tue Jun 27 08:54:46 CDT 2006  attila.lendvai@gmail.com
+  * Created a rfc2109.test system
+  
+  Splitting the file into a main/test would have been a bad idea due to the smart
+  inlining with the standard's text.
+  
+  The previous solution to always load the file is also bad for performance.
+  
+  The hopefully final solution is to create an rfc2109.test system and before loading
+  rfc2109.lisp in it rebind *features* and push a symbol (:test) into it. The main
+  lisp file #+test for this symbol and defines the tests when it's loaded through
+  rfc2109.test.
+
+Mon Jun 26 17:29:23 CDT 2006  attila.lendvai@gmail.com
+  * Disable fasl compilation in the asdf file
+  
+  This way we can get rid of the errors arising when rfc2109 is compiled
+  with 5am loaded and later loaded from fasl without 5am loaded.
+
+Sat May  6 19:43:17 CDT 2006  attila.lendvai@gmail.com
+  UNDO: Added missing fiveam dependency
+
+Sat May  6 19:45:23 CDT 2006  attila.lendvai@gmail.com
+  * FIX: empty strings are valid cookie values (they were quoted before)
+
+Sat May  6 19:43:17 CDT 2006  attila.lendvai@gmail.com
+  * Added missing fiveam dependency
+
+Wed Feb  1 01:07:51 CST 2006  rich at holygoat dot co uk
+  * Modernise rfc2109 defpackage form.
+
+Fri Jan 27 15:42:39 CST 2006  Alan Shields <Alan-Shields@omrf.ouhsc.edu>
+  * rfc2109: allow non-conformant paths, thanks to Richard Newman
+  Finally allow non-conformant paths. If the corrects-path-p option
+  to cookie-string is nil, the library will not coerce the path to
+  correctness.
+
+Fri Dec 16 16:07:46 CST 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: properly handle empty cookie strings (return nil)
+
+Wed Sep 21 14:35:37 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged rfc2109-version-0.3.2
+
+Tue Sep 20 16:22:50 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: allow nil to be passed to safe-parse-cookies
+  The docs say that you can pass nil to safe-parse-cookies to have no
+  legal domains to allow cookies to come from (ie they must come from your
+  server or not at all).
+  Whoops.
+
+Thu Aug 25 15:26:18 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged rfc2109-version-0.3.1
+
+Thu Aug 25 15:06:51 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109 - Marco applied the 5am patch, changed keyword
+  Marco wanted the feature keyword to be 5am. Less typing for me!
+
+Thu Aug 25 11:59:56 CDT 2005  rich@holygoat.co.uk
+  * Ensure that input to destructuring-bind in parse-cookies-vnetscape is a 2-element list.
+
+Thu Aug 11 17:18:15 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: Add basic testing and a tester
+  Decided to add a basic testing framework - mostly because I'm mucking about
+  with parsing and another library, want something to let me know when I've
+  REALLY screwed up.
+  
+  Please note that the current stable version of FiveAM will not run these tests,
+  as it doesn't have the *features* that are needed to define them. I've submitted
+  a patch to Marco, we'll see if he adds it.
+
+Wed Aug 10 17:31:25 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged rfc2109-version-0.3
+
+Wed Aug 10 17:31:01 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: update changelog for release
+
+Wed Aug 10 17:27:25 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: update version number for release
+  Don't really know how I missed updating the version number for 0.2 and 0.2.1...
+
+Wed Aug 10 17:20:04 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: add a note about Moz and IE's lack of RFC compliance
+  Mozilla, Links, and IE all have a problem with quoted PATHs. As quoted paths
+  are demanded by the RFC, there's really no way around this. Luckily, Moz
+  has this fixed in latest alpha. Note added to docs as well as workaround suggestion.
+  
+  Bug reference:
+  https://bugzilla.mozilla.org/show_bug.cgi?id=277033
+  
+  There is the option of adding a bonus-points-compatible-cookie-string option for
+  outputing compatible code, but I would really rather not go down that road.
+  Output strict, accept loose.
+
+Wed Aug 10 17:18:08 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: Update safe-parse-cookies using new understanding of domain cookies
+  After sorting out what the issue was with explicit domains, update safe-parse-cookies
+  (mostly documentation) to reflect this knowledge.
+
+Wed Aug 10 15:09:05 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * rfc2109: redefine valid domain based on a re-reading of 4.3.2
+  w3m and the Mozilla bugs set me straight on the reading of 4.3.2.
+  This patch requires an explicitly defined domain for domain, meaning
+  it must be:
+  a value
+  start with a "."
+  and contain an embedded "."
+
+Thu Aug  4 16:59:56 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged version-0.2.1
+
+Thu Aug  4 16:58:42 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Add a changelog - I'll update it each release
+
+Thu Aug  4 16:57:26 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged version-0.2
+
+Thu Aug  4 16:55:58 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Implement domain-match-p
+  While debugging an issue with w3m and cookies (which hasn't gone away, btw),
+  I needed to check my knowledge of a "domain-match" - I've included the function
+  in case others find it useful.
+
+Thu Aug  4 16:53:36 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * parse-cookie-string needs to allow quoted strings inside it
+  Wrote a small tokenizer that splits - taking into account quoted strings.
+  We're really getting to the point that a pattern language would be useful.
+  
+  Anyways, it works well, now.
+
+Thu Aug  4 16:52:46 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * No longer demand domains of the style ".blah.blah"
+  Turns out that the RFC allows (in fact desires) domains of the style "blah.blah",
+  so those are now legal.
+
+Thu Aug  4 16:49:59 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Fix QUOTED-STRING? to take into account escaped quotes
+  You know, I wrote a function to remove escaped quotes from a string...
+  amazing that I didn't use it. Now I do.
+  
+  Also, I tucked the helper function for removing escaped quotes into
+  the function that uses it. Much cleaner that way.
+
+Thu Aug  4 14:09:39 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  tagged version-0.1
+
+Thu Aug  4 14:07:43 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * ASDF package
+
+Wed Aug  3 19:36:05 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Mention split-sequence
+
+Wed Aug  3 19:30:30 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Parse Netscape-style cookies
+
+Wed Aug  3 19:29:56 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Wrap assemble-matches in an eval-when so it's available at macro time
+
+Wed Aug  3 19:28:44 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Quiet the compiler about *ht* *cr* and *lf*
+  SBCL was whining about vars being used before they're declared. Sensible, I suppose.
+  Moved and made a note.
+
+Wed Aug  3 18:56:48 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Parse cookies
+  We now parse RFC2109 cookies. We don't parse old Netscape cookies just yet.
+
+Wed Aug  3 18:55:38 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Swap arefs for elts when accessing strings
+
+Wed Aug  3 16:44:49 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Tiny patch - update comment for domain
+
+Wed Aug  3 16:32:57 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * cookie-struct
+  Add a structure for cookies, for those who like that sort of thing.
+
+Wed Aug  3 16:29:54 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Fix token? and quoted-string? to account for empty and non-empty strings
+  The specification for tokens says that they must be at least one character.
+  Fixed.
+  
+  The specification for quoted strings says that the empty quoted string is
+  acceptible. Fixed. So we can now have "" values.
+
+Wed Aug  3 15:23:46 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Include the license text and some bookmark-like strings
+  Marco suggested that I include the license text in its entirety.
+  Also included some text strings that are easy to find so as to get
+  to the most externally-relevant code.
+
+Tue Aug  2 18:39:48 CDT 2005  Alan-Shields@omrf.ouhsc.edu
+  * Initial creation of rfc2109.lisp
+  Basic functionality works - you can create RFC compliant cookies.

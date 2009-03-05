@@ -1,0 +1,9 @@
+Revision: pxmlutils--dev--1.0--patch-8
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Feb 17 15:16:49 CET 2004
+Standard-date: 2004-02-17 14:16:49 GMT
+Modified-files: pxml3.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-8
+Summary: Apply previous patch to other definition of add-to-entity-buf in pxml3.cl
+

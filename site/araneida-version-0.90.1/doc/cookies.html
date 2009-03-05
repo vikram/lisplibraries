@@ -1,0 +1,89 @@
+<html><head><title>Araneida - Cookies</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - How To Work With Cookies</title>
+</head><body>
+
+<h1>Cookies</h1>
+<p>To store data client-side, put it in a cookie. Cookies have a name
+and a value. There are some restrictions on what the name can be: stick
+with just alphabet characters and you'll be okay.
+
+<p>First, you have to send the cookie to the client:
+
+<pre>
+(defmethod handle-request-response ((handler intro-handler) method request)
+  (request-send-headers request :set-cookie (cookie-string "cookiename" "cookievalue"))
+  (html-stream
+   (request-stream request)
+   `(html (body
+           (p "Cookie set.")))))
+</pre>
+
+<p>Afterwards, this cookie value will be available via a call to REQUEST-COOKIE.
+
+<pre>
+(defmethod handle-request-response ((handler show-cookie) method request)
+  (request-send-headers request)
+  (html-stream
+   (request-stream request)
+   `(html (body
+	   (p "The cookie value is: " ,(request-cookie request "cookiename"))))))
+</pre>
+
+<p>To set a new value for the cookie, re-send the cookie as above.
+
+<p>There are more parameters to cookie-string than shown here, they are all keyword
+parameters. To have the above be a session cookie (deleted when the browser is closed):
+
+<pre>
+(cookie-string "cookiename" "cookievalue" :max-age 0)
+</pre>
+
+<p>To see the full parameter list:
+<pre>
+(documentation 'cookie1:cookie-string 'function)
+</pre>
+
+<h1>Prevent Cookie Spoofing</h1>
+<p>It is possible for another website to send your site a cookie without you being aware of it.
+If dan.example.com set a cookie like so:
+
+<pre>
+(cookie-string "bad" "cookie" :domain ".example.com")
+</pre>
+
+<p>and your website was ann.example.com, you would receive that cookie.
+
+<p>If your web app does not use domain cookies, it's best to ignore them - which would ignore the
+above cookie.
+
+<pre>
+(request-safe-cookie request "my" nil)
+</pre>
+
+<p>If you do use domain cookies, it's best to specify the domains you will accept explicitly.
+<pre>
+(request-safe-cookie request "my" ".example.com")
+</pre>
+
+<p>This will not stop all instances, but it's a good start.
+
+
+<h1>When the cookie isn't found</h1>
+<p>When you request a specific cookie, there is the possibility that it won't be found.
+Sometimes it's easier to assume the cookie is found, and set up a signal handler for when
+it isn't.
+
+<p>The REQUEST-COOKIE and REQUEST-SAFE-COOKIE methods take a keyword parameter that
+can enable signaling an error.
+
+<pre>
+(handler-case
+    (request-cookie request "mycookie" :on-fail :signal-condition)
+  (cookie-not-found (condition) (format *trace-output* "Cookie not found! ~A" condition)))
+</pre>
+
+<p>By default the methods return nil.
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+Revision: xmlutils--main--0.0--patch-4
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 10:39:17 CEST 2003
+Standard-date: 2003-10-07 08:39:17 GMT
+Summary: fixed possible bug in next-token
+Keywords: 
+New-files: 
+New-directories: 
+Removed-files: 
+Removed-directories: 
+Renamed-files: 
+Renamed-directories: 
+Modified-files: ./phtml.cl
+Modified-directories: 
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-4
+Removed-patches: 
+
+Some of the macro didn't substitute in the args, they worked threw
+inadvertente (i think) symbol capture.

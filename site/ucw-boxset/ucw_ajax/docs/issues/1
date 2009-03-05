@@ -1,0 +1,17 @@
+Summary: clisp's read-char breaks the httpd backend
+Status: open
+
+Whenever the browser sends a CRLF sequence to the httpd backend clisp
+reads _both_ chars and returns #\Return. Unfortunetly #\Return's
+char-code is 10, this breaks the current implementation of
+read-line-from-network.
+
+I tried briefly messing with the :external-format of the socket to no
+avail.
+
+One possible solution to this would be to use an :external-format of
+octet (or (unsigned-byte 8) or whatever). This would eliminate all
+character encoding issues and give us full control over the
+byte->character mapping (which we need anyway to properly handle
+multipart/form-data where the same stream can have data in various
+(possibly incompatable) encodings.

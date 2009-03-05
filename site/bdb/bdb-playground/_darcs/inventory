@@ -1,0 +1,12 @@
+[Initial
+-urso-@web.de**20060504164212] 
+[add licence information
+-urso-@web.de**20060505171803] 
+[added create-assoc-callback for testing secondary databases
+-urso-@web.de**20060507210655] 
+[WARNING: changed output path of make-qbook
+-urso-@web.de**20060507213922] 
+[made changes for using secondary databases in package 'bdb' available
+-urso-@web.de**20060518233640] 
+[added package bdb-ext-playground for testing the dlast db extensions (db-ext-env, db-ext and ext-cursor)
+-urso-@web.de**20060601155650] 

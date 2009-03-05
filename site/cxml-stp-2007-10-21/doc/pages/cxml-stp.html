@@ -1,0 +1,555 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Package cxml-stp</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-stp</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <h1>
+	  Package
+	  cxml-stp</h1>
+      <div class="indent">STP is a data structure for well-formed XML documents.<br><br>                            </div>
+    </div>
+    <table cellspacing="0" cellpadding="0"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+<div style="margin-left: -30px"><h3>About This Package</h3></div>
+<a href="#id58058" style="font-weight: bold">Parsing and Serializing</a><br><a href="#id58079" style="font-weight: bold">Names and Namespace URIs</a><br><a href="#id58156" style="font-weight: bold">Subclasses of Node</a><br><a href="#id58202" style="font-weight: bold">Creating nodes</a><br><a href="#id58255" style="font-weight: bold">Listing Child Nodes</a><br><a href="#id58419" style="font-weight: bold">Adding and Removing Child Nodes</a><br><a href="#id58528" style="font-weight: bold">Elements and their Attributes</a><br><br><h2>
+<a name="id58058"></a>Parsing and Serializing</h2>
+    To parse into STP, use an STP builder together with a function
+    generating SAX events:<br><br>    <div class="def"><a href="cxml-stp__fun__make-builder.html">Function make-builder ()</a></div>
+<div style="margin-left: 3em">This function creates SAX handler that constructs an STP document. <a href="cxml-stp__fun__make-builder.html#details">...</a>
+</div>
+<br>
+    Serialize STP by sending SAX events for the tree to a sink:<br><br>    <div class="def"><a href="cxml-stp__fun__serialize.html">Function serialize (node handler)</a></div>
+<div style="margin-left: 3em">This function generates SAX events representing <tt>node</tt>. <a href="cxml-stp__fun__serialize.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id58079"></a>Names and Namespace URIs</h2>
+    STP represents namespace-well-formed documents only.  All functions
+    accepting names take a local-name and and a namespace URI as an argument.
+    Qualified names are accepted where it makes sense, and named nodes have
+    a namespace prefix that is taken into account for well-formedness checks.<br><br>    There are two kinds of named nodes: <a href="cxml-stp__class__element.html"><tt>element</tt></a> and <a href="cxml-stp__class__attribute.html"><tt>attribute</tt></a>.
+    Their slots are:<br><br>    <div class="def"><a href="cxml-stp__fun__local-name.html">Function local-name (node)</a></div>
+<div style="margin-left: 3em">Returns the node's local name. <a href="cxml-stp__fun__local-name.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__namespace-uri.html">Function namespace-uri (node)</a></div>
+<div style="margin-left: 3em">Returns the node's namespace URI. <a href="cxml-stp__fun__namespace-uri.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__namespace-prefix.html">Function namespace-prefix (node)</a></div>
+<div style="margin-left: 3em">Returns the node's namespace prefix. <a href="cxml-stp__fun__namespace-prefix.html#details">...</a>
+</div>
+<br>    For <tt>element</tt>, all of the above can be changed using SETF (subject
+    to well-formedness checks).<br><br>    For attribute, <a href="cxml-stp__fun__local-name.html"><tt>local-name</tt></a> can be changed directly, while URI and
+    prefix always have to be changed in the same step using    <a href="cxml-stp__fun__rename-attribute.html"><tt>rename-attribute</tt></a>.<br><br>
+    A node's qualified name can be be queried:<br><br>    <div class="def"><a href="cxml-stp__fun__qualified-name.html">Function qualified-name (node)</a></div>
+<div style="margin-left: 3em">Returns the node's qualified name. <a href="cxml-stp__fun__qualified-name.html#details">...</a>
+</div>
+<br><br><br>    <tt>of-name</tt> is convenient when searching for elements or attributes:<br><br>    <div class="def"><a href="cxml-stp__fun__of-name.html">Function of-name (name &amp;optional (uri ))</a></div>
+<div style="margin-left: 3em">This function creates a test function for nodes of this name. <a href="cxml-stp__fun__of-name.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id58156"></a>Subclasses of Node</h2>
+    All STP nodes have a common superclass.<br><br>    <div class="def"><a href="cxml-stp__class__node.html">
+	  Class
+	  node</a></div>
+<div style="margin-left: 3em">The superclass of all nodes. <a href="cxml-stp__class__node.html#details">...</a>
+</div>
+<br>
+    Documents and elements can have children:<br><br>    <div class="def"><a href="cxml-stp__class__parent-node.html">
+	  Class
+	  parent-node</a></div>
+<div style="margin-left: 3em">Instances of this class can have children. <a href="cxml-stp__class__parent-node.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__class__document.html">
+	  Class
+	  document</a></div>
+<div style="margin-left: 3em">Instances of this class represent an entire XML document. <a href="cxml-stp__class__document.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__class__element.html">
+	  Class
+	  element</a></div>
+<div style="margin-left: 3em">Instances of this class represent XML elements with their attributes    and namespaces. <a href="cxml-stp__class__element.html#details">...</a>
+</div>
+<br>    Attributes belong to an <tt>element</tt>:<br><br>    <div class="def"><a href="cxml-stp__class__attribute.html">
+	  Class
+	  attribute</a></div>
+<div style="margin-left: 3em">Instances of this class represent attributes of an <a href="cxml-stp__class__element.html"><tt>element</tt></a>,    excluding namespace declarations. <a href="cxml-stp__class__attribute.html#details">...</a>
+</div>
+<br>
+    Other kinds of nodes:<br><br>    <div class="def"><a href="cxml-stp__class__comment.html">
+	  Class
+	  comment</a></div>
+<div style="margin-left: 3em"><div class="indent">Instances of this class represent XML comments.        </div></div>
+<br>    <div class="def"><a href="cxml-stp__class__document-type.html">
+	  Class
+	  document-type</a></div>
+<div style="margin-left: 3em">Instances of this class represent the DOCTYPE declaration at the    beginning of a document. <a href="cxml-stp__class__document-type.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__class__processing-instruction.html">
+	  Class
+	  processing-instruction</a></div>
+<div style="margin-left: 3em"><div class="indent">Instances of this class represent processing instructions.            </div></div>
+<br>    <div class="def"><a href="cxml-stp__class__text.html">
+	  Class
+	  text</a></div>
+<div style="margin-left: 3em"><div class="indent">Instances of this class represent text nodes.        </div></div>
+<br>    <h2>
+<a name="id58202"></a>Creating nodes</h2>
+    Nodes are created using the following functions:<br><br>    <div class="def"><a href="cxml-stp__fun__make-attribute.html">Function make-attribute (value name &amp;optional (uri ))</a></div>
+<div style="margin-left: 3em">This function creates an attribute node of the given value and name. <a href="cxml-stp__fun__make-attribute.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-comment.html">Function make-comment (data)</a></div>
+<div style="margin-left: 3em">This function creates a comment node. <a href="cxml-stp__fun__make-comment.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-document.html">Function make-document (document-element)</a></div>
+<div style="margin-left: 3em">This function creates document. <a href="cxml-stp__fun__make-document.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-document-type.html">Function make-document-type (root-element-name &amp;optional system-id public-id internal-subset)</a></div>
+<div style="margin-left: 3em">This function creates a document-type node. <a href="cxml-stp__fun__make-document-type.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-element.html">Function make-element (name &amp;optional (uri ))</a></div>
+<div style="margin-left: 3em">This function creates an element node of the given name. <a href="cxml-stp__fun__make-element.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-processing-instruction.html">Function make-processing-instruction (target data)</a></div>
+<div style="margin-left: 3em">This function creates a processing instruction. <a href="cxml-stp__fun__make-processing-instruction.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__make-text.html">Function make-text (data)</a></div>
+<div style="margin-left: 3em">This function creates a text node. <a href="cxml-stp__fun__make-text.html#details">...</a>
+</div>
+<br>
+    In addition, nodes can be copied including all their children:<br><br>    <div class="def"><a href="cxml-stp__fun__copy.html">Function copy (node)</a></div>
+<div style="margin-left: 3em">This function copies a node recursively. <a href="cxml-stp__fun__copy.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id58255"></a>Listing Child Nodes</h2>
+    Nodes have an optional parent node and can have children.<br><br>    <div class="def"><a href="cxml-stp__fun__parent.html">Function parent (node)</a></div>
+<div style="margin-left: 3em">Returns the node's parent. <a href="cxml-stp__fun__parent.html#details">...</a>
+</div>
+<br>    If a node has a <a href="cxml-stp__class__document.html"><tt>document</tt></a> as its ancestor, it can be found using    the <a href="cxml-stp__fun__document.html"><tt>document</tt></a> function.<br><br>    <div class="def"><a href="cxml-stp__fun__document.html">Function document (node)</a></div>
+<div style="margin-left: 3em">Returns the document node ancestor of <tt>node</tt>. <a href="cxml-stp__fun__document.html#details">...</a>
+</div>
+<br>    Since the <tt>parent</tt> slot needs to be updated when children are added or
+    removed, the sequence of children is not exposed as a mutable Common
+    Lisp sequence.<br><br>    <div class="def"><a href="cxml-stp__fun__list-children.html">Function list-children (node)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Returns a freshly consed list containing the child nodes of <tt>node</tt>.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__map-children.html">Function map-children (result-type function node)</a></div>
+<div style="margin-left: 3em">Applies <tt>function</tt> to successive child nodes. <a href="cxml-stp__fun__map-children.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__macro__do-children.html">Macro do-children ((var node &amp;optional result) &amp;body body)</a></div>
+<div style="margin-left: 3em"><div class="indent">            Executes <tt>bode</tt> with <tt>var</tt> bound to successive child     nodes.</div></div>
+<br>
+    The following DOM-like functions are also offered:<br><br>    <div class="def"><a href="cxml-stp__fun__nth-child.html">Function nth-child (n parent)</a></div>
+<div style="margin-left: 3em">Returns child node <tt>n</tt> of <tt>parent</tt> <a href="cxml-stp__fun__nth-child.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__first-child.html">Function first-child (node)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Returns first child of <tt>node</tt>, or nil.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__last-child.html">Function last-child (node)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Returns last child of <tt>node</tt>, or nil.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__previous-sibling.html">Function previous-sibling (node)</a></div>
+<div style="margin-left: 3em">Returns the child preceding <tt>node</tt> in the child list of its     parent. <a href="cxml-stp__fun__previous-sibling.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__next-sibling.html">Function next-sibling (node)</a></div>
+<div style="margin-left: 3em">Returns the child following <tt>node</tt> in the child list of its     parent. <a href="cxml-stp__fun__next-sibling.html#details">...</a>
+</div>
+<br>
+    A wide variety of sequence-related functions is offered that work
+    like the Common Lisp functions of the same name, but without the need    to call <a href="cxml-stp__fun__list-children.html"><tt>list-children</tt></a> first:<br><br>    <div class="def"><a href="cxml-stp__fun__find-child.html">Function find-child (value parent &amp;rest args &amp;key from-end (start 0) end key test)</a></div>
+<div style="margin-left: 3em"><div class="indent">                     Searches for a child node of <tt>parent</tt> that satisfies the <tt>test</tt>
+   and returns it.<br><br>   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-child-if.html">Function find-child-if (predicate parent &amp;rest args &amp;key from-end (start 0) end key)</a></div>
+<div style="margin-left: 3em"><div class="indent">                  Searches for a child node of <tt>parent</tt> that satisfies <tt>predicate</tt>
+   and returns it.<br><br>   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__child-position.html">Function child-position (value parent &amp;rest args &amp;key from-end (start 0) end key test)</a></div>
+<div style="margin-left: 3em"><div class="indent">                     Searches for a child node of <tt>parent</tt> that satisfies the <tt>test</tt>
+   and returns its position.<br><br>   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__child-position-if.html">Function child-position-if (predicate parent &amp;rest args &amp;key from-end (start 0) end key)</a></div>
+<div style="margin-left: 3em"><div class="indent">                     Searches for a child node of <tt>parent</tt> that satisfies the <tt>test</tt>
+   and returns its position.<br><br>   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__count-children.html">Function count-children (value parent &amp;rest args &amp;key from-end (start 0) end key test)</a></div>
+<div style="margin-left: 3em"><div class="indent">                     Counts (and returns the number of) <tt>parent</tt>'s child nodes satisfying
+   the test.   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__count-children-if.html">Function count-children-if (predicate parent &amp;rest args &amp;key from-end (start 0) end key)</a></div>
+<div style="margin-left: 3em"><div class="indent">                  Counts (and returns the number of) <tt>parent</tt>'s child nodes satisfying   <tt>predicate</tt>.   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__filter-children.html">Function filter-children (predicate parent &amp;rest args &amp;key from-end (start 0) end count key)</a></div>
+<div style="margin-left: 3em">Return a list of child nodes of <tt>parent</tt> from which nodes that     do not satisfy <tt>predicate</tt> have been removed. <a href="cxml-stp__fun__filter-children.html#details">...</a>
+</div>
+<br>
+    The functions listed above walk only across the direct children of the
+    parent node.  In addition, the node hierarchy can be mapped recursively
+    using these functions:<br><br>    <div class="def"><a href="cxml-stp__fun__map-recursively.html">Function map-recursively (fn node)</a></div>
+<div style="margin-left: 3em"><div class="indent">         Applies <tt>fn</tt> to successive descendants of <tt>node</tt> in   pre-order.</div></div>
+<br>    <div class="def"><a href="cxml-stp__macro__do-recursively.html">Macro do-recursively ((var node &amp;optional result) &amp;body body)</a></div>
+<div style="margin-left: 3em"><div class="indent">            Executes <tt>bode</tt> with <tt>var</tt> bound to successive descendants of   <tt>node</tt> in pre-order.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-recursively.html">Function find-recursively (item node &amp;key key test)</a></div>
+<div style="margin-left: 3em"><div class="indent">               Searches in pre-order for the first descendant of <tt>node</tt> that   satisfies the <tt>test</tt> and returns it.<br><br>   </div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__filter-recursively.html">Function filter-recursively (test node &amp;key key)</a></div>
+<div style="margin-left: 3em"><div class="indent">               Return a list of descendant nodes of <tt>node</tt> in pre-order, from which   nodes that do not satisfy <tt>predicate</tt> have been removed.</div></div>
+<br><br><br>    <h2>
+<a name="id58419"></a>Adding and Removing Child Nodes</h2>
+    While all nodes can be asked for their children, only documents and
+    elements permit actually adding children.  (For all other nodes, the
+    sequence of children appears as empty.)<br><br>
+    The most flexible function capable of changing the child nodes is    <a href="cxml-stp__fun__replace-children.html"><tt>replace-children</tt></a>.  Perhaps more common is <a href="cxml-stp__fun__insert-child.html"><tt>insert-child</tt></a>,
+    a specialized version for only one new child.<br><br>    <div style="margin-left: 3em"></div>
+<br>    <div class="def"><a href="cxml-stp__fun__insert-child.html">Function insert-child (parent child position)</a></div>
+<div style="margin-left: 3em">Adds <tt>child</tt> as a child node of <tt>parent</tt> at position      <tt>position</tt> if allowed. <a href="cxml-stp__fun__insert-child.html#details">...</a>
+</div>
+<br>
+    Various convenience functions are offered in addition:<br><br>    <div class="def"><a href="cxml-stp__fun__prepend-child.html">Function prepend-child (parent child)</a></div>
+<div style="margin-left: 3em">Adds <tt>child</tt> as the first child of <tt>parent</tt>, if allowed. <a href="cxml-stp__fun__prepend-child.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__append-child.html">Function append-child (parent child)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Adds <tt>child</tt> as the last child of <tt>parent</tt>, if allowed.<br><br>   Signals an error if the child already has a parent.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__delete-child.html">Function delete-child (child parent &amp;key from-end test start end count key)</a></div>
+<div style="margin-left: 3em"><div class="indent">                     Searches for a child node of <tt>parent</tt> that satisfies the <tt>test</tt>   and removes it, if allowed.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__delete-child-if.html">Function delete-child-if (predicate parent &amp;rest args &amp;key from-end start end count key)</a></div>
+<div style="margin-left: 3em"><div class="indent">                            Searches for an child node of <tt>parent</tt> that satisfies <tt>predicate</tt>    and removes it, if allowed.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__delete-nth-child.html">Function delete-nth-child (idx parent)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Removes child <tt>idx</tt> of <tt>parent</tt>, if allowed.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__insert-child-before.html">Function insert-child-before (parent new-child ref-child)</a></div>
+<div style="margin-left: 3em">Adds <tt>new-child</tt> before <tt>ref-child</tt> as a child node of   <tt>parent</tt>, if allowed. <a href="cxml-stp__fun__insert-child-before.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__insert-child-after.html">Function insert-child-after (parent new-child ref-child)</a></div>
+<div style="margin-left: 3em">Adds <tt>new-child</tt> after <tt>ref-child</tt> as a child node of   <tt>parent</tt>, if allowed. <a href="cxml-stp__fun__insert-child-after.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__replace-child.html">Function replace-child (parent old-child new-child)</a></div>
+<div style="margin-left: 3em">Adds <tt>new-child</tt> instead of <tt>old-child</tt> as a child node of    <tt>parent</tt>, if allowed. <a href="cxml-stp__fun__replace-child.html#details">...</a>
+</div>
+<br>    A node can also be deleted from its parent directly using <a href="cxml-stp__fun__detach.html"><tt>detach</tt></a>.<br><br>    <div class="def"><a href="cxml-stp__fun__detach.html">Function detach (node)</a></div>
+<div style="margin-left: 3em">This function removes a child node or attribute. <a href="cxml-stp__fun__detach.html#details">...</a>
+</div>
+<br>    <a href="cxml-stp__fun__detach.html"><tt>detach</tt></a> also works for attributes.<br><br>    <h2>
+<a name="id58528"></a>Elements and their Attributes</h2>
+    In addition to their children, elements have attributes and "extra
+    namespaces".<br><br>
+    Attributes themselves are nodes and be accessed using these functions:<br><br>    <div class="def"><a href="cxml-stp__fun__add-attribute.html">Function add-attribute (element attribute)</a></div>
+<div style="margin-left: 3em">Add a new attribute to <tt>element</tt> or replace an existing     attribute node of the same name. <a href="cxml-stp__fun__add-attribute.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__remove-attribute.html">Function remove-attribute (element attribute)</a></div>
+<div style="margin-left: 3em">Remove an attribute node from <tt>element</tt>. <a href="cxml-stp__fun__remove-attribute.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-attribute-named.html">Function find-attribute-named (element name &amp;optional (uri ))</a></div>
+<div style="margin-left: 3em">Searches for an attribute node of <tt>element</tt> with the     specified local name and namespace URI and returns it. <a href="cxml-stp__fun__find-attribute-named.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-attribute-if.html">Function find-attribute-if (test element)</a></div>
+<div style="margin-left: 3em">Searches for an attribute node of <tt>element</tt> satisfying     <tt>test</tt> <a href="cxml-stp__fun__find-attribute-if.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__list-attributes.html">Function list-attributes (element)</a></div>
+<div style="margin-left: 3em"><div class="indent">      Returns a freshly consed list containing the attributes of <tt>element</tt>.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__map-attributes.html">Function map-attributes (result-type fn element)</a></div>
+<div style="margin-left: 3em">Applies <tt>fn</tt> to each attribute nodes of <tt>element</tt>. <a href="cxml-stp__fun__map-attributes.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__macro__with-attributes.html">Macro with-attributes ((&amp;rest entries) element &amp;body body)</a></div>
+<div style="margin-left: 3em"><div class="indent">Evaluate body with the specified attributes bound lexically as if they
+   were variables.<br><br>   Each entry in <tt>entries</tt> is a list of the form   <i>(variable-name attribute-name &amp;optional uri)</i>, where   <tt>variable-name</tt>   is a symbol and <tt>attribute-name</tt> and <tt>uri</tt> are strings.<br><br>   The macro with-attributes invokes <a href="cxml-stp__fun__attribute-value.html"><tt>attribute-value</tt></a>
+   to access the attributes. specified by each entry.   Both setf and setq can be used to set the value of the attribute.</div></div>
+<br>    As a shortcut, the <a href="cxml-stp__fun__attribute-value.html"><tt>attribute-value</tt></a> and its <tt>setf</tt> function
+    allow access to attribute values by name, without having to look up the
+    attribute node first:<br><br>    <div class="def"><a href="cxml-stp__fun__attribute-value.html">Function attribute-value (element name &amp;optional (uri  urip))</a></div>
+<div style="margin-left: 3em">Searches for an attribute node of <tt>element</tt> with the     specified local name and namespace URI and returns its value. <a href="cxml-stp__fun__attribute-value.html#details">...</a>
+</div>
+<br>
+    There are three ways to declare a namespace: Using the name of the
+    element, using the name of one of its attributes, or using an "extra
+    namespace".  A prefix can be looked up from any of these local
+    declarations.  It is also possible to look up a namespace while taking
+    into account all declarations on parent elements.<br><br>    <div class="def"><a href="cxml-stp__fun__find-local-namespace.html">Function find-local-namespace (prefix element)</a></div>
+<div style="margin-left: 3em">Find the namespace <tt>prefix</tt> declared on <tt>element</tt>   and return its namespace URI, or return nil if no such namespace was found. <a href="cxml-stp__fun__find-local-namespace.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-namespace.html">Function find-namespace (prefix element)</a></div>
+<div style="margin-left: 3em">Find the namespace <tt>prefix</tt> declared on <tt>element</tt>
+   or its parent and return its namespace URI, or return nil if no such   namespace was found. <a href="cxml-stp__fun__find-namespace.html#details">...</a>
+</div>
+<br>
+    Extra namespaces are needed only when a namespace must be declared even
+    though there is no element or attribute referencing it through its name.    For example, an attribute declared with type <tt>QName</tt> using
+    RelaxNG/XSD must reference a namespace in scope.<br><br>    <div class="def"><a href="cxml-stp__fun__add-extra-namespace.html">Function add-extra-namespace (element prefix uri)</a></div>
+<div style="margin-left: 3em">Add an extra namespace to <tt>element</tt> that maps <tt>prefix</tt> to   <tt>uri</tt>. <a href="cxml-stp__fun__add-extra-namespace.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-stp__fun__remove-extra-namespace.html">Function remove-extra-namespace (element prefix)</a></div>
+<div style="margin-left: 3em"><div class="indent">         Removed the extra namespace declared on <tt>element</tt> for <tt>prefix</tt>.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__find-extra-namespace.html">Function find-extra-namespace (prefix element)</a></div>
+<div style="margin-left: 3em"><div class="indent">         Find the extra namespace named <tt>prefix</tt> declared on <tt>element</tt>   and return its namespace URI, or return nil if no such namespace was found.</div></div>
+<br>    <div class="def"><a href="cxml-stp__fun__map-extra-namespaces.html">Function map-extra-namespaces (fn element)</a></div>
+<div style="margin-left: 3em"><div class="indent">         Call fn for each extra namespace declared on <tt>element</tt> with   namespace prefix and URI as arguments.</div></div>
+<br>    </div>
+      </td>
+      <td valign="top">
+        <h3>
+<a name="index"></a>Symbol Index</h3>
+        <table cellspacing="0" cellpadding="0">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    <tr><td valign="top">
+<a href="cxml-stp__variable___check-uri-syntax_.html"><tt>*check-uri-syntax*</tt></a>, variable</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__add-attribute.html"><tt>add-attribute</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__add-extra-namespace.html"><tt>add-extra-namespace</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__append-child.html"><tt>append-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__attribute.html"><tt>attribute</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__attribute-value.html"><tt>attribute-value</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__base-uri.html"><tt>base-uri</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__child-position.html"><tt>child-position</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__child-position-if.html"><tt>child-position-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__comment.html"><tt>comment</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__copy.html"><tt>copy</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__count-children.html"><tt>count-children</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__count-children-if.html"><tt>count-children-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__data.html"><tt>data</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__delete-child.html"><tt>delete-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__delete-child-if.html"><tt>delete-child-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__delete-children.html"><tt>delete-children</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__delete-nth-child.html"><tt>delete-nth-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__detach.html"><tt>detach</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__macro__do-children.html"><tt>do-children</tt></a>, macro</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__macro__do-recursively.html"><tt>do-recursively</tt></a>, macro</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__document.html"><tt>document</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__document.html"><tt>document</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__document-element.html"><tt>document-element</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__document-type.html"><tt>document-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__document-type.html"><tt>document-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__element.html"><tt>element</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__filter-children.html"><tt>filter-children</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__filter-recursively.html"><tt>filter-recursively</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-attribute-if.html"><tt>find-attribute-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-attribute-named.html"><tt>find-attribute-named</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-child.html"><tt>find-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-child-if.html"><tt>find-child-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-extra-namespace.html"><tt>find-extra-namespace</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-local-namespace.html"><tt>find-local-namespace</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-namespace.html"><tt>find-namespace</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-recursively.html"><tt>find-recursively</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__find-recursively-if.html"><tt>find-recursively-if</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__first-child.html"><tt>first-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__insert-child.html"><tt>insert-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__insert-child-after.html"><tt>insert-child-after</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__insert-child-before.html"><tt>insert-child-before</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__internal-subset.html"><tt>internal-subset</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__last-child.html"><tt>last-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__list-attributes.html"><tt>list-attributes</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__list-children.html"><tt>list-children</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__local-name.html"><tt>local-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-attribute.html"><tt>make-attribute</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-builder.html"><tt>make-builder</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-comment.html"><tt>make-comment</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-document.html"><tt>make-document</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-document-type.html"><tt>make-document-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-element.html"><tt>make-element</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-processing-instruction.html"><tt>make-processing-instruction</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__make-text.html"><tt>make-text</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__map-attributes.html"><tt>map-attributes</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__map-children.html"><tt>map-children</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__map-extra-namespaces.html"><tt>map-extra-namespaces</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__map-recursively.html"><tt>map-recursively</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__namespace-prefix.html"><tt>namespace-prefix</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__namespace-uri.html"><tt>namespace-uri</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__next-sibling.html"><tt>next-sibling</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__node.html"><tt>node</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__nth-child.html"><tt>nth-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__of-name.html"><tt>of-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__parent.html"><tt>parent</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__parent-node.html"><tt>parent-node</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__prepend-child.html"><tt>prepend-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__previous-sibling.html"><tt>previous-sibling</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__processing-instruction.html"><tt>processing-instruction</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__public-id.html"><tt>public-id</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__qualified-name.html"><tt>qualified-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__remove-attribute.html"><tt>remove-attribute</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__remove-extra-namespace.html"><tt>remove-extra-namespace</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__rename-attribute.html"><tt>rename-attribute</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__replace-child.html"><tt>replace-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__root.html"><tt>root</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__root-element-name.html"><tt>root-element-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__serialize.html"><tt>serialize</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__stp-error.html"><tt>stp-error</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__string-value.html"><tt>string-value</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__system-id.html"><tt>system-id</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__target.html"><tt>target</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__class__text.html"><tt>text</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__fun__value.html"><tt>value</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-stp__macro__with-attributes.html"><tt>with-attributes</tt></a>, macro</td></tr>
+</table>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

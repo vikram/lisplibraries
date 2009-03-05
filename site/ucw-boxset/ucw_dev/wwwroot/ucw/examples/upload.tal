@@ -1,0 +1,17 @@
+<!-- -*- html -*- -->
+
+<div xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+     xmlns:ucw="http://common-lisp.net/project/ucw/core"
+     tal:in-package="it.bese.ucw-user">
+
+ <form method="POST" 
+       enctype="multipart/form-data" 
+       ucw:action="(upload $component)">
+
+   <input type="file" ucw:accessor="(file-upload-example.file $component)"/>
+
+   <input type="submit" value="post file"/>
+
+ </form>
+
+</div>

@@ -1,0 +1,13 @@
+Revision: xmlutils--main--0.0--base-0
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 09:55:37 CEST 2003
+Standard-date: 2003-10-07 07:55:37 GMT
+New-files: 
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--base-0
+    bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+Continuation-of: bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+Summary: tag of bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+Keywords: 
+
+(automatically generated log message)

@@ -1,0 +1,312 @@
+-*- outline -*-
+
+* Quick (or quasi-quick) start for a UnCommon Web (and Lisp) developer
+* (release 0.3 - 07-Dec-2005)
+
+** Abstract
+
+This document describes how to develop a web application with the
+UnCommon Web framework. This document is NOT an introduction to Lisp
+language. It is a quick tutorial to understand how to build a web
+application with UnCommon Web framework.
+
+** Introduction
+
+The author of UnCommon Web (UCW) is Marco Baringer.
+The homepage of UCW is http://common-lisp.net/project/ucw/.
+
+You can download the development branch of UCW using darcs:
+
+  darcs get http://common-lisp.net/project/ucw/repos/ucw_dev
+
+Remember, please, to configure UCW correctly before to begin the
+development. You can read docs/README or docs/QUICKSTART.
+
+There are two movies (sic!) about Slime and UCW:
+
+    http://common-lisp.net/torrents/slime.torrent (~150Mb/~60mins)
+    http://common-lisp.net/torrents/hello-world.torrent (~50Mb/~20mins)
+
+You need a Lisp implementation and an interface development environment.
+I use OpenMCL 1.0, GNU Emacs and Slime on Mac OS X with Tiger 10.4.3.
+
+    OpenMCL         http://openmcl.clozure.com/
+    Emacs Official  http://www.gnu.org/software/emacs/emacs.html
+    Emacs for Mac   http://bluebeard.org/software/emacs_osx/
+    Slime           http://common-lisp.net/project/slime/
+
+*** Emacs and Slime configuration
+
+Please, before to start the UCW adventure, you have to have a Lisp
+environment working: I mean, when you are in Emacs, pressing 'M-x
+slime', it displays the REPL (Read Eval Prompt Loop) window. A good
+introduction about Slime and Emacs are the Baringer's movies. 
+
+** Why Lisp for web application
+
+The technical advantages Lisp brings to the table are numerous.
+
+Image based development and remote debugging. Often, when a client
+discovers an error, you hook up slime to the remote image, the debugger
+pops up, and you can debug the error, and often fix it, while on the
+phone with the user. Having the entire app contained in one image,
+rather than a series of source files that are interpreted, has many
+advanteges for development, debugging, and deployment. 
+
+UCW provides a CPS framework and YACLML for generating HTML, it's
+TAL template mechanism for working with those pesky designers. When
+using UCW you never worry about CGI POST parameters and all the usual
+web dev stuff, but focus on the application itself, assigning INPUTS to
+slots and letting UCW work magic. A plus for the web development are
+the continuations, and UCW's "component" model.
+
+Lisp (compiled) is faster than scripting languages. 
+
+For any type of development, macros are a boon. For web development, a
+necessity. Web development is really a pain. Macro can abstract out all
+the silly details so you can focus on the code. 
+
+Using some nifty Common Lisp Object System, CLOS, method combinations
+and some lexical magic you was able to turn a 'normal' web component
+into an AJAX based one with only one line of code changed (change the
+href into an onclick). Lisp is able to absorb new paradigms as soon as
+they come up. In the fast paced world of web development, you wouldn't
+want to live without that ability. 
+
+Parenscript is a sexp syntax for javascript, and clsql is an sql library
+with and object-relational mapping and a sexp syntax for queries. Web
+development is a mess of different langauges (html, xml, javascript,
+sql, css etc). By using these Lisp based tools, you have a consitent
+syntax, and can use the same toolchain for every language you work
+in. Macros that generate javascript and html are almost as cool as
+macros that generate lisp code. 
+
+** Anatomy of a web application
+
+In UCW there are the following main elements: the application instance,
+the entry points of the application, the components of the application
+and the methods to render the components. The framework is CLOS based,
+the Common Lisp Object System. CLOS is a set of operators for doing
+object-oriented programming.
+
+*** Use of the application package
+
+A package, you know, is a Lisp object that maps names to symbols. The
+current package is always stored in the global variable *package*. The
+packages are useful to divide larger programs in small parts and to use
+a symbol as the name of a function or variable without worrying that the
+name is already used elsewhere.
+
+So we write, for instance, our application in the package
+it.bese.ucw-user: 
+
+(in-package :it.bese.ucw-user)
+
+You can use another package, for instance it.domain.yourpackage:
+
+(in-package :cl-user)
+
+(defpackage :your.domain.yourpackage
+  (:use :common-lisp
+	:it.bese.ucw
+	:it.bese.yaclml))
+
+(in-package :your.domain.yourpackage)
+
+When you are in REPL with Slime, you can press ',' (comma) to enter in
+command mode. The default package is COMMON-LISP-USER. To change the
+package you enter in command mode and write in mini-buffer '!p' and
+insert the new package it.bese.ucw-user. You can use the
+auto-completion, pressing, as usual, TAB. Now you can access functions
+or variables of that package without the package qualifier '::'.
+
+The package it.bese.ucw-user is the package containing two default
+applications in UCW: examples app and admin app.
+
+*** Definition of the application instance
+
+Now we set the package, we can create the application instance. It's a
+global variable and the name is *hello-world*. The asteriks, you know, is
+the convention to identify better the global variables.
+
+To make instances of a class, instead of calling a specific function, we
+call the general make-instance with the class name as the first
+argument, cookie-session-application.
+
+This class is for applications which use cookies for session tracking.
+Cookie session applications work exactly like standard-applications
+except that when the session is not found using the standard mechanisms
+the id is looked for in a cookie.
+
+(defvar *hello-world*
+  (make-instance 'standard-application
+		 :url-prefix "/hello/"))
+
+You can define the root of your web document (CSS, HTML, JavaScript,
+etc.), for instance: 
+
+(defvar *hello-world*
+  (make-instance 'standard-application
+		 :url-prefix "/chessweb/"
+		 :www-roots (list (merge-pathnames "../ucw_apps/hello/"))))
+
+The relative path in www-roots starts from UCW directory.
+
+You can check if there is your application asking it to the server on
+the REPL prompt:
+
+  (server.applications *default-server*)
+
+*** Registration of the application
+
+Now we have to register the application in the server.
+
+(register-application *default-server* *hello-world*)
+
+Another way to add the application to the server during the creation of
+the server contained in 'bin/start.lisp' file. For instance 
+
+(ucw:create-server :backend :aserve
+...
+	:applications (list it.bese.ucw-user::*example-application*
+			    it.bese.ucw-user::*hello-world*
+			    ucw::*admin-application*)
+...
+
+*** Entry point
+
+You need to define an entry point bound to an url.
+
+(defentry-point "index.ucw" (:application *hello-world*) ()
+  (call 'hello-world-home-page))
+
+In this case UCW builds the url of the application with the name of the
+server, the port listening, the url prefix and the entry point. For
+instance: 
+
+  http://localhost:8080/hello/index.ucw
+
+APPLICATION specifies the application object this entry point
+will be attached to. If NIL *default-application* will be used,
+otherwise it must be the name of an existing application.
+
+Of course we can have different entry points for an application and in
+an entry point we can call a list of components, as in a chain. 
+
+*** Component 
+
+The component represents the page we want to model with our widgets. 
+
+(defcomponent hello-world-home-page (simple-window-component) () 
+  (:default-initargs :title "Hello, World!"))
+
+If the page contains, for instance, a javascript, you can add it
+using the key ':javascript':
+
+(defcomponent hello-world-home-page (simple-window-component) () 
+  (:default-initargs :title "Hello, World!" :javascript "foo.js"))
+
+The file 'foo.js' will be searched in 'www-roots' path.
+
+The component creates an html page and calls the rendering method.
+
+*** Rendering of the component
+
+The method render allows to add to the empyty page, built by the
+component, subclassing the simple-window-component class, everything we
+want.
+
+(defmethod render ((hello hello-world-home-page))
+  (<:p "Hello, World!"))
+
+In our simple case the famous string "Hello, World!".
+
+** Troubleshooting or debugging
+
+*** UCW not properly configured
+
+venus:~/dev/lisp/ucw_dev venus$ openmcl -l bin/start.lisp
+Error in process listener(1): Error component "arnesi" not found
+While executing: ASDF:FIND-SYSTEM
+Type :GO to continue, :POP to abort.
+If continued: Skip loading "bin/start.lisp"
+Type :? for other options.
+
+asdf doesn't know how to find arnesi. Get arnesi from here:
+
+  darcs get http://common-lisp.net/project/bese/repos/arnesi_dev
+
+Then create a symlink from arnesi.asd to whatever systems directory
+you have on asdf:*central-registry*.
+
+** Exercises
+
+a. Install the hello app in UCW server (read the quickstart companion).
+b. Create an application with a login form, search form and result list, 
+logout component.
+c. Create a file foreach component of the application in point b).
+d. Interface a database (cl-sql) for the app in point b).
+e. Use TAL to separate the graphic layout and the business logic in the
+app in point b).
+
+** Conclusions
+
+Of course, this document is not exaustive about the UCW development. The
+audience target is the people with very little experience of Lisp,
+downloading for the first time UCW, after the installation of the hello
+application asking "Well, and now?". UCW is a wonderful and powerful
+framework. That's all, folks!
+
+** Getting help
+
+You can get help on IRC too. You can use ERC, an IRC implementation for
+Emacs. You can download it at the url
+
+    http://sourceforge.net/projects/erc/
+
+And you can find help at the url
+
+    http://www.emacswiki.org/cgi-bin/wiki/EmacsIRCClient 
+
+You can join to the channel #ucw or #lisp (or #lisp-it in italian
+language) on irc.freenode.net server.
+
+Or you can subscribe to the mailing list.
+
+** Resources
+
+- darcs, http://www.darcs.net/
+
+** References
+
+[1] ANSI Common Lisp, P. Graham, 1996 Prentice Hall, ISBN 0-13-370875-6
+
+** Thanks
+
+- Marco Baringer (UCW author)
+- Luigi Panzeri (matley on #ucw)
+- Drew Crampsie (drewc on #ucw)
+
+** History
+
+- 07-Dec-2005 rel. 0.3 added how to define package, www-roots, js
+- 13-Nov-2005 rel. 0.2 added Why Lisp for web applications
+- 12-Nov-2005 rel. 0.1 initial release
+
+** Disclaimer
+
+;; THIS DOCUMENT  IS PROVIDED BY THE COPYRIGHT  HOLDERS AND CONTRIBUTORS
+;; "AS IS"  AND ANY  EXPRESS OR IMPLIED  WARRANTIES, INCLUDING,  BUT NOT
+;; LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+;; A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+;; OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+;; SPECIAL,  EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES  (INCLUDING, BUT  NOT
+;; LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+;; DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+;; THEORY OF  LIABILITY, WHETHER IN CONTRACT, STRICT  LIABILITY, OR TORT
+;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+;; OF THIS DOCUMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+** About me
+
+Alberto Santini, http://www.albertosantini.it/

@@ -1,0 +1,43 @@
+fixme: pubid/sysid konvertieren
+
+========================================================================
+HAX is a protocol for HTML events, analogous to SAX for XML events.
+
+The main difference between HAX and SAX is that XML events include
+namespaces, and HAX does not.
+
+In addition, some conversion steps are necessary to turn HTML events
+into proper XML events, and it seems prudent to use different packages
+for protocols that differ in significant details.
+
+The conversion steps taken when turning a HAX call into a SAX call are:
+
+* Normalization of element and attribute names by downcasing, since XML
+  is case sensitive and HTML is not.
+
+* Conversion of the doctype declaration.  For example, an HTML
+  4.01 Transitional doctype turns into XHTML 1.0 Transitional.
+
+* addition of the XHTML namespace to elements (and of the empty
+  namespace to attributes).  A namespace declaration for the default
+  namespace is added to the <HTML> element.
+========================================================================
+falsch:
+* Setting of attribute values for those attributes that are specified
+  without a value in XML, like SELECTED in HTML, which turns into
+  selected="selected" in XHTML.  (The former is represented using the
+  special attribute value T in HAX.)
+
+------------------------------------------------------------------------
+
+(chtml:parse "<p><select><option selected></select></p>" 
+	     (chtml:make-string-sink))
+
+
+(chtml:parse "<p><select><option selected></select></p>"
+	     (chtml:make-lhtml-builder))
+
+
+
+(chtml:parse (drakma:http-request "http://www.w3.org/MarkUp/Test/HTML401/current/tests/sec14_2_4-BF-01.html")
+		    (chtml:make-lhtml-builder))

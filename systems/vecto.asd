@@ -1,0 +1,1 @@
+../site/vecto-1.1/vecto.asd

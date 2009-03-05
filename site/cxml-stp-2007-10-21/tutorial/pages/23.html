@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    23
+	    --
+	    Printed representation</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Printed representation</h1>
+    Structure-like output for copy&amp;paste in the REPL
+    <pre class="repl">CL-USER&gt; (stp:make-document (stp:make-element "list"))</pre>
+    <pre class="result">#.(STP:DOCUMENT
+   :CHILDREN '(#.(STP:ELEMENT
+                  #| :PARENT of type DOCUMENT |#
+                  :LOCAL-NAME "list")))</pre>
+    <ul>
+      <li>Uses #. to avoid changing the global readtable</li>
+      <li>
+	Private constructor functions for debugging purposes only.  In
+	source code, use the documented <tt>make-</tt><i>foo</i>
+	functions instead.
+      </li>
+      <li>
+	Syntax subject to change without notice
+      </li>
+    </ul>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="22.html">⬖</a>23/24<a class="icon" href="24.html">⬗</a>
+</div>
+</body>
+</html>

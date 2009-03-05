@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="iso-8859-1"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+       <title>cl-curl, an interface to the libcurl library</title>
+  </head>
+  <body>
+    <div class="body">
+
+ <div class="header">
+  <h1>cl-curl</h1>
+  <h2>An interface to libcurl, a multiprotocol file transfer
+	library</h2>
+ </div>
+
+ <h3>Introduction</h3>
+ <div class="content">
+      <p>
+	cl-curl is an interface to <a
+	  href="http://curl.haxx.se/libcurl/">libcurl</a>, a
+	multiprotocol file transfer library.  It is useful for
+	network communication where <a
+	  href="http://www.cliki.net/trivial-http">trivial-http</a> is
+	too trivial.  For example, it will allow you to access a web
+	page where keeping cookies is required.
+      </p>
+      <p>This code should be considered alpha.  It works correctly
+	using the libcurl "easy" interface and HTTP, anything else is
+	yet to be tested.  Testing, code, and documentation are
+	gratefully accepted.</p>
+ <p>This software is distributed under the <a
+	  href="http://www.cliki.net/LLGPL">LLGPL</a>.</p> 
+ </div>
+ 
+ <h3>Related projects</h3>
+  <div class="content">
+      As mentioned, <a
+	  href="http://www.cliki.net/trivial-http">trivial-http</a> is
+      recommended for simple HTTP transactions.  It requires no
+      external library.
+  </div>
+ 
+ <h3>Mailing Lists</h3>
+  <div class="content">
+      <ul>
+	<li><a href="http://www.common-lisp.net/mailman/listinfo/cl-curl-announce">
+   cl-curl-announce</a>, announcements related to cl-curl</li>
+	<li><a href="http://www.common-lisp.net/mailman/listinfo/cl-curl-devel">
+   cl-curl-devel</a>; development of cl-curl.  This is the list to ask
+	questions, post suggestions, etc.</li>
+      </ul>
+  </div>
+ 
+ <h3>Installation</h3>
+ <div class="content">
+      <p>
+	You will need
+      </p>
+	<ul>
+	<li><a href="http://curl.haxx.se/libcurl/">libcurl</a></li>
+	<li><a href="http://uffi.b9.com/">UFFI</a></li>
+	<li><a href="http://www.cliki.net/asdf">ASDF</a>
+	  </ul>
+      <p>
+	If you are running Debian, the following should work:</p>
+      <blockquote><pre>apt-get install libcurl2-dev cl-uffi cl-asdf</pre></blockquote>
+      <p>Once your CL implementation is running, do</p>
+      <blockquote><pre>(asdf:operate 'asdf:compile-op :curl)
+(asdf:operate 'asdf:load-op :curl)</pre></blockquote>
+      <p>or, if using common-lisp-controller,</p>
+      <blockquote><pre>(clc:clc-require :curl)</pre></blockquote>
+ </div>
+ 
+ <h3>Documentation and examples</h3>
+ <div class="content">
+ <p>At the present time, usage of the libcurl library is limited to
+ the "easy" interface, as opposed to the "multi" interface.  In
+ addition, since callbacks are not defined in UFFI, no functions may
+ be passed into the libary.  For setting options, #'set-option
+ (curl_easy_setopt) can take only strings or integers (long). 
+ General string reading and writing functions are defined in the
+ cl-curl C library, and they can be used to send and receive strings
+ to the URL.
+ </p>
+ <p>Here is an example that is used successfully with a real web site
+	(name has been changed to prevent gratuitous hammering):</p>
+<pre>
+(curl:with-connection-returning-string (:cookies t)
+  (curl:set-option :url "http://www.example.org/perl/login.pl")
+  (curl:set-option
+   :postfields
+   "username=myname&password=mypasswd&_submitted=1&_sessionid=&_submit=Submit")
+  (curl:perform)
+  (curl:set-option :url "http://www.example.org/perl/id_query.pl")
+  (curl:set-option
+   :postfields
+   "ids=8820&timeframe=latest&sort=catnum&ascii=yes&common_name=yes&_submitted=1&_sessionid=&_submit=Submit")
+  (curl:perform))
+</pre>
+      <p>which returns the HTML from the last page as a string.</p>
+ <p>For remaining documentation, see the CL source and
+	<a href="http://curl.haxx.se/libcurl/">libcurl</a>
+	documentation.  Some advice of mechanizing web access:  Go
+	through a manual session on a browser that will show you page
+	source.  Look for all "input" forms; these must be sent in the
+	:postfields form.  Alternatively, try a wire sniffer like <a
+	  href="http://www.ethereal.com/">Ethereal</a> and see what
+	you're sending out when you click things.
+	</p>
+  <p>cl-curl has been tested with SBCL on Debian i386 and amd64 and
+	  with SBCL and OpenMCL on MacOS X.</p>
+ </div>
+  
+ <h3>Source downloads</h3>
+ <div class="content">
+ <p>You may browse or download the <a
+	    href="http://subversion.tigris.org/">Subversion</a>
+	  repository at
+	  svn://common-lisp.net/project/cl-curl/subversion/trunk.  For
+	  example, 
+	   </p>
+	<pre>svn list svn://common-lisp.net/project/cl-curl/subversion/trunk
+svn checkout svn://common-lisp.net/project/cl-curl/subversion/trunk</pre>
+	You can also get a tgz file <a href="cl-curl.tgz">here</a>.
+ </div>
+ 
+ <div class="footer">
+    <hr>
+    <address><a href="mailto:">Liam Healy</a></address>
+<!-- Created: Feb 25 2005 -->
+<!-- hhmts start -->
+Last modified: Mon Aug 15 23:28:16 EDT 2005
+<!-- hhmts end -->
+ </div>
+
+ </body>
+</html>

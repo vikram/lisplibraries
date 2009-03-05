@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    STP examples
+	  </title>
+<link rel="stylesheet" type="text/css" href="tutorial.css">
+</head>
+<body><div class="main" style="font-size: 8pt;">
+<h1>STP examples</h1>
+<p>
+	      The following simple examples and code snippets have been
+	      taken from the <a href="index.html">STP tutorial</a>.  The
+	      containing tutorial slide is linked from each example.
+	    </p>
+<div class="example">
+<div class="example-header">
+<a href="pages/2.html" style="color: #aaaaaa">
+		      (Page 2) 
+		    </a>To parse into STP, use an STP builder together with a      function generating SAX events:</div>
+      <pre class="code">(<b>cxml:parse</b> #p"example.xml" (<a href="doc/pages/cxml-stp__make-builder.html"><b>stp:make-builder</b></a>))</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/2.html" style="color: #aaaaaa">
+		      (Page 2) 
+		    </a>Serialize STP by sending SAX events for the tree to a      sink:</div>
+      <pre class="code">(<a href="doc/pages/cxml-stp__serialize.html"><b>stp:serialize</b></a> * (cxml:make-character-stream-sink *standard-output*))</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/7.html" style="color: #aaaaaa">
+		      (Page 7) 
+		    </a>getElementsByTagNameNS("foo", "")</div>
+      <pre class="code">(stp:filter-recursively (stp:of-name "foo") node)</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/10.html" style="color: #aaaaaa">
+		      (Page 10) 
+		    </a>Making an element (no namespace)</div>
+      <pre class="repl">CL-USER&gt; (stp:make-element "list")</pre>
+      <pre class="result">#.(STP:ELEMENT :LOCAL-NAME "list")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/10.html" style="color: #aaaaaa">
+		      (Page 10) 
+		    </a>Making an element (with namespace)</div>
+      <pre class="repl">CL-USER&gt; (stp:make-element "z:list" "http://namespace")</pre>
+      <pre class="result">
+#.(STP:ELEMENT
+   :LOCAL-NAME "list"
+   :NAMESPACE-PREFIX "z"
+   :NAMESPACE-URI "http://namespace")</pre>
+    </div>
+<div class="example">
+<div class="example-header"><a href="pages/13.html" style="color: #aaaaaa">
+		      (Page 13) 
+		    </a></div>
+      <pre class="code">
+(defun <b>attribute-value</b> (element name &amp;optional uri) ...)
+(defun <b>(setf attribute-value)</b> (newval element name &amp;optional uri) ...)</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/13.html" style="color: #aaaaaa">
+		      (Page 13) 
+		    </a>with-attributes</div>
+      <pre class="repl">(let ((e (stp:document-element
+	  (cxml:parse "&lt;foo a='quux'/&gt;" (stp:make-builder)))))
+  (<b>stp:with-attributes ((a "a") (b "x:b" "http://foo")) e</b>
+    (setf b (concatenate 'string ".oO(" a ")"))
+    e))</pre>
+      <pre class="result">#.(CXML-STP:ELEMENT
+   :ATTRIBUTES '(#.(CXML-STP:ATTRIBUTE
+                    :VALUE ".oO(quux)"
+                    :LOCAL-NAME "b"
+                    :NAMESPACE-PREFIX "x"
+                    :NAMESPACE-URI "http://foo")
+                 #.(CXML-STP:ATTRIBUTE
+                    :VALUE "1"
+                    :LOCAL-NAME "a"))
+   :LOCAL-NAME "foo")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/14.html" style="color: #aaaaaa">
+		      (Page 14) 
+		    </a>Making an attribute node</div>
+      <pre class="repl">CL-USER&gt; (stp:make-attribute "123"
+                             "a:defaultValue"
+                             "http://relaxng.org/ns/compatibility/annotations/1.0")</pre>
+      <pre class="result">
+#.(STP:ATTRIBUTE
+   :VALUE "123"
+   :LOCAL-NAME "defaultValue"
+   :NAMESPACE-PREFIX "a"
+   :NAMESPACE-URI "http://relaxng.org/ns/compatibility/annotations/1.0")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/14.html" style="color: #aaaaaa">
+		      (Page 14) 
+		    </a>Making an attribute node (without namespace)</div>
+      <pre class="repl">CL-USER&gt; (stp:make-attribute "123" "defaultValue")</pre>
+      <pre class="result">
+#.(STP:ATTRIBUTE
+   :VALUE "123"
+   :LOCAL-NAME "defaultValue"&gt;</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/15.html" style="color: #aaaaaa">
+		      (Page 15) 
+		    </a>Namespaces are declared implicitly</div>
+      <pre class="repl">&lt;element xmlns="http://relaxng.org/ns/structure/1.0"
+	 xmlns:foo="http://foo"
+	 name="foo"
+	 foo:annotation="bar"&gt;
+  &lt;empty/&gt;
+&lt;/element&gt;</pre>
+      <pre class="result">#.(STP:ELEMENT
+   :LOCAL-NAME "element"
+   :NAMESPACE-URI "http://relaxng.org/ns/structure/1.0"
+   :ATTRIBUTES '(#.(<b>STP:ATTRIBUTE</b>
+                    :LOCAL-NAME "name"
+                    :VALUE "foo")
+                 #.(<b>STP:ATTRIBUTE</b>
+                    :LOCAL-NAME "annotation"
+                    :NAMESPACE-PREFIX "foo"
+                    :NAMESPACE-URI "http://foo"
+                    :VALUE "bar"))
+   <span style="color: #aaaaaa">:CHILDREN ... uninteresting child nodes elided ...</span>)</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/16.html" style="color: #aaaaaa">
+		      (Page 16) 
+		    </a>Well-formed namespaces</div>
+      <pre class="repl">(let ((e (stp:make-element           "a:foo" "http://a"))
+      (a (stp:make-attribute "value" "b:bar" "http://b")))
+  (stp:add-attribute e a))</pre>
+      <pre class="result">Okay</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/16.html" style="color: #aaaaaa">
+		      (Page 16) 
+		    </a>Namespaces not well-formed</div>
+      <pre class="repl">(let ((e (stp:make-element           "<b>a</b>:foo" "http://a"))
+      (a (stp:make-attribute "value" "a:bar" "<b>http://b</b>")))
+  (stp:add-attribute e a))</pre>
+      <pre class="result"><b>Error: namespace collision with element</b></pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/19.html" style="color: #aaaaaa">
+		      (Page 19) 
+		    </a>Text nodes</div>
+      <pre class="repl">CL-USER&gt; (stp:make-text "chit-chat")</pre>
+      <pre class="result">#.(STP:TEXT :DATA "chit-chat")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/19.html" style="color: #aaaaaa">
+		      (Page 19) 
+		    </a>Comment nodes</div>
+      <pre class="repl">CL-USER&gt; (stp:make-comment "Ich bin ein Blindtext.")</pre>
+      <pre class="result">#.(STP:COMMENT :DATA "Ich bin ein Blindtext.")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/19.html" style="color: #aaaaaa">
+		      (Page 19) 
+		    </a>Processing instruction nodes</div>
+      <tt>&lt;?xml-stylesheet type='text/xsl' href='style.xsl'?&gt;</tt>
+      <pre class="repl">CL-USER&gt; (stp:make-processing-instruction "xml-stylesheet" "type='text/xsl' href='style.xsl'")</pre>
+      <pre class="result">#.(STP:PROCESSING-INSTRUCTION
+   :DATA "type='text/xsl' href='style.xsl'"
+   :TARGET "xml-stylesheet")</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/21.html" style="color: #aaaaaa">
+		      (Page 21) 
+		    </a>Not all strings are allowed as comments</div>
+      <pre class="repl">CL-USER&gt; (stp:make-comment "verboten: --")</pre>
+      <pre class="result">Error: forbidden -- in comment</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/21.html" style="color: #aaaaaa">
+		      (Page 21) 
+		    </a>Names must follow the XML grammar</div>
+      <pre class="repl">CL-USER&gt; (stp:make-element "1eadingdigit")</pre>
+      <pre class="result">Error: not an NCName: 1eadingdigit</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/21.html" style="color: #aaaaaa">
+		      (Page 21) 
+		    </a>Mild protection against bogus argument order</div>
+      <pre class="repl">CL-USER&gt; (stp:make-element "html" "oops")</pre>
+      <pre class="result">WARNING: namespace URI does not look like an absolute URL: "oops"</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/21.html" style="color: #aaaaaa">
+		      (Page 21) 
+		    </a>The XMLDecl is not a processing instruction</div>
+      <pre class="repl">CL-USER&gt; (stp:make-processing-instruction "xml" "version='1.0'")</pre>
+      <pre class="result">Error: attempt to pretend that a PI is an XMLDecl</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/22.html" style="color: #aaaaaa">
+		      (Page 22) 
+		    </a>Convert STP to DOM</div>
+      <pre class="repl">CL-USER&gt; (<b>stp:serialize</b> document (<b>cxml-dom:make-dom-builder</b>))</pre>
+      <pre class="result">#&lt;RUNE-DOM::DOCUMENT {1005A421F1}&gt;</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/22.html" style="color: #aaaaaa">
+		      (Page 22) 
+		    </a>Convert STP to DOM</div>
+      <pre class="repl">CL-USER&gt; (<b>stp:serialize</b> document (<b>cxml-xmls:make-xmls-builder</b>))</pre>
+      <pre class="result">(("x" . "") NIL)</pre>
+    </div>
+<div class="example">
+<div class="example-header">
+<a href="pages/22.html" style="color: #aaaaaa">
+		      (Page 22) 
+		    </a>Validate against Relax NG schema</div>
+      <pre class="repl">CL-USER&gt; (let ((schema (cxml-rng:parse-compact #p"/home/david/demo.rnc")))
+	   (<b>stp:serialize</b> document (<b>cxml-rng:make-validator schema</b>)))</pre>
+      <pre class="result">Error: element example () not valid,
+was expecting an element named "demo", in the namespace ""
+   [Condition of type CXML-RNG:RNG-ERROR]</pre>
+    </div>
+</div></body>
+</html>

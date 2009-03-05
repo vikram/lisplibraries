@@ -1,0 +1,181 @@
+.\" -*- nroff -*-
+.\"
+.\" Copyright (c) 2006 Luca Capello http://luca.pca.it <luca@pca.it>
+
+.TH UCWCTL 1 "May 01, 2006"
+
+.SH NAME
+ucwctl \- control the UnCommon Web Application Framework
+
+.SH SYNOPSIS
+.B ucwctl
+.RI [ options ]
+.I action
+
+.SH DESCRIPTION
+UnCommon Web (UCW) is a way to develop interactive graphical
+applications using Common Lisp and HTTP/HTML.
+.P
+.B ucwctl
+manages to start or stop an UCW session via
+.BR detachtty (1)
+and
+.BR cl-launch (1).
+.P
+It can also connect to a running UCW session via
+.BR attachtty (1)
+and then you can give commands to the Common Lisp REPL.
+Alternatively, you can connect to a running UCW session using SLIME
+from Emacs.
+
+.SH OPTIONS
+The default options are read from \fI/etc/ucw/ucwctl.conf\fP.
+.TP
+.BI \-a "\fR, \fP" \--asdf-root " directory"
+Specify the directory which should be registered in the ASDF search
+path.  Default is \fIempty\fP, you should sure be that UCW can find
+all the necessary packages in the system ASDF search path.
+.TP
+.BI \-c "\fR, \fP" \--config-file " file"
+Change the config file which is read by UCW.  If you do not need a
+config file (because you have a special start file), use
+\fI/dev/null\fP as config file.  Default is \fI/etc/ucw/conf.lisp\fP.
+.TP
+.BI \-h "\fR, \fP" \--help
+Show the help and exit.
+.TP
+.BI \-k "\fR, \fP" \--stop-file " file"
+Specify the stop file which \fBucwctl\fP uses to stop UCW.  This is
+mandatory.  Default is \fI/etc/ucw/stop.lisp\fP.
+.TP
+.BI \-l "\fR, \fP" \--lisp " name"
+Specify the name (without the complete path) of the Common Lisp
+implementation to be used.  This is mandatory.
+.TP
+.BI \ \ \ \ \--log-root " directory"
+Change the directory in which the logs are saved.  When set, this
+option overrides the general \fB--var-root\fP.  Default is
+\fIempty\fP, which is the same as specifying \fI/var/log/ucw\fP for
+the root user or \fI~/log/ucw\fP for a normal one.
+.TP
+.BI \ \ \ \ \--run-root " directory"
+Change the directory where the pid and the socket file are created.
+When set, this option overrides the general \fB--var-root\fP.  Default
+is \fIempty\fP, which is the same as specifying \fI/var/run/ucw\fP
+for the root user or \fI~/run/ucw\fP for a normal one.
+.TP
+.BI \-s "\fR, \fP" \--start-file " file"
+Specify the start file which \fBucwctl\fP uses to start UCW.  This is
+mandatory.  Default is \fI/etc/ucw/start.lisp\fP.
+.TP
+.BI \-t "\fR, \fP" \--timeout " seconds"
+Set how many seconds attachtty should wait while trying to stop a
+running session.  Default is \fI5\fP.
+.TP
+.BI \-u "\fR, \fP" \--ucwctl-file " file"
+Specify the file which contains the \fBucwctl\fP options.  Default
+is \fI/etc/ucw/ucwctl.conf\fP and \fI~/.ucw/ucwctl.conf\fP, if they
+exist, with the latter overriding the former.  If a different
+\fIucwctl.conf\fP file is specified, it overrides all the defaults.
+Moreover, command line options take precedence over values in
+\fIucwctl.conf\fP files.
+.TP
+.BI \ \ \ \ \--var-root " directory"
+Specify the directory where the logs are saved
+(\fIdirectory/log/ucw\fP) and the pid/socket are created
+(\fIdirectory/run/ucw\fP).  This is mandatory, unless you use the
+\fB--log-root\fP and \fB--run-root\fP options.  Default is
+\fI/var\fP for the root user or \fI~/var\fP for a normal one.
+
+.SH ACTIONS
+.TP
+.B start
+Load up UCW reading the start file.
+.TP
+.B stop
+Try to stop a running UCW session via
+.BR attachtty (1).
+If that doesn't work, fall back to killing the process.
+.TP
+.B attach
+Connect to a running UCW session via
+.BR attachtty (1).
+To detach from the tty leaving the server process running, send a
+\fBSIGQUIT\fR (usually from the keyboard with ^\\).  See also
+.BR attachtty (1).
+
+.SH NOTES
+The API documentation is, as much as possible, contained in the
+docstrings of the various classes, methods, and packages which make up
+UCW itself.  Using a good inspector (SLIME's inspector for example)
+you should be able to easily navigate and browse the API.
+
+.SH FILES
+.PD 0
+.I /etc/ucw/conf.lisp
+.br
+.I /etc/ucw/start.lisp
+.br
+.I /etc/ucw/ucwctl.conf
+.br
+.I /var/log/ucw/ucw.detachtty
+.br
+.I /var/log/ucw/ucw.dribble
+.br
+.I /var/log/ucw/ucw.log
+.br
+.I /var/run/ucw/ucw.pid
+.br
+.I /var/run/ucw/ucw.socket
+.br
+.I ~/.ucw/ucwctl.conf
+.br
+.I ~/var/log/ucw/ucw.detachtty
+.br
+.I ~/var/log/ucw/ucw.dribble
+.br
+.I ~/var/log/ucw/ucw.log
+.br
+.I ~/var/run/ucw/ucw.pid
+.br
+.I ~/var/run/ucw/ucw.socket
+.PD
+
+.SH ENVIRONMENT
+All the command options can be specified as environment variables.
+.P
+The default start file \fI/etc/ucw/start.lisp\fP loads up an UCW
+session via the ASDF \fB:ucw.default\fP system, which reads the
+following environment variables (exported by \fBucwctl\fP):
+.P
+.B CONFIGFILE
+.br
+.B LOGROOT
+
+.SH BUGS
+Please report bugs to <bese-devel@common-lisp.net>.  A collection of
+all the known bugs and issues is present as text files in the
+directory docs/issues.
+
+.SH SEE ALSO
+.BR cl-launch (1),
+.BR detachtty (1),
+.BR attachtty (1),
+.BR emacs (1)
+and the SLIME info documentation.
+
+.SH AUTHORS
+UnCommon Web was principally written by Edward Marco Baringer
+<mb@bese.it> and is licensed under the terms of the BSD license.
+
+This manual page was written by Luca Capello <luca@pca.it>.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the BSD license.
+
+Please check the file COPYING in the upstream sources or, on Debian
+systems, the complete text of the BSD license can be found in
+/usr/share/common-licenses/BSD.
+
+The license was modified to reflect that Edward Marco Baringer (or
+Luca Capello for this manual page), not the Regents of the University
+of California, is the author.

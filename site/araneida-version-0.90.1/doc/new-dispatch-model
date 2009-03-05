@@ -1,0 +1,44 @@
+** new handler model
+
+[ I think everything in here has now been wrapped into one or more of
+the real doc files ]
+
+a handler is an object with various methods defining the actions
+for different stages
+
+a dispatching handler calls authent, authz, then dispatches on the 
+sub-handler, then logs
+
+We put the request method in as a specialisable argument - it's not
+unusual to do different things for GET and POST at the same url.
+
+There is no error handler any more: a dispatching handler should do a
+handler-case and etc if it wants to
+
+(How this meshes with the existing system: export-handler installs a
+"legacy-handler" at the appropriate url prefix - unless there's one
+there already)
+
+Stages may signal RESPONSE-SENT to short-ciruit subsequent stages.  
+This can also be used by REQUEST-SEND-HEADERS to skip sending the body.
+and so forth.  Note that it's a signal not an error, so in a legacy
+handler system if its not caught it'll be ignored
+
+we also need some way to deal with request-base-url and/or
+rest-of-url.  I propose that the request get new slots
+
+((urlstring :initform nil)
+ (handled-by ))
+
+handled-by is a list of lists
+
+we should detect when the handler is a function, and just call it.  We
+don't always need the full object stuff if it's just doing something
+simple like a redirect
+
+*root-handler* is always called first.  
+
+as we go through each new handler we cons the appropriate list of
+handler-instance and position within the urlstring that has been
+examined.
+

@@ -1,0 +1,14 @@
+Revision: pxmlutils--main--0.0--patch-11
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Wed Jan 28 21:22:55 CET 2004
+Standard-date: 2004-01-28 20:22:55 GMT
+Modified-files: pxml2.cl
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-11
+Summary: Implement URI= (see body) 
+Keywords: 
+
+We'll only keep this function until acl-compat gets it (which is
+where it should be).
+
+Thanks to Edi Weitz for noting this.

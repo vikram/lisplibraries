@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    22
+	    --
+	    SERIALIZE examples</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>SERIALIZE examples</h1>
+    STP to DOM:
+    <example title="Convert STP to DOM">
+      <pre class="repl">CL-USER&gt; (<b>stp:serialize</b> document (<b>cxml-dom:make-dom-builder</b>))</pre>
+      <pre class="result">#&lt;RUNE-DOM::DOCUMENT {1005A421F1}&gt;</pre>
+    </example>
+    STP to xmls-style lists:
+    <example title="Convert STP to DOM">
+      <pre class="repl">CL-USER&gt; (<b>stp:serialize</b> document (<b>cxml-xmls:make-xmls-builder</b>))</pre>
+      <pre class="result">(("x" . "") NIL)</pre>
+    </example>
+    Relax NG validation:
+    <example title="Validate against Relax NG schema">
+      <pre class="repl">CL-USER&gt; (let ((schema (cxml-rng:parse-compact #p"/home/david/demo.rnc")))
+	   (<b>stp:serialize</b> document (<b>cxml-rng:make-validator schema</b>)))</pre>
+      <pre class="result">Error: element example () not valid,
+was expecting an element named "demo", in the namespace ""
+   [Condition of type CXML-RNG:RNG-ERROR]</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="21.html">⬖</a>22/24<a class="icon" href="23.html">⬗</a>
+</div>
+</body>
+</html>

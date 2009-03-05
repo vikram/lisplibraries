@@ -1,0 +1,41 @@
+araneida (0.54) unstable; urgency=low
+
+  * Updated examples/, and revised the documentation slightly
+
+ -- Daniel Barlow <dan@telent.net>  Thu, 28 Jun 2001 15:51:46 +0100
+
+araneida (0.53.3) unstable; urgency=low
+
+  * This one might work in cmucl too
+
+ -- Daniel Barlow <dan@telent.net>  Wed, 27 Jun 2001 19:00:28 +0100
+
+araneida (0.53.2) unstable; urgency=low
+
+  * I hate debian
+
+ -- Daniel Barlow <dan@telent.net>  Wed, 27 Jun 2001 18:52:12 +0100
+
+araneida (0.53.1) unstable; urgency=low
+
+  * More bad dependencies
+
+ -- Daniel Barlow <dan@telent.net>  Wed, 27 Jun 2001 15:25:18 +0100
+
+araneida (0.53) unstable; urgency=low
+
+  * Bad dependencies.
+  * New (as yet undocumented) scheme for subrequests makes it possible
+    to do things like session-id-embedded-in-url support cleanly
+
+ -- Daniel Barlow <dan@glodfish.telent.net>  Wed, 27 Jun 2001 02:20:54 +0100
+
+araneida (0.52) unstable; urgency=low
+
+  * Turn it into a debian package
+
+ -- Daniel Barlow <dan@glodfish.telent.net>  Tue,  5 Jun 2001 13:43:50 +0100
+
+Local variables:
+mode: debian-changelog
+End:

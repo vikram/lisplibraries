@@ -1,0 +1,14 @@
+<!-- -*- html -*- -->
+<html xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+      xmlns:ucw="http://common-lisp.net/project/ucw/core"
+      tal:in-package=":it.bese.ucw-user">
+  <head>
+    <title tal:content="$page-name">page name goes here</title>
+  </head>
+  <body>
+    <h1 tal:content="$page-name">page name goes here</h1>
+    <div tal:content="$contents" tal:escape-html="nil">
+      template contents go here
+    </div>
+  </body>
+</html>

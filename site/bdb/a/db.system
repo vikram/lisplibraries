@@ -1,0 +1,10 @@
+(in-package "USER")
+
+(mk:defsystem "DB"
+    :components ((:file "db-pkg")
+		 (:file "db-cmu" :depends-on ("db-pkg"
+					      #+LispWorks "cmucl-ffi-compat"
+					      #+Allegro "cmucl-ffi-acl"))
+		 (:file "constants" :depends-on ("db-pkg"))
+		 (:file "db-ffi" :depends-on ("db-cmu" "constants"))
+		 (:file "db" :depends-on ("db-ffi"))))

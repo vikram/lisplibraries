@@ -1,0 +1,14 @@
+[Initial
+-urso-@web.de**20060504162327] 
+[add licence information
+-urso-@web.de**20060505165615] 
+[WARNING: changed output path of make-qbook
+-urso-@web.de**20060507213947] 
+[changed to filter to work like remove-if-not
+-urso-@web.de**20060525170026] 
+[rewrite of with-gensyms and once-only macros and added with-unique-names as synonymous for with-gensyms
+-urso-@web.de**20060906232728] 
+[added functions: const and const-values to src/misc.lisp
+-urso-@web.de**20060906232842] 
+[added stack-machine and functions for manipulating it
+-urso-@web.de**20060906233107] 

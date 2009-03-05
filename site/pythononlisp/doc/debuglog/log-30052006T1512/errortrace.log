@@ -1,0 +1,97 @@
+The value "Hello world" is not of type SYSTEM-AREA-POINTER.
+   [Condition of type TYPE-ERROR]
+
+Restarts:
+  0: [ABORT-REQUEST] Abort handling SLIME request.
+  1: [ABORT] Exit debugger, returning to top level.
+
+Backtrace:
+  0: (CFFI-SYS:NULL-POINTER-P "Hello world")
+      Locals:
+        SB-DEBUG::ARG-0 = "Hello world"
+  1: (CFFI:FOREIGN-STRING-TO-LISP "Hello world" 536870911 T)
+      Locals:
+        CFFI::NULL-TERMINATED-P = T
+        CFFI::PTR = "Hello world"
+        CFFI::SIZE = 536870911
+  2: ((LAMBDA (PYTHONONLISP::SELF PYTHONONLISP::ARGS)) #<unavailable argument> #.(SB-SYS:INT-SAP #X00211F70))
+      Locals:
+        SB-DEBUG::ARG-0 = :<NOT-AVAILABLE>
+        SB-DEBUG::ARG-1 = #.(SB-SYS:INT-SAP #X00211F70)
+  3: ((LAMBDA (SB-ALIEN::ARGS-POINTER SB-ALIEN::RESULT-POINTER FUNCTION)) -268437510 -268437517 #<FUNCTION (LAMBDA (PYTHONONLISP::SELF PYTHONONLISP::ARGS)) {10B35DE5}>)
+      Locals:
+        SB-DEBUG::ARG-0 = -268437510
+        SB-DEBUG::ARG-1 = -268437517
+        SB-DEBUG::ARG-2 = #<FUNCTION (LAMBDA (PYTHONONLISP::SELF PYTHONONLISP::ARGS)) {10B35DE5}>
+  4: ("foreign function: call_into_lisp")
+      Locals:
+  5: (PYTHONONLISP::PYRUN_SIMPLESTRING "class Sout:
+     def write(self, stdstring):
+          pol.dumpstd(stdstring)
+import pol
+import sys
+sys.stdout = Sout()
+sys.stderr = Sout()
+#sys.sydin = None
+print \"Hello world\"
+")
+      Locals:
+        SB-DEBUG::ARG-0 = "class Sout:
+     def write(self, stdstring):
+          pol.dumpstd(stdstring)
+import pol
+import sys
+sys.stdout = Sout()
+sys.stderr = Sout()
+#sys.sydin = None
+print \"Hello world\"
+"
+  6: (PYTHONONLISP::PYTHONLISP "print \"Hello world\"" PYTHONONLISP::CONSOLE NIL)
+      Locals:
+        PYTHONONLISP::CODE = "print \"Hello world\""
+        PYTHONONLISP::METHODS = NIL
+        PYTHONONLISP::REDIRECT-STDOUT = PYTHONONLISP::CONSOLE
+  7: (SB-INT:EVAL-IN-LEXENV (PYTHONONLISP::PY "print \"Hello world\"") #<NULL-LEXENV>)
+      Locals:
+        SB-DEBUG::ARG-0 = 2
+        SB-DEBUG::ARG-1 = (PYTHONONLISP::PY "print \"Hello world\"")
+        SB-DEBUG::ARG-2 = #<NULL-LEXENV>
+  8: (SWANK::EVAL-REGION "(py::py \"print \\\"Hello world\\\"\")
+" T)
+      Locals:
+        SWANK::PACKAGE-UPDATE-P = T
+        STRING = "(py::py \"print \\\"Hello world\\\"\")
+"
+  9: ((LAMBDA NIL))
+ 10: ((SB-PCL::FAST-METHOD SWANK-BACKEND:CALL-WITH-SYNTAX-HOOKS (T)) #<unused argument> #<unused argument> #<CLOSURE (LAMBDA NIL) {10F7EBA5}>)
+ 11: (SWANK::CALL-WITH-BUFFER-SYNTAX #<CLOSURE (LAMBDA NIL) {10F7EBA5}>)
+ 12: (SB-INT:EVAL-IN-LEXENV (SWANK:LISTENER-EVAL "(py::py \"print \\\"Hello world\\\"\")
+") #<NULL-LEXENV>)
+ 13: ((LAMBDA NIL))
+ 14: ((SB-PCL::FAST-METHOD SWANK-BACKEND:CALL-WITH-DEBUGGER-HOOK (T T)) #<unused argument> #<unused argument> #<FUNCTION SWANK:SWANK-DEBUGGER-HOOK> #<CLOSURE (LAMBDA NIL) {10F7E57D}>)
+ 15: ((LAMBDA NIL))
+ 16: ((SB-PCL::FAST-METHOD SWANK-BACKEND:CALL-WITH-DEBUGGER-HOOK (T T)) #<unused argument> #<unused argument> #<FUNCTION SWANK:SWANK-DEBUGGER-HOOK> #<FUNCTION (LAMBDA NIL) {1000223D}>)
+ 17: (SWANK::CALL-WITH-REDIRECTED-IO #<SWANK::CONNECTION {10000AD1}> #<CLOSURE (LAMBDA NIL) {10F7B9ED}>)
+ 18: (SWANK::CALL-WITH-CONNECTION #<SWANK::CONNECTION {10000AD1}> #<FUNCTION (LAMBDA NIL) {1000223D}>)
+ 19: (SWANK::HANDLE-REQUEST #<SWANK::CONNECTION {10000AD1}>)
+ 20: (SWANK::PROCESS-AVAILABLE-INPUT #<SB-SYS:FD-STREAM for "a constant string" {10001E29}> #<CLOSURE (LAMBDA NIL) {10F7B9DD}>)
+ 21: ((FLET SWANK::HANDLER))
+ 22: ((LAMBDA (SWANK-BACKEND::_)) #<unused argument>)
+ 23: (SB-IMPL::SUB-SERVE-EVENT NIL 0)
+ 24: (SB-SYS:WAIT-UNTIL-FD-USABLE 0 :INPUT NIL)
+ 25: (SB-IMPL::REFILL-BUFFER/FD #<SB-SYS:FD-STREAM for "standard input" {100004D1}>)
+ 26: (SB-IMPL::INPUT-CHAR/UTF-8 #<SB-SYS:FD-STREAM for "standard input" {100004D1}> NIL #:EOF-OBJECT)
+ 27: (READ-CHAR #<SB-SYS:FD-STREAM for "standard input" {100004D1}> NIL #:EOF-OBJECT #<unused argument>)
+ 28: (READ-CHAR #<SYNONYM-STREAM :SYMBOL SB-SYS:*STDIN* {8015F41}> NIL #:EOF-OBJECT #<unused argument>)
+ 29: (READ-CHAR #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-INPUT* {100003B9}> NIL #:EOF-OBJECT #<unused argument>)
+ 30: (READ-PRESERVING-WHITESPACE #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-INPUT* {100003B9}> NIL (NIL) T)
+ 31: (READ-PRESERVING-WHITESPACE #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-INPUT* {100003B9}> NIL (NIL) NIL)
+ 32: (READ #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-INPUT* {100003B9}> NIL (NIL) NIL)
+ 33: (SB-IMPL::REPL-READ-FORM-FUN #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-INPUT* {100003B9}> #<SYNONYM-STREAM :SYMBOL SWANK::*CURRENT-STANDARD-OUTPUT* {100003F1}>)
+ 34: (SB-IMPL::REPL-FUN NIL)
+ 35: ((LAMBDA NIL))
+ 36: ((LAMBDA NIL))
+ 37: (SB-IMPL::%WITH-REBOUND-IO-SYNTAX #<CLOSURE (LAMBDA NIL) {1000029D}>)
+ 38: (SB-IMPL::TOPLEVEL-REPL NIL)
+ 39: (SB-IMPL::TOPLEVEL-INIT)
+ 40: ((LABELS SB-IMPL::RESTART-LISP))

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Class rng-error</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-rng.html">cxml-rng</a></p>
+      <h2 class="page-title">
+	  Class rng-error</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Superclasses</h3>
+          <div class="indent">
+<tt style="color: #777777">common-lisp:simple-error</tt>, <tt style="color: #777777">common-lisp:simple-condition</tt>, <tt style="color: #777777">common-lisp:error</tt>, <tt style="color: #777777">common-lisp:serious-condition</tt>, <tt style="color: #777777">common-lisp:condition</tt>, <tt style="color: #777777">sb-pcl::slot-object</tt>, <tt style="color: #777777">common-lisp:t</tt>
+</div>
+          <h3>Documented Subclasses</h3>
+          <div class="indent">
+            <a href="cxml-rng__class__dtd-compatibility-error.html">
+              <tt>dtd-compatibility-error</tt>
+            </a>
+          </div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">The class of all validation and schema parsing errors.<br><br>
+    Signalled while parsing a schema, this error signifies that the schema
+    is incorrect (or not compatible with DTD Compatibility).  Signalled
+    during validation, this error signifies that the document is invalid
+    (or not sound).<br><br>
+    When parsing or validating with DTD Compatibility, check for    <tt>dtd-compatibility-error</tt> to distinguish between
+    correctness and compatibility or validity and soundness.<br><br>            </div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>Slot Access Functions</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-rng__fun__rng-error-line-number.html">
+                  <tt>rng-error-line-number</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-rng__fun__rng-error-column-number.html">
+                  <tt>rng-error-column-number</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-rng__fun__rng-error-system-id.html">
+                  <tt>rng-error-system-id</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

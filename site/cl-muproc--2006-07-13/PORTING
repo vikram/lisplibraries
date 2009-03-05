@@ -1,0 +1,30 @@
+PORTING CL-MUPROC
+
+Since cl-muproc inherently relies on the multiprocessing facilities,
+which are not part of the Common Lisp standard, it is impossible to
+write it in a completely portable manner.  
+
+We have taken care to access implementation-specific code via a
+special interface, provided by the package CL-MUPROC.COMPAT
+(cf. muproc-package.lisp).  The idea is that each implementation
+supported by cl-muproc should have its own file providing an
+implementation of the interface defined by CL-MUPROC.COMPAT.
+
+At this time, cl-muproc currently supports Lispworks and OpenMCL.  We
+believe that porting it to additional CL implementations should be
+fairly straightforward.
+
+The interface to implementation-specific parts of cl-muproc may need
+to evolve somewhat as more implementations are added (hopefully).
+However, as we do that, is important that the interface to
+implementation specific code remains 'clean' in the sense that
+cl-muproc interfaces in the same way to implementation-specific
+functionality on all implementations; in other words: we need to keep
+read-time conditionalization out of muproc.lisp, supervisor.lisp, and
+friends!
+
+If you're interested in porting cl-muproc to some platform, be sure to
+join the cl-muproc-devel mailing list (available at common-lisp.net)!
+
+Klaus Harbo
+2006-06-07

@@ -1,0 +1,12 @@
+README for package gzip-stream:
+
+home page : http://common-lisp.net/project/gzip-stream
+mailing list : http://common-lisp.net/cgi-bin/mailman/listinfo/gzip-stream-devel
+or me : Sean Ross <sross <at> common-lisp <dot> net>
+
+Sorry no documentation yet, but hopefully we'll have some soon.
+In the meantime look inside the gzip-stream package at the
+functions gzip, gunzip, make-gzip-intput-stream,
+make-gzip-output-stream and the macro with-open-gzip-file .
+
+

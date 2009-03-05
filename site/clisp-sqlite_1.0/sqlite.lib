@@ -1,0 +1,224 @@
+#0Y |CHARSET|::|UTF-8|
+(|SYSTEM|::|%IN-PACKAGE| "SQLITE.RAW" :|NICKNAMES| '|COMMON-LISP|::|NIL| :|USE|
+ '|COMMON-LISP|::|NIL| :|CASE-SENSITIVE| |COMMON-LISP|::|NIL| :|CASE-INVERTED|
+ |COMMON-LISP|::|NIL|)
+(|COMMON-LISP|::|USE-PACKAGE| '("FFI" "COMMON-LISP" "EXT") "SQLITE.RAW")
+(|SYSTEM|::|INTERN-EXPORT|
+ '("SQLITE_OPEN" "SQLITE_CLOSE" "SQLITE_EXEC" "SQLITE_LAST_INSERT_ROWID"
+   "SQLITE_CHANGES" "SQLITE_COMPLETE")
+ "SQLITE.RAW" |COMMON-LISP|::|NIL|)
+(|COMMON-LISP|::|FIND-PACKAGE| "SQLITE.RAW")
+(|SYSTEM|::|%IN-PACKAGE| "SQLITE" :|NICKNAMES| '|COMMON-LISP|::|NIL| :|USE|
+ '|COMMON-LISP|::|NIL| :|CASE-SENSITIVE| |COMMON-LISP|::|NIL| :|CASE-INVERTED|
+ |COMMON-LISP|::|NIL|)
+(|COMMON-LISP|::|USE-PACKAGE| '("FFI" "COMMON-LISP" "EXT" "SQLITE.RAW")
+ "SQLITE")
+(|SYSTEM|::|INTERN-EXPORT|
+ '("SQL" "DATABASE-OPENP" "DATABASE-NAME" "DATABASE-ADDRESS" "WITH-QUERY"
+   "SQLITE-LAST-INSERT-ROWID" "SQLITE-OPEN" "WITH-OPEN-DB" "SQLITE-CLOSE")
+ "SQLITE" |COMMON-LISP|::|NIL|)
+(|COMMON-LISP|::|FIND-PACKAGE| "SQLITE")
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "SQLITE.RAW"))
+(|EXT|::|WITHOUT-PACKAGE-LOCK| ("FFI")
+ (|COMMON-LISP|::|SETQ| |FFI|::|*FOREIGN-LANGUAGE*| ':|STDC|))
+(|FFI|::|PARSE-C-TYPE| '|FFI|::|C-POINTER| '|SQLITE.RAW|::|SQLITE-PTR|)
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_OPEN|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_CLOSE|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|FFI|::|PARSE-C-TYPE|
+ '(|FFI|::|C-FUNCTION|
+   (:|ARGUMENTS| (|SQLITE.RAW|::|ANY| |FFI|::|C-POINTER|)
+    (|SQLITE.RAW|::|ARGC| |FFI|::|SINT32|)
+    (|EXT|::|ARGV| (|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|))
+    (|SQLITE.RAW|::|COLUMN-NAMES| (|FFI|::|C-ARRAY-PTR| |FFI|::|C-STRING|)))
+   (:|RETURN-TYPE| |FFI|::|SINT32|))
+ '|SQLITE.RAW|::|SQLITE-CALLBACK|)
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_EXEC|
+ '#(4. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_LAST_INSERT_ROWID|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_CHANGES|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|SYSTEM|::|C-DEFUN| '|SQLITE.RAW|::|SQLITE_COMPLETE|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|))
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "SQLITE"))
+(|COMMON-LISP|::|LET*| ((#1=#:|G4643| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|SQLITE|::|DATABASE|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST|) :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|EXT|::|ADDRESS| :|READERS|
+    '(|SQLITE|::|DATABASE-ADDRESS|) :|INITARGS| '(:|ADDRESS|) :|INITFORM|
+    '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION| '"Stores the foreign address of the database connection.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|SQLITE|::|OPENP| :|READERS|
+    '(|SQLITE|::|DATABASE-OPENP|) :|INITARGS| '(:|OPENP|) :|INITFORM|
+    '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION| '"Is the current address open?")
+   (|COMMON-LISP|::|LIST| :|NAME| '|SQLITE|::|NAME| :|READERS|
+    '(|SQLITE|::|DATABASE-NAME|) :|INITARGS| '(:|NAME|) :|INITFORM|
+    '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION| '"The print name of the database"))
+  :|METACLASS| #1#
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|DOCUMENTATION| |COMMON-LISP|::|NIL| :|GENERIC-ACCESSORS|
+    '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|DATABASE-ADDRESS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|DATABASE-OPENP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|DATABASE-NAME|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CLOS|::|PRINT-OBJECT|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-CLOSE|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|SQLITE|::|DB|)))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-EXEC|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|SQLITE|::|DB| |SQLITE|::|QUERY| |SQLITE|::|CALLBACK|
+    |COMMON-LISP|::|&OPTIONAL| (|SQLITE|::|ARGUMENT| |COMMON-LISP|::|NIL|))))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-LAST-INSERT-ROWID|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|SQLITE|::|DB|)))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-CHANGES|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|SQLITE|::|DB|)))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-COMPLETE|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|SQLITE|::|SQL|)))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQLITE-OPEN|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|SQLITE|::|NAME| |COMMON-LISP|::|&OPTIONAL| (|SQLITE|::|MODE| 0.))))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|SQLITE|::|WITH-OPEN-DB|)
+(|SYSTEM|::|%SET-DOCUMENTATION| '|SQLITE|::|WITH-OPEN-DB|
+ '|COMMON-LISP|::|FUNCTION|
+ '"Convenience function for making sure database handles get freed.")
+(|SYSTEM|::|%PUTD| '|SQLITE|::|WITH-OPEN-DB|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |SQLITE|::|WITH-OPEN-DB|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Convenience function for making sure database handles get freed."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|<| (|EXT|::|LIST-LENGTH-DOTTED| |SYSTEM|::|<MACRO-FORM>|)
+      2.)
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G4754| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G4755|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|/=| (|EXT|::|LIST-LENGTH-DOTTED| #1#) 2.)
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|SQLITE|::|WITH-OPEN-DB| #1# '(|SQLITE|::|DB| |SQLITE|::|FILENAME|))
+         #1#))
+       (|SQLITE|::|DB| (|COMMON-LISP|::|CAR| #3#))
+       (|SQLITE|::|FILENAME| (|COMMON-LISP|::|CADR| #3#))
+       (|SQLITE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|COMMON-LISP|::|BLOCK| |SQLITE|::|WITH-OPEN-DB|
+       `(|COMMON-LISP|::|LET|
+         ((,|SQLITE|::|DB| (|SQLITE|::|SQLITE-OPEN| ,|SQLITE|::|FILENAME|)))
+         (|COMMON-LISP|::|UNWIND-PROTECT|
+          (|COMMON-LISP|::|PROGN| ,@|SQLITE|::|BODY|)
+          (|SQLITE|::|SQLITE-CLOSE| ,|SQLITE|::|DB|))))))))))
+(|SYSTEM|::|C-DEFUN| '|SQLITE|::|SQL|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|SQLITE|::|DB| |SQLITE|::|QUERY|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|SQLITE|::|WITH-QUERY|)
+(|SYSTEM|::|%SET-DOCUMENTATION| '|SQLITE|::|WITH-QUERY|
+ '|COMMON-LISP|::|FUNCTION|
+ '"A thoroughly useful function, your body is executed for each row
+returned by query. The columns in the result are assigned to the
+variables in arg-list so they can be easily accessed.")
+(|SYSTEM|::|%PUTD| '|SQLITE|::|WITH-QUERY|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |SQLITE|::|WITH-QUERY|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "A thoroughly useful function, your body is executed for each row
+returned by query. The columns in the result are assigned to the
+variables in arg-list so they can be easily accessed."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|<| (|EXT|::|LIST-LENGTH-DOTTED| |SYSTEM|::|<MACRO-FORM>|)
+      2.)
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G4782| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G4783|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|<| (|EXT|::|LIST-LENGTH-DOTTED| #1#) 3.)
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|SQLITE|::|WITH-QUERY| #1#
+          '(|SQLITE|::|DB| |SQLITE|::|ARG-LIST| |SQLITE|::|QUERY|
+            |COMMON-LISP|::|&REST| |SQLITE|::|QARGS|))
+         #1#))
+       (|SQLITE|::|DB| (|COMMON-LISP|::|CAR| #3#))
+       (|SQLITE|::|ARG-LIST| (|COMMON-LISP|::|CADR| . #4=(#3#)))
+       (|SQLITE|::|QUERY| (|COMMON-LISP|::|CADDR| . #4#))
+       (|SQLITE|::|QARGS| (|COMMON-LISP|::|CDDDR| . #4#))
+       (|SQLITE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|COMMON-LISP|::|BLOCK| |SQLITE|::|WITH-QUERY|
+       (|COMMON-LISP|::|LET|
+        ((|SQLITE|::|QPROC| (|COMMON-LISP|::|GENSYM|))
+         (|SQLITE|::|REALQUERY| (|COMMON-LISP|::|GENSYM|))
+         (|SQLITE|::|REALLAMBDA| (|COMMON-LISP|::|GENSYM|))
+         (|EXT|::|ARGV| (|COMMON-LISP|::|GENSYM|))
+         (|SQLITE|::|ARGC| (|COMMON-LISP|::|GENSYM|))
+         (|SQLITE|::|COLUMN-NAMES| (|COMMON-LISP|::|GENSYM|))
+         (|SQLITE|::|ANY| (|COMMON-LISP|::|GENSYM|)))
+        `(|COMMON-LISP|::|LET*|
+          ((,|SQLITE|::|REALQUERY|
+            ,(|COMMON-LISP|::|IF| |SQLITE|::|QARGS|
+              `(|COMMON-LISP|::|FORMAT| |COMMON-LISP|::|NIL|
+                ,(|COMMON-LISP|::|IF|
+                  (|COMMON-LISP|::|LISTP| |SQLITE|::|QUERY|)
+                  (|COMMON-LISP|::|APPLY| #'|EXT|::|STRING-CONCAT|
+                   |SQLITE|::|QUERY|)
+                  |SQLITE|::|QUERY|)
+                ,@|SQLITE|::|QARGS|)
+              (|COMMON-LISP|::|IF| (|COMMON-LISP|::|LISTP| |SQLITE|::|QUERY|)
+               (|COMMON-LISP|::|APPLY| #'|EXT|::|STRING-CONCAT|
+                |SQLITE|::|QUERY|)
+               |SQLITE|::|QUERY|)))
+           (,|SQLITE|::|REALLAMBDA|
+            (|COMMON-LISP|::|LAMBDA| ,|SQLITE|::|ARG-LIST| ,@|SQLITE|::|BODY|))
+           (,|SQLITE|::|QPROC|
+            (|COMMON-LISP|::|LAMBDA|
+             (,|SQLITE|::|ANY| ,|SQLITE|::|ARGC| ,|EXT|::|ARGV|
+              ,|SQLITE|::|COLUMN-NAMES|)
+             (|COMMON-LISP|::|DECLARE|
+              (|COMMON-LISP|::|IGNORE| ,|SQLITE|::|ANY| ,|SQLITE|::|ARGC|
+               ,|SQLITE|::|COLUMN-NAMES|))
+             (|COMMON-LISP|::|LET|
+              ,(|COMMON-LISP|::|LOOP| |SQLITE|::|FOR| |SQLITE|::|I|
+                |SQLITE|::|FROM| 0. |SQLITE|::|FOR| |SQLITE|::|ARG|
+                |SQLITE|::|IN| |SQLITE|::|ARG-LIST| |SQLITE|::|COLLECT|
+                `(,|SQLITE|::|ARG|
+                  (|COMMON-LISP|::|AREF| ,|EXT|::|ARGV| ,|SQLITE|::|I|)))
+              ,@|SQLITE|::|BODY|)
+             0.)))
+          (|SQLITE|::|SQLITE-EXEC| ,|SQLITE|::|DB| ,|SQLITE|::|REALQUERY|
+           ,|SQLITE|::|QPROC|))))))))))
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|SPECIAL| |SQLITE|::|*SQL-CONVERT-VALUES*|))

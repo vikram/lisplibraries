@@ -1,0 +1,10 @@
+Summary: The :COMPONENT and :BACKTRACK initargs to component classes aren't changeable upon reevaluation
+Status: open
+UCW-Version: ucw-2004@common-lisp.net/ucw--dev--0.3--patch-400
+Lisp: all
+
+Brian Downing pointed this out in http://common-lisp.net/pipermail/bese-devel/2005-April/000443.html
+
+Basically I need to define a correct reinitialize-instance
+method for standard-component-class objects.
+

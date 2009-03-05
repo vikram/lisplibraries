@@ -1,0 +1,18 @@
+Revision: pxmlutils--main--0.0--base-0
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Fri Oct 24 11:18:40 CEST 2003
+Standard-date: 2003-10-24 09:18:40 GMT
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--base-0
+    bese-devel@common-lisp.net/xmlutils--main--0.0--base-0
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-1
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-2
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-3
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-4
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-5
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-6
+    bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+Continuation-of: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-6
+Summary: rebranding xmlutils to pxmlutils
+Keywords:
+

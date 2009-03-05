@@ -1,0 +1,15 @@
+The utilities in this directory are (supposedly) useful for getting
+information about and working with araneida from the REPL.
+
+Such as taking an http-listener (often called *listener*) and having
+a pretty summary of all the handlers below it.
+
+ROC> (araneida-repl:show-listener-handlers *listener*)
+http://localhost:1106/*         (ROC-VIEW)
+	xml/*        (ROC-XML)
+		userviewtable/*           (USERVIEW-TABLE-XMLET)
+		usertable/*               (USER-TABLE-XMLET)
+		userdetailpane/*          (USER-DETAIL-PANE-XMLET)
+		user/*            (USER-XMLET)
+
+Others may appear if people find such things useful.

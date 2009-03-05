@@ -1,0 +1,941 @@
+Sun Nov  4 11:42:06 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  tagged 20071104
+
+Sun Nov  4 11:18:42 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed definition of *ps-lisp-library*.
+
+Sun Nov  4 11:05:53 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added length, @, mapcar utility functions, exported all library function symbols.
+
+Wed Oct 31 18:53:15 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added define-symbol-macro unit test.
+
+Wed Oct 31 18:46:03 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed define-symbol-macro.
+
+Wed Oct 31 00:28:11 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  tagged Halloween release (20071031)
+
+Wed Oct 31 00:03:59 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Prettied up whitespace and comments in parse-lambda-list, ref2test.
+
+Wed Oct 31 00:01:32 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Got rid of unused functions in util.lisp, slight refactoring.
+
+Mon Oct 29 12:45:21 MST 2007  Vladimir Sedach <vsedach@gmail.com>
+  * More refactorings to the printer, exported symbols that control printer behavior.
+
+Fri Oct 26 00:06:25 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Refactored Parenscript printer code.
+
+Tue Oct 16 16:04:45 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed ps-inline to take a form instead of an implicit progn as a parameter, gave ps-inline and ps-inline* optional arguments which bind *js-quote-char* to make it more convenient to use the two functions with different html generation macros (which may use single or double quotes to delimit attribute values).
+
+Tue Oct 16 15:54:53 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Further ignore declarations for unused variables (thanks to Kevin Layer).
+
+Sun Oct 14 12:18:11 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * In parse-lambda-list, made the need-symbol function work (otherwise the conditional always evaluated to nil).
+
+Sun Oct 14 12:17:22 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * In package definition, instead of exporting "NIL", exported (symbol-name 'nil); the latter causes a problem in case-sensitive Allegro. (thanks to Kevin Layer for the patch).
+
+Sun Oct 14 12:16:20 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Declared unused "expecting" variables in ps-special-form definitions ignorable (thanks to Kevin Layer).
+
+Sun Oct 14 12:15:19 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Made ps-macrology depend on utils in parenscript asdf definition (thanks to Kevin Layer).
+
+Wed Oct 10 20:27:40 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed a bug in how symbol-macros were defined, expanded, and used by 'with-slots'.
+
+Wed Oct 10 17:12:57 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Made defun, defvar and doeach expect a symbol as the "name" argument instead of trying to compile-parenscript-form :expecting :expression.
+
+Wed Oct 10 17:12:10 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Made the handling of keyword symbols across Parenscript be consistent with the treatment of other symbols (previously a keyword symbol was being treated as a quoted symbol by Parenscript).
+
+Sun Sep 23 00:07:26 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added support for &whole arguments in ps macro lambda lists, renamed parser.lisp to compiler.lisp
+
+Thu Sep 20 17:49:34 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added macro environment unit test that tests for bug "inconsistent expansion of local macro".
+
+Thu Sep 20 17:33:14 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Eliminated unwinding of macro environment for macro expansions, which fixed bug "Bug: inconsistent expansion of local macro" submitted by Daniel Gackle on 9/12/07
+
+Tue Aug 28 21:54:18 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  tagged 28-08-2007
+
+Tue Aug 28 17:04:38 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated description of PS-HTML in the tutorial.
+
+Fri Aug 24 15:32:01 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Revised obfuscation facility, added its description to the reference and more unit tests.
+
+Fri Aug 24 14:43:13 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added description of namespace system to the reference.
+
+Fri Aug 24 14:16:51 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed problem with (- 1). Unary operator "-" didn't like number constants.
+
+Fri Aug 24 14:01:23 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added defsetf and (defun (setf examples to the reference.
+
+Fri Aug 24 14:00:41 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added ps-print method specialized on null to ignore printing of nils.
+
+Fri Aug 24 13:39:30 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added code to remove unreachable constant forms from progn.
+
+Fri Aug 24 12:20:47 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated the introduction doc.
+
+Fri Aug 24 12:15:29 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated the ParenScript reference.
+
+Thu Aug 23 17:10:54 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated the ParenScript tutorial.
+
+Thu Aug 23 17:09:39 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed js-file and js-script from deprecated interface (helper macros for net.html.generator from AllegroServe, which really don't belong in ParenScript).
+
+Thu Aug 23 17:08:02 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed error where function call arguments weren't getting compiled to expressions.
+
+Thu Aug 23 15:35:15 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added the ability to compile cond to expressions.
+
+Thu Aug 23 15:22:37 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Made progn expressions with a single statement print as that statement alone (without parens).
+
+Thu Aug 23 15:22:16 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Made if-expressions return null instead of undefined when else clause wasn't specified.
+
+Thu Aug 23 14:58:53 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed cond.
+
+Wed Aug 22 16:46:33 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed the problem with compile-parenscript-form not being called with the right "expecting" value if a macroexpansion took place.
+
+Mon Aug 20 15:10:13 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated and fixed the deprecated interface.
+
+Mon Aug 20 15:08:58 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated the documentation and test suite to reflect the fact that html is now ps-html and the ps-inline special form no longer exists.
+
+Mon Aug 20 15:08:16 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed mention of old package system from tutorial.lisp.
+
+Mon Aug 20 15:07:48 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed js and ps-inline as special forms (they didn't make any sense as special forms), added ps-inline and ps-inline* to compilation-interface.lisp.
+
+Mon Aug 20 14:40:42 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed html -> ps-html (otherwise there's a conflict with any number of existing html generation libraries), reorganized packages.lisp exports.
+
+Wed Aug 15 17:51:13 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Replaced optional-args as the keyword-object-handling parameter with a gensym.
+
+Wed Aug 15 17:02:41 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added in-line code to support &rest arguments.
+
+Wed Aug 15 15:58:46 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added correct indentation to the printer.
+
+Wed Aug 15 14:39:29 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed js-ugly-translation.
+
+Tue Aug 14 19:08:33 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated the reference and tests to reflect some small changes in the new printing code (like current lack of line breaks and spaces before some opening parens). Added a few new unit tests.
+
+Tue Aug 14 19:07:08 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Reworked printing implementation to get rid of dwim-join and gratuitious consing; now everything gets written to a stream.
+
+Sun Aug 12 10:56:22 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed type bug with printing slot-value with obj/slot being a non-list.
+
+Sun Aug 12 09:43:11 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Redid package system unit tests.
+
+Sun Aug 12 09:42:40 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Exported the new naming and namespace interface functions and variables in package.lisp.
+
+Sat Aug 11 19:23:49 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Modified ParenScript tests to reflect the big compiler refactoring.
+
+Sat Aug 11 19:22:42 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated reference.lisp to reflect recent changes.
+
+Sat Aug 11 19:19:48 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Big refactoring of the ParenScript compiler.
+
+Sat Aug 11 19:18:09 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Updated js-expander to use ps:ps instead of js:js.
+
+Mon Aug  6 15:31:19 MDT 2007  reddaly@gmail.com
+  * remove lingering format string
+
+Mon Aug  6 15:10:54 MDT 2007  reddaly@gmail.com
+  * fixed DEFSCRIPTMACRO evaluation problem that caused load/compilation problems (red)
+  DEFSCRIPTMACRO and other similar macros were not expanding into but were instead side-effecting
+  macro definitions.
+
+Mon Aug  6 15:10:19 MDT 2007  reddaly@gmail.com
+  * removed file compilation exports for now (red)
+
+Sat Aug  4 00:16:51 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed parenscript.asdf
+
+Sat Aug  4 00:10:50 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed parenscript.reader
+
+Fri Aug  3 18:59:48 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Moved package-related code to namespace.lisp, added back *enable-package-system*.
+
+Fri Aug  3 16:59:22 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added (defun (setf...
+
+Fri Aug  3 15:59:17 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Stopped abuse of set-difference implementation-dependent ordering in defsetf.
+
+Fri Aug  3 15:19:00 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed order of evaluation in defsetf long form.
+
+Fri Aug  3 15:03:32 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added short-form defsetf.
+
+Fri Aug  3 14:19:36 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed (return).
+
+Fri Aug  3 14:12:58 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Renamed options to optional-args, added unit test for defun foo (&optional...
+
+Fri Aug  3 12:11:04 MDT 2007  reddaly@gmail.com
+  * keyword/optional fixes, slot-value accepts many slot names (RED)
+  I also fixed some problems with nil serialization and decomposed the compile-parenscript-form
+  function into a generic function with different behavior depending on the type of form.
+
+Fri Aug  3 13:31:23 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Restored special-form getting and setting by symbol-na,me
+
+Fri Aug  3 12:35:35 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added a more meaningful error message to compile-to-expression.
+
+Fri Aug  3 12:32:17 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Cleaned up macro-defining code, fixed handling of special forms in script-expand-form.
+
+Fri Aug  3 12:28:05 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed reference to without-packages in deprecated-interface.lisp.
+
+Fri Aug  3 10:46:06 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added a more informative print-object method for script-package.
+
+Thu Aug  2 20:01:33 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed handling of uninterned symbols.
+
+Thu Aug  2 19:18:57 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed package system so that symbols in parenscript, javascript and parenscript-user are non-prefixed. Made symbols in unknown packages be treated as though they were in parenscript-user by default. Added a prefix string preference to PS packages. Removed all *enable-package-system* stuff.
+
+Thu Aug  2 16:19:26 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added defsetf long-form.
+
+Thu Aug  2 16:17:05 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Disabled Boyer-Moore matching for cl-ppcre in js normalization code (breaks on Unicode lisps, on by default in PPCRE).
+
+Wed Aug  1 16:42:45 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * MSlightly more informative error messages for symbol-abuse.
+
+Wed Aug  1 12:31:43 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed manual.pdf from source control.
+
+Wed Aug  1 12:29:54 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed ps* not being found when special-form-symbol assertion is triggered.
+
+Tue Jul 31 16:59:10 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  UNDO: Added functions to set up and tear down a persistent compilation environment.
+
+Tue Jul 31 23:52:12 MDT 2007  reddaly@gmail.com
+  * fixed minor issues with advanced lambda lists, resolved conflicts, additional quoted-nil hack (red)
+
+Tue Jul 31 19:23:56 MDT 2007  reddaly@gmail.com
+  * advanced lambda lists, script packages with no primary lisp package improvements
+
+Tue Jul 31 16:59:10 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added functions to set up and tear down a persistent compilation environment.
+
+Tue Jul 31 16:43:58 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Unexported ps-to-string.
+
+Tue Jul 31 15:24:10 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  UNDO: Changed "Lisp package already has corresponding script package" error to warning (besides being annoying for users, tackge tests from being idempotent)
+
+Tue Jul 31 12:28:39 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  UNDO: Setup *compilation-environment* to have a working default value.
+
+Tue Jul 31 15:27:42 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added tests for 'nil and slot-value nil patches.
+
+Tue Jul 31 15:26:52 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed slot-value so that (slot-value foo nil) is now "foo" instead of "foo.null"
+
+Tue Jul 31 15:26:09 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed handling of quoted nil ('nil should be the same as nil, however ''nil isn't).
+
+Tue Jul 31 15:24:10 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed "Lisp package already has corresponding script package" error to warning (besides being annoying for users, tackge tests from being idempotent)
+
+Tue Jul 31 12:47:14 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Started work on implementing deprecated compatibility interface by Attila Lendvai's idea.
+
+Tue Jul 31 12:28:39 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Setup *compilation-environment* to have a working default value.
+
+Tue Jul 31 12:24:06 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added null macro (thanks to Daniel Gackle for suggestion).
+
+Tue Jul 31 12:20:56 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Corrected export of defmacro+/ps names.
+
+Tue Jul 31 11:10:52 MDT 2007  attila.lendvai@gmail.com
+  * make deprecation warning a only a style-warning
+
+Tue Jul 31 05:16:37 MDT 2007  attila.lendvai@gmail.com
+  * fix rebind
+
+Tue Jul 31 05:12:23 MDT 2007  attila.lendvai@gmail.com
+  * prefix ( in a comment
+
+Mon Jul 30 15:52:54 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Revised PS interface and deprecated function list based on user input.
+
+Mon Jul 30 15:36:15 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added tests for previous script* eval bug.
+
+Mon Jul 30 15:32:59 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed bug where script* wasn't evaluating its arguments as promised.
+
+Mon Jul 30 15:03:51 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed names of defmacro+/js forms to ps, made the special-form compilation error message be more informative. (vs)
+
+Mon Jul 30 15:02:19 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Changed tutorial to reflect factoring out of the HTML generation code of Portable Allegroserve, addition of PS package system. (vs)
+
+Sat Jul 28 11:49:20 MDT 2007  reddaly@gmail.com
+  * define-script-symbol-macro added
+
+Sat Jul 28 11:33:03 MDT 2007  reddaly@gmail.com
+  * defscriptmacro single string body fix
+  
+  From the mailing list:
+  A js macro that evaluates to a string literal can't be used:
+  
+    (defjsmacro blah () "abc")
+    (js (blah)) =>
+       "null;"
+  
+  This seems wrong. For one thing, other literals work fine:
+  
+    (defjsmacro blah () 123)
+    (js (blah)) =>
+       "123"
+  
+  For another, Lisp behaves differently:
+  
+    (defmacro blah () "abc")
+    (blah) =>
+        "abc"
+  
+  Dan
+  
+  p.s. Actually, I'd rather use a symbol macro but it appears there is
+  no define-symbol-macro in Parenscript and in this case symbol-macrolet
+  is not convenient.
+  
+  
+
+Thu Jul 26 21:43:24 MDT 2007  reddaly@gmail.com
+  * paren-asdf hack to make parenscript-compile-op use load-op's dependencies
+
+Thu Jul 26 20:33:26 MDT 2007  reddaly@gmail.com
+  * ASDF interaction for Parenscript files
+  see the new paren-asdf.lisp and updated compilation-interface.lisp files for implementation
+  details.  The function COMPILE-SCRIPT-SYSTEM compiles all the system's files and outputs
+  them to a single stream.  Currently it compiles each file separately; in the future we will
+  probably need to compile the whole program and then translate it.
+
+Thu Jul 26 15:21:53 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed slot-value-conditional bug. (slot-value object slot) should now handle cases where object is an arbitrary expression correctly.
+
+Thu Jul 26 14:40:22 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Cleaned up deprecated interface, added Lisp/ParenScript macro-defining macros back to parser.lisp.
+
+Thu Jul 26 13:37:14 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Removed redundant math library functions (more comprehensive ones are in lib/js-utils.lisp)
+
+Tue Jul 24 22:06:30 MDT 2007  reddaly@gmail.com
+  * usable-package-system
+  The package system is now fairly usable.  package.lisp and builtin-packages.lisp now
+  intelligently share symbols.  It is also possible to completely ignore any package
+  system functionality.
+
+Mon Jul 23 22:08:56 MDT 2007  reddaly@gmail.com
+  * bulk of package system, reader, and other refactoring
+
+Fri Jul 20 14:35:32 MDT 2007  reddaly@gmail.com
+  * eval-when special form
+  Added the EVAL-WHEN special form to the Parenscript language.  It works similarly
+  to the EVAL-WHEN form in Lisp.  It has the following form:
+  (eval-when body-forms-language? (situation*) body-forms*)
+  
+  SITUATION is either :compile-toplevel or :execute. 
+  
+  BODY-FORMS-LANGUAGE is optional and either :parenscript or :lisp.  It defaults
+  to :lisp when :COMPILE-TOPLEVEL is specified and :parenscript when :EXECUTE
+  is specified.
+  
+  Parenscript's EVAL-WHEN is relevant when loading toplevel forms, either from Parenscript
+  files or from within Lisp.
+
+Thu Jul 19 18:34:31 MDT 2007  reddaly@gmail.com
+  * renaming-and-refactoring
+  Changed the names of many functions and macros to get rid of the symbols with
+  "js" in them--its not Javascript, it's Parenscript!  Most of those symbols were renamed
+  with "script" replacing "js".
+  
+  Also changed the main compilation interfaces to use the function COMPILE-SCRIPT and the
+  macro SCRIPT from JS-COMPILE and JS respectively.
+  
+  Additionally, the first steps of the package system are included (with the addition of
+  a the SCRIPT-PACKAGE and COMPILATION-ENVIRONMENT classes).  These are integrated into
+  the current compiler, though they probably break a few "traditional" serialization methods,
+  specifically because macro and special form names are stored as symbols rather than strings
+  and EQL comparisons are used rather than STRING-EQUAL comparisons of the strings.
+  
+  I have also split parser.lisp into parser.lisp and macrology.lisp.  Parser.lisp contains
+  mechanisms for parsing Parenscript given an input s-expression while macrology.lisp
+  contains language definitions that make use of the parsing mechanisms.
+  
+  All tests now pass, though the documentation has gone slightly out of date with
+  the symbol renaming.  This will be fixed shortly.  More tests and functionality
+  need to be added to make the current Parenscript compatable with the older semantics
+  (as dicussed, comparing macro/special form names based on their string values is the
+  main thing).
+  
+
+Fri Jul 13 18:05:36 MDT 2007  reddaly@gmail.com
+  * rearrange-library-esque-files
+
+Fri Jul 13 17:40:51 MDT 2007  reddaly@gmail.com
+  * js-prefix-to-script-prefix
+
+Fri Jul 13 15:09:47 MDT 2007  reddaly@gmail.com
+  * symbol-refactoring-part-1
+
+Fri Jul 20 09:18:12 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  tagged release-7-20-07
+
+Mon Jul 16 12:13:40 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Re-introduced 'with' special form (it got lost somewhere along the way). (vs)
+
+Mon Jul 16 11:37:47 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Fixed compile error from last patch. (vs)
+
+Fri Jul 13 18:28:54 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Improved formatting/whitespace removing code in tests so that now all ps-tests pass. Added slot-value-setf test. (vs)
+
+Fri Jul 13 15:11:09 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added documentation of new macro facilities. (vs)
+
+Thu Jul 12 17:19:07 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added warnings when attempting to use reserved Javascript keywords as variable or functions names (thanks to Viktor Leis for the code). (vs)
+
+Tue Jul 10 15:18:21 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added oddp, evenp utility functions, added explanatory error message to js-compile-to-symbol. (vs)
+
+Tue Jul  3 13:45:56 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Improved symbol-to-js to handle more complicated Javascript-like symbols. (vs)
+
+Tue Jul  3 12:31:35 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Actually remembered to add the new tests file for the previous patch. (vs)
+
+Tue Jul  3 12:29:37 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Manually applied Luca Capello's patch to factor out misc tests into their own test file. (vs)
+
+Mon Jul  2 15:43:07 MDT 2007  reddaly@gmail.com
+  * character encoding fixes in test.lisp
+
+Sun Jul  1 11:04:19 MDT 2007  Luca Capello <luca@pca.it>
+  * t/test.lisp: typo, remove colon at line 82
+
+Sun Jul  1 11:00:21 MDT 2007  Luca Capello <luca@pca.it>
+  * add an (eval-when ...) when defining a test suite
+
+Thu Jun 28 13:28:23 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added divisors to ceiling, floor, round. (vs)
+
+Tue Jun 26 17:13:07 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added Red Daly to contributors file. (vs)
+
+Tue Jun 26 15:30:27 MDT 2007  reddaly@gmail.com
+  * js.lisp breakup
+  Broke the js.lisp file up into several three files: source-model.lisp,
+  js-translation.lisp, and parser.lisp.
+  
+  source-model.lisp: class definitions that correspond to the Javascript AST.
+  (defjsclass forms for the most part)
+  
+  js-translation.lisp: functions for converting AST objects to Javascript
+  source code
+  
+  parser.lisp: macro definitions and the mechanisms for processing Parenscript
+  forms into AST objects.
+  
+  See also http://common-lisp.net/pipermail/parenscript-devel/2007-June/000035.html
+
+Tue Jun 26 15:05:23 MDT 2007  reddaly@gmail.com
+  * Updated js-html.lisp and parser.lisp to reflect the changes in the previous patch.  (Had to resolve a conflict because js.lisp was deleted.)
+
+Tue Jun 26 13:49:15 MDT 2007  reddaly@gmail.com
+  * js.lisp reorganization
+
+Tue Jun 26 11:43:20 MDT 2007  reddaly@gmail.com
+  * package rename
+
+Tue Jun 26 13:24:52 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Refactored macro-related code, changed "compiler macros" to special forms, added separate namespaces for macros and symbol-macros, added full macro lambda lists to macrolet, added support for docstrings to defjsmacro.
+
+Mon Jun 25 13:42:00 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added contributors file.
+
+Mon Jun 25 13:17:27 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added js-expander.el
+
+Mon Jun 25 13:16:19 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added extras directory with js-expander.el.
+
+Fri Jun 22 14:46:40 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added defmacro to ParenScript. (vs)
+
+Thu Jun 21 11:54:16 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Renamed with-timeout to do-set-timeout, added ignore errors (thanks to John Fremlin). (vs)
+
+Wed Jun 20 14:48:00 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added defmacro+js (vs)
+
+Tue Jun 19 15:34:16 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Exported defmacro/js
+
+Tue Jun 19 13:37:48 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added js-utils file. (vs)
+
+Tue Jun 19 12:44:51 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added the defmacro/js macro-defining macro. (vs)
+
+Fri Jun 15 22:59:12 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * Added binary negation ~ operator.
+
+Fri Jun 15 13:29:16 MDT 2007  Vladimir Sedach <vsedach@gmail.com>
+  * setf slot-value patch
+
+Wed Jun  6 13:45:25 MDT 2007  attila.lendvai@gmail.com
+  * Fix: add parens around instanceof to make it work in all situations
+
+Thu May  3 08:40:28 MDT 2007  attila.lendvai@gmail.com
+  * Bah, speed up list-to-string by a few factors...
+
+Fri Apr 27 01:39:17 MDT 2007  attila.lendvai@gmail.com
+  * Fix (- 1) and (incf/decf x 5), patch by Ray Myers
+  
+  I have a minor patch that fixes the following incorrect (or at least
+  unexpected) behavior in ParenScript.
+  
+  (js (- 1))  =>  "1;"
+  (js (incf x 5))   => an error
+  (js (decf x 5))   => an error
+
+Wed Apr 25 08:58:06 MDT 2007  attila.lendvai@gmail.com
+  * Note in the warning that we are redefining a _js_ compiler macro
+
+Mon Apr 16 08:36:03 MDT 2007  attila.lendvai@gmail.com
+  * Follow quote changes in SLOT-VALUE
+
+Mon Apr 16 07:11:33 MDT 2007  attila.lendvai@gmail.com
+  * Fixed (?) quoting mechanism
+  
+  (js:js (+ 42 '"FoooFFFOFOFooo")) => "42 + FoooFFFOFOFooo;"
+  IOW, quote inside a parenscript form means to simply print the quoted value as-is.
+  Among other things, this is useful for inserting literal javascript into parenscript.
+  I hope it will not break anything.
+
+Mon Jan 15 07:19:48 MST 2007  Henrik Hjelte <henrik@evahjelte.com>
+  * conditional attributes in html-generator
+
+Wed Nov 15 00:38:22 MST 2006  marijnh@gmail.com
+  * add proper cond construct
+
+Wed Nov 22 12:30:27 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * Possible to make attributes conditionally rendered with js-html generator
+
+Wed Nov 15 16:54:41 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * docs updated for new setf optimization
+
+Wed Nov 15 16:41:44 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * bugfix method-call problem
+
+Wed Nov 15 15:40:45 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * moretests for method-call (dot-notation) syntax
+
+Wed Nov 15 14:35:02 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * bugfix commutative plus and minus
+
+Wed Nov 15 13:44:56 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * tests for some bugs, reported by Marijn Haverbeke
+
+Wed Nov 15 12:27:20 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * asdf test-op added, (asdf:operate 'asdf:test-op :parenscript)
+
+Wed Nov 15 09:46:03 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * updated pdf manual for new with syntax
+
+Wed Nov 15 09:43:39 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * build.sh for documentation
+
+Wed Nov 15 09:13:03 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * Updated documentation to reflect the new syntax of the with statement
+
+Wed Nov 15 08:58:46 MST 2006  Henrik Hjelte <henrik@evahjelte.com>
+  * make the test escape-sequences-in-string work again
+
+Tue Oct  3 07:49:55 MDT 2006  attila.lendvai@gmail.com
+  * Added evenp and oddp
+
+Tue Oct  3 07:49:23 MDT 2006  attila.lendvai@gmail.com
+  * Added assert for simple catch forms
+
+Fri Sep  1 10:02:49 MDT 2006  attila.lendvai@gmail.com
+  * Killed the feature (js:js* '(let (a b) (+ a b))) => "var a = b; a + b;"
+
+Mon Oct  2 15:55:16 MDT 2006  Luca Capello <luca@pca.it>
+  * docs/pbook.py: correct faulty check for PDF output
+  
+  Frank K[_\c3_][_\bc_]ster discovered that docs/pbook.py produces buggy LaTeX code,
+  a faulty check for PDF output.  It doesn't show up if you only try to
+  create PDF.
+  
+  But if you want to go the traditional route and produce dvi files (and
+  from that PostScript and maybe finally again PDF), this will fail and
+  still produce PDF.  The script itself doesn't do that (or rather, it
+  does that in fact but ignores the output in this first run), but it's
+  still an uglyness.  
+  
+  Moreover, it's completely useless, because the only package that uses
+  the information, graphicx, will detect the output format itself (and in
+  a proper way).
+  
+    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=390629
+
+Mon Aug 21 03:57:00 MDT 2006  attila.lendvai@gmail.com
+  * Use symbol-name for op matching to fix various bugs/surprises (e.g. `(foo::% 4 2))
+
+Fri Jul 21 01:50:06 MDT 2006  marijnh@gmail.com
+  * Allow strings and numbers as slot names in object literals
+
+Sun Jul 16 11:07:49 MDT 2006  Marco Baringer <mb@bese.it>
+  * Drop unused js2.lisp
+
+Sun Jul 16 10:47:17 MDT 2006  attila.lendvai@gmail.com
+  * Fix compilation of (.call (lambda () ...) arg1 ...), add missing ()'s around the lambda
+
+Sun Jul 16 10:46:30 MDT 2006  attila.lendvai@gmail.com
+  * Fix compilation of ((foo) bar) -> foo()(bar)
+
+Sun Jul 16 10:39:46 MDT 2006  attila.lendvai@gmail.com
+  * Fixed js-with WARNING: this involves syntax change
+  
+  Previously the syntax of with was this:
+    (with (object)
+      body)
+  
+  now it's:
+    (with object
+      body)
+  
+  It was also broken when 'object' was an expression...
+
+Sat Jul 15 14:13:44 MDT 2006  Henrik Hjelte <henrik.hjelte@evahjelte.com>
+  * bugfix sometimes missing semicolons when joining js-body
+
+Tue Jul 11 15:17:50 MDT 2006  attila.lendvai@gmail.com
+  * Rebind var in dolist to make also clisp happy (import-macros-from-lisp was broken due to this)
+
+Tue Jul 11 07:47:05 MDT 2006  Henrik Hjelte <henrik.hjelte@evahjelte.com>
+  * regex patch suggested by Lou Vanek
+
+Tue Jul 11 04:09:52 MDT 2006  Henrik Hjelte <henrik.hjelte@evahjelte.com>
+  * documentation updated about dollar char
+
+Tue Jul 11 02:49:15 MDT 2006  Henrik Hjelte <henrik.hjelte@evahjelte.com>
+  * Made ref2test work with cl-launch
+
+Fri Jul  7 16:37:11 MDT 2006  attila.lendvai@gmail.com
+  * Fix screwed-up asd file
+
+Fri Jul  7 09:18:26 MDT 2006  attila.lendvai@gmail.com
+  * Fixed instanceof
+
+Fri Jul  7 09:13:21 MDT 2006  attila.lendvai@gmail.com
+  * Added src/lib/functional.lisp
+  
+  This is a first element of an parenscript library. The contents of
+  this file is to be compiled with parenscript and the result js included
+  in the host environment in one way or another.
+
+Fri Jul  7 09:12:31 MDT 2006  attila.lendvai@gmail.com
+  * Added :eval-forms-p to compile-parenscript-file
+
+Thu Jul  6 16:55:47 MDT 2006  attila.lendvai@gmail.com
+  * Fix the return value of map-into
+
+Thu Jul  6 16:51:47 MDT 2006  attila.lendvai@gmail.com
+  * Moved some macros towards the top of the file due to dependencies
+  
+  In the long run we should cut js.lisp into several files. One dealing with
+  the basic infrastructure like macro expansion, and the rest implementing
+  the compiler based on this infrastructure/utilities.
+
+Wed Jul  5 12:23:51 MDT 2006  attila.lendvai@gmail.com
+  * Added map and map-into
+
+Wed Jul  5 12:20:46 MDT 2006  attila.lendvai@gmail.com
+  * Shortened default gensym constant
+
+Mon Jul  3 18:33:15 MDT 2006  attila.lendvai@gmail.com
+  * Don't use loop's initially clause to avoid a clisp bug
+  
+  For details see http://sourceforge.net/tracker/index.php?func=detail&aid=1516684&group_id=1355&atid=101355
+
+Sat May 27 03:31:59 MDT 2006  Marco Baringer <mb@bese.it>
+  * Make defjsmacro rend's docstring a comment so clisp will stop complaining
+
+Sat May 13 03:30:31 MDT 2006  attila.lendvai@gmail.com
+  * Move undefine-js-compiler-macro into an eval-when. Reported by William Halliburton.
+
+Fri May 12 09:29:54 MDT 2006  attila.lendvai@gmail.com
+  * Added import-macros-from-lisp that bring lisp macros into the js macroexpansion
+
+Wed May 10 06:54:47 MDT 2006  Marco Baringer <mb@bese.it>
+  * Move compile-parenscript code into a sperate file so that it complies cleanly
+  
+  The problew is that compile-parenscript-file-to-string contains a call
+  to the macro js:js* this macro needs to be defined before we compile
+  the compile-parenscript-file-to-string function.
+
+Wed May 10 06:54:22 MDT 2006  Marco Baringer <mb@bese.it>
+  * Use an explicit asdf:perform :after method instead of :perform (load-op :after ...)
+
+Mon May  8 05:08:34 MDT 2006  attila.lendvai@gmail.com
+  * Added compile-parenscript-file
+
+Mon May  8 05:06:11 MDT 2006  attila.lendvai@gmail.com
+  * Added character type conversion
+
+Sun Apr 16 12:18:25 MDT 2006  attila.lendvai@gmail.com
+  * Added a rebind js macro that rebinds variables on the js side
+
+Sat Apr  1 04:39:18 MST 2006  Marco Baringer <mb@bese.it>
+  * Export defjsmacro
+
+Sat Apr  1 04:35:03 MST 2006  Marco Baringer <mb@bese.it>
+  * Added docstring for *js-quote-char*
+
+Sat Apr  1 04:28:58 MST 2006  Marco Baringer <mb@bese.it>
+  * Add variable *js-quote-char* (Patch by: Xan Lopez <xan.lopez@gmail.com>)
+
+Sun Feb 26 10:05:27 MST 2006  Marco Baringer <mb@bese.it>
+  * Implement js-to-strings for the regex class
+
+Sat Feb 25 10:07:51 MST 2006  Marco Baringer <mb@bese.it>
+  * #\$ is not a special javascript character. (Reported by: Richard Morse <pukku@mac.com>)
+
+Thu Feb 16 01:42:59 MST 2006  Luca Capello <luca@pca.it>
+  * remove docs/images and relative references in tutorial.lisp
+
+Fri Jan 27 06:25:11 MST 2006  Luca Capello <luca@pca.it>
+  * remove docs/reference.pdf, already included in manual.pdf
+
+Sun Feb  5 09:04:44 MST 2006  Marco Baringer <mb@bese.it>
+  * The #\Form is not a standard character name, use #.(code-char 12) instead.
+
+Thu Feb  2 05:39:12 MST 2006  henrik.hjelte@poboxes.com
+  * proper escape sequences in strings
+
+Wed Feb  1 04:17:12 MST 2006  henrik.hjelte@poboxes.com
+  * ref2test finds reference.lisp in docs dir
+
+Tue Dec 27 12:05:29 MST 2005  henrik.hjelte@poboxes.com
+  * changed CASE to SWITCH and made CASE more like Lisp.
+
+Fri Jan 27 01:57:09 MST 2006  Luca Capello <luca@pca.it>
+  * merge parenscript-test.asd into parenscript.asd
+
+Mon Jan 23 15:25:48 MST 2006  Luca Capello <luca@pca.it>
+  * move doc files to docs/
+
+Mon Jan 23 14:50:26 MST 2006  Luca Capello <luca@pca.it>
+  * move test files to t/ and modify parenscript-test.asd as well
+
+Mon Jan 23 14:31:52 MST 2006  Luca Capello <luca@pca.it>
+  * move source files to src/ and modify parenscript.asd as well
+
+Mon Jan 23 14:19:27 MST 2006  Luca Capello <luca@pca.it>
+  * remove trailing spaces at endlines in *.lisp
+
+Sun Jan 22 14:57:42 MST 2006  Luca Capello <luca@pca.it>
+  * remove trailing spaces at empty lines in *.lisp
+
+Sun Jan 22 14:17:04 MST 2006  Luca Capello <luca@pca.it>
+  * pbook.py: convert endlines to Unix format
+
+Mon Jan  9 04:36:02 MST 2006  henrik.hjelte@poboxes.com
+  * css-inline compiles with cmucl
+
+Mon Dec 19 09:04:35 MST 2005  Marco Baringer <mb@bese.it>
+  * New function gen-js-name-string
+  This allows you to get a unique javascript name as a string and not
+  just as a symbol.
+
+Mon Dec 19 06:19:01 MST 2005  henrik.hjelte@poboxes.com
+  * bugfix slot-value
+
+Sun Dec 18 10:17:24 MST 2005  henrik.hjelte@poboxes.com
+  * bug in dwim-join
+
+Sun Dec 18 04:14:26 MST 2005  henrik.hjelte@poboxes.com
+  * css-inline generator
+
+Sat Dec 17 02:52:57 MST 2005  henrik.hjelte@poboxes.com
+  * cleaned reference
+
+Fri Dec 16 11:08:44 MST 2005  henrik.hjelte@poboxes.com
+  * tests from the reference
+
+Fri Dec 16 08:39:49 MST 2005  henrik.hjelte@poboxes.com
+  * quotes in introduction
+
+Thu Dec  1 12:17:09 MST 2005  Alan-Shields@omrf.ouhsc.edu
+  * Added defgenerics for all the defmethods
+  Ze style warnings! Zey drive me craaaazy.
+
+Tue Nov 15 16:53:51 MST 2005  Alan-Shields@omrf.ouhsc.edu
+  * enable #+parenscript
+  To integrate Parenscript with Araneida without requiring Parenscript,
+  I had to do some compile conditionals. This would make it much easier.
+  
+  Marco, eventually I am going to add this to every last one of your projects.
+  ;-p
+
+Tue Nov 15 16:52:33 MST 2005  Alan-Shields@omrf.ouhsc.edu
+  * need a function for css-inlining
+  If you have code that needs to inline CSS across an array, it's difficult
+  to use the current macro.
+  Having a function helps - mapping the macro to the function only completes
+  things.
+
+Tue Nov 15 16:48:12 MST 2005  Alan-Shields@omrf.ouhsc.edu
+  * Proper concatenation of inline CSS
+  CSS-INLINE does a simple concatenation of the results of CSS directives.
+  This looks like:
+  	color:blacksize:200%
+  Unfortunately, it should look like this:
+  	color:black;size:200%
+  
+  It now does.
+
+Mon Nov  7 05:30:47 MST 2005  Luca Capello <luca@pca.it>
+  * added COPYING file
+
+Mon Nov  7 03:21:18 MST 2005  Marco Baringer <mb@bese.it>
+  * Escape { and } chars in boring regexps
+
+Wed Oct  5 03:09:42 MDT 2005  Marco Baringer <mb@bese.it>
+  * Need to escape #\' in javascript strings
+
+Wed Oct  5 02:29:00 MDT 2005  Marco Baringer <mb@bese.it>
+  * Fix buf in JS-INLINE causing infinite macro expansion
+
+Mon Sep 12 02:17:00 MDT 2005  Marco Baringer <mb@bese.it>
+  * Add in checks to deal with functions/macros whose names aren't symbols
+
+Mon Sep  5 02:27:35 MDT 2005  Marco Baringer <mb@bese.it>
+  * Use strings, and not symbols, to name javascript functions/macros
+  
+  This effectivly flattens the namespace of javascript code. While this
+  change makes js similar to javascript, and removes the need to export
+  symbols from the JS package, it may break previous code which depended
+  on, for expample, js:and not being equivalent to js:and.
+  
+
+Mon Sep  5 02:17:02 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added support for literal objects ( "{ ... }" syntax)
+
+Wed Aug 31 05:58:20 MDT 2005  Marco Baringer <mb@bese.it>
+  * Export cen-js-names and with-unique-js-names
+
+Mon Aug 15 07:51:28 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added docstrings to previous patch
+
+Mon Aug 15 07:49:40 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added GEN-JS-NAME and WITH-UNIQUE-JS-NAMES
+
+Mon Aug 15 02:09:06 MDT 2005  Ivan Toshkov <itoshkov@gmail.com>
+  * dotimes-dolist-fix
+  
+  Fixes the infinite loop problems of `dotimes' and `dolist'.
+
+Mon Aug 15 02:00:53 MDT 2005  Marco Baringer <mb@bese.it>
+  * Parenscript, documentation not withstandanding, does not depend on htmlgen
+
+Mon Aug 15 01:49:02 MDT 2005  Marco Baringer <mb@bese.it>
+  * Attempt to improve the conversion of (js ((lambda ...) ...))
+
+Mon Aug 15 01:48:36 MDT 2005  Marco Baringer <mb@bese.it>
+  * Introduce the JS-LAMBDA class. Make JS-DEFUN a subclass of JS-LAMBDA
+
+Mon Aug 15 00:39:21 MDT 2005  Marco Baringer <mb@bese.it>
+  * Implement JS and JS-INLINE in terms of JS* and JS-INLINE*
+
+Sun Aug 14 08:16:29 MDT 2005  Marco Baringer <mb@bese.it>
+  * Symbols starting with #\: are left as is, no case conversion or other mangling
+
+Sun Aug 14 07:45:34 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added JS* and JS-INLINE*. 
+
+Sun Aug 14 07:43:44 MDT 2005  Marco Baringer <mb@bese.it>
+  * Javascript strings need to be quated with ' and not " to avoid interfering with the surrounding HTML.
+
+Sat Aug 13 08:20:23 MDT 2005  Marco Baringer <mb@bese.it>
+  * Ugly hack to support ((lambda ...) ...)
+
+Sat Aug 13 07:52:38 MDT 2005  Marco Baringer <mb@bese.it>
+  * Mention that I'm maintaining this version of parenscript
+
+Sat Aug 13 07:51:07 MDT 2005  Marco Baringer <mb@bese.it>
+  * Rename the system/package in the system definition, just renaming the file doesn't cut it :(.
+
+Sat Aug 13 07:44:41 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added images used in documentation
+
+Sat Aug 13 07:37:32 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added the pbook.py file used to generate the documentation
+
+Mon Aug  8 09:48:43 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added declare ignore forms for unused function arguments
+
+Mon Aug  8 09:48:36 MDT 2005  Marco Baringer <mb@bese.it>
+  * Rename system def
+
+Tue Jul 26 04:05:49 MDT 2005  Marco Baringer <mb@bese.it>
+  * Setup boringfile
+
+Tue Jul 26 04:04:16 MDT 2005  Marco Baringer <mb@bese.it>
+  * Added files from parenscript 0.1.0 as distributed by Manuel Odendahl

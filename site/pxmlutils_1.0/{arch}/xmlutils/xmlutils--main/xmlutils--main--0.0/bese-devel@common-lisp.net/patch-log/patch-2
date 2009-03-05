@@ -1,0 +1,22 @@
+Revision: xmlutils--main--0.0--patch-2
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 10:17:48 CEST 2003
+Standard-date: 2003-10-07 08:17:48 GMT
+Summary: patched phtml
+Keywords: 
+New-files: 
+New-directories: 
+Removed-files: 
+Removed-directories: 
+Renamed-files: 
+Renamed-directories: 
+Modified-files: ./phtml.cl
+Modified-directories: 
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-2
+Removed-patches: 
+
+1) changed the package refernces to mae sure they refer to
+   acl-compat.excl.
+
+2) rewoved the defpatche form

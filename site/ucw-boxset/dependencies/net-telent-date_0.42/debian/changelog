@@ -1,0 +1,27 @@
+cl-net-telent-date (3.01) unstable; urgency=low
+
+  * Fix http://sourceforge.net/tracker/?func=detail&atid=393636&aid=437470&group_id=28536
+
+ -- root <root@telent.net>  Sat, 30 Jun 2001 19:10:11 +0100
+
+cl-net-telent-date (3) unstable; urgency=low
+
+  * with-date syntax changed to be unambiguous
+
+ -- Daniel Barlow <dan@glodfish.telent.net>  Mon,  4 Jun 2001 18:48:34 +0100
+
+cl-net-telent-date (2) unstable; urgency=low
+
+  * Make it an all-arch package, not just alpha
+
+ -- Daniel Barlow <dan@glodfish.telent.net>  Mon,  4 Jun 2001 17:49:45 +0100
+
+cl-net-telent-date (1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Daniel Barlow <dan@telent.net>  Mon,  4 Jun 2001 17:18:34 +0100
+
+Local variables:
+mode: debian-changelog
+End:

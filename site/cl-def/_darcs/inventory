@@ -1,0 +1,49 @@
+Starting with tag:
+[TAG 2008-11-27
+attila.lendvai@gmail.com**20081127150329
+ Ignore-this: 324fbf5b086987945987709499158ae3
+] 
+[with-macro tests
+attila.lendvai@gmail.com**20081207120617
+ Ignore-this: 56219f40bc8f8cd983b24c41ef6769f5
+] 
+[with-macro: now supports (-body- (macro-body-variable-name fn-lexical-variable-name)) format. see tests for details in the following patch
+attila.lendvai@gmail.com**20081207120639
+ Ignore-this: e1c110ea14a2eaee0885f0b5dd4ccb6c
+] 
+[test for &rest support of with-macro
+attila.lendvai@gmail.com**20081207142100
+ Ignore-this: 5f7b92c1e83a786eb9612736c6b3c724
+] 
+[&rest support for with-macro
+attila.lendvai@gmail.com**20081207153004
+ Ignore-this: afa27dcecc39d8e725b2eb364ba586ec
+] 
+[be more tolerant to missing (-body-) in with-macro (cl-qq bodies may contain CLOS AST instances where it cannot descent)
+attila.lendvai@gmail.com**20081214202116
+ Ignore-this: 95aa0f678f97ca08f68031a2c45520f1
+] 
+[do the exporting in an eval-when
+attila.lendvai@gmail.com**20090117145843
+ Ignore-this: 9efdcef6fa27e6ee81d74453351d3062
+] 
+[with-macro supports the "d" flag
+attila.lendvai@gmail.com**20090117145910
+ Ignore-this: fc11051ee7ce406f0a1a8ed484c37311
+] 
+[clearer error message for missing definers
+attila.lendvai@gmail.com**20090130094101
+ Ignore-this: 24f72dda038f41765cdad00ee3b14106
+] 
+[in debug mode declaim notinline
+attila.lendvai@gmail.com**20090225172805
+ Ignore-this: b592f3ee56d1059e4b78a877682c0c0c
+] 
+[fix with-macro definer when passing values from the with-macro body to the user body
+attila.lendvai@gmail.com**20090225172819
+ Ignore-this: cdf04043daef0c58819277333cf3b5ad
+] 
+[fix with-macro definer regression
+attila.lendvai@gmail.com**20090226100840
+ Ignore-this: 94b19ed5b642b53af6b801474a70e5a2
+] 

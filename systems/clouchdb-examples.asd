@@ -1,0 +1,1 @@
+../site/clouchdb_0.0.8/clouchdb-examples.asd

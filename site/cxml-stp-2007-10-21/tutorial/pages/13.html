@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    13
+	    --
+	    Accessing attribute values directly</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Accessing attribute values directly</h1>
+    Accessing values without going through <tt>attribute</tt> nodes:
+    <example title="">
+      <pre class="code">
+(defun <b>attribute-value</b> (element name &amp;optional uri) ...)
+(defun <b>(setf attribute-value)</b> (newval element name &amp;optional uri) ...)</pre>
+    </example>
+    <br>
+    <tt>with-attributes</tt> is like <tt>with-accessors</tt>:
+    <example title="with-attributes">
+      <pre class="repl">(let ((e (stp:document-element
+	  (cxml:parse "&lt;foo a='quux'/&gt;" (stp:make-builder)))))
+  (<b>stp:with-attributes ((a "a") (b "x:b" "http://foo")) e</b>
+    (setf b (concatenate 'string ".oO(" a ")"))
+    e))</pre>
+      <pre class="result">#.(CXML-STP:ELEMENT
+   :ATTRIBUTES '(#.(CXML-STP:ATTRIBUTE
+                    :VALUE ".oO(quux)"
+                    :LOCAL-NAME "b"
+                    :NAMESPACE-PREFIX "x"
+                    :NAMESPACE-URI "http://foo")
+                 #.(CXML-STP:ATTRIBUTE
+                    :VALUE "1"
+                    :LOCAL-NAME "a"))
+   :LOCAL-NAME "foo")</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="12.html">⬖</a>13/24<a class="icon" href="14.html">⬗</a>
+</div>
+</body>
+</html>

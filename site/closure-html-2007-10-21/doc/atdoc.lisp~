@@ -1,0 +1,3 @@
+(atdoc:generate-documentation
+ '(:chtml) 
+ "/home/david/src/lisp/closure-html/doc/atdoc/")

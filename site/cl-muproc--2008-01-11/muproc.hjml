@@ -1,0 +1,979 @@
+<! Pre-document comments here>
+<<hjml cl-muproc-reference [xhtml]>>
+<html
+<head
+ §(prog1 ""
+    (defun fun () "<hr><br>[Function]<br>")
+    (defun gf () "<hr><br>[Generic Function]<br>")
+    (defun mac () "<hr><br>[Macro]<br>")
+    (defun ref (name) (format nil "<a href='#~a' <tt>~a</tt></a>" name name))
+    (defun returns () "-->")
+    (defun date () (multiple-value-bind (sec min hour day month year)
+			(decode-universal-time (get-universal-time))
+		      (format nil "~4,'0d-~2,'0d-~2,'0d" year month day)))
+    )
+ <title CL-MUPROC [mdash] Erlang-inspired multiprocessing in Common
+ Lisp (§(date))>
+ <style :type text/css
+  pre { padding:25px; background-color:#e0e0e0; font-size: 10pt }
+  a { text-decoration: none; }
+  a.none:hover { border:1px solid white; }
+  a { border:1px solid white; }
+  a:hover   { border: 1px solid black; }
+  a.noborder { border:0px }
+  a.noborder:hover { border:0px }
+  table            { border-width: 1px; border-color: black;
+		     border-style: solid; 
+		     border-collapse: collapse; }
+  td               { border-width: 1px; border-color: black;
+		     border-style: solid; 
+		     font: normal 12px verdana, tahoma, arial, helvetica, geneva;
+		     white-space: nowrap; padding: 2px; vertical-align: top; }
+  th               { border-width: 1px; border-color: black; 
+		     border-style: solid; 
+		     font: bold 12px verdana, tahoma, arial, helvetica, geneva;
+		     white-space: nowrap; padding: 2px; }
+  >>
+<body
+<h2 CL-MUPROC [mdash] Erlang-inspired multiprocessing in Common Lisp>
+
+<p <i This document was last updated on §(date).>>
+
+<p CL-MUPROC is a Common Lisp library which strives to offer some of
+the multiprocessing abstractions found in the <a :href
+http://www.erlang.org Erlang programming language>.  In CL-MUPROC
+
+<ul
+ <li a system consists on isolated tasks (known as <i muprocs>) which
+ communicate exclusively using <i message-passing>,>
+ <li muprocs perform <i pattern matching> on incoming messages to
+ figure out which message to process next,>
+ <li muprocs can <i link to> and <i monitor> each other,>
+ <li muprocs may use <i generic behavours>, at this point the <i
+ generic server> and <i supervisor> generic behaviours.>
+>>
+
+<p At this point, <b CL-MUPROC works on <a :href
+http://www.lispworks.com Lispworks>, <a :href
+http://openmcl.clozure.com/ OpenMCL>, <a :href
+http://www.cliki.net/SBCL SBCL>, <a :href
+http://www.cliki.net/CMUCL CMUCL>, and <a :href http://www.franz.com
+Allegro Common Lisp>>, but we're certainly interested in patches adding
+support for other implementaions.>
+
+<p <i Please report any problems you encounter with CL-MUPROC!>>
+
+<p Although CL-MUPROC has been developed with <i distributed
+operation> in mind, at this point all muprocs in a CL-MUPROC based
+system must execute within the same Lisp image.  BUT: The core
+abstractions employed in CL-MUPROC allows for distributed operation,
+and we hope to add this some time in the future!>
+
+<p CL-MUPROC is available under a BSD license.>
+
+<p If you are interested in using or contributing to CL-MUPROC,
+consider joining the <a :href
+http://common-lisp.net/cgi-bin/mailman/listinfo/cl-muproc-devel
+cl-muproc-devel at common-lisp.net> mailing list.  If you're in
+getting just announcements relating to CL-MUPROC you may wish to join
+the <a :href
+http://common-lisp.net/cgi-bin/mailman/listinfo/cl-muproc-announce
+cl-muproc-announce at common-lisp.net> mailing list instead.>
+
+<p This document is the only available documentation of CL-MUPROC at
+this time, as you will see below, it is still quite incomplete.  In
+addition, a <a :href http://common-lisp.net/project/cl-muproc/eclm2006--cl-muproc--Klaus-Harbo.pdf 
+presentation> held by Klaus Harbo at the European Common Lisp Meeting
+in Hamburg, April 2006 provides an overview of some of CL-MUPROC's
+features.>
+
+<p The most recent release of CL-MUPROC can be downloaded as <a :href
+http://www.common-lisp.net/project/cl-muproc/cl-muproc.tar.gz cl-muproc.tar.gz>>
+
+<p <i Klaus Harbo [lt]klaus at harbo.net[gt]>>
+
+<h2 Overview>
+<p
+ <ul
+  <li <a :href #muproc-index MUPROC index>> 
+  <li <a :href #gensrv-index GENERIC-SERVER index>> 
+  <li <a :href #super-index SUPERVISOR index>> 
+ >>
+<h3 :id muproc-index MUPROC index>
+<p
+ <ul
+  <li <b Core> <ol
+   <li <a :href #muproc-spawn muproc-spawn>>
+   <li <a :href #muproc-exit muproc-exit>>
+   <li <a :href #mumsg mumsg>>
+   <li <a :href #mumsg-send mumsg-send>>
+   <li <a :href #mumsg-receive mumsg-receive>>
+   <li <a :href #muproc-log-errorstream muproc-log-errorstream>>
+   <li <a :href #muproc-with-message-tag muproc-with-message-tag>>
+   <li <a :href #muproc-msgtag= muproc-msgtag=>>
+   <li <a :href #muproc-with-registered-port muproc-with-registered-port>>
+  >>
+  <li <b Scheduling> <ol
+   <li <a :href #muproc-with-timeout muproc-with-timeout>>
+   <li <a :href #muproc-schedule muproc-schedule>>
+   <li <a :href #muproc-schedule-relative muproc-schedule-relative>>
+   <li <a :href #muproc-unschedule-timer muproc-unschedule-timer>>
+  >>
+  <li <b Muproc management> <ol
+   <li <a :href #muproc-link muproc-link>>
+   <li <a :href #muproc-monitor muproc-monitor>>
+   <li <a :href #muproc-set-trap-exits muproc-set-trap-exits>>
+   <li <a :href #muproc-name muproc-name>>
+   <li <a :href #muproc-all-processes muproc-all-processes>>
+   <li <a :href #muproc-find muproc-find>>
+   <li <a :href #muproc-kill muproc-kill>>
+  >>
+  <li <b Predicates> <ol
+   <li <a :href #mumsg-p mumsg-p>>
+   <li <a :href #muproc-p muproc-p>>
+   <li <a :href #in-muproc-p in-muproc-p>>
+   <li <a :href #mupacket-p mupacket-p>>
+   <li <a :href #muproc-address-p muproc-address-p>>
+   <li <a :href #muproc-name-p muproc-name-p>>
+   <li <a :href #muproc-port-name-p muproc-port-name-p>>
+   <li <a :href #muproc-trap-exits-p muproc-trap-exits-p>>
+   <li <a :href #muproc-unmatched-input-p muproc-unmatched-input-p>>
+  >>
+  <li <b Miscellaneous> <ol
+    <li <a :href #muprocn muprocn>>
+  >>
+  <li <b Lower level> <ol
+   <! low-level send/receive>
+   <li muproc-current-process>
+   <li muproc-receive>
+   <li muproc-send>
+   <! ports>
+   <li muproc-port>
+   <li muproc-get-registered-port>
+   <li muproc-register-port-name>
+   <li muproc-unregister-port-name>
+   <! messages, packets, pending input>
+   <li muproc-packet-age>
+   <li muproc-get-field>
+   <li muproc-unmatched-input-count>
+   <li muproc-discard-all-pending-input>
+   <! scheduling>
+   <li muproc-make-interrupt-timer>
+   <! conditions>
+   <li muproc-exit-condition>
+   <li muproc-send-to-terminated-muproc-condition>
+   <! variables>
+   <li *muproc-errorstream*>
+   <li *muproc-inport*>
+   <li *muproc-mumsg*>
+   <li *muproc-packet*>
+  >>
+ >>
+
+<h3 :id gensrv-index GENERIC-SERVER index>
+<p
+ <ul
+  <li <b Core> <ol
+   <li muproc-define-call-handler>
+   <li muproc-define-cast-handler>
+   <li muproc-default-server-name>
+  >>
+  <li <b Other> <ol
+   <li muproc-generic-call>
+   <li muproc-generic-cast>
+   <li muproc-generic-start>
+   <li muproc-exit-after-handler>
+   <li *muproc-generic-server-package*>
+   <li *muproc-generic-server-port-name*>
+  >>
+ >>
+<h3 :id super-index SUPERVISOR index>
+<p 
+ <ul
+  <li <b Core> <ol
+   <li supervisor>
+   <li supervisor-start>
+   <li supervised-muproc>
+  >>
+ >>
+
+<h2 MUPROC dictionary>
+
+<p :id muproc-spawn §(fun)><tt <b muproc-spawn> name init-fn arglist
+		     &key errorstream inport initial-bindings link
+		     trap-exits §(returns) pid>> 
+
+<p <tt muproc-spawn> creates a new muproc whose muproc-name will be
+<tt name>, by calling <tt init-fn> with the arguments in <tt
+arglist>.  It is an error if a muproc already exists with the same <tt
+name>.>  
+
+<p Every muproc must have an <i errorstream> to which it may write log
+messages.  If <tt errorstream> is given, the errorstream messages of
+the created muproc is written to that stream.  Inside muprocs the
+errorstream is accessible via the <tt *muproc-errorstream*>, which has
+dynamic extent coinciding with the lifetime of the muproc.  When a
+muproc is spawned by another muproc, and no <tt errorstream> argument
+is given to <tt muproc-spawn>, the errorstream is inherited from the
+'parent' muproc.>
+
+<p Using the <tt inport> argument, the input port of a newly created
+muproc can be specified.  This is only advisable under very special
+circumstances.>
+
+<p A set of bindings that exist at the start of the muproc can be
+given using the <tt initial-bindings> argument, which should be a
+alist whose <tt car> element is the name of variable to be bound, and
+whose <tt cdr> element is the value to which it should be bound.
+Since muprocs should not share mutable state, <tt initial-bindings> is
+often a convenient way to given muprocs the equivalent of special
+variables, because each muproc will thus have their <i own> instance
+of the variable.>
+
+<p The <tt link> argument is used to control whether the spawning
+muproc and the spawned muproc is <i linked> to each other.  When to
+muprocs are linked, they are informed if the other muproc terminates
+(cf. the <tt trap-exits> flag and <tt muproc-set-trap-exits> to learn
+more about <i how> the fact that a muproc has terminated is
+communicated to the muprocs to which it is linked).  Iff <tt link> is
+NIL, the spawning and spawn muprocs are linked, otherwise they are
+not.>
+
+<p The <tt trap-exits> argument controls how the spawned muproc
+handles the termination of a muproc to which it is linked.  By
+default, a muproc terminates if a muproc to which it is linked
+terminates.  However, if a muproc <i traps exits>, it is sent a
+special mumsg informing it of the termination of the linked muproc.
+This mumsg contains two fields, <tt terminated> is the pid of the
+terminated muproc and <tt reason> is the value the terminated muproc
+gave as argument to <tt muproc-exit> when it terminated.  Sometimes
+the muproc run-time system decides to terminate a muproc, in which cas
+the <tt terminated> field in the termination message sent if the
+muproc is trapping exits is NIL.>
+
+<p <b EXAMPLE>^ [mdash]^ <i in which a muproc is spawned, which spawns a
+child to which it is linked, and with which it 'co-terminates' due to
+the linkage,>
+<pre <<|
+MUPROC> (muproc-spawn :spawn-test 
+		      (lambda (max)
+			(flet ((child ()
+				 (unwind-protect
+				      (loop 
+				       (muproc-log-errorstream "Still here.~%")
+				       (sleep 1))
+				   (muproc-log-errorstream "Done.~%"))))
+			  (muproc-spawn :child #'child nil :link t)
+			  (loop repeat max
+				with start = (get-universal-time)
+				for count from 1
+				for since = (- (get-universal-time) start)
+				do (muproc-log-errorstream "Count=~d since=~d~%" count since)
+				do (sleep 2))
+			  (muproc-log-errorstream "Done.~%")))
+			(list 3)
+			:errorstream *trace-output*)
+20:09:34.879 SPAWN-TEST Count=1 since=0
+20:09:34.884 CHILD Still here.
+#&lt;MP:PROCESS Name "muproc-6[:SPAWN-TEST]" Priority 850000 State "Running">
+20:09:35.888 CHILD Still here.
+20:09:36.884 SPAWN-TEST Count=2 since=2
+20:09:36.892 CHILD Still here.
+20:09:37.896 CHILD Still here.
+20:09:38.888 SPAWN-TEST Count=3 since=4
+20:09:38.900 CHILD Still here.
+20:09:39.900 CHILD Still here.
+20:09:40.892 SPAWN-TEST Done.
+20:09:40.893 CHILD Done.
+MUPROC>|>>>>
+
+<p <b SEE ALSO> [mdash] §(ref '|muproc-exit|), §(ref '|muproc-kill|)>
+
+<p :id muproc-exit §(fun)<tt <b muproc-exit> reason &optional muproc>>
+
+<p <tt muproc-exit> is used to terminate a muproc, causing <tt muproc>
+to terminate with <tt reason> as the exit value.  The default muproc
+to terminate is the muproc calling <tt muproc-exit>.  An error occurs
+if <tt muproc> is not a muproc.>
+
+<p <b EXAMPLE 1>^ [mdash]^ <i in which a muproc is spawn, which spawns a
+child to which it is linked, and from which it receives a termination
+message which the child decides to terminate,>
+<pre <<|
+MUPROC> (muproc-spawn :exit-test
+		      (lambda ()
+			(flet ((child ()
+				 (unwind-protect
+				      (progn
+					(sleep 2)
+					(muproc-exit :i-am-done))
+				   (muproc-log-errorstream "Done.~%"))))
+			  (unwind-protect
+			       (progn
+				 (muproc-spawn :child #'child nil :link t)
+				 (mumsg-receive (from)
+				   ((terminated reason) t
+				    (muproc-log-errorstream "Got termination from ~a: ~a." terminated reason))))
+			    (muproc-log-errorstream "Done.~%"))))
+			nil
+			:trap-exits t
+			:errorstream *trace-output*)
+#&lt;MP:PROCESS Name "muproc-8[:EXIT-TEST]" Priority 850000 State "Running">
+20:28:23.260 CHILD Done.
+20:28:23.263 EXIT-TEST Got termination from #&lt;MP:PROCESS Name :DEAD-PROCESS Priority 0 State "Dead">: I-AM-DONE.
+20:28:23.267 EXIT-TEST Done.
+MUPROC> |>>>>
+
+<p <b EXAMPLE 2>^ [mdash]^ <i in which a muproc is spawned, which spawns a
+child that it decides to terminate, and from which it receives a
+termination message,>
+<pre <<|
+MUPROC> (muproc-spawn :exit-test
+		      (lambda ()
+			(flet ((child ()
+				 (unwind-protect
+				      (loop 
+				       (muproc-log-errorstream "Still here.")
+				       (sleep 1))
+				   (muproc-log-errorstream "Done.~%"))))
+			  (unwind-protect
+			       (let ((child (muproc-spawn :child #'child nil :link t)))
+				 (sleep 3)
+				 (muproc-exit :you-are-done child)
+				 (mumsg-receive (from)
+				   ((terminated reason) t
+				    (muproc-log-errorstream "Got termination from ~a: ~a." terminated reason))))
+			    (muproc-log-errorstream "Done.~%"))))
+		      nil
+		      :trap-exits t
+		      :errorstream *trace-output*)
+20:31:25.236 CHILD Still here.
+#&lt;MP:PROCESS Name "muproc-10[:EXIT-TEST]" Priority 850000 State "Running">
+20:31:26.244 CHILD Still here.
+20:31:27.248 CHILD Still here.
+20:31:28.236 CHILD Done.
+20:31:28.237 EXIT-TEST Got termination from #&lt;MP:PROCESS Name :DEAD-PROCESS Priority 0 State "Dead">: YOU-ARE-DONE.
+20:31:28.237 EXIT-TEST Done.
+MUPROC> |>>>>
+
+<p <b SEE ALSO> [mdash] §(ref '|muproc-kill|), §(ref '|muproc-spawn|)>
+
+<p :id mumsg §(fun)<tt <b mumsg> &rest plist>>
+
+<p <tt mumsg> is used to build mumsg objects, which are used as the
+basis of muproc's pattern-matching message sending protocol.  However,
+<tt mumsg> is not used very often, since <tt mumsg-send> a 'built-in'
+support for create mumsg objects 'on-the-fly'.>
+
+<p <b NOTE>^ [mdash] <i The representation of mumsg objects is not part of the
+interface and may change [mdash] use only the functions exported from
+the muproc package to access mumsg field values.>>
+
+<p <b EXAMPLE>
+<pre <<|
+MUPROC> (mumsg :a 1 :b 2)
+(:MUMSG (:A . 1) (:B . 2))
+MUPROC>|>>>
+
+<p <b SEE ALSO> [mdash] §(ref '|mumsg-send|), §(ref '|mumsg-receive|)>
+
+<p :id mumsg-send §(fun)<tt <b mumsg-send> to &rest plist>>
+
+<p <tt mumsg-send is used to send mumsg messages between muprocs
+(obviously), i.e. it is used for sending messages which are intended
+to be received using the message pattern matching performed by <tt
+mumsg-receive>.  A mumsg object is constructed with the named fields
+and values found in the <tt plist> argument, and sent to <tt to>,
+which is either a <tt pid> or a registered (named) port.>>
+
+<p <b NOTE> [mdash] <tt mumsg-send> can only be used to send mumsg objects.  To
+send other kinds of objects, use §(ref '|muproc-send|), on top of
+which <tt mumsg-send> is built.>
+
+<p <b NOTE> [mdash] cl-muproc is based on the notion that
+multiprocessing should be done using <i shared-nothing
+message-passing>.  However, since muprocs running in the same Lisp
+image exchange regular Lisp data structures, they are not [ndash]
+strictly speaking [ndash] <i shared-nothing>, quite the contrary
+actually.  The <i intention> in cl-muproc, however, is that <u <i data
+objects exchanged between muprocs must be treated as immutable>>.
+That is, muproc applications should take care to either
+<ul 
+ <li never update data received from other muprocs, or>
+ <li copy data before sending or upon receiving the data,> 
+> 
+
+From a theoretical point of view (especially when comparing to
+cl-muproc's inspiration, the <a :href http://www.erlang.org Erlang
+programming language>) this is a serious weakness, but in practice it
+need not be.  It is worth noting that this problem is inherent in all
+Lisp multiprocessing.>
+
+
+<p <b EXAMPLE>^ [mdash]^ <i in which two muprocs send messages back and forth
+to each other a specified number of times,>
+<pre <<|
+MUPROC> (labels ((out (&rest args)
+		   (apply #'muproc-log-errorstream args))
+		 (pong ()
+		   (loop
+		    (mumsg-receive (from)
+		      ((ping) t
+		       (out "PONG -- Got ping: ~a." ping)
+		       (mumsg-send from :pong (* 100 ping)))
+		      ((done) t
+		       (out "PONG -- Got done.")
+		       (muproc-exit :done)))))
+		 (ping (pong count)
+		   (loop for iter from 1 to count
+			 do (mumsg-send pong :ping iter)
+			 do (mumsg-receive (from)
+			      ((pong) t
+			       (out "PING -- Got pong: ~a." pong))))
+		   (mumsg-send pong :done :dummy))
+		 (ping-pong (count)
+		   (let ((pong (muproc-spawn 'pong #'pong ()
+					     :errorstream *trace-output*)))
+		     (muproc-spawn 'ping #'ping (list pong count)
+				   :errorstream *trace-output*))))
+	  (ping-pong 3))
+13:27:51.305 PONG PONG -- Got ping: 1.
+13:27:51.305 PING PING -- Got pong: 100.
+13:27:51.306 PONG PONG -- Got ping: 2.
+13:27:51.306 PING PING -- Got pong: 200.
+13:27:51.306 PONG PONG -- Got ping: 3.
+13:27:51.307 PING PING -- Got pong: 300.
+13:27:51.307 PONG PONG -- Got done.
+#&lt;MP:PROCESS Name "muproc-17[PING]" Priority 850000 State "Running">
+MUPROC> |>>>>
+
+<p <b SEE ALSO> [mdash] §(ref '|mumsg-receive|), §(ref '|with-registered-port|), 
+§(ref '|mumsg|), §(ref '|muproc-send|)>
+
+<p :id mumsg-receive §(mac)<tt <b mumsg-receive> (from-bind) &body
+clauses>>
+
+<p <tt mumsg-receive> is used to receive messages using <i message
+pattern matching>.  Using <tt mumsg-receive>, it is possible to
+selectively look for packets in the muproc's input queue.  This
+allows different kinds of inbound data to be processed at different
+times.>
+
+<p <tt mumsg-receive> processes the messages in the input queue is the
+order the messages arrived, trying to match each message in turn
+against the patterns specified in <tt clauses>, as described below.>
+
+<p <tt mumsg-receive> processes each message in the input queue,
+trying each clause in turn.  For each clause, <tt mumsg-receive> looks
+for a field for each of the field names mentioned in the <tt
+list-of-field-names>.  Iff a field is found in the message, the value
+of each field is bound to the field name, and the <tt predicate> is
+evaluated.  Iff the <tt predicate> evaluates to a non-NIL value, the
+entire <tt mumsg-receive> form returns the result of evaluating the
+<tt boyd> (using <tt progn>).  If the <tt predicate> evaluates to NIL,
+the next clause is tried.  If a field is NOT found for each field
+name, the next clause is tried.  If no clause can be found which can
+match the message, the next message is tried.  If there are no more
+messages to trie, <tt mumsg-receive> block until a message arrives, at
+which point the matching process continues.>
+
+<p A <tt mumsg-receive> form has the following high-level structure
+<pre <<|(mumsg-receive (from) . list-of-clauses)|>>>
+where each clause has the form
+<pre <<|(list-of-field-names predicate . body-forms)|>>>>
+
+<p Looking at an example of a <tt mumsg-receive> form,
+<pre <<|
+(mumsg-receive (from)
+  ((field-a) (integerp field-a)
+   :integer
+  ((field-a) t
+   :not-an-integer
+  (() t
+   :no-field-a))|>>>>
+
+<p The above <tt mumsg-receive> example has 3 clauses whose parts are
+
+<table
+<tr <td <b Clause>><td <b Field names>><td <b Predicate>><td <b Body>>>
+<tr <td 1><td <tt field-a>><td <tt (integerp field-a)>><td <tt
+^:integer>>>
+<tr <td 2><td <tt field-a><td <tt t>><td <tt ^:not-an-integer>>>>
+<tr <td 3><td <tt ()>><td <tt t>><td <tt ^:no-field-a>>>>
+>
+
+<p In the above, <tt mumsg-receive> will always match the first
+message in the input queue because the last clause requires no fields
+to be present and the predicate always returns <tt t>.>
+
+<p <b NOTE> [mdash] Most of the time, the clause specifies all the fields
+necessary for performing message processing, but sometimes this is not
+possible, in which case the contents of the message can be accessed
+after message matching using §(ref '|muproc-get-field|), §(ref
+'|*muproc-mumsg*|), and/or §(ref '|*muproc-packet*|).>
+
+<p <b NOTE> [mdash] Use <tt muproc-with-timeout> if <tt mumsg-receive> should
+block for a limited period of time.>
+
+<p <b EXAMPLE>^ [mdash]^ <i Cf. §(ref '|mumsg-send|).>>
+
+<p <b SEE ALSO> [mdash] §(ref '|muproc-send|), §(ref '|mumsg|), §(ref
+'|muproc-with-timeout|), §(ref '|muproc-discard-all-pending-input|),
+§(ref '|muproc-get-field|), §(ref '|*muproc-packet*|), §(ref '|*muproc-mumsg*|)>
+
+
+<p :id muproc-log-errorstream §(fun)<tt <b muproc-log-errorstream>
+format-string &rest args>>
+
+<p Every muproc has a stream designated as it's 'errorstream'.
+Normally, muprocs should not write to their errorstream, but rather
+use application-specific ways of communicating messages to its
+environment.  However, for debugging it is very useful to manage
+explicitly where to send strings.>
+
+<p <tt muproc-log-errorstream> is used to write strings to the
+muproc's errostream.  <tt format-string> is a formatting string with
+the same sematics as those given to <tt format>, against which <tt
+args> are matched.>
+
+<p <b Note> [mdash] Since errorstreams are mutable and usually shared
+between muprocs (by default, a muproc inherits the errorstream of its
+parent), a lock is employed to serialize access.  As there is just on
+lock controlling access to all errorstreams, using <tt
+muproc-log-errorstream> can potentially cause performance loss.
+Therefore, <tt muproc-log-errorstream> should be used only sparingly.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|*muproc-errorstream*|)>
+
+<p :id muproc-with-message-tag §(mac)<tt <b muproc-with-message-tag> (tag-name) &body body>>
+
+<p <tt muproc-with-message-tag> generates a 'statistically unique'
+message tag, and binds it to <tt tag-name> in <tt body>.>
+
+<p In general, messages may arrive in a muproc's input at any time.
+Very often, however, a muproc want to send some request to another
+muproc, wait for the reply to come back, and then proceed.  In this
+situation, it is essential that the reply we get <i is the reply to
+the request we just sent,> and not a reply we sent some time ago, but
+whose reply we never got to process (due to a timeout, perhaps, see
+NOTE below).>
+
+<p A common idiom for dealing with this issue is the use of <i unique
+message tags> which a put into requests and returned by the muproc at the
+other end.  By remembering the unique message tag, we can look for the
+reply to the request we just sent using <tt mumsg-receive> pattern
+matching.  This is best illustrated by the following example:
+<pre <<|
+(muproc-with-message-tag (mytag)
+  (mumsg-send some-muproc :the-request :bla :tag mytag)
+  (mumsg-receive (from)
+    ((the-reply tag) (muproc-msgtag= mytag tag)
+     (list :reply-to-what-we-just-sent the-reply))
+    ((the-reply tag) t
+     (list :reply-to-some-old-reply the-reply)))) |>>>>
+
+<p <b NOTE> [mdash] muprocs are responsible for 'keeping their input
+queues clean' themselves.  That is, care must be taken that muprocs do
+not accumulate messages in their input queues because some kinds of
+messages are not matched by any <tt mumsg-receive> clause (or by <tt
+muproc-receive> if lower-level primitives are used).  How this is done
+best, depends on the application (which is why cl-muproc does not
+attempt to deal with this issue).  If care is not take to process any
+message which may arrive in a muproc, the queue will eventually fill
+up, which will lead to an error whivh causes the muproc to terminate.
+Very long input queues also affect performance, since pattern matching
+on input always starts with the oldest message in the queue.>
+
+<p <b SEE ALSO> [mdash] §(ref '|muproc-msgtag=|), §(ref
+'|mumsg-receive|), §(ref '|mumsg-send|)>
+
+<p :id muproc-msgtag= §(fun)<tt <b muproc-msgtag=> t1 t2>>
+
+<p <tt muproc-msgtag=> compares to message tags and returns <tt t> iff
+they are identical.>
+
+<p :id muproc-with-registered-port §(mac) <tt <b muproc-with-registered-port> (name) &body body>>
+
+<p Messages can be sent to muprocs using two kinds of 'addresses',
+either their <tt pid> or a <i registered port name>, which must a Lisp
+keyword.  By registering a port name, a muproc can ensure that other
+muprocs can send it messages easily, even if they do not know that
+muproc's <tt pid>.>
+
+<p The usual way to use a register a port name is using <tt
+muproc-with-registered-port>, which registers <tt name> while
+evaluating <tt body>.>
+
+<p <b EXAMPLE>^ [mdash]^ <i in which one muproc registers a port name
+to which another sends a few times,>
+<pre <<|
+MUPROC> (labels ((done ()
+		   (muproc-log-errorstream "DONE.~%"))
+		 (server (count)
+		   (unwind-protect
+		        ;; REGISTER PORT NAME --   
+			(muproc-with-registered-port (:SERVER)
+			  (loop repeat count 
+				do (mumsg-receive (from)
+				     ((request) t
+				      (mumsg-send from :reply (* request 2))))))
+		     (done)))
+		 (client (count)
+		   (unwind-protect
+			(progn
+			  (sleep .1) ;; wait for server to be ready
+			  (loop for req from 1
+				repeat count
+				do (progn
+				         ;; SEND TO REGISTERED PORT NAME --
+				     (mumsg-send :SERVER :request req)
+				     (mumsg-receive (from)
+				       ((reply) t
+					(muproc-log-errorstream "Reply(~a)=~a.~%" req reply))))))
+		     (done)))
+		 (parent (count)
+		   (muproc-spawn :srv #'server (list count) :errorstream *trace-output*)
+		   (muproc-spawn :cli #'client (list count) :errorstream *trace-output*)))
+	  (parent 4))
+#&lt;MP:PROCESS Name "muproc-69[:CLI]" Priority 850000 State "Running">
+16:14:19.510 CLI Reply(1)=2.
+16:14:19.511 CLI Reply(2)=4.
+16:14:19.511 CLI Reply(3)=6.
+16:14:19.512 SRV DONE.
+16:14:19.512 CLI Reply(4)=8.
+16:14:19.513 CLI DONE.
+MUPROC> |>>>>
+
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-register-port-name|), §(ref '|muproc-unregister-port-name|)>
+
+
+<p :id muproc-with-timeout §(mac) <tt <b muproc-with-timeout> (timeout &body timeout-forms) &body body>>
+
+<p Evaluate <tt body> for a maximum of <tt timeout> seconds.  If
+timeout occurs, return the results of evaluationg <tt timeout-forms>.>
+
+<p <b EXAMPLE>^ [mdash]
+<pre <<|
+MUPROC> (muproc-with-timeout (1 :timed-out)
+	  (progn
+	    (sleep 2)
+	    :done))
+:TIMED-OUT
+MUPROC> (muproc-with-timeout (2 :timed-out)
+	  (progn
+	    (sleep 1)
+	    :done))
+:DONE
+MUPROC> 
+|>>>>
+
+<p :id muproc-schedule §(fun) <tt <b muproc-schedule> function universal-time &optional repeat-period>>
+
+<p Call <tt function> at <tt universal-time>.  Iff <tt repeat-period>
+is given, repeat every <tt repeat-period> seconds.>
+
+<p <b NOTE> [mdash] All timers created by a muproc are destroyed
+(unscheduled) when it terminates.>
+
+<p <b EXAMPLE>^ [mdash]^ <i in which we see a timer scheduled using
+universal time repeating every 1 seconds, and we note that the timer
+created by the muproc is unscheduled upon its exit,> 
+<pre <<|
+MUPROC> (muprocn (5 :muprocn-timed-out)
+          (let ((start (get-universal-time)))
+            (flet ((f () (muproc-log-errorstream "Time passed: ~d" (- (get-universal-time) start))))
+              (muproc-schedule #'f (+ start 2) 1)
+              (sleep 8)
+              (muproc-log-errorstream "Done."))))
+19:38:43.365 MUPROCN-7587 Time passed: 2
+19:38:44.365 MUPROCN-7587 Time passed: 3
+19:38:45.365 MUPROCN-7587 Time passed: 4
+19:38:46.366 MUPROCN-7587 Time passed: 5
+:MUPROCN-TIMED-OUT
+19:38:47.365 MUPROCN-7587 Time passed: 6
+19:38:48.365 MUPROCN-7587 Time passed: 7
+19:38:49.365 MUPROCN-7587 Time passed: 8
+19:38:49.365 MUPROCN-7587 Done.
+MUPROC> 
+|>>>>
+
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-schedule-relative|), §(ref
+'|muproc-unschedule-timer|)>
+
+<p :id muproc-schedule-relative §(fun) <tt <b muproc-schedule-relative> function expiry-time &optional repeat-period>>
+
+<p Call <tt function> after <tt expiry-time> seconds.  Iff <tt repeat-period>
+is given, repeat every <tt repeat-period> seconds.>
+
+<p <b NOTE> [mdash] All timers created by a muproc are destroyed
+(unscheduled) when it terminates.>
+
+<p <b EXAMPLE>^ [mdash]^ <i in which we see a timer scheduled
+relatively repeating every 1 seconds, and we note that the timer
+created by the muproc is unscheduled upon its exit,>
+<pre <<|
+MUPROC> (muprocn (5 :muprocn-timed-out)
+	  (let ((start (get-universal-time)))
+	    (flet ((f () (muproc-log-errorstream "Time passed: ~d" (- (get-universal-time) start))))
+	      (muproc-schedule-relative #'f 1 1)
+	      (sleep 8)
+	      (muproc-log-errorstream "Done."))))
+19:13:12.615 MUPROCN-5504 Time passed: 1
+19:13:13.615 MUPROCN-5504 Time passed: 2
+19:13:14.615 MUPROCN-5504 Time passed: 3
+19:13:15.615 MUPROCN-5504 Time passed: 4
+19:13:16.616 MUPROCN-5504 Time passed: 5
+:MUPROCN-TIMED-OUT
+19:13:17.615 MUPROCN-5504 Time passed: 6
+19:13:18.615 MUPROCN-5504 Time passed: 7
+19:13:19.615 MUPROCN-5504 Time passed: 8
+19:13:19.615 MUPROCN-5504 Done.
+MUPROC> 
+|>>>>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-schedule|)>
+
+<p :id muproc-link §(fun) <tt <b muproc-link> muproc1 &optional muproc2>>
+
+<p Link <tt muproc1> and <tt muproc2> to each other.  The default
+value of <tt muproc2> is the muproc calling <tt muproc-link>.  When
+two muprocs are linked, one process will be notified if the other
+terminates, and vice versa.  Iff the muproc being notified traps
+exits, the termination notification is by sending a <i termination
+notification> <tt mumsg> to the muproc, otherwise <tt muproc-exit> is
+called for the muproc.>
+
+<p A <i notification message> has two fields: <tt terminated>
+whose value is the muproc which terminated, and <tt reason> which is
+the value the muproc gave upon exit.>
+
+<p <b NOTE> [mdash] Muproc linking is a <i symmetric relationship>
+between two muprocs.  By contrast <i muproc monitoring> is an <i
+asymmetric relationship>, where one muproc is notified is the other
+terminates, but NOT vice versa (except, of course, if the other
+happens to be monitoring the former).>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-set-trap-exits|), §(ref
+'|muproc-monitor|)> 
+
+<p :id muproc-monitor §(fun) <tt <b muproc-monitor> object-muproc &optional subject-muproc>>
+
+<p Let <tt subject-muproc> monitor <tt object-muproc.> When a muproc
+monitors another, it is notified if the monitored muproc terminates
+Iff the muproc being notified traps exits, the termination
+notification is by sending a <i termination notification> <tt mumsg>
+to the muproc, otherwise <tt muproc-exit> is called for the muproc.>
+
+<p A <i notification message> has two fields: <tt terminated>
+whose value is the muproc which terminated, and <tt reason> which is
+the value the muproc gave upon exit.>
+
+<p <b NOTE> [mdash] Muproc monitoring is an <i asymmetric
+relationship>, where one muproc is notified is the other terminates,
+but NOT vice versa (except, of course, if the other happens to be
+monitoring the former). By contrast <i muproc linking> is a <i
+symmetric relationship> between two muprocs.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-set-trap-exits|), §(ref
+'|muproc-link|)> 
+
+<p :id muproc-set-trap-exits §(fun) <tt <b muproc-set-trap-exits> new-value &optional muproc>>
+
+<p Set whether <tt muproc> <i traps exits> or not.  The default value
+of <tt muproc> is the current muproc. <tt muproc> does NOT trap exits if <tt
+new-value> is NIL, and DOES trap exits otherwise.>
+
+<p When a muproc traps exits, it receives <i notification messages>
+when linked or monitored muprocs terminated.  Otherwise <tt
+muproc-exit> used for notification (which results in the termination
+of the linked or monitoring muproc also).>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-trap-exits-p|),  §(ref
+'|muproc-link|), §(ref '|muproc-monitor|), §(ref '|muproc-spawn|)> 
+
+<p :id muproc-name §(fun) <tt <b muproc-name> &optional muproc>>
+
+<p Returns the name of <tt muproc>.  The default value of <tt muproc>
+is the current muproc.>
+
+<p <b NOTE> [mdash] A muproc is given its name when it is created.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-spawn|)>
+
+<p :id muproc-all-processes §(fun) <tt <b muproc-all-processes>>>
+
+<p Returns a list of curredntly running muprocs.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-find|), §(ref
+'|muproc-spawn|), §(ref '|muproc-kill|)>
+
+<p :id muproc-find §(gf) <tt <b muproc-find> criteria &key as-list>>
+
+<p Searches current muprocs returning those which fullfil <tt
+criteria>, which is either the name of the muproc (a symbol), or a
+string representing a <i regular expression> to be used for matching
+the names of current muprocs.>
+
+<p If <tt as-list> is NIL, it is an error for a search match more than
+one muproc, and <tt muproc-find> simply returns this process;
+otherwise <tt muproc-find> returns a list with the muprocs matching
+<tt criteria>.>
+
+<p <b NOTE 1> [mdash] Edi Weitz's CL-PPCRE library must be loaded
+before <i compiling> CL-MUPROC for regular expression matching to
+work.>
+
+<p <b NOTE 2> [mdash] <tt muproc-find> should probably be made more
+flexible.> 
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-spawn|)>
+
+<p :id muproc-kill §(fun) <tt <b muproc-kill> muproc reason>>
+
+<p Terminate <tt muproc> with <tt reason> as exit reason, without
+giving it the opportunity to 'trap' the exit.  That is, as opposed to
+<tt muproc-exit> which either causes a termination message or
+termination signal to be sent (depending on the value of <tt
+muproc-trap-exits-p>), <tt muproc-kill> termination is always
+signalled (i.e. cannot be trapped).>
+
+<p <b NOTE> [mdash] <tt muproc-kill> is mostly appropriate under quite
+exceptional circumstances, e.g. when developing and debugging code.
+Under normal circumstances, muprocs' wishes to trap exits should
+probably be respected.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-exit|), §(ref
+'|muproc-set-trap-exits|), §(ref '|muproc-trap-exits-p|)>
+
+<p :id mumsg-p §(fun) <tt <b mumsg-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a <tt mumsg> object, and <tt NIL>
+otherwise.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|mumsg|), §(ref '|mumsg-send|), §(ref
+'|mumsg-receive|)>
+
+<p :id muproc-p §(fun) <tt <b muproc-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a muproc, and <tt NIL>
+otherwise.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-spawn|), §(ref
+'|muproc-exit|), §(ref '|in-muproc-p|)>
+
+<p :id in-muproc-p §(fun) <tt <b in-muproc-p>>>
+
+<p Returns <tt T> iff called in a muproc, and <tt NIL> otherwise.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-spawn|), §(ref
+'|muproc-exit|), §(ref '|muproc-p|)>
+
+<p :id mupacket-p §(fun) <tt <b mupacket-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a <tt mupacket> object, and <tt NIL>
+otherwise.  <tt mupacket>s are the representation of messages
+exchanged between muprocs.  Under most circumstances, muproc users do
+not need to manipulate mupackets directly.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-send|), §(ref
+'|muproc-receive|)>
+
+<p :id muproc-address-p §(fun) <tt <b muproc-address-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a cl-muproc address object, and <tt
+NIL> otherwise.  A muproc address is the destination of muproc
+messages, and can be a muproc, a muproc port object, or a keyword
+symbol referring to a registered port name.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|mumsg-send|), §(ref
+'|mumsg-receive|), §(ref '|muproc-send|), §(ref
+'|muproc-receive|), §(ref '|muproc-register-port-name|), §(ref
+'|muproc-unregister-port-name|), §(ref
+'|muproc-with-registered-port|)>
+
+<p :id muproc-name-p §(fun) <tt <b muproc-name-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a valid muproc name, and <tt NIL>
+otherwise.  Muproc names can be any symbol except <tt NIL>.  Every
+muproc must have a unique name.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-spawn|), §(ref '|muproc-name|)>
+
+<p :id muproc-port-name-p §(fun) <tt <b muproc-port-name-p> obj>>
+
+<p Returns <tt T> iff <tt obj> is a valid muproc port name, and <tt NIL>
+otherwise.  Muproc port names must be a keyword symbol.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-register-port-name|), §(ref
+'|muproc-unregister-port-name|), §(ref
+'|muproc-with-registered-port|)> 
+
+
+<p :id muproc-trap-exits-p §(fun) <tt <b muproc-trap-exits-p> &optional muproc>>
+
+<p Returns <tt T> iff <tt muproc> traps exits, and <tt NIL>
+otherwise.  The default value of <tt muproc> is the muproc making the
+call.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|muproc-set-trap-exits|), §(ref
+'|muproc-spawn|)> 
+
+<p :id muproc-unmatched-input-p §(fun) <tt <b muproc-unmatched-input-p>>>
+
+<p Returns <tt T> iff the calling muproc has unprocessed messages in its
+input queue, and <tt NIL> otherwise.  Under most circumstances muprocs
+do not need to use this function.>
+
+<p <b SEE ALSO>^ [mdash]^ §(ref '|mumsg-receive|), §(ref
+'|muproc-receive|)> 
+
+<p :id muprocn §(mac) <tt <b muprocn> ((&optional (timeout 10) (timeout-action :timeout)) &body body)>>
+
+<p <tt muprocn> spawns a muproc and evaluates a list of forms inside
+it. The name <tt muprocn> is intended as analogous to <tt progn>.>
+
+<p The value of evaluating the last form given to <tt muprocn> is
+returned.  However, since a new muproc is spawned and since it may
+never terminate, an upper bound may be specified in <tt timeout>.  Iff
+a timeout occurs, the value of evaluating <tt timeout-action> is
+returned.  The default value of <tt timeout> is 10, and the default
+value of <tt timeout-action> is <tt ^:timeout>.>
+
+<p <tt muprocn> is very useful for interactively communicating with a
+muproc, e.g. for debugging or ad hoc queries.>
+
+<p Since operators like <tt mumsg-send> and <tt mumsg-receive> can
+only be used inside muprocs, <tt muprocn> can sometimes be useful for
+creating simple interfaces between non-muproc and muproc parts of a
+system.  Note, however, that (in current muproc), spawning a muproc is
+relatively expensive operation, so using <tt muprocn> as the basis of
+a high-volume interface is generally a bad idea.>
+
+<p <b EXAMPLE>^ [mdash]^ <i in which we see how to use <tt muprocn>
+interactively,> 
+<pre <<|
+CL-MUPROC> (in-muproc-p)
+NIL
+CL-MUPROC> (muprocn () 
+	     (in-muproc-p))
+T
+CL-MUPROC> (handler-case
+	       (muproc-log-errorstream "Hi")
+	     (error (err)
+	       (format nil "~a" err)))
+"The assertion (IN-MUPROC-P) failed."
+CL-MUPROC> (handler-case
+	       (muprocn ()
+		 (muproc-log-errorstream "Hi"))
+	     (error (err)
+	       (format nil "~a" err)))
+22:05:48.188 MUPROCN-1353 Hi
+NIL
+CL-MUPROC>
+|>>>>
+
+>>
+<<>>
+Post-document comments here

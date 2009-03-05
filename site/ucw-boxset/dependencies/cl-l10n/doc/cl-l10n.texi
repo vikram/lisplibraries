@@ -1,0 +1,652 @@
+\input texinfo          @c -*- texinfo -*-
+@c %**start of header
+@setfilename cl-l10n.texi
+@settitle CL-L10N Manual
+
+
+@dircategory Software development
+@direntry
+* cl-l10n: (cl-l10n).  CL Localization Package
+@end direntry
+
+@copying
+Copyright @copyright{} 2004 Sean Ross All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met: 
+
+@enumerate
+@item
+Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.
+
+@item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+@item
+The names of the authors and contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.
+@end enumerate
+
+@sc{This software is provided by the authors and contributors ``as is''
+and any express or implied warranties, including, but not limited to,
+the implied warranties of merchantability and fitness for a particular
+purpose are disclaimed.  In no event shall the authors or contributors
+be liable for any direct, indirect, incidental, special, exemplary, or
+consequential damages (including, but not limited to, procurement of
+substitute goods or services; loss of use, data, or profits; or
+business interruption) however caused and on any theory of liability,
+whether in contract, strict liability, or tort (including negligence
+or otherwise) arising in any way out of the use of this software, even
+if advised of the possibility of such damage.}
+ 
+@end copying
+
+@c 
+@titlepage
+@title CL-L10N: CL Localization Package
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@ifnottex
+
+@node Top
+@top CL-L10N: CL Localization Package
+
+@insertcopying
+
+@menu
+* Introduction:         Introduction
+* Getting Started:      Getting Started
+* API:                  API
+* I18N:                 I18N
+* Notes:                Notes
+* Credits:              Credits
+* Comprehensive Index::
+
+@end menu
+
+@end ifnottex
+
+@node Introduction
+@chapter Introduction
+
+CL-L10N is a portable localization package for Common Lisp which is more or
+less modelled on the Allegro Common Lisp locale package. It currently supports
+various accessors (like locale-mon), number printing, money printing and 
+time/date printing.
+
+The CL-L10N Home Page is at @uref{http://www.common-lisp.net/project/cl-l10n}
+where one can find details about mailing lists, cvs repositories and various releases.
+
+Enjoy
+ Sean.
+
+@section Supported Implementations
+@itemize @bullet
+@item SBCL
+@item CMUCL
+@item CLISP
+@item Lispworks
+@item ECL
+@item Allegro CL
+@end itemize
+
+
+@node Getting Started
+@chapter Getting Started
+
+CL-L10N uses @uref{http://cliki.net/asdf,,asdf} as it's system definition tool and 
+is required whenever you load the package.  
+You will need to download it, or if you have @uref{http://sbcl.org,,sbcl}
+@code{(require 'asdf)}
+
+
+@section Downloading
+@itemize
+@item ASDF-INSTALL 
+CL-L10N is available through asdf-install. If you are new
+to Common Lisp this is the suggested download method. With asdf-install loaded run 
+@code{(asdf-install:install :cl-l10n)}
+This will download and install the package for you. Asdf-install will try to verify 
+that the package signature is correct and that you trust the author. If the key is 
+not found or the trust level is not sufficient a continuable error will be signalled. 
+You can choose to ignore the error and continue to install the package. 
+See the documentation of asdf-install for more details.
+
+@item DOWNLOAD
+
+The latest cl-l10n release will always be available from @uref{http://www.common-lisp.net,,cl.net}.
+Download and untar in an appropriate directory then symlink @file{cl-l10n.asd}  to a directory on 
+@code{asdf:*central-registry*} (see the documentation for asdf for details about setting up asdf).
+
+@item CVS
+
+If you feel the need to be on the bleeding edge you can use
+anonymous CVS access, see the @uref{http://www.common-lisp.net/project/cl-l10n,,Home Page}
+ for more details for accessing the archive. Once downloaded follow the symlink instructions above.
+
+@end itemize
+
+@section Installing
+Once downloaded and symlinked you can load CL-L10N at anytime using
+@code{(asdf:oos 'asdf:load-op :cl-l10n)}
+This will compile CL-L10N the first time it is loaded.
+
+Once installed run @code{(asdf:oos 'asdf:test-op :cl-l10n)} to test
+the package. If any tests fail please send an email to one of the
+mailing lists.
+
+@node API
+@chapter API
+
+@section Variables
+@anchor{Variable *locale*}
+@vindex *locale*
+@deftp {Variable} *locale* 
+The default locale which will be used.
+@end deftp 
+
+@anchor{Variable *locale-path*}
+@vindex *locale-path*
+@deftp {Variable} *locale-path*
+The default pathname where locale definition files can be found.
+@end deftp 
+
+@anchor{Variable *locales*}
+@vindex *locales*
+@deftp {Variable} *locales*
+A hash table containing loaded locales keyed on locale name. 
+@end deftp
+
+@anchor{Variable *float-digits*}
+@vindex *float-digits*
+@deftp {Variable} *float-digits*
+An integer value which determines the number of digits
+after the decimal point when all said digits are zero.
+This variable only has an effect when printing numbers
+as monetary printing gets this value from the locale.
+@end deftp
+
+
+@section Functions
+@anchor{Function locale-name}
+@deffn {Function} locale-name locale
+Returns the name of @emph{locale}.
+@end deffn
+
+@anchor{Function locale}
+@deffn {Function} locale name &key (use-cache t) (errorp t)
+Loads the locale designated by the locale-designator @emph{name} which is 
+expected to be found in @code{*locale-path*}. If use-cache is @code{nil} the 
+locale will be forcibly reloaded from path otherwise the cached locale will be returned. 
+If the locale cannot be found and errorp is not nil an error of type @code{locale-error}
+will be signalled.
+@end deffn
+
+@anchor{Function locale-value}
+@deffn {Function} locale-value locale category-name key
+Returns the value of @emph{key} in cagetory @emph{category-name}
+found in the @code{locale} @emph{locale}.
+@end deffn
+
+@anchor{Function load-all-locales}
+@deffn {Function} load-all-locales &optional (path *locale-path*)
+Load all locales found in pathname @emph{path}.
+@end deffn
+
+@anchor{Function print-number}
+@deffn {Function} print-number number &key (stream *standard-output) no-ts no-dp locale *locale*
+Prints @emph{number} using locale @emph{locale}. If @emph{no-ts} is not nil no 
+thousand seperators will be used when printing @emph{number}. If @emph{no-dp} is 
+not nil the decimal seperator will be suppressed if @emph{number} is not an integer.
+@end deffn
+
+@anchor{Function format-number}
+@deffn {Function} format-number stream arg no-dp no-ts &optional (locale *locale*)
+format-number is intended to be used as an argument to the ~/ / format directive.
+Example (assuming *locale* is  en_ZA)
+@lisp
+(format t "~:/cl-l10n:format-number/" 1002932)
+ prints `1,002,932`
+
+@end lisp
+@end deffn
+
+
+@anchor{Function print-money}
+@deffn {Function} print-money value &key (stream *standard-output) use-int-sym no-ts (locale *locale*)
+Prints @emph{value} as a monetary value using locale @emph{locale}. If @emph{no-ts} is not nil no 
+thousand seperators will be used when printing @emph{number}. If @emph{use-int-sym} is not nil 
+@code{locale-int-curr-symbol} will be used instead of the default @code{locale-currency-symbol}
+@end deffn
+
+@anchor{Function format-money}
+@deffn {Function} format-money stream arg use-int-sym no-ts &optional (locale *locale*)
+Prints @emph{value} as a monetary value using locale @emph{locale}. 
+format-money is intended to be used as the function to the ~/ / format directive
+Examples.
+@lisp
+(format t "~/cl-l10n:format-money/" 188232.2322)
+ prints `R188,232.23`
+
+;; and 
+
+(format t "~:/cl-l10n:format-money/" 188232.2322)
+ prints `ZAR 188,232.23`  
+
+@end lisp
+@end deffn
+
+@anchor{Function print-time}
+@deffn {Function} print-time ut &key show-date show-time (stream *standard-output) (locale *locale) fmt time-zone
+Prints the @code{universal-time} @emph{ut} as a locale specific time to @emph{stream}.
+Equivalent to @code{(format-time stream ut show-date show-time locale fmt time-zone)}.
+@end deffn
+
+@anchor{Function format-time}
+@deffn {function} format-time stream ut show-date show-time &optional (locale *locale*) fmt time-zone
+Prints the @code{universal-time} @emph{ut} as a locale specific time to @emph{stream}.
+The format of the time printed is controlled by @emph{show-time} and @emph{show-date}.
+
+@table @code 
+@item show-time and show-date are not nil
+@code{locale-d-t-fmt}
+@item show-time and show-date are nil
+@code{locale-t-fmt-ampm} or @code{locale-t-fmt} if @code{locale-t-fmt-ampm} has
+no apparent value.
+@item show-time is not nil and show-date is nil
+locale-t-fmt
+@item show-date is not nil and show-time is nil
+locale-d-fmt
+@end table
+
+If @emph{fmt} is not nil then @emph{show-date} and @emph{show-time} are ignored 
+and @emph{fmt} is used as the format control string. See the Notes Section for 
+the defined control characters which can be used.
+
+Examples (assuming *locale* is ``en_ZA'' and a CL -2 Time Zone)
+@verbatim
+(format t "~:/cl-l10n:format-time/" 3192624000)
+  prints `03/03/01'
+
+(format t "~@/cl-l10n:format-time/" 3192624000)
+  prints `18:00:00'
+
+(format t "~:@/cl-l10n:format-time/" 3192624000)
+  prints `Sat 03 Mar 2001 18:00:00 +0200'
+
+(format t "~v,v/cl-l10n:format-time/" "fr_FR" "%A" 3192624000)
+  prints `samedi'
+
+(format t "~,v/cl-l10n:format-time/" "%A" 3192624000)
+  prints `Saturday'
+
+; The Time Zone can be overriden with an extra v argument
+(format t "~v,v,v/cl-l10n:format-time/" "en_ZA" "%A" -8 3192624000)
+  print `Sunday'
+
+@end verbatim
+@end deffn
+
+@anchor{Function format}
+@deffn {Function} format stream fmt-string &rest args
+Format is an unexported symbol in the cl-l10n package. It's 
+use is to make formatting of dates, times, numbers and monetary
+values simpler. 
+Shadow importing @code{cl-l10::format} into your package gives
+you a few new format directives.
+The new directives are ~U : Time and Date (universal-time), 
+~N : Numbers and ~M : Monetary values. All other format directives
+are unchanged and work as normal. These new directives are 
+drop in replacements for the ~/cl-l10n:format-?/ calls.
+
+@verbatim
+;; These examples assume an en_ZA locale and a CL -2 Time Zone
+(in-package :cl-user)
+
+(shadowing-import 'cl-l10n::format)
+
+(format t "~:U" 3192624000)
+  prints `03/03/2001'
+
+(format t "~,vU" "%A" 3192624000)
+  prints `Saturday'
+
+(format t "~:N" 3192624000)
+  prints `3,192,624,000'
+
+(format t "~:M" 3192624000)
+  prints `ZAR 3,192,624,000.00`
+
+@end verbatim
+
+@end deffn
+
+@anchor{Macro formatter}
+@deffn {Macro} formatter fmt-string
+Formatter is another unexported symbol in the cl-l10n package
+Shadow importing formatter gives support for the new format
+control directives.
+@end deffn
+
+@anchor{Function parse-number}
+@deffn {Function} parse-number num-string &optional (locale *locale*)
+Parses the string @emph{num-string} into a number using @emph{locale}. 
+@end deffn
+
+@anchor{Function parse-time}
+@deffn {Function} parse-time time-string &key (start 0) (end (length time-string)) (error-on-mismatch nil) (patterns *default-date-time-patterns*) (default-seconds nil) (default-minutes nil) (default-hours nil) (default-day nil) (default-month nil) (default-year nil) (default-zone nil) (default-weekday nil) (locale *locale*)
+
+Tries very hard to make sense out of the argument time-string using
+locale and returns a single integer representing the universal time if
+successful.  If not, it returns nil.  If the :error-on-mismatch
+keyword is true, parse-time will signal an error instead of
+returning nil.  Default values for each part of the time/date
+can be specified by the appropriate :default- keyword.  These
+keywords can be given a numeric value or the keyword :current
+to set them to the current value.  The default-default values
+are 00:00:00 on the current date, current time-zone.
+
+Example, what date does the string ``02/03/05'' specify?
+parse-time will use the current locale or the locale-designator
+passed to it to determine the correct format for dates.
+In America (en_US) this date is the 3rd of February 2005, with an South African English (en_ZA)
+locale this date is the 2nd of March 2005 and with a Swedish locale (sv_SE) it's the 5th of March 2002.
+
+Note. This is not my work but was done by Jim Healy and is a part of the CMUCL project, 
+      which has been modified to handle differt locales.
+
+@end deffn
+
+
+@section Classes
+@anchor{Class locale}
+@deftp {Class} locale
+Class Precedence: @code{standard-object}
+The class representing a loaded locale.
+@end deftp
+
+@anchor{Class category}
+@deftp {Class} category
+Class Precedence: @code{standard-object}
+The class representing a loaded category within a locale.
+@end deftp
+
+
+@section Conditions
+@anchor{Condition locale-error}
+@deftp {Condition} locale-error
+Class Precedence: @code{error}
+
+Root CL-L10N condition which will be signalled when an exceptional 
+situation occurs.
+@end deftp
+
+@anchor{Condition parser-error}
+@deftp {Condition} parser-error
+Class Precedence: @code{error}
+Error which is signalled when an error occurs when parsing numbers
+or time strings.
+@end deftp
+
+
+@node I18N
+@chapter I18N
+
+@section Internationalisation
+CL-L10N supports internationalised strings through the use 
+of bundles. 
+The process is currently extremely basic, and is bound to 
+change in the future, but is flexible and does what is expected of it.
+
+First you define a bundle using @code{make-instance}.
+@lisp
+(defvar *my-bundle* (make-instance 'bundle))
+@end lisp
+
+Then you add resources to your bundle using either @code{add-resource} 
+or @code{add-resources}. 
+
+@verbatim
+(add-resources (bundle "af_")
+  "showtime" "Dankie, die tyd is ~:@/cl-l10n:format-time/~%")
+
+;; an empty string as the locale matcher becomes the default
+(add-resources (bundle "") 
+  "showtime" "Thanks, the time is ~:@/cl-l10n:format-time/~%")
+
+@end verbatim
+
+Then by using @code{gettext} you can lookup locale specific strings.
+@lisp
+(defun timey () (format t (gettext "showtime" bundle) 3310880446))
+(timey) ;; with locale en_ZA
+ prints `Thanks, the time is Wed 01 Dec 2004 11:00:46 +0200`
+
+(let ((*locale* (locale "af_ZA")))
+  (timey))
+ prints `Dankie, di tyd is Wo 01 Des 2004 11:00:46 +0200`
+@end lisp
+
+A useful trick is to define either a macro or reader macro wrapping
+gettext for your specific bundle 
+eg.
+@lisp
+(set-dispatch-macro-character
+ #\# #\"
+ #'(lambda (s c1 c2)
+     (declare (ignore c2))
+     (unread-char c1 s)
+     `(cl-l10n:gettext ,(read s) bundle)))
+ 
+;; or this
+
+(defmacro _ (text)
+  `(cl-l10n:gettext ,text bundle))
+
+@end lisp
+
+which would change the @code{timey} function to 
+@lisp
+(defun timey () (format t #"showtime" 3310880446))
+;; or 
+(defun timey () (format t (_ "showtime") 3310880446))
+
+@end lisp
+
+@section API
+@anchor{Generic add-resource}
+@deffn {Generic} add-resource bundle from to locale-name
+Adds an entry to @emph{bundle} for @emph{locale-name}  mapping
+@emph{from} to @emph{to}. The @emph{locale-name} does not 
+have to be a full name like ``en_US'' but can be a partial match
+like ``en_''. Adding mappings for these two locale-names will
+result in the mapping for ``en_US'' being used when the locale
+is ``en_US'' and the mapping for ``en_'' being used when using any
+other english locale. Adding a mapping for an empty locale-name
+will become the default.
+@lisp
+;; Add mapping for welcome for Afrikaans languages. 
+(add-resource *my-bundle* "welcome" "welkom" "af_")
+@end lisp
+@end deffn
+
+@anchor{Macro add-resources}
+@deffn {Macro} add-resources (bundle locale-name) &rest entries
+Utility macro to group large amounts of entries into a single
+logical block for a locale.
+@lisp
+(add-resources (bundle "af_") 
+  "hello" "hallo"
+  "goodbye" "totsiens"
+  "yes" "ja"
+  "no "nee")
+
+== 
+
+(add-resource bundle "hello" "hallo" "af_")
+(add-resource bundle "goodbye" "totsiens" "af_")
+(add-resource bundle "yes" "ja" "af_")
+(add-resource bundle "no" "nee" "af_")
+
+@end lisp
+@end deffn
+
+@anchor{Function gettext}
+@deffn {Function} gettext name bundle &optional (*locale* *locale* )
+Looks for a mapping for @emph{name} in @emph{bundle}. If no mapping
+is found returns name. 
+@end deffn
+
+
+@node Notes
+@chapter Notes
+
+@section Locale Designators
+The locale argument to the various locale accessors and to the print functions
+is a locale designator. A locale designator is one of three things
+@itemize @bullet
+@item A locale object returned by @code{(locale name)}
+@item A string designating a locale, ``en_ZA''.
+@item A symbol eg. :|en_ZA|
+@end itemize
+
+@section The Default Locale
+The default locale is found by looking at various environment variables.
+If the CL_LOCALE environment variable is set then this locale is loaded.
+Failing that the locale designated by the environment variable LC_CTYPE
+is loaded. If these two have failed then the POSIX locale is loaded 
+as the default.
+
+@section Time Format Control Characters
+The following is a list of each legal control character in a time 
+format string followed by a description of what is does.
+@itemize
+@item %%        A percentage sign.
+@item %a        locale's abbreviated weekday name (Sun..Sat)
+@item %A        locale's full weekday name, variable length (Sunday..Saturday)
+@item %b        locale's abbreviated month name (Jan..Dec)
+@item %B        locale's full month name, variable length (January..December)
+@item %c        locale's date and time (Sat Nov 04 12:02:33 EST 1989)
+@item %C        century [00-99]
+@item %d        day of month (01..31)
+@item %D        date (mm/dd/yy)
+@item %e        day of month, blank padded ( 1..31)
+@item %F        same as %Y-%m-%d
+@item %g        the 2-digit year corresponding to the %V week number
+@item %G        the 4-digit year corresponding to the %V week number
+@item %h        same as %b
+@item %H        hour (00..23)
+@item %I        hour (01..12)
+@item %j        day of year (001..366)
+@item %k        hour ( 0..23)
+@item %l        hour ( 1..12)
+@item %m        month (01..12)
+@item %M        minute (00..59)
+@item %n        a newline
+@item %N        nanoseconds (Always 000000000)
+@item %p        locale's upper case AM or PM indicator (blank in many locales)
+@item %P        locale's lower case am or pm indicator (blank in many locales)
+@item %r        time, 12-hour (hh:mm:ss [AP]M)
+@item %R        time, 24-hour (hh:mm)
+@item %s        seconds since `00:00:00 1970-01-01 UTC'
+@item %S        second (00..60)
+@item %t        a horizontal tab
+@item %T        time, 24-hour (hh:mm:ss)
+@item %u        day of week (1..7);  1 represents Monday
+@item %U        week number of year with Sunday as first day of week (00..53)
+@item %V        week number of year with Monday as first day of week (01..53)
+@item %w        day of week (0..6);  0 represents Sunday
+@item %W        week number of year with Monday as first day of week (00..53)
+@item %x        locale's date representation (locale-d-fmt)
+@item %X        locale's time representation (locale-t-fmt)
+@item %y        last two digits of year (00..99)
+@item %Y        year (1900...)
+@item %z        RFC-2822  style  numeric  timezone (-0500)
+@item %Z        RFC-2822  style  numeric  timezone (-0500)
+@end itemize
+
+@section Accessors to Locale Values.
+There are a number of accessor functions to the various locale 
+attributes defined. The functions are named by replacing 
+underscores with hypens and prepending locale- to the name.
+The following is each defined accessor function in the format 
+Category, Keyword and the accessor function for it.
+@itemize 
+@item LC_MONETARY    int_curr_symbol      @code{locale-int-curr-symbol}
+@item LC_MONETARY    currency_symbol      @code{locale-currency-symbol}
+@item LC_MONETARY    mon_decimal_point    @code{locale-mon-decimal-point}
+@item LC_MONETARY    mon_thousands_sep    @code{locale-mon-thousands-sep}
+@item LC_MONETARY    mon_grouping         @code{locale-mon-grouping}
+@item LC_MONETARY    positive_sign        @code{locale-positive-sign}
+@item LC_MONETARY    negative_sign        @code{locale-negative-sign}
+@item LC_MONETARY    int_frac_digits      @code{locale-int-frac-digits }
+@item LC_MONETARY    frac_digits          @code{locale-frac-digits }
+@item LC_MONETARY    p_cs_precedes        @code{locale-p-cs-precedes }
+@item LC_MONETARY    p_sep_by_space       @code{locale-p-sep-by-space }
+@item LC_MONETARY    n_cs_precedes        @code{locale-n-cs-precedes }
+@item LC_MONETARY    n_sep_by_space       @code{locale-n-sep-by-space }
+@item LC_MONETARY    p_sign_posn          @code{locale-p-sign-posn }
+@item LC_MONETARY    n_sign_posn          @code{locale-n-sign-posn }
+@item LC_NUMERIC     decimal_point        @code{locale-decimal-point}
+@item LC_NUMERIC     thousands_sep        @code{locale-thousands-sep}
+@item LC_NUMERIC     grouping             @code{locale-grouping }
+@item LC_TIME        abday                @code{locale-abday}
+@item LC_TIME        day                  @code{locale-day}
+@item LC_TIME        abmon                @code{locale-abmon}
+@item LC_TIME        mon                  @code{locale-mon}
+@item LC_TIME        d_t_fmt              @code{locale-d-t-fmt}
+@item LC_TIME        d_fmt                @code{locale-d-fmt}
+@item LC_TIME        t_fmt                @code{locale-t-fmt}
+@item LC_TIME        am_pm                @code{locale-am-pm}
+@item LC_TIME        t_fmt_ampm           @code{locale-t-fmt-ampm}
+@item LC_TIME        date_fmt             @code{locale-date-fmt}
+@item LC_MESSAGES    yesexpr              @code{locale-yesexpr}
+@item LC_MESSAGES    noexpr               @code{locale-noexpr}
+@item LC_PAPER       height               @code{locale-height}
+@item LC_PAPER       width                @code{locale-width}
+@item LC_NAME        name_fmt             @code{locale-name-fmt}
+@item LC_NAME        name_gen             @code{locale-name-gen}
+@item LC_NAME        name_mr              @code{locale-name-mr}
+@item LC_NAME        name_mrs             @code{locale-name-mrs}
+@item LC_NAME        name_miss            @code{locale-name-miss}
+@item LC_NAME        name_ms              @code{locale-name-ms}
+@item LC_ADDRESS     postal_fmt           @code{locale-postal-fmt}
+@item LC_TELEPHONE   tel_int_fmt          @code{locale-tel-int-fmt}
+@item LC_MEASUREMENT measurement          @code{locale-measurement}
+@end itemize
+
+@section Known Issues
+@itemize @bullet
+@item  LC_COLLATE and LC_CTYPE categories in the locale files are currently ignored.
+@item  Not all time format directives are supported (U, V and W are not implemented). 
+@end itemize
+
+
+@node Credits
+@chapter Credits
+Thanks To
+@itemize @bullet
+@item Common-Lisp.net: For project hosting.
+@end itemize
+
+@node Comprehensive Index
+@chapter Index
+
+@section Function Index
+@printindex fn
+
+@section Variable Index
+@printindex vr
+
+@bye

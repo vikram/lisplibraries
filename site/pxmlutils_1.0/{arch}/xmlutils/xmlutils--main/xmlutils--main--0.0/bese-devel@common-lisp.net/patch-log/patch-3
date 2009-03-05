@@ -1,0 +1,18 @@
+Revision: xmlutils--main--0.0--patch-3
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 10:22:28 CEST 2003
+Standard-date: 2003-10-07 08:22:28 GMT
+Summary: changed references ta MP::WITHOUT-SCHEDULING to ACL-COMPAT.MP:WITHOUT-SCHEDULING
+Keywords: 
+New-files: 
+New-directories: 
+Removed-files: 
+Removed-directories: 
+Renamed-files: 
+Renamed-directories: 
+Modified-files: ./phtml.cl
+Modified-directories: 
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-3
+Removed-patches: 
+

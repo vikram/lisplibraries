@@ -1,0 +1,775 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Re: Web application design: the REST of the story</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <style>
+      body {
+        width: 40em;
+      }
+      div.baringer, span.baringer{ 
+        color: #000000;
+        border-left: 1px solid #000000; 
+        border-top: 1px solid #000000; 
+      }
+      div.baringer {
+        padding-left: 20px; 
+      }
+      div.roberts, span.roberts { 
+        color: #ff0000; 
+        border-top: 1px solid #FF0000; 
+        border-left: 1px solid #FF0000; 
+      }
+      div.roberts {
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h1>Re:&nbsp;Web&nbsp;application&nbsp;design:&nbsp;the&nbsp;REST&nbsp;of&nbsp;the&nbsp;story</h1>
+    
+    <p>This document is the result an e-mail conversation between
+    Marco Baringer and Dave Roberts. The conversation started with
+    Dave Roberts' <a
+    href="http://www.findinglisp.com/blog/2004/11/web-application-design-rest-of-story.html">blog
+    posting</a> talking about REST in the context of web
+    applications.</p>
+
+    <p>Marco Baringer's writing is enclosed
+    in <span class="baringer">boxes like this one</span>, while Dave
+    Roberts' writing is enclosed in <span style="color: #FF0000;
+    border-left: 1px solid #FF0000; border-top: 1px solid #FF0000;
+    padding: 2px;">boxes like this</span>. </p>
+    
+    <div class="baringer">
+      <h2>On REST</h2>
+
+      <p>In short: The REST camp is right, but our definition of
+      &quot;web application&quot; is too wide. The term &quot;web
+      application,&quot; in its common use, appiles to two radically
+      different things whcih both travel over HTTP:</p>
+
+      <ol>
+        <li>databases interfaces (amazon is the classical example but
+        sites such as lexus nexus and ebay fit in here as well). These
+        are systems where someone is asking a server for
+        information.</li>
+        <li>applications which just happen to use the browser for the
+        GUI. (what you called interactive applications).</li>
+      </ol>
+
+      <p>I'd argue that REST is the perfect (and only) tool for the
+      first category, while continuations work great for the
+      second. I'd also argue that most &quot;web sites&quot; are a mix
+      of both. Take amazon for example, when I use amazon there are
+      two independant things i want to do 1) browse for books and 2)
+      buy books. the browsing part should follow the REST principles,
+      however the buying part should not, purchasing a book is an
+      inherently statefull operation which requires the server to
+      maintain some of the client's state. The order of operations in
+      purchasing a book is complex and, imnsho, much easier to express
+      using continutations. At the same time writing the code to show
+      book details is much easier when you just transalte a url into
+      an sql query and show the resulting rows.</p>
+
+      <div class="roberts">
+        <p>I'm not totally convinced that the checkout portion can't
+        be made REST as well. The REST crowd actually thinks
+        so. Clearly, there is state, but they would say that the state
+        should either return with the next request or should be stored
+        on the server side in the database, not carried in the web
+        server. That may be bending the rules on REST, though.</p>
+
+        <div class="baringer">
+          <p>i'm not going to argue that i can't, only that it
+          shouldn't.</p>
+
+          <p>The application, and its underlying database, have a
+          certain state which is global and shared by everyone. Then
+          there is the state of GUI, this information (what page we're
+          looking at, what the navigation history is, etc.) may be
+          implemented in the DB but it's not application state, its
+          GUI state.</p>
+
+          <p>When the REST guys start sending this GUI state in the
+          response objects they run into a number of obstacles (since
+          they need to send <i>all</i> of the GUI state
+          for <i>every</i> response): 1) object marshalling, 2)
+          malicious clients 3) request/response size
+          limits. Continuation based apps need only send: 1) a key
+          (generally a random string a few tens of characters long)
+          specifying the session and the point in the sesion history,
+          2) what's changed in the user interface.</p>
+
+          <div class="roberts">
+            <p>Right. I would agree that it's much easier to just use
+            standard session data like most web servers provide
+            today. The REST guys would just argue that it's less
+            scalable. And they're right, too. The big question is,
+            does it only matter for sites like Amazon or EBay which
+            are <b>massive</b>, or does it come into play at lower levels
+            of scalability, too.</p>
+
+            <div class="baringer">
+              <p>The REST guys are against sessions? I don't think
+              that's what they meant; how else would you ever
+              implement anything personalized?</p>
+
+              <div class="roberts">
+                <p>Yep, they're against sessions and consequently
+                generally down on personalization. Their answer is
+                that this isn't REST.</p>
+
+                <p>I should probably qualify it, though. *In the
+                context of REST*, they are down on those concepts. I
+                think you'd find many people that would say, "Sure,
+                the only way to implement personalization is with
+                sessions, and that's fine when you want to go that
+                way, but realize that you are now stepping out of a
+                REST architecture style and you're going to pay that
+                penalty" This is one reason why I think REST is most
+                applicable to web applications that would otherwise
+                use SOAP (i.e. "web services," not something
+                interactive).</p>
+              </div>
+
+              <p>Maybe this is just another case of distinguishing
+              between web apps as "collections of resources named by
+              urls" and web apps as "applications which happen to use
+              the browser for a GUI"</p>
+
+              <div class="roberts"><p>Yes, indeed.</p></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="baringer">
+      <p>This doesn't mean that you can't shoe-horn the statefull part
+      of the application into REST but it does mean that REST is not
+      the best option for this (and vice versa).</p>
+
+      <div class="roberts">
+        <p>Right. The question really is, what penalty are you paying
+        when you move outside the REST style, and can you afford
+        that. In some cases, you probably can. My big question is, how
+        much is the penalty for continuations? If it's small, then no
+        biggie. If large, then you really have to think about it. I
+        could see continuations being very large, depending on how
+        they were implemented, and that would definitely push you to
+        larger and larger server front-ends with all the consequent
+        headache.</p>
+
+        <div class="baringer">
+          <p>when you talk about continuations and web apps
+          (interactive applications with a web GUI) there are (mainly)
+          two places where the continutaions come into play:</p>
+
+          <ol>
+            <li><p>writing the code - we (some of us at least) would like
+            to write our code sequentially, even though it will be
+            executed asynchronously and certain parts of it may be
+            executed multiple times (think back button and window
+            cloning). there is no penalty here if the contiuations are
+            implemented by a compile time code transformation (as ucw
+            does). [well, there is a slight penalty since we introduce
+            an oscene number of lambda calls, but its basically 0
+            compared to reading/writing the requests/response (trust
+            me on this)]. Even when you use "full" built in
+            continuations (as SeaSide and PLT scheme do) the overhead
+            is still little more than a couple function calls and some
+            memory (stact) manipulation.</p>
+
+              <div class="roberts">
+                <p>The only thing I was worried about was the memory
+                allocation, not the time to render the page. As you
+                say, either style's speed difference is swamped by the
+                cost of the I/O. Again, my main issue is how much
+                memory I'm sucking up with all those various
+                continuations hanging around. And remember that I have
+                multiple continuations per page (every link,
+                right?). That could easily be many KB per
+                continuation. Depending on how much back-button saving
+                state I want to hang around, I could literally have
+                MBs per user. If my policy is to let that stuff hang
+                around until a timeout of some sort or an explicit
+                logout/finish purchase point, I have to worry about
+                how many people abandon their session, etc. You get
+                the idea.</p>
+
+                <div class="baringer">
+                  
+                  <p>a ucw session object consists of:</p>
+
+                  <ol>
+                    <li>a 40 character id string</li>
+                    <li>a last-access time (a fixnum)</li>
+                    <li>an object table (an eql hash table)</li>
+                    <li>a list of session-frame objects</li>
+                  </ol>
+                  
+                  <p>each session frame object consits of:</p>
+
+                  <ol>
+                    <li>a 20 character id string</li>
+                    <li>a component object (which may contain other
+                    component objects).</li>
+                    <li>a hash table mapping action-ids (10 character
+                    strings) to closures.</li>
+                    <li>a hash table mapping callback-ids (10
+                    character strings) to closures.</li>
+                    <li>a list of (value . ucw:place). a value is a
+                    lisp object, ucw:place is an object with 3
+                    closures (one for getting the current value, one
+                    for setting and one for copying).</li>
+                  </ol>
+
+                  <p>what you (and i) should be worried about are all
+                  those closure objects. a closure consists of two
+                  things: 1) a code vector and 2) an environment. the
+                  code vector is shared across all closures in all
+                  sessions, so all we're really worried about is the
+                  environment. the environment is bascially a
+                  (constant size) vector of objects, assuming has a
+                  page has ten links each with an action (in ucw the
+                  actions are generally simple forms which call some
+                  function on the srever) we'll have a couple objets
+                  in the environment. each of these objects is however
+                  shared across all the closure in the page. in all
+                  honesty i don't think the cost of memory is such an
+                  issue , i did some quick math and came up with about
+                  400 bytes per session + 700 bytes per
+                  request/response iteration (assuming you backtrack
+                  about 10 objects per request/response and assuming
+                  each "slot" is 4 byte wide (immediate objects are
+                  saved in the slot, non immediates require some
+                  memory for the data as well). would this be a big
+                  issue for sites like amazon and ebay? yes. is this
+                  an issue for 99% of the web apps out there?
+                  considering how the cost of 1GB of RAM, no.</p>
+
+                  <p>what is a much bigger issue is farming out
+                  sessions. if you don't want to get swamped in
+                  serializeng/deserializng objects and sending them
+                  over the network you really need to leave a session
+                  on the same machine for its entire life, while
+                  dobale (i should have a client who will fund this
+                  work in a few months) it's not immediate and you
+                  still run the risk of having one machine at 100% CPU
+                  and another idle.</p>
+
+                  <div class="roberts">
+                    <p>This is pretty easy and done all the
+                    time. That's why load balancers implement a sticky
+                    policy to keep a given client bound to the same
+                    front-end web server. The issue then becomes how
+                    critical that data is in the event of a server
+                    failure, but the scalability model has been
+                    conquered.</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <p>saving the state - when the user clicks on a link we
+              want to make sure that the state of the app as the
+              _user_ saw it on the page corresponds to the state on
+              the server, even when the user has used the back
+              button. in this case you, developer, have to tell the
+              framework what state shoud be saved and restored based
+              on the user's request and what state is global and
+              doesn't change even though the user has "undone" some
+              pages.</p>
+
+              <p>generally we save the state regarding the GUI (values
+              of forms, what the &quot;current&quot; page is, state of
+              the navigation menu) and don't save the general
+              application state (user data, db manipulations, etc.)
+              how much you save is up to the developer. i'd like to
+              point out that this penalty (saving and restoring GUI
+              state) is taken even by REST apps (if they want to do
+              things right), it's just that's its done by
+              hand.</p>
+
+              <div class="roberts">
+                <p>Yes, agreed. State is state. You have to store it somewhere and then
+                restore it when you get another request.</p>
+
+                <div class="baringer">
+                  <p>the difference is who has to deal with that
+                  job. in a continuation based system you usally end
+                  up with a framework where the saving and restoring
+                  is done by the framework itself, all you (developer)
+                  have to do is use tha data. in the rest frameworks
+                  i've seen you have to do this work yourself.</p>
+
+                  <div class="roberts">
+                    <p>Right, agreed. The explicit model forces you to
+                    do more work. The continuation model makes this
+                    seamless, but could hand you a huge scalability
+                    problem if you aren't conscious about what's
+                    happening behind the scenes. Like any high-level
+                    paradigm (language, for instance), they can make
+                    some things seem really easy, but that can mask
+                    performance problems if you aren't careful.</p>
+                  </div>
+                </div>
+              </div></li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="baringer">
+      <p>The problem most people face is that you never hear about
+      applications-which-use-browser-for-a-GUI, what you see 99% of
+      the time are regular old web applications whose underyling
+      paradigm hasn't changed since 1992. Those real world
+      applications (#2 above) are usually deployed on an intranet and
+      neither look nor feel (nor are considered) different from a
+      regular desktop application.</p>
+
+      <div class="roberts">
+        <p>How do you mean that you never hear about those? Can you give me an
+        example of an application that you know about that works that
+        way?</p>
+
+        <div class="baringer">
+          <p>i've developed a document management systems for a law
+          office and various patient management systems for hospitals,
+          i've worked on buisness intelligence and e-learning
+          tools. None of these apps were ever accessable to the public
+          nor did they ever have to deal with more than 50
+          simultaneous users, though they did have extremly complex
+          user interactions.</p>
+
+          <div class="roberts">
+            <p>Ah, got it. I guess that's the sort of app that I think
+            that continuation-based methods would work well on. If the
+            user count is low and the scalability doesn't have to go
+            higher than those sorts of numbers, I see no reason not to
+            use almost whatever technique is most expedient
+            (continuation, REST, or something else).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="baringer">
+      <h2>On State Machines</h2>
+
+      <p>I don't think it's ever been proven, but i've a strong
+      feeling that state machines are another way of writing cps code
+      (and vice versa). if we have some code like this:</p>
+
+      <div class="roberts">
+        <p>Actually, I think it has been proven, but perhaps in
+        another context.  Really, this is just the same old tension
+        between old linear, sequential programming and event-driven
+        programming, ala the original Mac GUI in 1984. The only
+        difference between the two is where you store the state of the
+        state machine. In the sequential code/continuation case, it's
+        in the activation records sitting on the stack. In the state
+        machine case, it's more explicit. Neither is ultimately more
+        expressive, just different.</p>
+
+        <div class="baringer">
+          <p>right. however i still think that while the underlying
+          machinery is more explicit in the state machine the high
+          level goals are more explict in the continuation case.</p>
+
+          <div class="roberts">
+            <p>I suppose it depends on what you're comfortable
+            with. Again, I often think in terms of state machines
+            anyway. Either way, we're mapping a series of HTTP
+            requests onto some sort of model and using that to
+            simplify our thinking. You think sequentially; I often
+            think in terms of state machines.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <pre>
+(do-one-thing)
+(show-a-page)
+(do-another-thing)
+(show-another-page)
+(done)
+      </pre>
+
+      <p>that's basically the same as writing:</p>
+
+      <pre>
+(loop
+  with state = 'initial
+  do (case state
+       (initial
+         (do-one-thing)
+         (print 'a-page)
+         (setf state 'post-one-thing))
+       (post-one-thing
+         (do-another-thing)
+         (print 'another-page)
+         (setf state 'post-another-thing))
+       (post-another-thing
+         (done)
+         (setf state 'done))))
+      </pre>
+
+      <p>it's just a lot harder to read. </p>
+
+      <div class="roberts">
+        <p>Yup. I wonder if it wouldn't make sense to develop a small
+        interpreted Lisp language (in Lisp, of course) that would
+        drive the high-level page flow and allow you to save off
+        continuations appropriately. Either that or some radical
+        macros that would allow you to write in a very linear style
+        but would explode to a full state machine with very optimized
+        state storage. That's the fun thing about Lisp, I
+        suppose--everything is possible and relatively easy to
+        implement.</p>
+
+        <div class="baringer">
+          
+          <p>i had guessed you knew about <a
+          href="http://common-lisp.net/project/ucw">UnCommom
+          Web</a>. UCW contains a cps transformer and the machinery
+          for saving the lexical and GUI state, developers don't even
+          need to know what a continuation is to use it, they just
+          write:</p>
+
+          <pre>
+(defaction do-something ((c my-task-component))
+  (do-one-thing)
+  ;; pass do-another-thing the informaiot collected in a-page  
+  (do-another-thing (call 'a-page))
+  ;; pass done the information collected in another-page  
+  (done (call 'another-page)))
+          </pre>
+
+          <p>except for the html generation that's all there is to
+          it. the code will &quot;block&quot; when the forms (call 'a-page) and
+          (call 'another-page) are executed and will only continue
+          when those pages &quot;return&quot;.</p>
+
+          <div class="roberts">
+            <p>Got it. Very interesting. Yes, that's basically what I
+            had in mind.  Given that you're doing this in CL, you have
+            to fake the continuations with a macro transformation into
+            CPS style. That's cool though. Any idea how much state
+            you're saving per continuation?</p>
+
+            <div class="baringer">
+              <p>the components a-page and another-page will need to
+              "answer" at some point so that the forms (call 'a-page)
+              and (call 'another-page) return. let's assume those
+              component are immediate (don't ever call other
+              components) and present two links, one which returns t
+              and one which returns nil. let us also assume the
+              components backtrack two places each (useing the shallow
+              copyer). in order to complete the action do-something
+              there will be, with these assumpitons, two pages seen by
+              the user. so:</p>
+
+              <ul>
+                <li>1 session object</li>
+                <li>2 session-frame objects (eacch session-frame
+                object represents one request/response cycle)</li>
+                <li>6 backtracked places (2 for the first component, 2
+                for the next component. the first 2 are copied in the
+                second request).</li>
+                <li>2 closures for the actions (with any empty closed
+                over environment)</li>
+                <li>2 10 character string for the ids for the actions</li>
+                <li>2 closures for the a-page and another-page's
+                continuations (which in this case only close over the
+                variable c).</li>
+              </ul>
+
+              <p>that's basically it. should the user use the back
+              button certain functions will be called again but the
+              amout of memory used won't increase.</p>
+
+              <p>note the each link in the page does not create a
+              continuation. each link simply calls a function, the
+              "continuations" only come into play when a component
+              answers. each component object has its continuation and
+              these continuations are nothing more than closures (so
+              the code vector itself is compiled and shared across all
+              instances while only the envornment changes from
+              component to component).</p>
+
+              <div class="roberts">
+                <p>My head is spinning at this point. I need to dig
+                into the code and see what's really doing on. I can't
+                follow the thread of control at the time of rendering
+                and overall through the application from that
+                description above (not your fault; I just don't
+                understand enough UCW terminology yet).</p>
+
+                <div class="baringer">
+                  <p>you can't understand because te only place its
+                  described is the code.  here's a high level
+                  description of the standard rerl implementation,
+                  tell me if its clear enough:</p>
+
+                  <p>every time a user "uses" a ucw app they have one
+                  session object, every request/response cycle gets
+                  one session frame. every time a ucw recieves an http
+                  request it basically does this:</p>
+
+                  <ol>
+                    <li>find the session object specified by the
+                    request. (requests generally pass a parameter
+                    named +session-parameter-name+ ("s" in the defalut
+                    setup). [applications of type cookie-session use
+                    cookies for this, but the idea is the same]</li>
+
+                    <li>find the corresponding session-frame which
+                    generated the page the user used to make this
+                    request. this is kind of murky so i'll reexplain
+                    in. we assume that every request to a ucw app is
+                    caused by some precedeing request generating a
+                    link. the exception to this is the very first time
+                    you go to a ucw appilcation, here we pass the work
+                    over to entry-points, however things are simpler
+                    if we leave entry-points out of it for now and
+                    assume that every http request is following a link
+                    (or submitting a form) generated by a previous
+                    response.</li>
+
+                    <li>once we've found the "causing" session frame
+                    we look in the http request and find the specified
+                    action-id, this action-id corresponds to a lambda
+                    on the server.</li>
+
+                    <li>before funcall'ing the action we need to
+                    restore the state as it was when the action lambda
+                    was generated. we do this by "restoring" all the
+                    places which were registreed for backtracking. the
+                    session frame objects holds a set of backtrack
+                    objects which tell us 1) what the value of the
+                    place was when the frame was generated, 2) how to
+                    set modify the place.</li>
+
+                    <li>now we're done with the "causing" session
+                    frame and generate a new one which represents this
+                    new request/response cycle. the new frame will
+                    have, initially, an empty set of
+                    action-ids/action-lambdas, a set of backtracks
+                    (containing a copy of all the previous frame's
+                    backtrack objects).</li>
+
+                    <li>we can know finally funcall the action, the
+                    action we're talking about here are usually very
+                    simple lambda which call "real" actions defined
+                    via defaction. during the course of this a couple
+                    things will happen: (in whatever order):
+
+                      <ol>
+                        <li>actions will be registered. this is usally
+                          done through the high level &lt;ucw:a macro (or
+                          its tla equivalent). it creates a url which,
+                          when requested, causes the lambda to be
+                          funcall'd. registring an action adds an
+                          entry to our action-id/action hash
+                          table. [technically this will happen in step
+                          6, but its easier to conceptualize if you
+                          consider it happeening here].</li>
+
+                        <li>call forms may be executed. this will stop
+                        whatever the action is doing, change the
+                        component tree so that the 'current' component
+                        is substituded with the new component, and
+                        cause us to jump to step 6. note that not all
+                        actions will use call (or answer) and may
+                        simply leave the component tree as it is.</li>
+
+                        <li>answer forms may be executed. this will
+                        cause the current component to be 'forgetten'
+                        (it will evenutally get gc'd) and whatever
+                        call form whcih generated the component which
+                        is now answering will return (and exuction
+                        will continue from there).</li>
+
+                        <li>callbacks may be registered. callbacks are
+                        a special mechanism for dealing with request
+                        parameters, just ignore them for now. (or
+                        study the :accessor yaclml/tal attribute
+                        mechanism).  [technically this will also (like
+                        action registration) happen in step 6.]</li>
+
+                        <li>at same point the action must put a
+                        component object in the session-frame's
+                        window-component slot. usually entry-points do
+                        this and actions simply don't change it (its
+                        saved across session-frames), the important
+                        thing is that after the action
+                        window-component contains a component.</li>
+                      </ol>
+                    </li>
+
+                    <li>go through the list of backtrack objects in
+                    the new frame, save them and store them in the
+                    frame object (so that the next frame can restore
+                    them).</li>
+
+                    <li>once the action returns, either "naturally" or
+                    via a CALL form, we acall render-on on the frame's
+                    window-component. this method must make sure that
+                    any nested componets get passed to render-on we've
+                    finally finished and the html we'll show to user
+                    is stored in the response object. we can now
+                    "shutdown" the response and hope the backend sends
+                    it off the client's browser.</li>
+
+                    <li>lather, rinse, repeat.</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>uncommon web has a main loop which looks more or less like
+      this:</p>
+
+      <pre>
+(loop
+  for request = (read-request)
+  for state = (fetch-state request)
+  for new-state = (handle-action state request)
+  do (setf (fetch-state request) new-state))
+      </pre>
+
+      
+      <p>a while ago i wrote the control loop for a dynamic (states
+      and state transfer functions were put into hash tables and
+      changed at run time) state machine and it's main loop looked
+      very similar to that.</p>
+
+      <div class="roberts">
+        <p>Right. I'm not sure that's actually much easier to
+        read/write at the end of the day. You're just making a state
+        machine with a hashtable doing the state lookup and dispatch
+        rather than a case.</p>
+
+        <div class="baringer">
+          <p>depends on who writes it. in ucw it's written by the
+          framework so i don't really care (or know :)) how hard/easy
+          it is to write.</p>
+        </div>
+
+        <p>Personally, I find state machines very natural to write
+        in. Perhaps that's my hardware background coming
+        through. Rather that avoid the abstraction, I'm more willing
+        to just embrace it. Its sort of like Linus writing Linux in C
+        and disallowing all sorts of typedefs because he wants
+        everybody to know when they're manipulating a structure and
+        when they aren't. Part of me prefers to map my brain onto the
+        underlying problem such that it's more well understood.</p>
+
+        <div class="baringer">
+          <p>I'd assume that that part of your brain knows when the
+          mapping is helpfull and when it's not (your brain doesn't
+          map LOOP constructs into the underlying assembler).</p>
+
+          <div class="roberts">
+            <p>Right, agreed. My motto is just to pick an abstraction
+            that works. I'm not in the camp that all you have is a
+            hammer and therefore everything should be viewed as a
+            nail. ;-)</p>
+          </div>
+
+          <p>the reason ucw exists is that, in web applications, the
+          underlying techincal details are so diametrically opposed to
+          the high level problem. attempting to map "do this, then if
+          A do that else loop over page B" to the http
+          request/response paradigm is such a pain that you just give
+          up on complex interactions.</p>
+
+          <p>[This is provacative but not complety untrue:</p>
+
+          <p>The REST camp is trying to simplify the world so that the
+          problem ceases to exist. The continuation camp is solving
+          the problem.]</p>
+
+          <div class="roberts">
+            <p>You're right. That's provocative. ;-) I don't see that
+            the REST camp is avoiding the problem so much as they are
+            trying to make sure that people understand the
+            tradeoffs. Even the REST people will say that sometimes
+            you should just whack out something quickly with SOAP if
+            you know that scalability is never going to be an issue. I
+            think for interactive apps, they would just make sure that
+            everybody is aware of the tradeoffs and then say, "Hey, if
+            you can live with the scalability limits imposed by your
+            particular architectural style, then fine. Get on with
+            it."</p>
+
+            <div class="baringer">
+              <p>you're trying to introduce the vaice of reason into
+                this conversation. STOP IT! :)</p>
+            </div>
+          </div>
+
+          <p>Anyway, my point(s):</p>
+
+          <ul>
+            <li>Knowing when to use the right tool (and knowing what
+            the available tools are and what their characteristiscs
+            are) is an essential part of software development.</p>
+
+              <div class="roberts">
+                <p>Yup, fully agree. In fact, that was exactly my
+                motivation for asking the question. Continuations are
+                clearly nice. But how far can they take you and where
+                do they break down. Clearly REST is more scalable,
+                blah, blah, but it's also a bit more complex because
+                you may have to fit your application into a style that
+                is less natural. Therefore, when should somebody go
+                through the pain of choosing a REST style when it
+                isn't natural?</p>
+              </div>
+            </li>
+
+            <li><p>Continuations in web apps do not allow you to do
+            anything which can't be done without them, though i'd
+            argue that there are certain user interactions which are
+            too complex to manage (for a developer's point of view)
+            without them.</p>
+
+              <div class="roberts">
+                <p>I'd probably agree with that, but again, the
+                threshold for "too complex" is probably higher than
+                yours is, just because I seem to be more comfortable
+                with a state machine architectural style. But yes, I
+                agree.</p>
+              </div>
+            </li>
+
+            <li><p>Continuations have a non zero cost. However much of
+            that cost already exists in REST apps when they attempt to
+            offer the same functionality as continuation based
+            apps.</p>
+
+            <div class="roberts">
+              <p>It would be interesting to turn this into hard
+              numbers. For instance, exactly how much state is being
+              saved with every continuation?</p>
+            </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    16
+	    --
+	    Namespaces checked strictly</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Namespaces checked strictly</h1>
+    STP represents namespace-well-formed documents.
+    <br>
+    <br>
+    <example title="Well-formed namespaces">
+      <pre class="repl">(let ((e (stp:make-element           "a:foo" "http://a"))
+      (a (stp:make-attribute "value" "b:bar" "http://b")))
+  (stp:add-attribute e a))</pre>
+      <pre class="result">Okay</pre>
+    </example>
+    <br>
+    Conflicting declarations on the same element are forbidden.
+    <example title="Namespaces not well-formed">
+      <pre class="repl">(let ((e (stp:make-element           "<b>a</b>:foo" "http://a"))
+      (a (stp:make-attribute "value" "a:bar" "<b>http://b</b>")))
+  (stp:add-attribute e a))</pre>
+      <pre class="result"><b>Error: namespace collision with element</b></pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="15.html">⬖</a>16/24<a class="icon" href="17.html">⬗</a>
+</div>
+</body>
+</html>

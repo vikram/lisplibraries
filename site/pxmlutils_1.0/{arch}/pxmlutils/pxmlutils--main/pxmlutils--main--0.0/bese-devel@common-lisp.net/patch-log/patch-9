@@ -1,0 +1,10 @@
+Revision: pxmlutils--main--0.0--patch-9
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Thu Jan  8 19:04:49 CET 2004
+Standard-date: 2004-01-08 18:04:49 GMT
+Modified-files: phtml.cl
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-9
+Summary: Allom escaping of delimeter char in tag attributes.
+Keywords: 
+

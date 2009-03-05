@@ -1,0 +1,4 @@
+See doc/index.html for installation instructions.
+
+Note that a version of MK:DEFSYSTEM is included for convenience.  For
+more info about MK:DEFSYSTEM see <http://www.cliki.net/mk-defsystem>.

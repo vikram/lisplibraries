@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    14
+	    --
+	    make-attribute</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>make-attribute</h1>
+    Value comes first because URI is optional argument:
+    <example title="Making an attribute node">
+      <pre class="repl">CL-USER&gt; (stp:make-attribute "123"
+                             "a:defaultValue"
+                             "http://relaxng.org/ns/compatibility/annotations/1.0")</pre>
+      <pre class="result">
+#.(STP:ATTRIBUTE
+   :VALUE "123"
+   :LOCAL-NAME "defaultValue"
+   :NAMESPACE-PREFIX "a"
+   :NAMESPACE-URI "http://relaxng.org/ns/compatibility/annotations/1.0")</pre>
+    </example>
+    <br>
+    Without namespace:
+    <example title="Making an attribute node (without namespace)">
+      <pre class="repl">CL-USER&gt; (stp:make-attribute "123" "defaultValue")</pre>
+      <pre class="result">
+#.(STP:ATTRIBUTE
+   :VALUE "123"
+   :LOCAL-NAME "defaultValue"&gt;</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="13.html">⬖</a>14/24<a class="icon" href="15.html">⬗</a>
+</div>
+</body>
+</html>

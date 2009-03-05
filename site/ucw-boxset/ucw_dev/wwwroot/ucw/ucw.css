@@ -1,0 +1,115 @@
+
+a:visited,
+a:link {
+  color: #00d;
+}
+
+a {
+  cursor: pointer;
+}
+
+/*
+   tabbed pane
+*/
+
+.ucw-tabbed-pane {
+  font: 12px verdana, arial, sans-serif;
+  position:relative;
+  width: 97%;
+}
+
+.ucw-tabbed-pane-options {
+  font: bold 11px verdana, arial, sans-serif;
+  list-style-type: none;
+  padding-bottom: 14px ;
+  padding-left: 20px;
+  position:relative;
+  width:100%;
+}
+
+.ucw-tabbed-pane-not-selected, div.ucw-tabbed-pane-selected {
+  float: left;
+  height: 21px;
+  background-color: #ccc;
+  margin: 2px 2px 0 2px;
+  border: 1px solid #006;
+}
+
+.ucw-tabbed-pane-options a {
+  float: left;
+  display: block;
+  color: #666;
+  text-decoration: none;
+  padding: 4px;
+}
+
+.ucw-tabbed-pane-options a:hover {
+  background: #fff;
+}
+
+
+.ucw-tabbed-pane-selected a {
+  border-bottom: 1px solid #fff;
+  background-color: #fff;
+  text-decoration: none;
+}
+
+.ucw-tabbed-pane-body {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #006;
+}
+
+
+
+/*
+   list container
+*/
+
+div.list-container > ol {
+  list-style: none;
+  display: table;
+  margin: 0;
+  padding: 0;
+}
+
+div.list-container.horizontal > ol > li {
+  display: table-cell;
+}
+
+div.list-container.vertical > ol > li {
+  /* TODO should be table-row, but that seems buggy with ff */
+  display: block;
+}
+
+
+/*
+   collapsible pane
+*/
+
+.collapsible .switch a:link,
+.collapsible .switch a:visited,
+.collapsible .switch a:hover,
+.collapsible .switch a:active
+{
+  text-decoration: none;
+  color: #000;
+}
+
+.collapsible > .switch > a > img
+{
+  padding-right: 5px;
+}
+
+/*
+   validation
+*/
+
+.ucw-form-field-invalid {
+  border: 1px solid #ff0000;
+}
+
+.ucw-form-field-valid {
+  border: none;
+}
+

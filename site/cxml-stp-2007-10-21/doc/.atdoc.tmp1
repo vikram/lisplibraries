@@ -1,0 +1,1893 @@
+<?xml version="1.0"?>
+<documentation index-title="cxml-stp API reference" css="index.css" heading="cxml-stp">
+  <package name="cxml-stp" id="cxml-stp">
+    <sections>
+      <section section="Parsing and Serializing">
+    To parse into STP, use an STP builder together with a function
+    generating SAX events:<break/>    <aboutfun id="cxml-stp__fun__make-builder">make-builder</aboutfun>
+    Serialize STP by sending SAX events for the tree to a sink:<break/>    <aboutfun id="cxml-stp__fun__serialize">serialize</aboutfun>    </section>
+      <section section="Names and Namespace URIs">
+    STP represents namespace-well-formed documents only.  All functions
+    accepting names take a local-name and and a namespace URI as an argument.
+    Qualified names are accepted where it makes sense, and named nodes have
+    a namespace prefix that is taken into account for well-formedness checks.<break/>    There are two kinds of named nodes: <class id="cxml-stp__class__element">element</class> and <class id="cxml-stp__class__attribute">attribute</class>.
+    Their slots are:<break/>    <aboutfun id="cxml-stp__fun__local-name">local-name</aboutfun>    <aboutfun id="cxml-stp__fun__namespace-uri">namespace-uri</aboutfun>    <aboutfun id="cxml-stp__fun__namespace-prefix">namespace-prefix</aboutfun>    For <code>element</code>, all of the above can be changed using SETF (subject
+    to well-formedness checks).<break/>    For attribute, <fun id="cxml-stp__fun__local-name">local-name</fun> can be changed directly, while URI and
+    prefix always have to be changed in the same step using    <fun id="cxml-stp__fun__rename-attribute">rename-attribute</fun>.<break/>
+    A node's qualified name can be be queried:<break/>    <aboutfun id="cxml-stp__fun__qualified-name">qualified-name</aboutfun><break/>    <code>of-name</code> is convenient when searching for elements or attributes:<break/>    <aboutfun id="cxml-stp__fun__of-name">of-name</aboutfun>    </section>
+      <section section="Subclasses of Node">
+    All STP nodes have a common superclass.<break/>    <aboutclass>node</aboutclass>
+    Documents and elements can have children:<break/>    <aboutclass>parent-node</aboutclass>    <aboutclass>document</aboutclass>    <aboutclass>element</aboutclass>    Attributes belong to an <code>element</code>:<break/>    <aboutclass>attribute</aboutclass>
+    Other kinds of nodes:<break/>    <aboutclass>comment</aboutclass>    <aboutclass>document-type</aboutclass>    <aboutclass>processing-instruction</aboutclass>    <aboutclass>text</aboutclass>    </section>
+      <section section="Creating nodes">
+    Nodes are created using the following functions:<break/>    <aboutfun id="cxml-stp__fun__make-attribute">make-attribute</aboutfun>    <aboutfun id="cxml-stp__fun__make-comment">make-comment</aboutfun>    <aboutfun id="cxml-stp__fun__make-document">make-document</aboutfun>    <aboutfun id="cxml-stp__fun__make-document-type">make-document-type</aboutfun>    <aboutfun id="cxml-stp__fun__make-element">make-element</aboutfun>    <aboutfun id="cxml-stp__fun__make-processing-instruction">make-processing-instruction</aboutfun>    <aboutfun id="cxml-stp__fun__make-text">make-text</aboutfun>
+    In addition, nodes can be copied including all their children:<break/>    <aboutfun id="cxml-stp__fun__copy">copy</aboutfun>    </section>
+      <section section="Listing Child Nodes">
+    Nodes have an optional parent node and can have children.<break/>    <aboutfun id="cxml-stp__fun__parent">parent</aboutfun>    If a node has a <class id="cxml-stp__class__document">document</class> as its ancestor, it can be found using    the <fun id="cxml-stp__fun__document">document</fun> function.<break/>    <aboutfun id="cxml-stp__fun__document">document</aboutfun>    Since the <code>parent</code> slot needs to be updated when children are added or
+    removed, the sequence of children is not exposed as a mutable Common
+    Lisp sequence.<break/>    <aboutfun id="cxml-stp__fun__list-children">list-children</aboutfun>    <aboutfun id="cxml-stp__fun__map-children">map-children</aboutfun>    <aboutmacro>do-children</aboutmacro>
+    The following DOM-like functions are also offered:<break/>    <aboutfun id="cxml-stp__fun__nth-child">nth-child</aboutfun>    <aboutfun id="cxml-stp__fun__first-child">first-child</aboutfun>    <aboutfun id="cxml-stp__fun__last-child">last-child</aboutfun>    <aboutfun id="cxml-stp__fun__previous-sibling">previous-sibling</aboutfun>    <aboutfun id="cxml-stp__fun__next-sibling">next-sibling</aboutfun>
+    A wide variety of sequence-related functions is offered that work
+    like the Common Lisp functions of the same name, but without the need    to call <fun id="cxml-stp__fun__list-children">list-children</fun> first:<break/>    <aboutfun id="cxml-stp__fun__find-child">find-child</aboutfun>    <aboutfun id="cxml-stp__fun__find-child-if">find-child-if</aboutfun>    <aboutfun id="cxml-stp__fun__child-position">child-position</aboutfun>    <aboutfun id="cxml-stp__fun__child-position-if">child-position-if</aboutfun>    <aboutfun id="cxml-stp__fun__count-children">count-children</aboutfun>    <aboutfun id="cxml-stp__fun__count-children-if">count-children-if</aboutfun>    <aboutfun id="cxml-stp__fun__filter-children">filter-children</aboutfun>
+    The functions listed above walk only across the direct children of the
+    parent node.  In addition, the node hierarchy can be mapped recursively
+    using these functions:<break/>    <aboutfun id="cxml-stp__fun__map-recursively">map-recursively</aboutfun>    <aboutmacro>do-recursively</aboutmacro>    <aboutfun id="cxml-stp__fun__find-recursively">find-recursively</aboutfun>    <aboutfun id="cxml-stp__fun__filter-recursively">filter-recursively</aboutfun><break/>    </section>
+      <section section="Adding and Removing Child Nodes">
+    While all nodes can be asked for their children, only documents and
+    elements permit actually adding children.  (For all other nodes, the
+    sequence of children appears as empty.)<break/>
+    The most flexible function capable of changing the child nodes is    <fun id="cxml-stp__fun__replace-children">replace-children</fun>.  Perhaps more common is <fun id="cxml-stp__fun__insert-child">insert-child</fun>,
+    a specialized version for only one new child.<break/>    <aboutfun id="cxml-stp__fun__replace-children">replace-children</aboutfun>    <aboutfun id="cxml-stp__fun__insert-child">insert-child</aboutfun>
+    Various convenience functions are offered in addition:<break/>    <aboutfun id="cxml-stp__fun__prepend-child">prepend-child</aboutfun>    <aboutfun id="cxml-stp__fun__append-child">append-child</aboutfun>    <aboutfun id="cxml-stp__fun__delete-child">delete-child</aboutfun>    <aboutfun id="cxml-stp__fun__delete-child-if">delete-child-if</aboutfun>    <aboutfun id="cxml-stp__fun__delete-nth-child">delete-nth-child</aboutfun>    <aboutfun id="cxml-stp__fun__insert-child-before">insert-child-before</aboutfun>    <aboutfun id="cxml-stp__fun__insert-child-after">insert-child-after</aboutfun>    <aboutfun id="cxml-stp__fun__replace-child">replace-child</aboutfun>    A node can also be deleted from its parent directly using <fun id="cxml-stp__fun__detach">detach</fun>.<break/>    <aboutfun id="cxml-stp__fun__detach">detach</aboutfun>    <fun id="cxml-stp__fun__detach">detach</fun> also works for attributes.<break/>    </section>
+      <section section="Elements and their Attributes">
+    In addition to their children, elements have attributes and "extra
+    namespaces".<break/>
+    Attributes themselves are nodes and be accessed using these functions:<break/>    <aboutfun id="cxml-stp__fun__add-attribute">add-attribute</aboutfun>    <aboutfun id="cxml-stp__fun__remove-attribute">remove-attribute</aboutfun>    <aboutfun id="cxml-stp__fun__find-attribute-named">find-attribute-named</aboutfun>    <aboutfun id="cxml-stp__fun__find-attribute-if">find-attribute-if</aboutfun>    <aboutfun id="cxml-stp__fun__list-attributes">list-attributes</aboutfun>    <aboutfun id="cxml-stp__fun__map-attributes">map-attributes</aboutfun>    <aboutmacro>with-attributes</aboutmacro>    As a shortcut, the <fun id="cxml-stp__fun__attribute-value">attribute-value</fun> and its <code>setf</code> function
+    allow access to attribute values by name, without having to look up the
+    attribute node first:<break/>    <aboutfun id="cxml-stp__fun__attribute-value">attribute-value</aboutfun>
+    There are three ways to declare a namespace: Using the name of the
+    element, using the name of one of its attributes, or using an "extra
+    namespace".  A prefix can be looked up from any of these local
+    declarations.  It is also possible to look up a namespace while taking
+    into account all declarations on parent elements.<break/>    <aboutfun id="cxml-stp__fun__find-local-namespace">find-local-namespace</aboutfun>    <aboutfun id="cxml-stp__fun__find-namespace">find-namespace</aboutfun>
+    Extra namespaces are needed only when a namespace must be declared even
+    though there is no element or attribute referencing it through its name.    For example, an attribute declared with type <code>QName</code> using
+    RelaxNG/XSD must reference a namespace in scope.<break/>    <aboutfun id="cxml-stp__fun__add-extra-namespace">add-extra-namespace</aboutfun>    <aboutfun id="cxml-stp__fun__remove-extra-namespace">remove-extra-namespace</aboutfun>    <aboutfun id="cxml-stp__fun__find-extra-namespace">find-extra-namespace</aboutfun>    <aboutfun id="cxml-stp__fun__map-extra-namespaces">map-extra-namespaces</aboutfun>    </section>
+    </sections>
+    <see-also>
+      <auto>
+        <see id="cxml-stp__class__element">element</see>
+        <see id="cxml-stp__class__attribute">attribute</see>
+        <see id="cxml-stp__fun__local-name">local-name</see>
+        <see id="cxml-stp__fun__rename-attribute">rename-attribute</see>
+        <see id="cxml-stp__class__document">document</see>
+        <see id="cxml-stp__fun__document">document</see>
+        <see id="cxml-stp__fun__list-children">list-children</see>
+        <see id="cxml-stp__fun__replace-children">replace-children</see>
+        <see id="cxml-stp__fun__insert-child">insert-child</see>
+        <see id="cxml-stp__fun__detach">detach</see>
+        <see id="cxml-stp__fun__detach">detach</see>
+        <see id="cxml-stp__fun__attribute-value">attribute-value</see>
+      </auto>
+    </see-also>
+    <documentation-string>STP is a data structure for well-formed XML documents.<break/>                            </documentation-string>
+    <symbols>
+      <class-definition id="cxml-stp__class__node" name="node" package="cxml-stp">
+        <cpl>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses>
+          <subclass status="EXTERNAL" id="cxml-stp__class__parent-node" name="parent-node" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__text" name="text" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__processing-instruction" name="processing-instruction" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__document-type" name="document-type" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__comment" name="comment" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__attribute" name="attribute" package="cxml-stp"/>
+        </subclasses>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__document">document</see>
+            <see id="cxml-stp__fun__root">root</see>
+            <see id="cxml-stp__fun__detach">detach</see>
+            <see id="cxml-stp__fun__copy">copy</see>
+            <see id="cxml-stp__fun__serialize">serialize</see>
+            <see id="cxml-stp__fun__map-children">map-children</see>
+            <see id="cxml-stp__macro__do-children">do-children</see>
+            <see id="cxml-stp__fun__list-children">list-children</see>
+            <see id="cxml-stp__fun__first-child">first-child</see>
+            <see id="cxml-stp__fun__last-child">last-child</see>
+            <see id="cxml-stp__fun__nth-child">nth-child</see>
+            <see id="cxml-stp__fun__previous-sibling">previous-sibling</see>
+            <see id="cxml-stp__fun__next-sibling">next-sibling</see>
+            <see id="cxml-stp__fun__count-children">count-children</see>
+            <see id="cxml-stp__fun__find-child">find-child</see>
+            <see id="cxml-stp__fun__child-position">child-position</see>
+            <see id="cxml-stp__fun__count-children-if">count-children-if</see>
+            <see id="cxml-stp__fun__find-child-if">find-child-if</see>
+            <see id="cxml-stp__fun__child-position-if">child-position-if</see>
+            <see id="cxml-stp__fun__filter-children">filter-children</see>
+            <see id="cxml-stp__fun__map-recursively">map-recursively</see>
+            <see id="cxml-stp__macro__do-recursively">do-recursively</see>
+            <see id="cxml-stp__fun__find-recursively">find-recursively</see>
+            <see id="cxml-stp__fun__filter-recursively">filter-recursively</see>
+          </other>
+          <slot>
+            <see id="cxml-stp__fun__parent">parent</see>
+            <see id="cxml-stp__fun__base-uri">base-uri</see>
+          </slot>
+        </see-also>
+        <documentation-string><short>The superclass of all nodes.</short><break/>    Although only <class id="cxml-stp__class__document">document</class> and <class id="cxml-stp__class__element">element</class> allow children,
+    read-only functions accessing the list of children are available for
+    all nodes and always return zero children for other classes.<break/>                                                                                                        </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__find-attribute-if" name="find-attribute-if" package="cxml-stp">
+        <lambda-list>
+          <elt>test</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="test">a designator for a function of one argument.</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__attribute">attribute</class> or nil</return>
+        <documentation-string>         <short>Searches for an attribute node of <code>element</code> satisfying     <code>test</code></short><break/>   Returns nil if no such attribute was found.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__filter-recursively" name="filter-recursively" package="cxml-stp">
+        <lambda-list>
+          <elt>test</elt>
+          <elt>node</elt>
+          <elt>&amp;key</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="test">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a sequence containing nodes</return>
+        <documentation-string>               Return a list of descendant nodes of <code>node</code> in pre-order, from which   nodes that do not satisfy <code>predicate</code> have been removed.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__child-position" name="child-position" package="cxml-stp">
+        <lambda-list>
+          <elt>value</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+          <elt>test</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="value">an object</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__child-position-if">child-position-if</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                     Searches for a child node of <code>parent</code> that satisfies the <code>test</code>
+   and returns its position.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__delete-nth-child" name="delete-nth-child" package="cxml-stp">
+        <lambda-list>
+          <elt>idx</elt>
+          <elt>parent</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="idx">a non-negative integer</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+          </auto>
+        </see-also>
+        <documentation-string>      Removes child <code>idx</code> of <code>parent</code>, if allowed.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-document-type" name="make-document-type" package="cxml-stp">
+        <lambda-list>
+          <elt>root-element-name</elt>
+          <elt>&amp;optional</elt>
+          <elt>system-id</elt>
+          <elt>public-id</elt>
+          <elt>internal-subset</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="root-element-name">string, a Name</arg>
+          <arg arg="system-id">a string allowed as a system ID</arg>
+          <arg arg="public-id">a string allowed as a public ID</arg>
+          <arg arg="internal-subset">a well-formed internal subset as a string</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__documen-type">documen-type</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__document">document</see>
+          </other>
+        </see-also>
+        <return>an <class id="cxml-stp__class__documen-type">documen-type</class></return>
+        <documentation-string>               <short>This function creates a document-type node.</short><break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__data" name="data" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__comment">comment</class>, <class id="cxml-stp__class__processing-instruction">processing-instruction</class>,      or <class id="cxml-stp__class__text">text</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__comment">comment</see>
+            <see id="cxml-stp__class__processing-instruction">processing-instruction</see>
+            <see id="cxml-stp__class__text">text</see>
+          </auto>
+        </see-also>
+        <return>a string of XML characters</return>
+        <documentation-string>        <short>Returns the node's data.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-comment" name="make-comment" package="cxml-stp">
+        <lambda-list>
+          <elt>data</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="data">a string containing XML characters only</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__comment">comment</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__comment">comment</class></return>
+        <documentation-string>      <short>This function creates a comment node.</short><break/>   <code>data</code> must not contain two consecutive dashes, or a dash   at the end.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__remove-attribute" name="remove-attribute" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>attribute</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+          <arg arg="attribute">an instance of <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <return>the attribute</return>
+        <documentation-string>         <short>Remove an attribute node from <code>element</code>.</short><break/>   It is an error if <code>attribute</code> is not an attribute of <code>element</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-extra-namespace" name="find-extra-namespace" package="cxml-stp">
+        <lambda-list>
+          <elt>prefix</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="prefix">a string</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>the namespace URI (a string), or nil</return>
+        <documentation-string>         Find the extra namespace named <code>prefix</code> declared on <code>element</code>   and return its namespace URI, or return nil if no such namespace was found.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__element" name="element" package="cxml-stp">
+        <cpl>
+          <superclass status="EXTERNAL" id="cxml-stp__class__parent-node" name="parent-node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="INTERNAL" name="named-node-mixin" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__add-attribute">add-attribute</see>
+            <see id="cxml-stp__fun__remove-attribute">remove-attribute</see>
+            <see id="cxml-stp__fun__find-attribute-named">find-attribute-named</see>
+            <see id="cxml-stp__fun__find-attribute-if">find-attribute-if</see>
+            <see id="cxml-stp__macro__with-attributes">with-attributes</see>
+            <see id="cxml-stp__fun__list-attributes">list-attributes</see>
+            <see id="cxml-stp__fun__map-attributes">map-attributes</see>
+            <see id="cxml-stp__fun__attribute-value">attribute-value</see>
+            <see id="cxml-stp__fun__find-namespace">find-namespace</see>
+            <see id="cxml-stp__fun__find-attribute-namespace">find-attribute-namespace</see>
+            <see id="cxml-stp__fun__find-local-namespace">find-local-namespace</see>
+            <see id="cxml-stp__fun__find-extra-namespace">find-extra-namespace</see>
+            <see id="cxml-stp__fun__add-extra-namespace">add-extra-namespace</see>
+            <see id="cxml-stp__fun__remove-extra-namespace">remove-extra-namespace</see>
+            <see id="cxml-stp__fun__map-extra-namespaces">map-extra-namespaces</see>
+          </other>
+          <slot>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-prefix">namespace-prefix</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+            <see id="cxml-stp__fun__qualified-name">qualified-name</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-element">make-element</see>
+          </constructor>
+        </see-also>
+        <documentation-string><short>Instances of this class represent XML elements with their attributes    and namespaces.</short><break/>    See <class id="cxml-stp__class__node">node</class> for functions to query the list of children.<break/>    See <class id="cxml-stp__class__parent-node">parent-node</class> for functions to add or remove children.<break/>                                                                               </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__root" name="root" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an instance of <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__fun__parent">parent</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>      <short>Returns the root of the tree of nodes <code>node</code> is part of.</short><break/>   In a complete document, this is an instance of <class id="cxml-stp__class__document">document</class>, but
+   a detached subtree can have any node as its root.  In particular, the   argument itself is returned if it does not have a <fun id="cxml-stp__fun__parent">parent</fun>.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__text" name="text" package="cxml-stp">
+        <cpl>
+          <superclass status="INTERNAL" name="leaf-node" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <slot>
+            <see id="cxml-stp__fun__data">data</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-text">make-text</see>
+          </constructor>
+        </see-also>
+        <documentation-string>Instances of this class represent text nodes.        </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__list-children" name="list-children" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a list of nodes</return>
+        <documentation-string>      Returns a freshly consed list containing the child nodes of <code>node</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__list-attributes" name="list-attributes" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="element">an <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <return>a list of <class id="cxml-stp__class__attribute">attribute</class> nodes</return>
+        <documentation-string>      Returns a freshly consed list containing the attributes of <code>element</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__add-extra-namespace" name="add-extra-namespace" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>prefix</elt>
+          <elt>uri</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="prefix">string, an NCName</arg>
+          <arg arg="uri">string, a namespace URI</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>
+          <code>uri</code>
+        </return>
+        <documentation-string>            <short>Add an extra namespace to <code>element</code> that maps <code>prefix</code> to   <code>uri</code>.</short><break/>
+   It is an error if the new namespace conflicts with existing namespace   declarations on this element.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__replace-child" name="replace-child" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>old-child</elt>
+          <elt>new-child</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+          <arg arg="old-child">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="new-child">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>            <short>Adds <code>new-child</code> instead of <code>old-child</code> as a child node of    <code>parent</code>, if allowed.</short><break/>
+    Signals an error if the new child already has a parent.<break/>    Also signals an error if <code>old-child</code> is not a child of    <code>parent</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__delete-child" name="delete-child" package="cxml-stp">
+        <lambda-list>
+          <elt>child</elt>
+          <elt>parent</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>test</elt>
+          <elt>start</elt>
+          <elt>end</elt>
+          <elt>count</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="child">an object</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                     Searches for a child node of <code>parent</code> that satisfies the <code>test</code>   and removes it, if allowed.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-attribute" name="make-attribute" package="cxml-stp">
+        <lambda-list>
+          <elt>value</elt>
+          <elt>name</elt>
+          <elt>&amp;optional</elt>
+          <elt>(uri )</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="value">a string containing XML characters only</arg>
+          <arg arg="name">a string, either a QName or an NCName</arg>
+          <arg arg="uri">a string, the namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__element">element</see>
+          </other>
+        </see-also>
+        <return>an <class id="cxml-stp__class__attribute">attribute</class></return>
+        <documentation-string>            <short>This function creates an attribute node of the given value and name.</short><break/>   </documentation-string>
+      </function-definition>
+      <macro-definition id="cxml-stp__macro__do-recursively" name="do-recursively" package="cxml-stp">
+        <lambda-list>
+          <elt>(var node &amp;optional result)</elt>
+          <elt>&amp;body</elt>
+          <elt>body</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="var">symbol, a variable name</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="result">a form</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>the result of evaluating <code>result</code></return>
+        <documentation-string>            Executes <code>bode</code> with <code>var</code> bound to successive descendants of   <code>node</code> in pre-order.</documentation-string>
+      </macro-definition>
+      <function-definition id="cxml-stp__fun__document" name="document" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an instance of <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__fun__root">root</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__document">document</class> or nil</return>
+        <documentation-string>      <short>Returns the document node ancestor of <code>node</code>.</short><break/>   Returns the <class id="cxml-stp__class__document">document</class> node that is the <fun id="cxml-stp__fun__root">root</fun> of <code>node</code>   or <code>nil</code> if the root node is not a document.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__document" name="document" package="cxml-stp">
+        <cpl>
+          <superclass status="EXTERNAL" id="cxml-stp__class__parent-node" name="parent-node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <slot>
+            <see id="cxml-stp__fun__document-element">document-element</see>
+            <see id="cxml-stp__fun__document-type">document-type</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-document">make-document</see>
+          </constructor>
+        </see-also>
+        <documentation-string><short>Instances of this class represent an entire XML document.</short><break/>
+    A document may have at most one document-type, and must have exactly one
+    element as a child (in this order).<break/>
+    It may also have comments and processing-instructions anywhere.<break/>            </documentation-string>
+      </class-definition>
+      <variable-definition id="cxml-stp__variable___check-uri-syntax_" name="*check-uri-syntax*" package="cxml-stp">
+        <documentation-string>If true (the default), a warning is issued if a string specified   as a namespace URI does not have URI syntax.</documentation-string>
+      </variable-definition>
+      <function-definition id="cxml-stp__fun__find-recursively-if" name="find-recursively-if" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>node</elt>
+          <elt>&amp;key</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="test">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__find-child-if">find-child-if</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>            Searches in pre-order for the first descendant of <code>node</code> that   satisfies the <code>test</code> and returns it.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__system-id" name="system-id" package="cxml-stp">
+        <lambda-list>
+          <elt>document-type</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document-type">
+            <class id="cxml-stp__class__document-type">document-type</class>
+          </arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document-type">document-type</see>
+          </auto>
+        </see-also>
+        <return>string suitable as a system ID</return>
+        <documentation-string>        <short>Returns the document-type's system-id.</short></documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__stp-error" name="stp-error" package="cxml-stp">
+        <cpl>
+          <superclass status="EXTERNAL" name="simple-error" package="common-lisp"/>
+          <superclass status="EXTERNAL" name="simple-condition" package="common-lisp"/>
+          <superclass status="EXTERNAL" name="error" package="common-lisp"/>
+          <superclass status="EXTERNAL" name="serious-condition" package="common-lisp"/>
+          <superclass status="EXTERNAL" name="condition" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <documentation-string>The class of all STP errors.</documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__first-child" name="first-child" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>      Returns first child of <code>node</code>, or nil.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__detach" name="detach" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__parent">parent</see>
+          </other>
+        </see-also>
+        <documentation-string>    <short>This function removes a child node or attribute.</short><break/>
+    In contrast to functions for child nodes, this function can also remove
+    an attribute from its parent.<break/>    </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__map-children" name="map-children" package="cxml-stp">
+        <lambda-list>
+          <elt>result-type</elt>
+          <elt>function</elt>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="result-type">a sequence type specifier, or nil</arg>
+          <arg arg="function">a designator for a function of one argument</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>an sequence of <code>result-type</code>, or nil</return>
+        <documentation-string>                <short>Applies <code>function</code> to successive child nodes.</short><break/>    The <code>result-type</code> specifies the type of the resulting sequence.    <code>map-children</code> returns nil if <code>result-type</code> is nil.  Otherwise
+    it returns a sequence such that element i is the result of applying    <code>function</code> to child i of <class id="cxml-stp__class__node">node</class>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__namespace-uri" name="namespace-uri" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__element">element</class> or <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__qualified-name">qualified-name</see>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-prefix">namespace-prefix</see>
+          </other>
+        </see-also>
+        <return>string, a URI</return>
+        <documentation-string>        <short>Returns the node's namespace URI.</short>            </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__map-recursively" name="map-recursively" package="cxml-stp">
+        <lambda-list>
+          <elt>fn</elt>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="fn">a designator for a function of one argument</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>nil</return>
+        <documentation-string>         Applies <code>fn</code> to successive descendants of <code>node</code> in   pre-order.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-text" name="make-text" package="cxml-stp">
+        <lambda-list>
+          <elt>data</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="data">a string containing XML characters only</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__text">text</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__text">text</class></return>
+        <documentation-string>      <short>This function creates a text node.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__attribute-value" name="attribute-value" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>name</elt>
+          <elt>&amp;optional</elt>
+          <elt>(uri  urip)</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+          <arg arg="name">string, an NCName</arg>
+          <arg arg="uri">string, a namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>a string or nil</return>
+        <documentation-string>              <short>Searches for an attribute node of <code>element</code> with the     specified local name and namespace URI and returns its value.</short><break/>   Returns nil if no such attribute was found.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__public-id" name="public-id" package="cxml-stp">
+        <lambda-list>
+          <elt>document-type</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document-type">
+            <class id="cxml-stp__class__document-type">document-type</class>
+          </arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document-type">document-type</see>
+          </auto>
+        </see-also>
+        <return>string suitable as a system ID</return>
+        <documentation-string>        <short>Returns the document-type's public-id.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-document" name="make-document" package="cxml-stp">
+        <lambda-list>
+          <elt>document-element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document-element">an <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__document">document</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__document">document</class></return>
+        <documentation-string>      <short>This function creates document.</short><break/>   The given element is used as the document's only initial child.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__serialize" name="serialize" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+          <elt>handler</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__make-builder">make-builder</see>
+          </other>
+        </see-also>
+        <documentation-string>    <short>This function generates SAX events representing <code>node</code>.</short><break/>
+    Use this function together with a serialization sink to generate
+    a serialized XML document.<break/>
+    Examples. Serializing to a stream:    <pre>CL-USER&gt; (stp:serialize (stp:make-document (stp:make-element "test"))
+			(cxml:make-character-stream-sink *standard-output*))
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;test/&gt;
+#&lt;SWANK-BACKEND::SLIME-OUTPUT-STREAM {10037EA611}&gt;</pre>
+    Examples. Serializing to a string:    <pre>CL-USER&gt; (stp:serialize (stp:make-document (stp:make-element "test"))
+			(cxml:make-string-sink))
+"&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;
+&lt;test/&gt;"</pre><break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__filter-children" name="filter-children" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>count</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="predicate">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+          <arg arg="count">an integer or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__fun__list-children">list-children</see>
+          </auto>
+        </see-also>
+        <return>a sequence containing nodes</return>
+        <documentation-string>                        <short>Return a list of child nodes of <code>parent</code> from which nodes that     do not satisfy <code>predicate</code> have been removed.</short><break/>   This function returns the same list as <code>remove-if-not</code> on the result   of <fun id="cxml-stp__fun__list-children">list-children</fun>.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__attribute" name="attribute" package="cxml-stp">
+        <cpl>
+          <superclass status="INTERNAL" name="leaf-node" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="INTERNAL" name="named-node-mixin" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__fun__parent">parent</see>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__list-attributes">list-attributes</see>
+          </other>
+          <slot>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-prefix">namespace-prefix</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+            <see id="cxml-stp__fun__qualified-name">qualified-name</see>
+            <see id="cxml-stp__fun__value">value</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-attribute">make-attribute</see>
+          </constructor>
+        </see-also>
+        <documentation-string><short>Instances of this class represent attributes of an <class id="cxml-stp__class__element">element</class>,    excluding namespace declarations.</short><break/>    The <fun id="cxml-stp__fun__parent">parent</fun> of an attribute is always an <class id="cxml-stp__class__element">element</class> or nil,
+    but the attribute is not a child of that element.<break/>                            </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__add-attribute" name="add-attribute" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>attribute</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+          <arg arg="attribute">an instance of <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <documentation-string>      <short>Add a new attribute to <code>element</code> or replace an existing     attribute node of the same name.</short><break/>
+   It is an error if the attribute's namespace conflicts with existing   namespace declarations on this element.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__parent" name="parent" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>the parent node, or nil</return>
+        <documentation-string>        <short>Returns the node's parent.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__child-position-if" name="child-position-if" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="predicate">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__child-position">child-position</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                     Searches for a child node of <code>parent</code> that satisfies the <code>test</code>
+   and returns its position.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-local-namespace" name="find-local-namespace" package="cxml-stp">
+        <lambda-list>
+          <elt>prefix</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="prefix">a string</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>the namespace URI (a string), or nil</return>
+        <documentation-string>         <short>Find the namespace <code>prefix</code> declared on <code>element</code>   and return its namespace URI, or return nil if no such namespace was found.</short><break/>
+   The namespaces considered by this function are: The namespace of the element
+   itself.  The namespaces of element's attributes.  Extra namespaces declared   by the element.  The "xmlns" namespace, which is always fixed.</documentation-string>
+      </function-definition>
+      <macro-definition id="cxml-stp__macro__with-attributes" name="with-attributes" package="cxml-stp">
+        <lambda-list>
+          <elt>(&amp;rest entries)</elt>
+          <elt>element</elt>
+          <elt>&amp;body</elt>
+          <elt>body</elt>
+        </lambda-list>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__fun__attribute-value">attribute-value</see>
+          </auto>
+        </see-also>
+        <documentation-string>Evaluate body with the specified attributes bound lexically as if they
+   were variables.<break/>   Each entry in <code>entries</code> is a list of the form   <em>(variable-name attribute-name &amp;optional uri)</em>, where   <code>variable-name</code>   is a symbol and <code>attribute-name</code> and <code>uri</code> are strings.<break/>   The macro with-attributes invokes <fun id="cxml-stp__fun__attribute-value">attribute-value</fun>
+   to access the attributes. specified by each entry.   Both setf and setq can be used to set the value of the attribute.</documentation-string>
+      </macro-definition>
+      <function-definition id="cxml-stp__fun__map-extra-namespaces" name="map-extra-namespaces" package="cxml-stp">
+        <lambda-list>
+          <elt>fn</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="fn">a designator for a function of two arguments</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>nil</return>
+        <documentation-string>         Call fn for each extra namespace declared on <code>element</code> with   namespace prefix and URI as arguments.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-attribute-named" name="find-attribute-named" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>name</elt>
+          <elt>&amp;optional</elt>
+          <elt>(uri )</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+          <arg arg="name">string, an NCName</arg>
+          <arg arg="uri">string, a namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__attribute">attribute</class> or nil</return>
+        <documentation-string>              <short>Searches for an attribute node of <code>element</code> with the     specified local name and namespace URI and returns it.</short><break/>   Returns nil if no such attribute was found.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__remove-extra-namespace" name="remove-extra-namespace" package="cxml-stp">
+        <lambda-list>
+          <elt>element</elt>
+          <elt>prefix</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="prefix">string, an NCName</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>
+          <code>uri</code>
+        </return>
+        <documentation-string>         Removed the extra namespace declared on <code>element</code> for <code>prefix</code>.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__processing-instruction" name="processing-instruction" package="cxml-stp">
+        <cpl>
+          <superclass status="INTERNAL" name="leaf-node" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <slot>
+            <see id="cxml-stp__fun__target">target</see>
+            <see id="cxml-stp__fun__data">data</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-processing-instruction">make-processing-instruction</see>
+          </constructor>
+        </see-also>
+        <documentation-string>Instances of this class represent processing instructions.            </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__next-sibling" name="next-sibling" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>      <short>Returns the child following <code>node</code> in the child list of its     parent.</short><break/>   Signals an error if <code>node</code> has no parent or is the last child of its   parent.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__append-child" name="append-child" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>child</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="child">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+          </auto>
+        </see-also>
+        <documentation-string>      Adds <code>child</code> as the last child of <code>parent</code>, if allowed.<break/>   Signals an error if the child already has a parent.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__delete-children" name="delete-children" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">an <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>nil</return>
+        <documentation-string>      Deletes all children of <code>element</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__last-child" name="last-child" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>      Returns last child of <code>node</code>, or nil.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__previous-sibling" name="previous-sibling" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>      <short>Returns the child preceding <code>node</code> in the child list of its     parent.</short><break/>   Signals an error if <code>node</code> has no parent or is the first child of its   parent.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__parent-node" name="parent-node" package="cxml-stp">
+        <cpl>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses>
+          <subclass status="EXTERNAL" id="cxml-stp__class__element" name="element" package="cxml-stp"/>
+          <subclass status="EXTERNAL" id="cxml-stp__class__document" name="document" package="cxml-stp"/>
+        </subclasses>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__prepend-child">prepend-child</see>
+            <see id="cxml-stp__fun__append-child">append-child</see>
+            <see id="cxml-stp__fun__delete-nth-child">delete-nth-child</see>
+            <see id="cxml-stp__fun__delete-child">delete-child</see>
+            <see id="cxml-stp__fun__insert-child-before">insert-child-before</see>
+            <see id="cxml-stp__fun__insert-child-after">insert-child-after</see>
+            <see id="cxml-stp__fun__replace-child">replace-child</see>
+            <see id="cxml-stp__fun__insert-child">insert-child</see>
+            <see id="cxml-stp__fun__delete-child-if">delete-child-if</see>
+            <see id="cxml-stp__fun__replace-children">replace-children</see>
+          </other>
+        </see-also>
+        <documentation-string><short>Instances of this class can have children.</short><break/>    See <class id="cxml-stp__class__node">node</class> for functions to query the list of children without
+    changing it.<break/>                                        </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__prepend-child" name="prepend-child" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>child</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+          <arg arg="child">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>      <short>Adds <code>child</code> as the first child of <code>parent</code>, if allowed.</short><break/>   Signals an error if the child already has a parent.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__string-value" name="string-value" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an instance of <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a string</return>
+        <documentation-string>        <short>Returns the string value of <code>node</code> as defined by XPath.</short><break/>
+    For a document, this is the value of its root element.<break/>
+    For an element, the concatenation of the values of those child nodes
+    is returned that are elements or text nodes.
+    (Leaving only the PCDATA content.)<break/>
+    For a text, comment, and processing instruction nodes, the node's data
+    is returned.<break/>
+    For an attribute, the attribute value is returned.<break/>    The value for document types is not specified.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__base-uri" name="base-uri" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a string</return>
+        <documentation-string>        <short>Returns the node's base URI.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__nth-child" name="nth-child" package="cxml-stp">
+        <lambda-list>
+          <elt>n</elt>
+          <elt>parent</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="n">a non-negative integer</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class></return>
+        <documentation-string>         <short>Returns child node <code>n</code> of <code>parent</code></short>, or signals an error   if n is negative or as large or larger that the number of child nodes.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__delete-child-if" name="delete-child-if" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>start</elt>
+          <elt>end</elt>
+          <elt>count</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="predicate">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                            Searches for an child node of <code>parent</code> that satisfies <code>predicate</code>    and removes it, if allowed.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__internal-subset" name="internal-subset" package="cxml-stp">
+        <lambda-list>
+          <elt>document-type</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document-type">
+            <class id="cxml-stp__class__document-type">document-type</class>
+          </arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document-type">document-type</see>
+          </auto>
+        </see-also>
+        <return>string, a well-formed internal subset</return>
+        <documentation-string>        <short>Returns the document-type's internal subset as a string.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-element" name="make-element" package="cxml-stp">
+        <lambda-list>
+          <elt>name</elt>
+          <elt>&amp;optional</elt>
+          <elt>(uri )</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="name">string, a QName or NCName</arg>
+          <arg arg="uri">a string, the namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__element">element</class></return>
+        <documentation-string>         <short>This function creates an element node of the given name.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__target" name="target" package="cxml-stp">
+        <lambda-list>
+          <elt>processing-instruction</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="processing-instruction">
+            <class id="cxml-stp__class__processing-instruction">processing-instruction</class>
+          </arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__processing-instruction">processing-instruction</see>
+          </auto>
+        </see-also>
+        <return>string, a Name</return>
+        <documentation-string>        <short>Returns the processing-instruction's target.</short></documentation-string>
+      </function-definition>
+      <macro-definition id="cxml-stp__macro__do-children" name="do-children" package="cxml-stp">
+        <lambda-list>
+          <elt>(var node &amp;optional result)</elt>
+          <elt>&amp;body</elt>
+          <elt>body</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="var">symbol, a variable name</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="result">a form</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <return>the result of evaluating <code>result</code></return>
+        <documentation-string>            Executes <code>bode</code> with <code>var</code> bound to successive child     nodes.</documentation-string>
+      </macro-definition>
+      <function-definition id="cxml-stp__fun__insert-child-after" name="insert-child-after" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>new-child</elt>
+          <elt>ref-child</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+          <arg arg="new-child">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="ref-child">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>         <short>Adds <code>new-child</code> after <code>ref-child</code> as a child node of   <code>parent</code>, if allowed.</short><break/>
+   Signals an error if the child already has a parent.<break/>   Also signals an error if <code>ref-child</code> is not a child of <code>parent</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__namespace-prefix" name="namespace-prefix" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__element">element</class> or <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__qualified-name">qualified-name</see>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+          </other>
+        </see-also>
+        <return>string, an NCName</return>
+        <documentation-string>        <short>Returns the node's namespace prefix.</short>            </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-processing-instruction" name="make-processing-instruction" package="cxml-stp">
+        <lambda-list>
+          <elt>target</elt>
+          <elt>data</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="target">string, an NCName</arg>
+          <arg arg="data">string containing XML characters only</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__processing-instruction">processing-instruction</see>
+          </auto>
+        </see-also>
+        <return>an <class id="cxml-stp__class__processing-instruction">processing-instruction</class></return>
+        <documentation-string>         <short>This function creates a processing instruction.</short><break/>   <code>target</code> must not equal "xml".<break/>   <code>data</code> must not contain the substring "?&gt;".</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__document-element" name="document-element" package="cxml-stp">
+        <lambda-list>
+          <elt>document</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document">a <class id="cxml-stp__class__document">document</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__document-type">document-type</see>
+          </other>
+        </see-also>
+        <return>an <class id="cxml-stp__class__element">element</class></return>
+        <documentation-string>   
+   This function returns the child node that is an element.   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__document-type" name="document-type" package="cxml-stp">
+        <lambda-list>
+          <elt>document</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document">a <class id="cxml-stp__class__document">document</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document">document</see>
+            <see id="cxml-stp__class__document-type">document-type</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__document-element">document-element</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__document-type">document-type</class>, or nil</return>
+        <documentation-string>   
+   This function returns the child node that is a document type, or nil.   </documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__document-type" name="document-type" package="cxml-stp">
+        <cpl>
+          <superclass status="INTERNAL" name="leaf-node" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document">document</see>
+          </auto>
+          <slot>
+            <see id="cxml-stp__fun__root-element-name">root-element-name</see>
+            <see id="cxml-stp__fun__system-id">system-id</see>
+            <see id="cxml-stp__fun__public-id">public-id</see>
+            <see id="cxml-stp__fun__internal-subset">internal-subset</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-document-type">make-document-type</see>
+          </constructor>
+        </see-also>
+        <documentation-string><short>Instances of this class represent the DOCTYPE declaration at the    beginning of a document.</short><break/>    The document type is an optional child of a <class id="cxml-stp__class__document">document</class>.  At most
+    one document type is allowed, and it must precede the document element.<break/>
+    Since STP checks well-formedness only, not validity, the document type
+    only declares what DTD the document claims to be conforming to, but
+    does not guarantee that it actually does.<break/>                    </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__find-recursively" name="find-recursively" package="cxml-stp">
+        <lambda-list>
+          <elt>item</elt>
+          <elt>node</elt>
+          <elt>&amp;key</elt>
+          <elt>key</elt>
+          <elt>test</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="item">an object</arg>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__find-child-if">find-child-if</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>               Searches in pre-order for the first descendant of <code>node</code> that   satisfies the <code>test</code> and returns it.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__local-name" name="local-name" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__element">element</class> or <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__qualified-name">qualified-name</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+            <see id="cxml-stp__fun__namespace-prefix">namespace-prefix</see>
+          </other>
+        </see-also>
+        <return>string, an NCName</return>
+        <documentation-string>        <short>Returns the node's local name.</short>            </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__count-children" name="count-children" package="cxml-stp">
+        <lambda-list>
+          <elt>value</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+          <elt>test</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="value">an object</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__count-children-if">count-children-if</see>
+          </other>
+        </see-also>
+        <return>a non-negative integer less than or equal to the number of     child nodes</return>
+        <documentation-string>                     Counts (and returns the number of) <code>parent</code>'s child nodes satisfying
+   the test.   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__insert-child" name="insert-child" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>child</elt>
+          <elt>position</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+          <arg arg="child">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="position">a non-negative integer</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>            <short>Adds <code>child</code> as a child node of <code>parent</code> at position      <code>position</code> if allowed.</short><break/>
+   Signals an error if the new child already has a parent.<break/>   Also signals an error if <code>position</code> is greater than the number   <code>parent</code>'s child nodes.</documentation-string>
+      </function-definition>
+      <class-definition id="cxml-stp__class__comment" name="comment" package="cxml-stp">
+        <cpl>
+          <superclass status="INTERNAL" name="leaf-node" package="cxml-stp-impl"/>
+          <superclass status="EXTERNAL" id="cxml-stp__class__node" name="node" package="cxml-stp"/>
+          <superclass status="EXTERNAL" name="standard-object" package="common-lisp"/>
+          <superclass status="INTERNAL" name="slot-object" package="sb-pcl"/>
+          <superclass status="EXTERNAL" name="t" package="common-lisp"/>
+        </cpl>
+        <subclasses/>
+        <see-also>
+          <slot>
+            <see id="cxml-stp__fun__data">data</see>
+          </slot>
+          <constructor>
+            <see id="cxml-stp__fun__make-comment">make-comment</see>
+          </constructor>
+        </see-also>
+        <documentation-string>Instances of this class represent XML comments.        </documentation-string>
+      </class-definition>
+      <function-definition id="cxml-stp__fun__value" name="value" package="cxml-stp">
+        <lambda-list>
+          <elt>attribute</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="attribute">an <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+        </see-also>
+        <return>a string of XML characters</return>
+        <documentation-string>        <short>Returns the attribute's value.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__rename-attribute" name="rename-attribute" package="cxml-stp">
+        <lambda-list>
+          <elt>attribute</elt>
+          <elt>prefix</elt>
+          <elt>uri</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="attribute">the <class id="cxml-stp__class__attribute">attribute</class> to be renamed</arg>
+          <arg arg="prefix">string, an NCName</arg>
+          <arg arg="uri">a string, the namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+          </other>
+        </see-also>
+        <return>the attribute</return>
+        <documentation-string>            <short>This function changed namespace prefix and URI of an attribute.</short><break/>
+   Since there is no default namespace for attributes, prefix and uri must
+   be changed in the same step to rename an attribute with no namespace to
+   an attribute with both namespace prefix and URI.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__make-builder" name="make-builder" package="cxml-stp">
+        <lambda-list/>
+        <see-also>
+          <other>
+            <see id="cxml-stp__fun__serialize">serialize</see>
+          </other>
+        </see-also>
+        <return>STP builder, a SAX handler</return>
+        <documentation-string>   <short>This function creates SAX handler that constructs an STP document.</short><break/>
+   The builder processes SAX events and can be used with any
+   function generating such events, in particular with cxml:parse-file.<break/>
+   Examples. Parsing a file:   <pre>(cxml:parse #p"example.xml" (stp:make-builder))</pre>
+   Parsing a string:   <pre>(cxml:parse "&lt;example/&gt;" (stp:make-builder))</pre><break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__qualified-name" name="qualified-name" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">an <class id="cxml-stp__class__element">element</class> or <class id="cxml-stp__class__attribute">attribute</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__class__attribute">attribute</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+            <see id="cxml-stp__fun__namespace-prefix">namespace-prefix</see>
+          </other>
+        </see-also>
+        <return>string, a QName</return>
+        <documentation-string>      <short>Returns the node's qualified name.</short>
+   The qualified name is computed as prefix ':' local-name.         </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__copy" name="copy" package="cxml-stp">
+        <lambda-list>
+          <elt>node</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="node">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>    <short>This function copies a node recursively.</short><break/>
+    The resulting node is of the same class as the argument, and all
+    child nodes and attributes are copied in the same way.<break/>
+    Shared structure includes only primitive slot values like strings.
+    (The consequences are undefined if user code mutates such values, whether    <code>copy</code> is used or not.)</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__map-attributes" name="map-attributes" package="cxml-stp">
+        <lambda-list>
+          <elt>result-type</elt>
+          <elt>fn</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="result-type">a sequence type specifier, or nil</arg>
+          <arg arg="fn">a designator for a function of one argument</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+        </see-also>
+        <return>an sequence of <code>result-type</code>, or nil</return>
+        <documentation-string>            <short>Applies <code>fn</code> to each attribute nodes of <code>element</code>.</short><break/>    The <code>result-type</code> specifies the type of the resulting sequence.    <code>map-children</code> returns nil if <code>result-type</code> is nil.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__root-element-name" name="root-element-name" package="cxml-stp">
+        <lambda-list>
+          <elt>document-type</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="document-type">
+            <class id="cxml-stp__class__document-type">document-type</class>
+          </arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__document-type">document-type</see>
+          </auto>
+        </see-also>
+        <return>string, a Name</return>
+        <documentation-string>        <short>Returns the document-type's root-element-name.</short></documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-namespace" name="find-namespace" package="cxml-stp">
+        <lambda-list>
+          <elt>prefix</elt>
+          <elt>element</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="prefix">a string</arg>
+          <arg arg="element">an instance of <class id="cxml-stp__class__element">element</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__element">element</see>
+            <see id="cxml-stp__fun__find-local-namespace">find-local-namespace</see>
+          </auto>
+        </see-also>
+        <return>the namespace URI (a string), or nil</return>
+        <documentation-string>         <short>Find the namespace <code>prefix</code> declared on <code>element</code>
+   or its parent and return its namespace URI, or return nil if no such   namespace was found.</short><break/>   This functions returns the same result as <fun id="cxml-stp__fun__find-local-namespace">find-local-namespace</fun>   if the namespace is declared directly on <code>element</code>.  Otherwise   it takes into account namespaces declared on parent elements.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-child-if" name="find-child-if" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="predicate">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__find-child">find-child</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                  Searches for a child node of <code>parent</code> that satisfies <code>predicate</code>
+   and returns it.<break/>   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__of-name" name="of-name" package="cxml-stp">
+        <lambda-list>
+          <elt>name</elt>
+          <elt>&amp;optional</elt>
+          <elt>(uri )</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="name">an NCName string or <code>nil</code></arg>
+          <arg arg="uri">a string, the namespace URI</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__attribute">attribute</see>
+            <see id="cxml-stp__class__element">element</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__local-name">local-name</see>
+            <see id="cxml-stp__fun__namespace-uri">namespace-uri</see>
+          </other>
+        </see-also>
+        <return>an function of one argument</return>
+        <documentation-string>         <short>This function creates a test function for nodes of this name.</short><break/>
+   The function returned will return T if the argument is an instance   of <class id="cxml-stp__class__attribute">attribute</class> or <class id="cxml-stp__class__element">element</class> and has the specified local-name
+   and namespace URI, and will return NIL otherwise.<break/>
+   If local-name is nil, only the namespace URI is considered for comparison.<break/>      </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__count-children-if" name="count-children-if" package="cxml-stp">
+        <lambda-list>
+          <elt>predicate</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="predicate">a designator for a function of one argument that returns     a generalized boolean</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__count-children">count-children</see>
+          </other>
+        </see-also>
+        <return>a non-negative integer less than or equal to the number of     child nodes</return>
+        <documentation-string>                  Counts (and returns the number of) <code>parent</code>'s child nodes satisfying   <code>predicate</code>.   </documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__insert-child-before" name="insert-child-before" package="cxml-stp">
+        <lambda-list>
+          <elt>parent</elt>
+          <elt>new-child</elt>
+          <elt>ref-child</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="parent">a <class id="cxml-stp__class__parent-node">parent-node</class></arg>
+          <arg arg="new-child">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="ref-child">a <class id="cxml-stp__class__node">node</class></arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__parent-node">parent-node</see>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+        </see-also>
+        <documentation-string>         <short>Adds <code>new-child</code> before <code>ref-child</code> as a child node of   <code>parent</code>, if allowed.</short><break/>
+   Signals an error if the child already has a parent.<break/>   Also signals an error if <code>ref-child</code> is not a child of <code>parent</code>.</documentation-string>
+      </function-definition>
+      <function-definition id="cxml-stp__fun__find-child" name="find-child" package="cxml-stp">
+        <lambda-list>
+          <elt>value</elt>
+          <elt>parent</elt>
+          <elt>&amp;rest</elt>
+          <elt>args</elt>
+          <elt>&amp;key</elt>
+          <elt>from-end</elt>
+          <elt>(start 0)</elt>
+          <elt>end</elt>
+          <elt>key</elt>
+          <elt>test</elt>
+        </lambda-list>
+        <arguments>
+          <arg arg="value">an object</arg>
+          <arg arg="parent">a <class id="cxml-stp__class__node">node</class></arg>
+          <arg arg="from-end">a generalized boolead</arg>
+          <arg arg="start, end">bounding index designators for <code>parent</code>'s child list</arg>
+          <arg arg="key">a designator for a function of one argument, or nil</arg>
+          <arg arg="test">a designator for a function of two arguments, or nil</arg>
+        </arguments>
+        <see-also>
+          <auto>
+            <see id="cxml-stp__class__node">node</see>
+            <see id="cxml-stp__class__node">node</see>
+          </auto>
+          <other>
+            <see id="cxml-stp__fun__find-child-if">find-child-if</see>
+          </other>
+        </see-also>
+        <return>a <class id="cxml-stp__class__node">node</class> or nil</return>
+        <documentation-string>                     Searches for a child node of <code>parent</code> that satisfies the <code>test</code>
+   and returns it.<break/>   </documentation-string>
+      </function-definition>
+    </symbols>
+  </package>
+</documentation>

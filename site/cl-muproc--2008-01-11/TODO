@@ -1,0 +1,32 @@
+CL-MUPROC TODO
+
+MAJOR STUFF
+
+* Portability: Support other CL implementations than Lispworks.
+
+* Scalability: Distributed operation.
+
+* Reference manual - for muproc, generic-server, and supervisor.
+
+* User manual/tutorial explaining muproc and introducing core
+  idioms.
+
+* Generic server: It is not clear that the way to define generic
+  servers is 'just right'.
+
+* State machine generic behaviour.
+
+* Performance: Optimizing mumsg-receive could be worthwhile.
+
+MINOR STUFF
+
+* Add control over muproc input buffer size.
+
+* Consider removing the requirement of unique names of muproc (what
+  does it really contribute?).
+
+* supervisor.lisp: Weed out some dbgformat forms.
+
+* supervisor.lisp (*dying-period*): Make user configurable.
+
+

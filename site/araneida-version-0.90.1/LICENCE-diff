@@ -1,0 +1,33 @@
+
+For the benefit of your lawyers, here's the difference between the
+licence that Araneida is provided under and the standard
+BSD-sans-advertising licence.
+
+--- BSD	Sun Dec 26 17:07:51 1999
++++ LICENCE	Sun Dec 26 17:07:39 1999
+@@ -1,4 +1,4 @@
+-Copyright (c) The Regents of the University of California.
++Copyright (c) Daniel Barlow and contributors
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+@@ -9,14 +9,14 @@
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+-3. Neither the name of the University nor the names of its contributors
+-   may be used to endorse or promote products derived from this software
+-   without specific prior written permission.
++3. The names of the authors and contributors may not be used to endorse 
++   or promote products derived from this software without specific prior 
++   written permission.
+ 
+-THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
++THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+-ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
++ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)

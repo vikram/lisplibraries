@@ -1,0 +1,63 @@
+<html><head>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida Reference : Servers</title>
+</head><body>
+
+<h1>Servers</h1>
+
+<p> Araneida understands the HTTP/1.1 Host header, to support multiple
+`virtual servers' in the same instance.  Before you can export any
+handlers, you need to decide the hostnames that you plan to serve
+content from, and register them with Araneida
+
+<pre>
+# Note: You cannot just invent host names and hope they work. The name you 
+# define here must be a valid DNS name for your host. If you don't understand
+# this, ask your network administrator.
+                                         -- Rob McCool, Apache httpd.conf
+</pre>
+
+<hr>
+<i>Function</i> <B>EXPORT-SERVER</b>
+
+<p><b>Syntax:</b>
+
+<p><b>export-server</b> <i>server</i>
+
+<p><b>Arguments and Values:</b>
+
+<p><i>server</i> - a SERVER object.  See <a
+href="../server-class.lisp">server-class.lisp</a> for details
+
+<p><b>Description:</b>
+
+<p>Registers <i>server</i> with Araneida, so that we know how to
+answer requests for it.  The same registration list is also used for
+<b>output-apache-conf</b>
+
+<p>Note that the name and port in the server's BASE-URL slot don't
+have to be the same as in PORT and NAME.  NAME and PORT give the
+address that Araneida will start a server on, whereas BASE-URL is the
+server's <i>published</i> address.  If you're using a forwarding proxy
+(recommended for production sites), you should configure the proxy
+to answer for BASE-URL and forward requests onto Araneida on HOST:PORT
+
+<p> You can see this in <a href="../examples/main.lisp"
+>../examples/main.lisp</a> which works with Apache on port 80 and
+Araneida on port 8000
+
+<h2>Troubleshooting</h2>
+
+<ol>
+<li> Araneida cannot configure network interfaces, nor will it
+administer your DNS for you.  Before getting too involved in a virtual
+host configuration that's not working, check that the hostname(s)
+you're planning to use are set up and pointing to the right machine.
+
+<li> Even if you plan to use Araneida with an Apache proxy in front of
+it, it may help to set Araneida up on its own first to check that your  
+handlers etc work
+
+</ol>
+
+

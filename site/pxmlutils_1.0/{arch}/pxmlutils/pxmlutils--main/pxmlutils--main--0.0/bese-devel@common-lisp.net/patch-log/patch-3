@@ -1,0 +1,19 @@
+Revision: pxmlutils--main--0.0--patch-3
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Sat Oct 25 11:27:21 CEST 2003
+Standard-date: 2003-10-25 09:27:21 GMT
+Summary: porting xmlutils to OpenMCL.
+Keywords: 
+New-files: 
+New-directories: 
+Removed-files: 
+Removed-directories: 
+Renamed-files: 
+Renamed-directories: 
+Modified-files: ./pxml0.cl ./pxml1.cl
+Modified-directories: 
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-3
+Removed-patches: 
+
+1) OpenMCL doesn't have the :LISP pacakge.

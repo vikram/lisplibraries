@@ -1,0 +1,285 @@
+#!/bin/sh
+#
+# ucwctl --- Control the UnCommon Web Application Framework
+
+
+# the help output
+help ()
+{
+    cat <<EOF
+Usage: ucwctl [options] command
+
+Options:
+
+  -a, --asdf-root DIRECTORY   Register asdf search DIRECTORY
+  -c, --config-file FILE      Read FILE as config file.
+  -h, --help                  Display this help and exit.
+  -k, --stop-file FILE        Use FILE as stop file.
+  -l, --lisp NAME             Use NAME (without PATH) as Common Lisp
+                              implementation.
+      --log-root DIRECTORY    Save the logs in DIRECTORY, overriding the
+                              --var-root option.
+      --run-root DIRECTORY    Created pid/socket in DIRECTORY, overriding the
+                              --var-root option.
+  -s, --start-file FILE       Use FILE as start file.
+  -t, --timeout SECONDS       Set timeout in SECONDS when trying to stop a
+                              a running session.
+  -u, --ucwctl-file FILE      Read FILE as the ucwctl.conf file.
+      --var-root DIRECTORY    Save the logs in DIRECTORU/log/ucw and create
+                              pid/socket in DIRECTORY/run/ucw, if the two
+                              options --log-root and --run-root are not set.
+
+Commands:
+
+  start              Start the UCW server.
+  stop               Shutdown the UCW server and exit from lisp.
+  attach             Attach to the socket specified in the config file.
+
+By defaults, ucwctl uses the values present in /etc/ucw/ucwctl.conf and
+~/.ucw/ucwctl.conf if they exist, with the latter overriding the former.
+If a different ucwctl.conf file is specified, it overrides all the defaults.
+Command line options take precedence over values in ucwctl.conf files.
+
+Report bugs to <bese-devel@common-lisp.net>.
+EOF
+}
+
+
+# use getopt instead?
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -a|--asdf-root)
+            TMP_ASDFROOT=$2
+            shift 2
+            ;;
+        -c|--config-file)
+            TMP_CONFIGFILE=$2
+            shift 2
+            ;;
+        -h|--help)
+            help
+            exit 0
+            ;;
+        -k|--stop-file)
+            TMP_STOPFILE=$2
+            shift 2
+            ;;
+        -l|--lisp)
+            TMP_LISP=$2
+            shift 2
+            ;;
+        --log-root)
+            TMP_LOGROOT=$2
+            shift 2
+            ;;
+        -s|--start-file)
+            TMP_STARTFILE=$2
+            shift 2
+            ;;
+        --run-root)
+            TMP_RUNROOT=$2
+            shift 2
+            ;;
+        -t|--timeout)
+            TMP_TIMEOUT=$2
+            shift 2
+            ;;
+        -u|--ucwctl-file)
+            UCWCTLFILE=$2
+            shift 2
+            ;;
+        --var-root)
+            TMP_VARROOT=$2
+            shift 2
+            ;;
+        start|stop|attach)
+            break
+            ;;
+        *)
+            echo -e "Unrecognized command line argument '$1'.\n"
+            help
+            exit 1
+            ;;
+    esac
+done
+
+
+# set variables
+# 1) load the ucwctl config files if present
+test -r /etc/ucw/ucwctl.conf && . /etc/ucw/ucwctl.conf
+test -r "$HOME/.ucw/ucwctl.conf" && . "$HOME/.ucw/ucwctl.conf"
+
+if [ -n "$UCWCTLFILE" ]; then
+    if [ ! -r "$UCWCTLFILE" ]; then
+        echo "'$UCWCTLFILE' is not readable."
+        exit 1
+    else
+        . "$UCWCTLFILE"
+    fi
+fi
+
+# 2) other variables
+ASDFROOT=${TMP_ASDFROOT:-$ASDFROOT}
+CONFIGFILE=${TMP_CONFIGFILE:-$CONFIGFILE}
+STOPFILE=${TMP_STOPFILE:-$STOPFILE}
+LISP=${TMP_LISP:-$LISP}
+LOGROOT=${TMP_LOGROOT:-$LOGROOT}
+STARTFILE=${TMP_STARTFILE:-$STARTFILE}
+RUNROOT=${TMP_RUNROOT:-$RUNROOT}
+TIMEOUT=${TMP_TIMEOUT:-$TIMEOUT}
+VARROOT=${TMP_VARROOT:-$VARROOT}
+
+
+# abort if the needed executables are not present
+DETACHTTY=`/usr/bin/which detachtty`
+if [ ! -x "$DETACHTTY" ]; then
+    echo "Unable to find the detachtty executable in your PATH."
+    exit 1
+fi
+
+ATTACHTTY=`/usr/bin/which attachtty`
+if [ ! -x "$ATTACHTTY" ]; then
+    echo "Unable to find the attachtty executably in your PATH."
+    exit 1
+fi
+
+CLLAUNCH=`/usr/bin/which cl-launch || /usr/bin/which cl-launch.sh`
+if [ ! -x "$CLLAUNCH" ]; then
+    echo "Unable to find the cl-launch executably in your PATH."
+    exit 1
+fi
+
+
+# abort if no lisp implementation is provided or it is not present
+if [ -z $LISP ]; then
+    echo "You should provide a lisp implementation."
+    exit 1
+elif [ -z `which $LISP` ]; then
+    echo "'$LISP' does not exist in your PATH or is not executable."
+    exit 1
+else
+    OPT_LISP="-l $LISP"
+fi
+
+
+# set the ASDF path for cl-launch
+if [ -n "$ASDFROOT" ]; then
+    if [ ! -d "$ASDFROOT" ]; then
+        echo "'$ASDFROOT' does not exist or is not a directory."
+        exit 1
+    else
+        OPT_PATH="-p \"$ASDFROOT\""
+    fi
+fi
+
+
+# check that the config file exists
+if [ ! -r "${CONFIGFILE:=/etc/ucw/conf.lisp}" ]; then
+    echo "'$CONFIGFILE' does not exist or is not a file."
+    exit 1
+fi
+
+
+# check that the start file exists
+if [ ! -r "${STARTFILE:=/etc/ucw/start.lisp}" ]; then
+    echo "'$STARTFILE' does not exist or is not a file."
+    exit 1
+fi
+
+
+# check that the stop file exists
+if [ ! -r "${STOPFILE:=/etc/ucw/stop.lisp}" ]; then
+    echo "'$STOPFILE' does not exist or is not a file."
+    exit 1
+fi
+
+
+# check that $TIMEOUT is an integer
+if ! expr ${TIMEOUT:=5} + 1 >/dev/null 2>&1; then
+    echo "$TIMEOUT is not an integer."
+    exit 1
+fi
+
+
+# check for the $VARROOT, $LOGROOT and $RUNROOT variables
+# 1) a normal user cannot write to /var
+if [ -z "$VARROOT" -o "$VARROOT" = "/var" ]; then
+    if [ "$USER" != "root" ]; then
+        VARROOT="$HOME/var"
+    else
+        VARROOT="/var"
+    fi
+fi
+
+# 2) set $LOGROOT and $RUNROOT if not defined
+if [ -z "$LOGROOT" ]; then
+    LOGROOT="$VARROOT/log/ucw"
+fi
+
+if [ -z "$RUNROOT" ]; then
+    RUNROOT="$VARROOT/run/ucw"
+fi
+
+
+# export the variables needed by cl-launch
+export CONFIGFILE=$CONFIGFILE
+export LOGROOT=$LOGROOT
+
+
+# eventually manage UCW
+case "$1" in
+    start)
+        install -d -m 755 "$LOGROOT" "$RUNROOT"
+        "$DETACHTTY" --dribble-file "$LOGROOT/ucw.dribble" \
+            --log-file "$LOGROOT/ucw.detachtty" \
+            --pid-file "$RUNROOT/ucw.pid" \
+            "$RUNROOT/ucw.socket" \
+            "$CLLAUNCH" -X $OPT_LISP $OPT_PATH NO_QUIT=yes -- "$STARTFILE"
+        ;;
+    stop)
+        "$ATTACHTTY" "$RUNROOT/ucw.socket" \
+            "(load \"$STOPFILE\")" $TIMEOUT >/dev/null 2>&1 || \
+            kill -s QUIT `cat "$RUNROOT/ucw.pid"`
+        ;;
+    attach)
+        "$ATTACHTTY" "$RUNROOT/ucw.socket"
+        ;;
+    *)
+        help
+        ;;
+esac
+
+exit 0
+
+
+# Copyright (c) 2003-2006 Edward Marco Baringer
+# Copyright (c) 2006 Luca Capello http://luca.pca.it <luca@pca.it>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#  - Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  - Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+#  - Neither the name of Luca Capello, Edward Marco Baringer, nor
+#    BESE, nor the names of its contributors may be used to endorse
+#    or promote products derived from this software without specific
+#    prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

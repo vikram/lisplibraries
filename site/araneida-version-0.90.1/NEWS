@@ -1,0 +1,235 @@
+-*- Text -*-
+
+* Portability to MCL (Brian Mastenbrook)
+* Workaround for Unicode-enabled SBCL (Brian Mastenbrook)
+
+New in 0.9
+
+* Portability to multiple lisps:
+  - SBCL, as before
+  - OpenMCL, threaded handlers only
+  - Allegro, threaded handlers only
+  - Armed Bear Common Lisp, threaded handlers only
+  - CMUCL, serve-event only
+  - CLISP, serve-event only
+  - LispWorks, threaded (from Jochen Schmidt, based on Portable AServe)
+
+In particular the CLISP support is a bit of a hack; timeouts are still
+notably missing, and you must run (araneida:host-serve-events) after
+you're done running start-listener on all of your listeners.
+
+(Brian Mastenbrook, Jochen Schmidt)
+
+* SERVE-EVENT fixes so that non-Araneida fd handlers can be
+  added/removed during request handling.  More than slightly kludgey,
+  and less than entirely thread-safe, but this can be blamed mostly on
+  the nature of serve-event.  (Brian again, and Luis Oliveira)
+
+
+New in 0.85
+
+* Fix URL encoding for characters 0 to F (Fare Rideau)
+
+* Add :www-authenticate keyword to request-send-headers, and
+  :extra-http-headers for other stranger headers that it still doesn't
+  know (Brian Mastenbrook)
+
+* Clean up some of the HTML outputting stuff (impetus from Fare, but
+  actual code not his fault; as far as I can see anyway)
+
+New in 0.84
+
+* Important bug fix: conditional request support had the sense of the
+  "changed?" test backwards.  An upgrade is recommended for anyone 
+  using this.
+
+* Some notes on HTTP caching added to documentation
+
+* New generic function LISTENING-P to detect whether an http-listener
+  is active
+
+New in 0.83
+
+* Clear up RESPONSE-SENT so that it works as described.
+
+* Convenient support for conditional GET requests: the new keyword
+  argument :CONDITIONAL T to REQUEST-SEND-HEADERS will cause it to
+  compare the last-modified date in the response with the
+  if-modified-since date in the request, sending a 304 response
+  and then signalling RESPONSE-SENT when appropriate.
+
+* REDIRECT-HANDLER may now take a relative urlstring for :LOCATION,
+  which is merged against the handler's base url
+
+* Cleared up a lot (but not all) of the compilation warnings and
+  style-warnings
+
+
+
+New in 0.82
+
+* SLIME integration: the SLIME debugger can now be used to debug
+  errors that occur in handlers.  This is controlled by the 
+
+* New variable *RESTART-ON-HANDLER-ERRORS*, which replaces the
+  badly-named *BREAK-ON-HANDLER-ERRORS*.  It can contain a function
+  which is run on handler errors to provide an alternative debugger
+  interface
+
+New in 0.81
+
+* Fix for bug in doc/example.lisp: long-site-name doesn't (as I had
+  claimed) necessarily have to return FQDN, and only did that on my
+  machine because I had leftover bits of Debian common-lisp-controller
+  it was looking at.  Thanks to Vincent Arkesteijn
+
+* Export REQUEST-UNHANDLED-PART, which is the rightmost part of the 
+  urlstring: what would have been in the second parameter of an 
+  old-style handler
+
+* STATIC-FILE-HANDLER coped badly with requests for ".../doc" when
+  ".../doc/" is a directory.  Now issues redirect
+
+
+New in 0.80
+
+* New HTTP-LISTENER abstraction drastically improves the threaded
+  variant of Araneida, and also replaces a lot of older ad-hocky code
+  and global variables.  The following are at least obsolete, and may
+  not even exist any more
+
+  - The 'server' stuff: export-server etc
+  - *root-handler*
+  - install-{thread,serve-event}-handlers, remove-handlers
+
+* Raising HTTP errors from handlers is now accomplished in a far
+  cleaner fashion, by signalling CL conditions.  (This also means that
+  parent handlers may handle these conditions to provide e.g. custom
+  404 pages).  A condition exists for each 4xx and 5xx HTTP response code
+
+* Add REFRESH header to REQUEST-SEND-HEADERS; sends the not-quite-HTTP
+  'Refresh: ' header (really, not part of HTTP/1.0 or 1.1: it appears to
+  have been a Netscape extension)
+
+* Fix packaging problem in 0.72
+
+New in 0.72
+
+* Experimental HTTP/0.9 support.  Requests with no Host: header are served
+  as though they were for *DEFAULT-SERVER*, and REQUEST-SEND-HEADERS is
+  a no-op when (< (REQUEST-HTTP-VERSION R) 1)
+
+* Fix bug in a FORMAT string spotted by new SBCL
+
+New in 0.71 : bugfixes
+
+* static-file-handler no longer calls peek-char, to avoid a bug in
+  SBCL <0.8.3.
+
+* new variable *break-on-handler-errors* controls whether errors encountered 
+  during a request read or response (almost any code in Araneida,
+  including request parsing, dispatch, etc) cause a break into the
+  debugger or not
+
+* Incompatible change: html-stream has new and experimental behaviour
+  if you put a function in the tree: it invokes the function, passing the
+  output stream as its only parameter.  This is experimental and I
+  hope it won't affect anyone much - does anyone currently print function
+  objects in their html streams?
+
+* Added LINK to the list of empty elements
+
+* New prettier implementation of body-params which goes about twice as
+  fast (thanks to Zach Beane)
+
+* Minor docn updates
+
+New in 0.70
+
+* Experimental MP support, only on SBCL with #+sb-threads configured
+
+* Dead code cleanup: removed package aliases HTTPSRV and HTTP-SERVER
+  and references to them
+
+* HTTP header parsing code is slightly less consy
+
+* MERGE-URL fix
+
+* Now uses SB-BSD-SOCKETS; DB-SOCKETS no longer required
+
+
+New in 0.69 
+
+* All-new handler model, with prototype documentation - unpolished,
+  but should be enough to get started.  
+
+* Default handlers REDIRECT-HANDLER and FILE-REQUEST-HANDLER  - see
+  relevant source files for details
+
+* Examples are no longer included, as they're all terrifically out of
+  date
+
+* (Actually, they were missed out of the last version too, but it
+  was accidental that time)
+
+* This is essentially a beta for 0.7, which will have bug fixes (if
+  anyone sends bug reports) and better examples.
+
+
+New in 0.63
+
+* SEND-FILE (and thus FILE-REQUEST-HANDLER) test explicitly and return 404
+  for wild pathnames.
+
+New in 0.62
+
+* URL merging bug fixes
+
+New in 0.61 (relative to 0.6)
+
+* now depends on SPLIT-SEQUENCE package (available the same place you
+  found this)
+
+* Socket error handling change: STREAM-ERROR is assumed to be due to the
+   peer going away, and not worth calling the error handler for
+
+* Bug fixed: now correctly handles folded lines in the HTTP header
+
+* New function REQUEST-COOKIE
+
+* FTP protocol "support" in url functions
+
+* Fix broken base64 decoder
+
+New in 0.54 - Thu, 28 Jun 2001 
+
+* Araneida is now a cCLan package
+
+* Araneida 0.52 (unreleased) and later also work with SBCL - in fact,
+  most of the testing these days is done with SBCL.  Has been used on
+  Linux i386 and Alpha; would be interested to receive success/failure
+  reports (and especially patches) from users on other platforms.
+
+New in 0.51 - Sun Jan  7 02:31:10 GMT 2001
+
+* better support for conditional GET and If-Modified-Since headers
+
+* some speed improvements to the sexp-to-HTML convertor
+
+* new pattern-based sexp rewriting engine, so that you can for example
+write
+
+(define-page
+ ((merge-url *araneida-url* "/rewritten")
+  :patterns example-patterns
+  :changed-time (get-universal-time))
+ '(page
+   (title "foo")
+   (body (h1 "title") (p "hello " (red "red") " world")))))
+
+and have it transformed into HTML in a fairly arbitrary (and more
+general than CSS) fashion.  See example 6 in <a
+href="../examples/main.lisp">main.lisp</a> for details (including the
+definiton of the rewriting patterns) and <a
+href="/rewritten">/rewritten</a> for the output
+

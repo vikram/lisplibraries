@@ -1,0 +1,7 @@
+The validation stuff is old code from when it was distributed as a
+library called xmls-valid. It would be very nice to make validation
+work via xml schemas rather than hand built rules. I've had some hacks
+at this but kept getting stuck. So the validation stuff will stay as
+useless as it is until I feel adequately motivated to make the schema
+stuff work.
+

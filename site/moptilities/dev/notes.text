@@ -1,0 +1,288 @@
+#| montezuma warnings
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:index:multi-reader.lisp" :
+;   Unused lexical variable FIXME, in (READ-SEGMENT-TERM-DOC-ENUM
+                                        (MULTI-TERM-DOC-ENUM T T)).
+; Warning: COMPILE-FILE warned while performing #<COMPILE-OP NIL #xEB3E85E> on
+;                     #<CL-SOURCE-FILE "multi-reader" #xEB234DE>.
+; While executing: #<STANDARD-METHOD ASDF:PERFORM (COMPILE-OP
+                                                   ASDF:CL-SOURCE-FILE)>
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:boolean-scorer.lisp" :
+;   Unused lexical variable REQUIRED-NUM-MATCHERS, in (COUNTING-CONJUNCTION-SUM-SCORER
+                                                       (BOOLEAN-SCORER T)).
+; Warning: COMPILE-FILE warned while performing #<COMPILE-OP NIL #xEB3E85E> on
+;                     #<CL-SOURCE-FILE "boolean-scorer" #xEB1A336>.
+; While executing: #<STANDARD-METHOD ASDF:PERFORM (COMPILE-OP
+                                                   ASDF:CL-SOURCE-FILE)>
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:index-searcher.lisp" :
+;   Unused lexical variable OPTIONS, in (SEARCH-EACH (INDEX-SEARCHER QUERY T)).
+; Warning: COMPILE-FILE warned while performing #<COMPILE-OP NIL #xEB3E85E> on
+;                     #<CL-SOURCE-FILE "index-searcher" #xEB1C0FE>.
+; While executing: #<STANDARD-METHOD ASDF:PERFORM (COMPILE-OP
+                                                   ASDF:CL-SOURCE-FILE)>
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:index-searcher.lisp" :
+;   Undefined function MONTEZUMA::HITS, in (MONTEZUMA::SEARCH-EACH
+                                            (MONTEZUMA:INDEX-SEARCHER
+                                             MONTEZUMA::QUERY
+                                             T)).
+;   Undefined function MONTEZUMA::YIELD, in an anonymous lambda form inside (MONTEZUMA::SEARCH-EACH
+                                                                             (MONTEZUMA:INDEX-SEARCHER
+                                                                              MONTEZUMA::QUERY
+                                                                              T)).
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:wildcard-term-enum.lisp" :
+;   Undefined function MONTEZUMA::FIELD=, in (MONTEZUMA::TERM-COMPARE
+                                              (MONTEZUMA::WILDCARD-TERM-ENUM
+                                               T)).
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:boolean-scorer.lisp" :
+;   Undefined function MONTEZUMA::MAKE-COUNTING-SUM-SCORER3, in (MONTEZUMA::MAKE-COUNTING-SUM-SCORER2
+                                                                 (MONTEZUMA::BOOLEAN-SCORER
+                                                                  T
+                                                                  T)).
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:search:term-query.lisp" :
+;   Undefined function MONTEZUMA:: << , in (MONTEZUMA::EXTRACT-TERMS
+                                          (MONTEZUMA:TERM-QUERY T)).
+;   Undefined function MONTEZUMA::<< (2 references), in (MONTEZUMA::EXPLAIN-SCORE
+                                                         (MONTEZUMA::TERM-WEIGHT
+                                                          T
+                                                          T)).
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:index:index.lisp" :
+;   Undefined function SETF::MONTEZUMA:: GET-FIELD (2 references), in an anonymous lambda form inside (MONTEZUMA::QUERY-UPDATE
+                                                                                                      (MONTEZUMA:INDEX
+                                                                                                       T
+                                                                                                       T)).
+;Compiler warnings for "Billy-Pilgrim:repository:darcs:montezuma:index:index-writer.lisp" :
+;   Undefined function MONTEZUMA::ADD-SEGMENT, in (MONTEZUMA::ADD-INDEXES-READERS
+                                                   (MONTEZUMA:INDEX-WRITER T)).
+NIL
+? 
+#<Package "MONTEZUMA">
+? (t
+|#
+
+being able to remove methods of a gf should be easier
+
+with-unique-names / with-gensyms is very high on the list of must haves
+
+;;; ---------------------------------------------------------------------------
+
+direct-superclasses
+direct-subclasses
+
+\METABANG.MOPTILITIES\ 
+(leaf-class-p (standard-class)) 
+(leaf-class-p (symbol)) 
+(mopu-eql-specializer-p (t)) 
+(mopu-generic-function-methods (t)) 
+(mopu-generic-function-name (t)) 
+(mopu-method-qualifiers (t)) 
+(mopu-method-specializers (t)) 
+(mopu-specializer-direct-generic-functions (t)) 
+(setf class) 
+(subclassp (t t)) 
+all-specializers-of 
+build-generalized-mopu-method 
+class-name-of 
+direct-specializers-of 
+display-methods 
+finalize-class-if-necessary 
+find-slot 
+find-structure 
+generic-function-list 
+in-order-p 
+leaf-class-p 
+leaf-subclasses 
+map-methods 
+map-subclasses 
+mopu-arglist 
+mopu-class-direct-subclasses 
+mopu-class-direct-subclasses-internal 
+mopu-class-direct-superclasses 
+mopu-class-initargs 
+mopu-class-precedence-list 
+mopu-class-slot-information 
+mopu-class-slot-names 
+mopu-direct-slot-names 
+mopu-find-method 
+mopu-find-slot-definition 
+mopu-method-name 
+mopu-reader-method-p 
+mopu-slot-definition-initform 
+mopu-slot-definition-name 
+mopu-writer-method-p 
+remove-methods 
+remove-methods-if 
+show-class-path 
+subclasses 
+subclasses* 
+subclasses* 
+(\METABANG.MOPTILITIES\ (leaf-class-p (standard-class))
+ (leaf-class-p (symbol)) (mopu-eql-specializer-p (t))
+ (mopu-generic-function-methods (t)) (mopu-generic-function-name (t))
+ (mopu-method-qualifiers (t)) (mopu-method-specializers (t))
+ (mopu-specializer-direct-generic-functions (t)) (setf class) ...)
+? 
+
+(defgeneric direct-specializers-of (class &key writers? readers? other? short-form?)
+  (:method ((classname symbol) &key (short-form? t) (writers? t) (readers? t) 
+            (other? t))
+           ;;?? does this already have a name in the MOP
+           (let ((result nil))
+             (map-methods classname
+                          (lambda (gf m)
+                            (declare (ignore gf))
+                            (when (or (and (mopu-reader-method-p m)
+                                           readers?)
+                                      (and (mopu-writer-method-p m)
+                                           writers?)
+                                      (and (not (mopu-reader-method-p m))
+                                           (not (mopu-writer-method-p m))
+                                           other?))
+                              (push m result))))
+             (when short-form?
+               (setf result (delete-duplicates (mapcar #'mopu-method-name result))))
+             (nreverse result)))
+  (:method ((class standard-object) &rest args &key writers? readers? other? short-form?)
+           (declare (ignore writers? readers? other? short-form?))
+           (apply #'direct-specializers-of (class-name (class-of class)) args))
+  (:method ((class standard-class) &rest args &key writers? readers? other? short-form?)
+           (declare (ignore writers? readers? other? short-form?))
+           (apply #'direct-specializers-of (class-name class) args)))
+
+
+;;; ---------------------------------------------------------------------------
+
+#| From Allegro
+
+MOP:CLASS-DEFAULT-INITARGS [generic-function] (CLASS)
+MOP:SLOT-DEFINITION-INITARGS [generic-function] (OBJECT)
+MOP:COMPUTE-DEFAULT-INITARGS [generic-function] (CLASS CPL DIRECT)
+MOP:CLASS-DIRECT-DEFAULT-INITARGS [generic-function] (CLASS)
+EXCL::DIRECT-DEFAULT-INITARGS
+EXCL::VALID-INITARGS
+EXCL::WRAPPER-VALID-INITARGS [macro] (WRAPPER)
+EXCL::DIRECT-DEFAULT-INITARGS-P
+EXCL::SUPPLIED-INITARGS
+EXCL::VALIDATE-REINITIALIZE-INSTANCE-INITARGS [function] (INSTANCE
+                                                          INITARGS)
+EXCL::COMPUTE-EFFECTIVE-SLOT-DEFINITION-INITARGS [generic-function] (CLASS
+                                                                     DIRECT-SLOTDS)
+EXCL::WRAPPER-VALID-INITARGS-INDEX value: 6
+EXCL::CANONICALIZE-DEFAULT-INITARGS [function] (CLASS-NAME INITARGS)
+EXCL::COMPUTE-INVALID-INITARGS [function] (VALID-INITARGS INITARGS)
+EXCL::DEFAULT-INITARGS [generic-function] (CLASS SUPPLIED-INITARGS)
+EXCL::COMPUTE-VALID-REDEFINED-CLASS-INITARGS [function] (INSTANCE
+                                                         ADDED-SLOTS
+                                                         DISCARDED-SLOTS
+                                                         PROPERTY-LIST)
+EXCL::COMPUTE-VALID-MAKE-INSTANCE-INITARGS [function] (CLASS)
+EXCL::COMPUTE-CLASS-INITARGS [function] (CLASS)
+EXCL::*VALIDATE-MAKE-INSTANCE-INITARGS* value: T
+EXCL::VALIDATE-UPDATE-INSTANCE-FOR-REDEFINED-CLASS-INITARGS [function] (INSTANCE
+                                                                        ADDED-SLOTS
+                                                                        DISCARDED-SLOTS
+                                                                        PROPERTY-LIST
+                                                                        ...)
+EXCL::REINITARGS
+EXCL::COMPUTE-VALID-DIFFERENT-CLASS-INITARGS [function] (PREVIOUS
+                                                         CURRENT
+                                                         ADDED-SLOTS)
+EXCL::SEARCH-INITARGS [function] (SLOT-INITARGS OARGS)
+EXCL::COMPUTE-VALID-REINITIALIZE-INSTANCE-INITARGS [function] (INSTANCE)
+EXCL::VALIDATE-UPDATE-INSTANCE-FOR-DIFFERENT-CLASS-INITARGS [function] (PREVIOUS
+                                                                        CURRENT
+                                                                        ADDED-SLOTS
+                                                                        INITARGS)
+EXCL::VALIDATE-MAKE-INSTANCE-INITARGS [function] (CLASS INITARGS)
+EXCL::SLOT-INITARGS
+EXCL::INITARGS
+:ORIGINAL-INITARGS  value: :ORIGINAL-INITARGS
+:DEFAULT-INITARGS   value: :DEFAULT-INITARGS
+:DIRECT-DEFAULT-INITARGS value: :DIRECT-DEFAULT-INITARGS
+:INITARGS           value: :INITARGS
+LEP::INITARGS
+MP::INITARGS
+
+COMP:SAVE-ARGLIST-SWITCH value: #<Function DEBUG > 0 @ #x5181192>
+EXCL::LISTIFY-FWRAPPER-ARGLIST [macro] ()
+EXCL::ORIGINAL-ARGLIST
+EXCL::CLOSURE-HAS-ARGLIST-P [function] (FUNC)
+EXCL::ORIGINAL-ARGLISTS
+EXCL::MACROARGLISTP
+EXCL::WALK-ARGLIST  [function] (ARGLIST CONTEXT ENV &OPTIONAL ...)
+EXCL::COMPUTE-FORMAL-ARGLIST
+ARGLIST             [function] (FUNCTION)
+FF::X-ARGLIST
+LEP::ARGLIST-SESSION
+|#
+
+
+#| SBCL
+(* apropos "arglist")
+
+ASDF::ARGLIST
+SB-IMPL::ARGLIST
+SB-IMPL::ORIGINAL-ARGLISTS
+:ARGLIST (bound)
+SB-WALKER::ARGLIST
+SB-WALKER::WALK-ARGLIST (fbound)
+SB-PCL::METHOD-PRETTY-ARGLIST (fbound)
+SB-PCL::ARGLIST
+SB-PCL::GENERIC-FUNCTION-PRETTY-ARGLIST (fbound)
+SB-PCL::COMPUTE-DISCRIMINATING-FUNCTION-ARGLIST-INFO-INTERNAL (fbound)
+SB-PCL::MAKE-DISCRIMINATING-FUNCTION-ARGLIST (fbound)
+SB-PCL::COMPUTE-DISCRIMINATING-FUNCTION-ARGLIST-INFO (fbound)
+SB-PCL::ARGLIST-POS
+SB-C::OPTIONAL-DISPATCH-ARGLIST (fbound)
+SB-C::ARGLISTS
+SB-C::ARGLIST
+SB-VM:SIMPLE-FUN-ARGLIST-SLOT (bound)
+SB-VM::ARGLIST
+SB-KERNEL:%SIMPLE-FUN-ARGLIST (fbound)
+SB-KERNEL::ARGLIST
+* (apropos "initargs")
+
+ASDF::OPERATION-ORIGINAL-INITARGS (fbound)
+ASDF::ORIGINAL-INITARGS
+:ORIGINAL-INITARGS (bound)
+:DEFAULT-INITARGS (bound)
+:DIRECT-DEFAULT-INITARGS (bound)
+:INITARGS (bound)
+SB-PCL::CHECK-INITARGS-2-PLIST (fbound)
+SB-PCL::CHECK-INITARGS-1 (fbound)
+SB-PCL::DEFAULT-METHOD-INITARGS
+SB-PCL::DEFAULTING-INITARGS
+SB-PCL::SLOT-INITARGS
+SB-PCL::INITARGS
+SB-PCL::INITARGS-FORM
+SB-PCL::SLOT-INITARGS-FROM-STRUCTURE-SLOTD
+SB-PCL::MAKE-METHOD-INITARGS-FORM-INTERNAL1 (fbound)
+SB-PCL::CHECK-INITARGS-2-LIST (fbound)
+SB-PCL::INITARG-ERROR-INITARGS (fbound)
+SB-PCL::DIRECT-DEFAULT-INITARGS
+SB-PCL::DIRECT-DEFAULT-INITARGS-P
+SB-PCL::CHECK-RI-INITARGS (fbound)
+SB-PCL::CLASS-METHOD-INITARGS
+SB-PCL::REAL-MAKE-METHOD-INITARGS-FORM (fbound)
+SB-PCL::RI-INITARGS
+SB-PCL::CTOR-INITARGS (fbound)
+SB-PCL::EARLY-COLLECT-DEFAULT-INITARGS (fbound)
+SB-PCL::UPDATE-INITARGS (fbound)
+SB-PCL::ECD-OTHER-INITARGS (fbound)
+SB-PCL::COMPUTE-EFFECTIVE-SLOT-DEFINITION-INITARGS (fbound)
+SB-PCL::OTHER-INITARGS
+SB-PCL::MAKE-METHOD-INITARGS-FORM-INTERNAL (fbound)
+SB-PCL::DEFAULT-INITARGS (fbound)
+SB-PCL::SUPPLIED-INITARGS
+SB-PCL::MAKE-METHOD-INITARGS-FORM (fbound)
+SB-PCL::SLOT-INITARGS-FROM-CONDITION-SLOT
+SB-PCL::CHECK-INITARGS-VALUES (fbound)
+SB-MOP:SLOT-DEFINITION-INITARGS (fbound)
+SB-MOP:COMPUTE-DEFAULT-INITARGS (fbound)
+SB-MOP:CLASS-DIRECT-DEFAULT-INITARGS (fbound)
+SB-MOP:CLASS-DEFAULT-INITARGS (fbound)
+SB-KERNEL:CONDITION-SLOT-INITARGS (fbound)
+SB-KERNEL::ACTUAL-INITARGS
+SB-KERNEL::INITARGS
+SB-KERNEL::DEFAULT-INITARGS
+SB-KERNEL::CONDITION-CLASSOID-DEFAULT-INITARGS (fbound)
+SB-KERNEL::CONDITION-ACTUAL-INITARGS (fbound)
+|#

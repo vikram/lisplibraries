@@ -1,0 +1,83 @@
+
+Portable AllegroServe Enhaced Version for SBCL
+==============================================
+
+This version of Portable AllegroServe contains important enhancements
+and bugfixes for SBCL.  With this version it is possible to use external
+formats other than latin-1 (ISO-8859-1), e.g. UTF-8.
+
+
+
+CHANGELOG
+---------
+
+1.2.47-vbz-0.1
+
+- Merged changes from aserve-1.2.47
+
+- New file: acl-compat/llefu-sbcl.lisp
+This file contains low level utilities for external format handling.
+
+- lw-buffering.lisp rewritten to use external formats.
+
+- Declarations added to chunked-stream-mixin.lisp.
+
+- Log and error stream locking implemented (main.cl, log.cl).
+
+- Fixed condition handling in CONNECTION-RESET-ERROR (main.cl).
+
+- Varios fixes for external format handling
+(main.cl, publish.cl, decode.cl).
+
+- Portability fixes (e.g. changing EQ to EQL used in char comparison).
+
+- Added md5 portability layer (client.cl).  This depends on the CL-MD5
+package.
+
+
+1.2.47-vbz-0.1.1
+
+- minor fixes
+
+
+1.2.47-vbz-0.1.2
+
+- fixed INSTALL.lisp again
+
+
+1.2.47-vbz-0.1.4
+
+- llefu-sbcl.lisp modified to reflect changes in SBCL 1.0
+
+
+DEPENDENIES
+-----------
+
+- CL-PPCRE (included)
+- PURI (>= 1.4) (included)
+- CL-MD5
+- SBCL (>= 1.0)
+
+
+
+TODO
+----
+
+- test/t-aserve.cl
+- CGI
+- proxy
+
+
+
+NOTES
+-----
+
+I tried to retain portability for other implementations but tested none. 
+
+
+
+--
+VOROSBARANYI Zoltan 
+(Vörösbaranyi Zoltán)
+See http://vbzo.li/ for my e-mail address.
+

@@ -1,0 +1,496 @@
+-*- Text -*- mode, thanks.
+
+[ These notes are horrendously out of date, and kept only so I can
+giggle at them.  ]
+
+Sat Jan  2 17:56:11 1999
+
+An instance of the class 'request' represents a request for some
+portion of the URL document space.  It is created when the request
+comes in from the browser.  Different parts of the URL space may be
+handled by different subclasses of 'request': *exported-urls* is a
+list of ( url-string-prefix symbol-for-desired-subclass ) ; the longest
+matching prefix is used.
+
+The only thing a request instance is expected to have right now is a method
+specialising (defmethod process-request ((r request) stream socket).  It's
+not actually _required_, but the default one is decidedly nonexciting.
+This is called by the general handler thing as soon as the instance is
+created.
+
+
+Sun Jan  3 00:51:18 1999
+
+Brief spate of playing with profiling, demonstrating ye olde advice to
+be sure that you are measuring what you think you are measuring.  The
+thing limiting it to one request per second was actually the time that
+lynx was spending loading; netcat is one hell of a lot faster.
+
+I can get something around 30 'null-ish' requests per second; this is
+plenty fast enough for me.
+
+'socket' and 'stream' are now slots in the request instance rather
+than additional arguments to process-request.
+
+
+Sun Jan  3 14:22:46 1999
+
+Enough of it is there that it's clear what the general shape is at
+that level.  THe next question is how to layer a process-oriented view
+over it.
+
+Let's proceed on the assumption that the 'session id' is a component
+of the URL.  We could start a session by having a request subclass 
+with an :allocation :class slot that stores the persistent (between
+requests) data.  So far so OK.  We'd need a new class (note class not
+instance) for each new session, though, which sounds like we're
+involving the MOP.
+
+I'm not sure I want to involve the MOP.  The alternative is to have
+one subclass for _all_ sessions, with a :allocation :class slot that's
+a hash table containing persistent data for each session.  That'd be
+better.
+
+At the process level we want to be able to write things like (bad
+pseudocode ahoy):
+
+(cond ((http-y-or-n-p "Delete row ~A, are you sure?" row)
+       (delete-row row)
+       (show-page "Row deleted"))
+      (t 
+       (show-page "Cancelled")))
+
+That is, during the course of our program we want to converse with the
+user by showing him web pages and waiting for his input.
+
+(defun htttp-y-or-n-p (request &optional control &rest args)
+  (let ((sub-url (get-sub-url request)))
+    (show-page (form :action sub-url
+                     (apply format nil control args)
+                     (button :title "Yes" :value "yes")
+                     (button :title "No" :value "no")))
+    (if (assoc "Yes" (get-input sub-url)) t nil)))
+
+All names are provisional as yet.  The motley surrounded by SHOW-PAGE
+is some as-yet-indefinite fluff for outputting html forms.  GET-INPUT
+would have to do something like block the thread until SUB-URL is
+'ready' -- another thread somewhere else would in the meantime process
+a user's request, note that it matched sub-url, count up all the
+input, then wake this thread up.  When I say 'wake' I mean 'release a
+lock that this thread was waiting on' or something that actually makes
+sesnse in whatever the thread library is.
+
+Sounds simple so far?  The fun part is yet to come: suppose instead of
+clicking "yes" or "no", the user clicks "back" in their browser.  We
+don't know -- or might not know, anyway -- that that happens.  If they
+then click on something different on the preceding page (maybe "amend
+row") we need not only to have http-y-or-n-p do something appropriate,
+but the user input needs to be preserved so that the right part of the
+program (probably the caller of http-y-or-n-p) can deal with it.
+
+So get-input now not only needs to be woken when the right kind of
+input comes in, but needs to woken (and probably made to throw an
+exception) when other kinds that say "you are no longer interesting,
+we've dropped back to your parent" do.  The exception shouldn't be
+caught in http-y-or-n-p, because if it is we will present the user
+with a 'delete cancelled' screen and still be out of sync.  It should
+be caught at whatever the next event loop up is, I expect.
+
+So we have a stack of input handlers (probably distinguished by
+URL prefix), and a request which can not be handled by the one at the
+top should cause it to get mashed and execution to resume from the
+next one along.  
+
+Sun Jan  3 19:00:53 1999
+
+(let ((tag (gensym)))
+  (format t "Catch was ~A~%"
+          (catch tag
+            (format t "before~%")
+            (throw tag 2)
+            (format t "after~%"))))
+
+=>
+before
+Catch was 2
+NIL
+
+(let ((tag (gensym)))
+  (format t "Catch was ~A~%"
+          (catch tag
+            (format t "before~%")
+;            (throw tag 2)
+            (format t "after~%"))))
+before
+after
+Catch was NIL
+NIL
+
+
+Sun Jan  3 22:34:42 1999
+
+Menu A
+
+1 New
+2 Edit
+3 Delete
+
+Menu B (select 3 on menu A to get here)
+
+1 Delete
+2 Don't 
+
+program flow should be 
+
+1 print menu A
+2 get input
+3 input was 3, so
+4 print menu B
+5 get input. 
+6 input was unrecognised, so throw to 2
+
+It looks like the 'get input' routine should be 
+(or (catch tag ) (really-get-input))
+
+Now: the return value of catch is what will contain the input if it
+was presented to a routine expecting a sub-question to be answered.
+But that routine must have been executed from within the dynamic
+extent of the catch block.
+
+The block which encloses the (catch) form must restart it if it
+returns non-NIL, seems to be the thing
+
+(let ((tag (gensym)))
+  (do ((r nil (catch tag
+                (do-stuff (or r (really-get-request)) tag)))
+       (started nil t))
+      ((and (not r) started) nil)))
+
+We really want to turn this into a macro
+
+(defmacro with-request (request tag &body body)
+  "Get input from the user and bind it to REQUEST.  Code in BODY may
+throw to TAG"
+  (let ((m-tag (gensym)))
+    `(do ((r nil (catch ,m-tag
+                   (let ((,tag ,m-tag)
+                         (,request (or r (really-get-request))))
+                     ,@body)))
+          (started nil t))
+         ((and (not r) started) nil))))
+  
+Note that 'request' is almost certainly a bad choice of word.  I don't
+think these are going to be requests in the sense defined yesterday.
+Aside from that (and aside from emacs indenting invocation of this
+really badly) this may even work.  I'm not sure if R will give us
+variable capture problems though.  See process.lisp for a more
+thoroughly (gensym)med version
+
+Emacs lisp:
+ (put 'with-request 'lisp-indent-function 'defun)
+
+Be nice to do this automatically for all functions matching "^with-"
+
+Mon Jan  4 23:29:19 1999
+
+I eventually found the bit of emacs code that chooses whether to indent
+something like a function or not:
+/usr/share/emacs/20.2/lisp/emacs-lisp/lisp-mode.el line 527 or so.
+Sadly, there seems no non-cheesy way to override it for regex matching.
+
+So, some work with the hyperspec and some emacs macros later... (see .emacs)
+
+I'm actually not sure that they aren't requests.  Incidentally, the
+headers & stuff should be stuck in a request slot somewhere.
+
+Yep, I think they _are_ requests.  Oh what is it to be decisive?
+
+Tue Jan  5 21:56:27 1999
+
+OK.
+
+A request for /session/ should generate a new session id, and issue a
+redirect to it. 
+
+A request for /session/{sessionid}/something should expect the
+sessionid to be present already, should put the request data somewhere
+that (really-get-request) called from the thread for sessionid will
+find it, and cause that thread to wake up.  That probably means
+releasing a lock that it was waiting on.
+
+(Aside: should cater for people who click 'stop' and 'reload')
+
+Wed Jan  6 00:03:17 1999
+
+The process does
+
+(defmethod really-get-request ((s session))
+  (process-wait "Will wait for food"
+                (lambda () (if (session-request s) t nil)))
+  (with-lock-held (session-lock s)
+                  (prog1
+                      (session-request s)
+                    (setf (session-request s) nil))))
+
+The per-request handler does
+
+(defmethod process-request ((r session-request))
+  (let ((s (session-request-session r)))
+    (with-lock-held (session-lock s)
+                    (setf (session-request s) r))
+    (process-yield)))
+
+
+Someone at session creation had to do
+
+(make-instance session :lock (make-lock sessionid))
+
+Wed Jan  6 22:40:16 1999
+
+I did some more thinking about this last night, and concluded that
+it's not really all that pointful after all.  It's only any use for
+limited numbers of users, it depends rather strongly on the lisp's MP
+capabilities, and it's going to bite hard if the user uses their back
+button or their reload button.  Not really worth the effort.
+
+(Aside: going to need methods for authenticating the user sooner or
+later.  The default one returns t, people can subclass it to do
+various things.  It needs to fit over the URL tree independently of
+how the 'request' thing does)
+
+How else to do reasonable-ish processes?  
+
+1) We want to be able to put things with parameters in the
+*exported-urls* list, which means sticking with classes and using the
+MOP, or creating instances ahead of time which handle-request `fills
+out'.  I favour the former, to be honest.  Anyway, the point would be
+
+(let ((url (get-me-a-new-bit-of-url-space r)))
+  (export-url url (make-instance 'summary-view (format nil "Summary of ~A" fn)))
+  (output `(p (a (:href ,url) "View summary"))))
+
+that make-instance call would have to be returning a subclass of
+request - something that make-instance could be called on in turn to
+get an instance of a subclass of request
+
+Thu Jan  7 21:11:37 1999
+
+Well, we missed out the whole html-generation system.  Briefly:
+
+(html '((p :align right) "Here is some text" (table (tr (td 1) (td 2) (td 3)))))
+"<P ALIGN=RIGHT>Here is some text<TABLE><TR><TD>1</TD><TD>2</TD><TD>3</TD></TR>
+</TABLE>
+</P>
+"
+
+That's about it, except to note that it correctly doesn't print the
+closing tag if there is no body, and it has a keyword argument
+:newline which is a list of elements to insert a newline after.
+Defaults to something sensible.
+
+After that: we need an application.  We could write a mail reader
+(doesn't everyone?).  Need lisp code to talk to an imap server, hence
+recent acquisition of rfc2060 and installation of imapd.
+
+Adopt a server/folder/message model:
+
+(let* ((server (imap:open-server "localhost" "dan" "mypassword"))
+       (folders (imap:folder-list server))
+       (folder (imap:open-folder server (car folders)))
+       (some-messages (imap:search-folder folder :deleted :from "smith"))
+       (message (imap:fetch-message server (third (cadr messages))))
+  (do stuff))
+
+folders is a list of (attributes delimiter name) lists:
+
+(((:attribute1 :attribute2 ...) "/" "Mail/inbox")
+ ((:attribute1 :attribute2 ...) "/" "Mail/outbox")
+ ...)
+
+attributes are :noinferiors :noselect :marked :unmarked, which
+correspond to the IMAP attributes of similar names.
+
+some-messages is a list of UIDs.
+
+
+We'll take a slightly pared-down approach:
+
+- we only deal with one command at a time.
+- we don't bother trying to read completly unsolicited responses until
+  we're going to do the next command
+  
+
+Sat Jan  9 02:41:01 1999
+
+Should search-folder take a folder name or a 'folder' instance?  Or to
+put it another way, is there per-folder state that we need to store?
+
+Sat Jan  9 22:05:16 1999
+
+Either I misunderstand UIDs or imapd does.
+
+A4 UID SEARCH FROM "dan"
+* SEARCH 22 23 64 115 186 187 213 218 291 312 318 321 370 371 383 385
+A4 OK UID SEARCH completed
+
+A5 SEARCH FROM "dan"
+* SEARCH 22 23 64 115 186 187 213 218 291 312 318 321 370 371 383 385
+A5 OK SEARCH completed
+
+You tell me what the difference is?
+
+OK, for the moment I'll settle for 
+(folder-search "INBOX" '(FROM "dan")) 
+=> (22 23 64 115 186 187 213 218 291 312 318 321 370 371 383 385)
+
+Note that SEARCH the IMAP command requires an argument, so we say
+that (folder-search "INBOX" '()) is eqvt to (folder-search "INBOX" '(ALL))
+
+Sun Jan 10 20:07:47 1999
+
+This is moderately silly.  Rewriting imap::server-send to parse the
+stuff coming back from the server in semi-lisp fashion.  It's not
+sufficiently close to real lisp to be able to READ, but it has enough
+structure to make READ-STRING non-optional
+
+The RFC says
+- atom (one or more non-special characters)
+- number (of one or more digit characters)
+[digit characters are special, or numbers are atoms ... ?]
+- string
+  - literal is {octet-count} CR string-content
+  - quoted is 7-bit characters, no CR or LF, with " at each end
+     By experimentation, we find that " can appear in a quoted string
+     if escaped with \.  Thus "a quoted string with a \"quote\" in it"
+- Parenthesised list.  Empty list is ()
+- NIL is distinct from ()
+
+We're going to make each response a list.  We'll turn atoms into
+symbols (they had _better_ have compatible syntax), numbers into
+numbers, strings (either type) into strings, and lists into lists.
+Not sure about NIL: either we can turn it into 'IMAP-NIL, or we can
+decide that we're not losing anything interesting by turning it into
+'()
+
+Mon Jan 18 23:05:57 1999
+
+Well, that worked (I thought).  Then I learnt the bare minimum about
+logical pathnames, with the result that I can now find these files
+under #p"SRC:dhttp;".  Then I wrote a bigger defsystem that copes with
+the imap stuff as a subsystem.  So now it only takes one line to
+load everything after starting lisp.
+
+Problems with packages.  I got the list-creation stuff in imap to
+intern its symbols in that package, and now I'm not sure I want to,
+because it means they come back with IMAP:: prefixes in whatever else
+uses them.  Maybe I shoudn't; maybe I should have server-send-ok and
+the like compare against 'OK in *package* instead.  Or maybe I should
+be using the KEYWORD package
+
+Tue Jan 19 00:07:34 1999
+
+I think I've sorted out the packages for the time being (though I
+reserve the right to have them come back and bite me later)
+
+The folder is going to have to be an object with local state: it's
+appallingly slow recalling it dynamically every time.
+
+... Actually it's a great deal faster if you don't bother issuing
+unnecessary SELECT commands before each operation on a folder.  Still
+not _that_ fast though, and it conses something awesome.  Some of that
+may be the HTML generation, though
+
+
+Tue Jan 19 01:04:27 1999
+
+* (dhttp:start-server 8002)
+OUT: A7797 SELECT "Mail/sent"
+
+IN: (6 100)
+
+Reader error on #<Stream for descriptor 7>:
+Illegal terminating character after a colon, #\Space.
+
+Debugging READ when the readtable in the debugger is redefined is
+... kind of funky
+
+But it works for http://localhost:8080/mail/index/INBOX anyway.  Just
+not for any other mailbox.
+
+Wed Jan 20 00:12:48 1999
+
+I think that this parsing-to-symbols thing is not actually the right
+thing to be doing generally, and instead we should read-line then
+read-from-string in the cases that it turns out to be meaningful.
+
+Fri Jan 22 02:04:38 1999
+
+It does something a bit like that, yes.  Seems to work, too
+
+Sat Jan 23 19:38:08 1999
+
+Need to : 
+check whether the imap server is open
+
+Sat Jan 23 20:33:51 1999
+
+Starting on the display-a-message-body stuff.  We want to do search by
+message id
+
+Sun Jan 24 18:34:42 1999
+
+I think I'm going to turn the IMAP package back into something that
+deals with lists.  The reasoning goes: inline strings have quoted
+stuff in them, literal strings don't.  By confusing the two when we
+imap::read-line, we probably run into nasty problems parsing its
+return value if something that started as a literal string has " in it.
+
+Mon Jan 25 01:54:19 1999
+
+OK.  Compromised.  Some commands ('OK', 'BAD') come back with strings,
+others with lists.
+
+Hacked up fetch-anvelope-alist to pretreat email addresses, and to
+strip out bits of the in-reply-to that aren't message id.  
+
+Extended the html formatter to have an extension mechanism for custom
+tags.  First custom tag is 'escape' which html-escapes its argument:
+
+(html '(p (b (escape "foo <bar>"))))
+"<P><B>foo &#60;bar&#62;</B></P>
+"
+
+See html.lisp for details
+
+Prettified the mail-message-request output a bit.  It wasn't even
+printing headers last time I wrote in this file.
+
+to do:
+0) Go to bed
+1) Check if the imap server connection is valid
+2) Make SO_REUSEADDR work, one way or another
+
+Sun Jan 31 22:18:08 1999
+
+That was a gap.  I've written some noddy XML parsing stuff and a CLOS
+class browser (xml.lisp and object-request.lisp).
+
+Wanted: an object->XML converter and a XML->HTML converter.
+
+Ongoing reflection at the moment is that the 'subclassing REQUEST for
+different URL prefixes' idea is not really all that useful -- it never
+gets more slots or methods, it just gets process-request overridden a
+lot -- and it'd be just as good to stick with the ordinary REQUEST and
+put functions in the *exported-urls* list
+
+Tue Aug 31 01:15:14 1999
+
+Well, the old one was about ready for use as a live thing in Rinaldo
+
+Let's clean up and start again 
+
+- dates are wrong, somehow.  We need something that converts
+  universal-time to decoded GMT instead of whatever the current zone is 
+
+- URL system is brand new, with objects and accessors and everything.
+  We'd like to cope with relative URLs somehow though

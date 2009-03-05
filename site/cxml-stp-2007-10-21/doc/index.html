@@ -1,0 +1,1105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+  <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>cxml-stp API reference</title>
+<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-stp</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+	Index of packages:
+      </div>
+    <table cellspacing="0" cellpadding="0"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h2 class="page-title">
+            <a href="pages/cxml-stp.html">
+		  Package
+		  cxml-stp</a>
+          </h2>
+          <div style="left: 100px">
+            <div class="indent">STP is a data structure for well-formed XML documents.<br><br>                            </div>
+            <div class="indent">
+              <p>
+                <i>About this package:</i>
+              </p>
+              <ul>
+                <li>
+                  <a href="pages/cxml-stp.html#id58058">Parsing and Serializing</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58079">Names and Namespace URIs</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58156">Subclasses of Node</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58202">Creating nodes</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58255">Listing Child Nodes</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58419">Adding and Removing Child Nodes</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-stp.html#id58528">Elements and their Attributes</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td valign="top">
+        <h3>
+<a name="index"></a>Symbol Index</h3>
+        <table cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__variable___check-uri-syntax_.html"><tt>*check-uri-syntax*</tt></a>, variable</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__add-attribute.html"><tt>add-attribute</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__add-extra-namespace.html"><tt>add-extra-namespace</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__append-child.html"><tt>append-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__attribute.html"><tt>attribute</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__attribute-value.html"><tt>attribute-value</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__base-uri.html"><tt>base-uri</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__child-position.html"><tt>child-position</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__child-position-if.html"><tt>child-position-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__comment.html"><tt>comment</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__copy.html"><tt>copy</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__count-children.html"><tt>count-children</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__count-children-if.html"><tt>count-children-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__data.html"><tt>data</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__delete-child.html"><tt>delete-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__delete-child-if.html"><tt>delete-child-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__delete-children.html"><tt>delete-children</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__delete-nth-child.html"><tt>delete-nth-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__detach.html"><tt>detach</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__macro__do-children.html"><tt>do-children</tt></a>, macro</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__macro__do-recursively.html"><tt>do-recursively</tt></a>, macro</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__document.html"><tt>document</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__document.html"><tt>document</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__document-element.html"><tt>document-element</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__document-type.html"><tt>document-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__document-type.html"><tt>document-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__element.html"><tt>element</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__filter-children.html"><tt>filter-children</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__filter-recursively.html"><tt>filter-recursively</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-attribute-if.html"><tt>find-attribute-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-attribute-named.html"><tt>find-attribute-named</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-child.html"><tt>find-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-child-if.html"><tt>find-child-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-extra-namespace.html"><tt>find-extra-namespace</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-local-namespace.html"><tt>find-local-namespace</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-namespace.html"><tt>find-namespace</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-recursively.html"><tt>find-recursively</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__find-recursively-if.html"><tt>find-recursively-if</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__first-child.html"><tt>first-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__insert-child.html"><tt>insert-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__insert-child-after.html"><tt>insert-child-after</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__insert-child-before.html"><tt>insert-child-before</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__internal-subset.html"><tt>internal-subset</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__last-child.html"><tt>last-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__list-attributes.html"><tt>list-attributes</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__list-children.html"><tt>list-children</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__local-name.html"><tt>local-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-attribute.html"><tt>make-attribute</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-builder.html"><tt>make-builder</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-comment.html"><tt>make-comment</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-document.html"><tt>make-document</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-document-type.html"><tt>make-document-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-element.html"><tt>make-element</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-processing-instruction.html"><tt>make-processing-instruction</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__make-text.html"><tt>make-text</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__map-attributes.html"><tt>map-attributes</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__map-children.html"><tt>map-children</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__map-extra-namespaces.html"><tt>map-extra-namespaces</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__map-recursively.html"><tt>map-recursively</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__namespace-prefix.html"><tt>namespace-prefix</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__namespace-uri.html"><tt>namespace-uri</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__next-sibling.html"><tt>next-sibling</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__node.html"><tt>node</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__nth-child.html"><tt>nth-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__of-name.html"><tt>of-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__parent.html"><tt>parent</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__parent-node.html"><tt>parent-node</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__prepend-child.html"><tt>prepend-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__previous-sibling.html"><tt>previous-sibling</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__processing-instruction.html"><tt>processing-instruction</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__public-id.html"><tt>public-id</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__qualified-name.html"><tt>qualified-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__remove-attribute.html"><tt>remove-attribute</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__remove-extra-namespace.html"><tt>remove-extra-namespace</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__rename-attribute.html"><tt>rename-attribute</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__replace-child.html"><tt>replace-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__root.html"><tt>root</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__root-element-name.html"><tt>root-element-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__serialize.html"><tt>serialize</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__stp-error.html"><tt>stp-error</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__string-value.html"><tt>string-value</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__system-id.html"><tt>system-id</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__target.html"><tt>target</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__class__text.html"><tt>text</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__fun__value.html"><tt>value</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-stp:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-stp__macro__with-attributes.html"><tt>with-attributes</tt></a>, macro</td>
+          </tr>
+        </table>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+

@@ -1,0 +1,1 @@
+../site/lassie-0.0.2/lassie.asd

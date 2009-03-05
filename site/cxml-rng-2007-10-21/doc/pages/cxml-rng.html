@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Package cxml-rng</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	    Up:
+	    <a href="../index.html">cxml-rng API reference</a></p>
+      <h1>
+	  Package
+	  cxml-rng</h1>
+      <div class="indent">
+<tt>cxml-rng</tt> implements <a href="http://relaxng.org/spec-20011203.html">    Relax NG</a> schema validation for Closure XML.<br><br>    Support for <a href="http://relaxng.org/compact-20021121.html">Compact Syntax</a>    and <a href="http://relaxng.org/compatibility-20011203.html">DTD Compatibility</a>
+    is included.<br><br>                </div>
+    </div>
+    <table cellspacing="0" cellpadding="0"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+<div style="margin-left: -30px"><h3>About This Package</h3></div>
+<a href="#id58058" style="font-weight: bold">Example</a><br><a href="#id58067" style="font-weight: bold">Classes</a><br><a href="#id58082" style="font-weight: bold">Parsing and validating</a><br><a href="#id58113" style="font-weight: bold">Grammar introspection</a><br><br><h2>
+<a name="id58058"></a>Example</h2>    <pre>(cxml:parse-file "test.xml"
+                 (cxml-rng:make-validator
+                  (cxml-rng:parse-schema #p"test.rng")))    </pre>    <h2>
+<a name="id58067"></a>Classes</h2>    <div class="def"><a href="cxml-rng__class__schema.html">
+	  Class
+	  schema</a></div>
+<div style="margin-left: 3em"><div class="indent">An instance of this class represents a Relax NG grammar that has
+   been parsed and simplified.             </div></div>
+<br>    <div class="def"><a href="cxml-rng__class__rng-error.html">
+	  Class
+	  rng-error</a></div>
+<div style="margin-left: 3em">The class of all validation and schema parsing errors. <a href="cxml-rng__class__rng-error.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__dtd-compatibility-error.html">
+	  Class
+	  dtd-compatibility-error</a></div>
+<div style="margin-left: 3em">The class of DTD compatibility errors. <a href="cxml-rng__class__dtd-compatibility-error.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id58082"></a>Parsing and validating</h2>    <div class="def"><a href="cxml-rng__fun__parse-schema.html">Function parse-schema (input &amp;key entity-resolver (process-dtd-compatibility t))</a></div>
+<div style="margin-left: 3em">This function parses a Relax NG schema file in XML syntax <a href="cxml-rng__fun__parse-schema.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__parse-compact.html">Function parse-compact (pathname)</a></div>
+<div style="margin-left: 3em">This function parses a Relax NG schema file in compact syntax <a href="cxml-rng__fun__parse-compact.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__make-validator.html">Function make-validator (schema &amp;optional handler)</a></div>
+<div style="margin-left: 3em">This function creates a validation handler for <tt>schema</tt> <a href="cxml-rng__fun__make-validator.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__make-dtd-compatibility-handler.html">Function make-dtd-compatibility-handler (schema handler)</a></div>
+<div style="margin-left: 3em">This function creates a handler for DTD Compatibility processing <a href="cxml-rng__fun__make-dtd-compatibility-handler.html#details">...</a>
+</div>
+<br>    <div style="margin-left: 3em"></div>
+<br>    <h2>
+<a name="id58113"></a>Grammar introspection</h2>
+    The following classes and function are exported so that users can
+    take a peek at the internals of the parsed and simplified grammar.<br><br>    <div class="def"><a href="cxml-rng__fun__schema-start.html">Function schema-start (instance)</a></div>
+<div style="margin-left: 3em"><div class="indent">       
+       Reader function for the grammar's start pattern, from which all       of the grammar's patters are reachable.</div></div>
+<br>    <div class="def"><a href="cxml-rng__class__attribute.html">
+	  Class
+	  attribute</a></div>
+<div style="margin-left: 3em">This pattern specifies that an attribute of a certain name class   is required. <a href="cxml-rng__class__attribute.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__choice.html">
+	  Class
+	  choice</a></div>
+<div style="margin-left: 3em">This pattern specifies that one of two possible subpatterns are   allowed at the current position, given as its children. <a href="cxml-rng__class__choice.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__data.html">
+	  Class
+	  data</a></div>
+<div style="margin-left: 3em">This pattern specifies that text of a specific data type is   expected. <a href="cxml-rng__class__data.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__element.html">
+	  Class
+	  element</a></div>
+<div style="margin-left: 3em">This pattern specifies that an element of a certain name class   is required. <a href="cxml-rng__class__element.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__empty.html">
+	  Class
+	  empty</a></div>
+<div style="margin-left: 3em">This pattern specifies that nothing more is expected at the current   position. <a href="cxml-rng__class__empty.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__group.html">
+	  Class
+	  group</a></div>
+<div style="margin-left: 3em">This pattern specifies that two subpatterns are   required at the current position in a specific order. <a href="cxml-rng__class__group.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__interleave.html">
+	  Class
+	  interleave</a></div>
+<div style="margin-left: 3em">This pattern specifies that two possible subpatterns are   allowed to occur in any order at the current position. <a href="cxml-rng__class__interleave.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__list-pattern.html">
+	  Class
+	  list-pattern</a></div>
+<div style="margin-left: 3em">This pattern specifies that a subpatterns is allowed multiple   times a the current position, with whitespace as a separator. <a href="cxml-rng__class__list-pattern.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__not-allowed.html">
+	  Class
+	  not-allowed</a></div>
+<div style="margin-left: 3em">This pattern specifies that the part of the schema reached at   this point is not valid. <a href="cxml-rng__class__not-allowed.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__one-or-more.html">
+	  Class
+	  one-or-more</a></div>
+<div style="margin-left: 3em">This pattern specifies that its subpattern is   allowed to occur at the current position one or more times. <a href="cxml-rng__class__one-or-more.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__pattern.html">
+	  Class
+	  pattern</a></div>
+<div style="margin-left: 3em">The superclass of all patterns. <a href="cxml-rng__class__pattern.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__ref.html">
+	  Class
+	  ref</a></div>
+<div style="margin-left: 3em">This pattern references another part of the pattern graph. <a href="cxml-rng__class__ref.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__text.html">
+	  Class
+	  text</a></div>
+<div style="margin-left: 3em">This pattern specifies that text is expected here. <a href="cxml-rng__class__text.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__class__value.html">
+	  Class
+	  value</a></div>
+<div style="margin-left: 3em">This pattern specifies that a specific value is expected as text   here. <a href="cxml-rng__class__value.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-child.html">Function pattern-child (instance)</a></div>
+<div style="margin-left: 3em">Returns the pattern's sub-pattern. <a href="cxml-rng__fun__pattern-child.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-a.html">Function pattern-a (instance)</a></div>
+<div style="margin-left: 3em">Returns the first of two sub-patterns the pattern instance has. <a href="cxml-rng__fun__pattern-a.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-b.html">Function pattern-b (instance)</a></div>
+<div style="margin-left: 3em">Returns the second of two sub-patterns the pattern instance has. <a href="cxml-rng__fun__pattern-b.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-name.html">Function pattern-name (instance)</a></div>
+<div style="margin-left: 3em">Returns the <tt>pattern</tt>'s name class. <a href="cxml-rng__fun__pattern-name.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-element.html">Function pattern-element (ref)</a></div>
+<div style="margin-left: 3em">Returns the ref pattern's target. <a href="cxml-rng__fun__pattern-element.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-type.html">Function pattern-type (instance)</a></div>
+<div style="margin-left: 3em">Returns the data type expected at this position. <a href="cxml-rng__fun__pattern-type.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-string.html">Function pattern-string (instance)</a></div>
+<div style="margin-left: 3em">Returns the string expected at this position. <a href="cxml-rng__fun__pattern-string.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-value.html">Function pattern-value (instance)</a></div>
+<div style="margin-left: 3em">Returns the value expected at this position. <a href="cxml-rng__fun__pattern-value.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-params.html">Function pattern-params (instance)</a></div>
+<div style="margin-left: 3em">The data type parameters for this data pattern. <a href="cxml-rng__fun__pattern-params.html#details">...</a>
+</div>
+<br>    <div class="def"><a href="cxml-rng__fun__pattern-except.html">Function pattern-except (instance)</a></div>
+<div style="margin-left: 3em">Returns the <tt>data</tt> instance's <tt>except</tt> pattern. <a href="cxml-rng__fun__pattern-except.html#details">...</a>
+</div>
+<br>    </div>
+      </td>
+      <td valign="top">
+        <h3>
+<a name="index"></a>Symbol Index</h3>
+        <table cellspacing="0" cellpadding="0">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    <tr><td valign="top">
+<a href="cxml-rng__class__any-name.html"><tt>any-name</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__any-name-except.html"><tt>any-name-except</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__attribute.html"><tt>attribute</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__choice.html"><tt>choice</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__data.html"><tt>data</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__dtd-compatibility-error.html"><tt>dtd-compatibility-error</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__element.html"><tt>element</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__empty.html"><tt>empty</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__group.html"><tt>group</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__interleave.html"><tt>interleave</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__list-pattern.html"><tt>list-pattern</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__make-dtd-compatibility-handler.html"><tt>make-dtd-compatibility-handler</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__make-validating-source.html"><tt>make-validating-source</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__make-validator.html"><tt>make-validator</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__name.html"><tt>name</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__name-class.html"><tt>name-class</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__name-class-choice.html"><tt>name-class-choice</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__name-class-choice-a.html"><tt>name-class-choice-a</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__name-class-choice-b.html"><tt>name-class-choice-b</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__name-lname.html"><tt>name-lname</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__name-uri.html"><tt>name-uri</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__not-allowed.html"><tt>not-allowed</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__ns-name.html"><tt>ns-name</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__ns-name-except.html"><tt>ns-name-except</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__ns-name-uri.html"><tt>ns-name-uri</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__one-or-more.html"><tt>one-or-more</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__parse-compact.html"><tt>parse-compact</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__parse-schema.html"><tt>parse-schema</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__pattern.html"><tt>pattern</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-a.html"><tt>pattern-a</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-b.html"><tt>pattern-b</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-child.html"><tt>pattern-child</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-element.html"><tt>pattern-element</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-except.html"><tt>pattern-except</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-name.html"><tt>pattern-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-params.html"><tt>pattern-params</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-string.html"><tt>pattern-string</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-type.html"><tt>pattern-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__pattern-value.html"><tt>pattern-value</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__ref.html"><tt>ref</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__rng-error.html"><tt>rng-error</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__rng-error-column-number.html"><tt>rng-error-column-number</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__rng-error-line-number.html"><tt>rng-error-line-number</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__rng-error-system-id.html"><tt>rng-error-system-id</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__schema.html"><tt>schema</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__schema-start.html"><tt>schema-start</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__fun__serialize-schema.html"><tt>serialize-schema</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__text.html"><tt>text</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-rng__class__value.html"><tt>value</tt></a>, class</td></tr>
+</table>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

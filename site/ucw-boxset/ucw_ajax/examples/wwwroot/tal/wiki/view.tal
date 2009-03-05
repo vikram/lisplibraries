@@ -1,0 +1,13 @@
+<!-- -*- html -*- -->
+<tal:include xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+	     xmlns:ucw="http://common-lisp.net/project/ucw/core"
+	     xmlns:param="http://common-lisp.net/project/bese/tal/params"
+	     tal:in-package=":it.bese.ucw-user"
+	     tal:name="wiki-wrapper.tal">
+  <param:contents>
+    <div tal:content="$contents" tal:escape-html="nil">
+      page contents go here
+    </div>
+    <p><a href="edit.ucw?page-name=${$page-name}">Edit</a></p>
+  </param:contents>
+</tal:include>

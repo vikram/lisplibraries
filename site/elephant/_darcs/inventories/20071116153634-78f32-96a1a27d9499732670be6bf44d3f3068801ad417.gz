@@ -1,0 +1,317 @@
+[Empty repository
+ieslick@common-lisp.net**20070308220933] 
+[Initial Import of CVS 0.9.1 RC1
+ieslick@common-lisp.net**20070430224026] 
+[Prevalence store basic ops + BTrees + some index + some prep for new index architecture
+ieslick@common-lisp.net**20070502174250] 
+[Resolve README Conflict
+ieslick@common-lisp.net**20070502181707] 
+[Factor our forbidden secondary cursor ops
+ieslick@common-lisp.net**20070502191218] 
+[Bug fix for primary key missing in map-index
+ieslick@common-lisp.net**20070505043920] 
+[Remove user file my-config.sexp that should not be repo
+ieslick@common-lisp.net**20070505221208] 
+[Add specific conditions for errors in the deserializer than implementations can dispatch on; also generalized database error signal is exported
+ieslick@common-lisp.net**20070507022025] 
+[Enable subclass override of controller object cache
+ieslick@common-lisp.net**20070507022608] 
+[Fix btree-index forbidden ops factorization
+ieslick@common-lisp.net**20070507023022] 
+[Prevalence backend BTree index implementation; all but 11 tests pass (with fake serializer)
+ieslick@common-lisp.net**20070505043545] 
+[initial import db-postmodern
+Henrik Hjelte <hhjelte@common-lisp.net>**20070510080504] 
+[make db-postmodern compile and load
+Henrik Hjelte <hhjelte@common-lisp.net>**20070510093421] 
+[make Makefile documentation build on sbcl
+Henrik Hjelte <hhjelte@common-lisp.net>**20070510132113] 
+[upgrade-btree-type in db-postmodern
+Henrik Hjelte <hhjelte@common-lisp.net>**20070510143154
+ which fixed a bug shown by test pset
+] 
+[postmodern cursor-set need to be able to move to next key
+Henrik Hjelte <hhjelte@common-lisp.net>**20070511070159] 
+[testcollections, cursor-previous variants, tests may cheat
+Henrik Hjelte <hhjelte@common-lisp.net>**20070511154905
+ 
+ because of loop for while m.
+ It makes the test silently leave as soon as m is false
+ despite what the value for p and v is. If the m is moved
+ to the always clause everything is tested.
+] 
+[db-postmodern bug fix for cursor-previous et al
+Henrik Hjelte <hhjelte@common-lisp.net>**20070511170648] 
+[postmodern tests file
+Henrik Hjelte <hhjelte@common-lisp.net>**20070511171430] 
+[postmodern integration
+rread@common-lisp.net**20070704214111] 
+[btree-exec-prepared rewritten
+Henrik Hjelte<henrik@evahjelte.com>**20070706005537] 
+[updated install-bdb.sh in henrik/contrib
+Henrik Hjelte <hhjelte@common-lisp.net>**20070608144005] 
+[db-postmodern some cleaning
+Henrik Hjelte<henrik@evahjelte.com>**20070706033345] 
+[db-postmodern, treat strings as objects.
+Henrik Hjelte<henrik@evahjelte.com>**20070706033714
+ To avoid this: Database error 54000: index row size 3172 exceeds btree maximum, 2713
+ Values larger than 1/3 of a buffer page cannot be indexed.
+ Consider a function index of an MD5 hash of the value, or use full text indexing.
+] 
+[db-postmodern blob table bid column is now a 64 bit integer
+Henrik Hjelte<henrik@evahjelte.com>**20070708152711] 
+[db-postmodern send binary data instead of base64
+Henrik Hjelte<henrik@evahjelte.com>**20070709092113] 
+[stress-test make subsets work with sbcl
+Henrik Hjelte<henrik@evahjelte.com>**20070709093108] 
+[Fixed Roberts bug with large blobs
+Henrik Hjelte<henrik@evahjelte.com>**20070709190719
+ Becuause the bob columb in blob had a unique index.
+ Now the index is on a md5 value of the bob.
+] 
+[db-postmodern some cleaning
+Henrik Hjelte<henrik@evahjelte.com>**20070709191312] 
+[keysize test
+rread@common-lisp.net**20070710201629
+ This is a test of how big a key can get.  It was introduced when
+ debugging the postmodern stuff.  Unfortunately, there is a limit,
+ which we should work to overcome.
+] 
+[TryingToSurviveSerializationErrors
+rread@common-lisp.net**20070710201826
+ This is an attempt to survive serialization errrors.
+ Rob may be the only person who ever has these (having 
+ a live database since around 0.3), and this method 
+ is almost a non-method --- but at least it doesn't 
+ make your whole attempt to load a database grind to a
+ halt.
+] 
+[PuttingIndexOnMd5column
+rread@common-lisp.net**20070710202059
+ I haven't gotten Henrik's approval of this yet, but it seems obvious
+ (and my test bear out) that this is the column that should be indexed.
+] 
+[postmodern disable cache
+Henrik Hjelte<henrik@evahjelte.com>**20070714161443
+ Because it may cause conflicts when different processes access the same database
+] 
+[pm-indexed-btree, remove cache slot
+ties**20070717090830
+                                                           
+] 
+[file elephant-tests split into several files
+Henrik Hjelte<henrik@evahjelte.com>**20070721022740] 
+[Test framework changed to FiveAM
+Henrik Hjelte<henrik@evahjelte.com>**20070721044404] 
+[fiveam make a default testsuite elephant-tests
+Henrik Hjelte<henrik@evahjelte.com>**20070721145533] 
+[testcollections changed to fiveam
+Henrik Hjelte<henrik@evahjelte.com>**20070721145633] 
+[removed-kv tests are merged to one test
+Henrik Hjelte<henrik@evahjelte.com>**20070721150018
+ removed old outcommented code
+] 
+[two more trivial map-index tests
+Henrik Hjelte<henrik@evahjelte.com>**20070721153616] 
+[two more indexing-basic tests for completeness
+Henrik Hjelte<henrik@evahjelte.com>**20070721160313] 
+[test larger-indexing-with-string
+Henrik Hjelte<henrik@evahjelte.com>**20070721180537
+ fails on postmodern, works with bdb and clsql
+] 
+[db-postmodern new implementation of cursor-set
+Henrik Hjelte<henrik@evahjelte.com>**20070722030035
+ Solved a bug with map-index for strings.
+ Works with testcases but needs cleaning up..
+] 
+[testcase pcursor2-on-string
+Henrik Hjelte<henrik@evahjelte.com>**20070722060604] 
+[some more basic indexing tests
+Henrik Hjelte<henrik@evahjelte.com>**20070722060733] 
+[db-postmodern fix for problem with map-index
+Henrik Hjelte<henrik@evahjelte.com>**20070722061401
+ elephant apparently requires btrees with strings as keys
+ to be sorted correctly according to lisp-compare<=. This works 
+ for cl-sql which sorts things in memory, but not for the
+ postmodern design which relies on the database to sort things.
+ We need to either change elephant or implement db-postmodern
+ differently. This fix changes elephant internals temporarily
+ when using the db-postmodern backend. Not pretty.
+] 
+[make a fixture for indexing tests
+Henrik Hjelte<henrik@evahjelte.com>**20070722070302] 
+[db-postmodern some cleaning up
+Henrik Hjelte<henrik@evahjelte.com>**20070722074116] 
+[db-postmodern misc cleaning up
+Henrik Hjelte<henrik@evahjelte.com>**20070722075640] 
+[db-postmodern some refactoring
+Henrik Hjelte<henrik@evahjelte.com>**20070722113311] 
+[bugfix cursor-set on empty tree
+Henrik Hjelte<henrik@evahjelte.com>**20070722140929] 
+[typo fix
+Ties Stuij**20070724111443] 
+[db-postmodern cursor-set refactoring and bugfix
+Henrik Hjelte<henrik@evahjelte.com>**20070725220115] 
+[db-postmodern some with-trans-and-vars changed to with-vars
+Henrik Hjelte<henrik@evahjelte.com>**20070725220146] 
+[db-postmodern make char-columns default
+Henrik Hjelte<henrik@evahjelte.com>**20070726054334] 
+[db-postmodern minor changes
+Henrik Hjelte<henrik@evahjelte.com>**20070731073031] 
+[db-postmodern ignore-errors when preparing-query
+Henrik Hjelte<henrik@evahjelte.com>**20070808093908
+ An ugly fix that should be solved at some point
+] 
+[db-postmodern print-object on pm-btree
+Henrik Hjelte<henrik@evahjelte.com>**20070814081715] 
+[db-postmodern bugfix again map-index patch is always needed
+Henrik Hjelte<henrik@evahjelte.com>**20070814090244] 
+[db-postmodern print-object on cursor
+Henrik Hjelte<henrik@evahjelte.com>**20070814090413] 
+[TAG PostmodernImprovements
+ieslick@common-lisp.net**20070822200524] 
+[db-postmodern: execute-transaction does not use magic macro
+Henrik Hjelte<henrik@evahjelte.com>**20070820201508] 
+[changed test for serializer
+Henrik Hjelte<henrik@evahjelte.com>**20070822020617] 
+[db-postmodern attempt to solve uncommon error 42P01 with prepared statements
+Henrik Hjelte<henrik@evahjelte.com>**20070823084724] 
+[db-postmodern bugfix with transaction handling
+Henrik Hjelte<henrik@evahjelte.com>**20070823084932] 
+[db-postmodern update in initialization code
+Henrik Hjelte<henrik@evahjelte.com>**20070823085018] 
+[db-postmodern ignore-errors changed to handler-case
+Henrik Hjelte<henrik@evahjelte.com>**20070823085526] 
+[db-postmodern create-language on initialization (Robert L. Read)
+Henrik Hjelte<henrik@evahjelte.com>**20070823090504] 
+[db-postmodern rename with-conn with-postmodern-conn
+Henrik Hjelte<henrik@evahjelte.com>**20070823091456] 
+[db-postmodern remove meaningless function
+Henrik Hjelte<henrik@evahjelte.com>**20070823094715] 
+[db-postmodern do not use postmoderns connection pooling
+Henrik Hjelte<henrik@evahjelte.com>**20070823094751] 
+[do-test-spec jumps into debugger by default
+Henrik Hjelte<henrik@evahjelte.com>**20070823145758] 
+[db-postmodern safe-ignore-postgres-error on create-language
+Henrik Hjelte<henrik@evahjelte.com>**20070823153914] 
+[intern to proper package in make-derived-name
+alex.mizrahi@gmail.com**20070904123559] 
+[fix type declaration in get-instances-by-range
+alex.mizrahi@gmail.com**20070904123721] 
+[pm-btree make-plpgsql-insert/update duplicates handling fixed
+alex.mizrahi@gmail.com**20070905124306] 
+[Somehow this was fixed before, and then regressed again in the 
+rread@common-lisp.net**20070911155714
+ current code.  I have added a test which actually exercises,
+ according the the XP discipline.  It is a very inelegant test,
+ but it is a hard to exercise problem.
+] 
+[Cleaning up some type declarations
+rread@common-lisp.net**20070911155928] 
+[A tiny convenience.
+rread@common-lisp.net**20070911160015] 
+[Test duplicate operations without depending on primary key ordering part 1
+ieslick@common-lisp.net**20070505170910] 
+[Prevalence fixes for duplicate and get cursor operations
+ieslick@common-lisp.net**20070505174213] 
+[Fix map-legacy-names bug for null case
+ieslick@common-lisp.net**20070507031026] 
+[Simple augmentation of debugging model in deserializer
+ieslick@common-lisp.net**20070507031150] 
+[Cleanup persistent object printing to handle unbound oids
+ieslick@common-lisp.net**20070509001123] 
+[Update elephant code version to 0.9.1
+ieslick@common-lisp.net**20070509001216] 
+[Cleanup and export instance caching so data stores can override the protocol
+ieslick@common-lisp.net**20070509001327] 
+[First pass complete cl-prevalence backend; still a few bugs to work out
+ieslick@common-lisp.net**20070509001453] 
+[Keep to date with CVS for release tag 0.9
+ieslick@common-lisp.net**20070531195635] 
+[Last CVS branch bug fix: utf16 serializer
+ieslick@common-lisp.net**20070606170001] 
+[Pset wasn't persistent
+ieslick@common-lisp.net**20070612135351] 
+[Enable UTF32le unicode support for OpenMCL 1.1
+ieslick@common-lisp.net**20070627143750] 
+[Add test for unicode values in slots from 0.9p1
+ieslick@common-lisp.net**20070627145755] 
+[Most recent edits; small bug fixes and query testing
+ieslick@common-lisp.net**20071019153850] 
+[resolve merge conflicts between eslick working branch and postmodern branch
+eslick@common-lisp.net**20071019160331] 
+[Fix FiveAM test dependencies, some Allegro issues, some mis-merges, etc.  See diff for details.
+eslick@common-lisp.net**20071019213723] 
+[Fix lisp comparisons for map-index to mirror 0.9p1
+eslick@common-lisp.net**20071022135848
+ 
+ Forgot to push patch to lisp-compare<=/=/< functions from
+ 0.9 CVS to 091 darcs.  Fixed in merge branch. 
+ 
+] 
+[Fixed mop test dependencies for fiveam conversion
+eslick@common-lisp.net**20071022140438] 
+[Fix character comparison in BDB data store and lisp-compare functions
+eslick@common-lisp.net**20071022162238] 
+[Add test for characters as index keys
+eslick@common-lisp.net**20071022194149] 
+[Fixed a bug in cursor-prev and added a test for standard btree cursors (was missing! wow!)
+eslick@common-lisp.net**20071022212318] 
+[Fix a defaults bug in manual transaction handling
+eslick@common-lisp.net**20071022235855] 
+[(#7) Delete slot data during instance edits in change-class and redefine-class; optional warning conditions
+eslick@common-lisp.net**20071022235935] 
+[Fix bugs in recent changes and tests for change class and character indexing; tests are green
+eslick@common-lisp.net**20071023003026] 
+[(#19) Fixed increment cursor on cursor-put
+eslick@common-lisp.net**20071023004356] 
+[(#40) Allow delete while mapping; add tests; fix more test dependencies; fix bug in map-index
+eslick@common-lisp.net**20071023031831] 
+[(#18) Preliminary migration-oriented GC, very slow. Also added warning print vars and did some preliminary work on (#48)
+eslick@common-lisp.net**20071024010932] 
+[Fix bugs that showed up in migration test suite; some test harness detritus and a bug in the SQL txn handling implementation
+eslick@common-lisp.net**20071024025205] 
+[Patch to use core lisp comparison predicates, including fixes to sql cursors and removing a test that works by accident under BDB due to the inability to compare standard objects
+eslick@common-lisp.net**20071028191358] 
+[Fix signaling test to bind error appropriate for the given lisp
+eslick@common-lisp.net**20071028192553] 
+[Fix a typo
+eslick@common-lisp.net**20071028223403] 
+[Fix some test harness issues for lispworks
+eslick@common-lisp.net**20071028225431] 
+[db-postmodern ignore errors around close cursor
+Henrik Hjelte<henrik@evahjelte.com>**20070921053113] 
+[txn btree value cache
+alex.mizrahi@gmail.com**20070912191553] 
+[un-disabled instance caching
+alex.mizrahi@gmail.com**20070913141409] 
+[global-sync-cache
+alex.mizrahi@gmail.com**20070919113321] 
+[fixes in pm-cache
+alex.mizrahi@gmail.com**20070920071646] 
+[Made enable-sync-cache more efficient and safe
+Henrik Hjelte<henrik@evahjelte.com>**20070926015756] 
+[Postmodern backend: connection spec now accepts :port keyword argument, to specify the port. Similar to Postmodern's connection spec syntax.
+tjg@pentaside.org**20071024152639] 
+[db-postmodern secondary cursor should be closed after removing values
+Henrik Hjelte<henrik@evahjelte.com>**20071030181154] 
+[db-postmodern update the ugly map-index quick fix
+Henrik Hjelte<henrik@evahjelte.com>**20071030181310] 
+[postmodern texinfo file
+Henrik Hjelte<henrik@evahjelte.com>**20071030185853] 
+[postmodern remove obsolete comment about weak tables
+Henrik Hjelte<henrik@evahjelte.com>**20071031023318] 
+[db-postmodern fixed buggy cursor-delete fix secondary-cursor
+Henrik Hjelte<henrik@evahjelte.com>**20071101100700] 
+[POSTMODERN-tests include hints to configure postgres
+Henrik Hjelte<henrik@evahjelte.com>**20071101102627] 
+[random test for serializer
+Henrik Hjelte<henrik@evahjelte.com>**20071101144320] 
+[Fixes to enable the docs to build (on OS X / SBCL using 'make' in elephant/doc)
+eslick@common-lisp.net**20071104204802] 
+[postmodern removed ugly-fix from pm-btree-index 
+Henrik Hjelte<henrik@evahjelte.com>**20071106080216
+ and made char-columns hardcoded (removed other option).
+] 
+[a little comment update
+Henrik Hjelte<henrik@evahjelte.com>**20071106080259] 

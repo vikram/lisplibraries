@@ -1,0 +1,136 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  xmlns:rng="http://relaxng.org/ns/structure/1.0">
+
+  <start>
+    <choice>
+      <ref name="normal"/>
+      <ref name="attribute"/>
+      <ref name="atomic"/>
+    </choice>
+  </start>
+
+  <define name="normal">
+    <element>
+      <nsName ns="http://relaxng.org/ns/structure/1.0">
+        <except>
+          <name>rng:attribute</name>
+          <name>rng:value</name>
+          <name>rng:param</name>
+          <name>rng:name</name>
+        </except>
+      </nsName>
+      <ref name="normalAtts"/>
+      <ref name="normalContent"/>
+    </element>
+  </define>
+
+  <define name="attribute">
+    <element name="rng:attribute">
+      <ref name="normalAtts"/>
+      <optional>
+        <attribute name="a:defaultValue">
+          <text/>
+        </attribute>
+      </optional>
+      <ref name="normalContent"/>
+    </element>
+  </define>
+
+  <define name="atomic">
+    <element>
+      <choice>
+        <name>rng:value</name>
+        <name>rng:param</name>
+        <name>rng:name</name>
+      </choice>
+      <ref name="normalAtts"/>
+      <text/>
+    </element>
+  </define>
+
+  <define name="normalAtts">
+    <zeroOrMore>
+      <attribute>
+        <anyName>
+          <except>
+            <nsName ns="http://relaxng.org/ns/compatibility/annotations/1.0"/>
+          </except>
+        </anyName>
+        <text/>
+      </attribute>
+    </zeroOrMore>
+  </define>
+
+  <define name="normalContent">
+    <interleave>
+      <zeroOrMore>
+        <ref name="foreign"/>
+      </zeroOrMore>
+      <group>
+        <zeroOrMore>
+          <ref name="doc"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <group>
+              <ref name="atomic"/>
+              <zeroOrMore>
+                <ref name="doc"/>
+              </zeroOrMore>
+            </group>
+            <ref name="attribute"/>
+            <ref name="normal"/>
+          </choice>
+        </zeroOrMore>
+      </group>
+    </interleave>
+  </define>
+
+  <define name="foreign">
+    <element>
+      <anyName>
+        <except>
+          <nsName ns="http://relaxng.org/ns/structure/1.0"/>
+          <nsName ns="http://relaxng.org/ns/compatibility/annotations/1.0"/>
+        </except>
+      </anyName>
+      <ref name="any"/>
+    </element>
+  </define>
+
+  <define name="any">
+    <zeroOrMore>
+      <choice>
+        <attribute>
+          <anyName/>
+          <text/>
+        </attribute>
+        <element>
+          <anyName/>
+          <ref name="any"/>
+        </element>
+        <text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+
+  <define name="doc">
+    <element name="a:documentation">
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <nsName ns="http://relaxng.org/ns/structure/1.0"/>
+              <nsName ns="http://relaxng.org/ns/compatibility/annotations/1.0"/>
+              <nsName ns=""/>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+
+</grammar>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="35"
+   name=""
+   committed-date="2005-08-16T03:41:12.748972Z"
+   url="svn://common-lisp.net/project/cl-curl/subversion/trunk/clcurl"
+   last-author="lhealy"
+   kind="dir"
+   uuid="47c31f7a-90f0-0310-991a-882670050eca"
+   revision="35"/>
+<entry
+   committed-rev="35"
+   name="curl.c"
+   text-time="2005-11-06T23:43:46.000000Z"
+   committed-date="2005-08-16T03:41:12.748972Z"
+   checksum="7592cc235503affe9b8ced2ff7f20c2a"
+   last-author="lhealy"
+   kind="file"
+   prop-time="2005-11-06T23:43:46.000000Z"/>
+</wc-entries>

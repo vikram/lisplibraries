@@ -1,0 +1,24 @@
+
+You may want to add this to your emacs setup:
+
+(let ((overrides
+       '((defclass* defclass)
+         (defcondition* defcondition)
+         (def (4 4 (&whole 4 &rest 2) &body))
+         (defresources (4 &rest (&whole 2 &lambda &body))))))
+  (dolist (el overrides)
+    (put (first el) 'common-lisp-indent-function
+         (if (symbolp (second el))
+             (get (second el) 'common-lisp-indent-function)
+             (second el)))))
+
+And maybe this to lisp-font-lock-keywords-2
+
+("(\\(def\\)[ 	\n]+(\\([^) 	\n]+\\).*?)[ 	\n(]+\\(.*?\\)[ 	\n)]+"
+ (1 font-lock-keyword-face)
+ (2 font-lock-type-face)
+ (3 font-lock-function-name-face))
+("(\\(def\\)[ 	\n]+\\(.*?\\)[ 	\n(]+\\(.*?\\)[ 	\n)]+"
+ (1 font-lock-keyword-face)
+ (2 font-lock-type-face)
+ (3 font-lock-function-name-face))

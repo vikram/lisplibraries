@@ -1,0 +1,11 @@
+Revision: pxmlutils--main--0.0--patch-2
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Fri Oct 24 11:53:22 CEST 2003
+Standard-date: 2003-10-24 09:53:22 GMT
+Modified-files: README pxml0.cl pxml1.cl pxml2.cl pxml3.cl
+    pxmlutils.asd
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-2
+Summary: ported the xml parser.
+Keywords: 
+

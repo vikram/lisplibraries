@@ -1,0 +1,64 @@
+<html><head><title>Araneida - Caching</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - Caching</title>
+</head><body>
+
+<h1>Caching</h1>
+
+<p>Proper use of HTTP caching can make your application run faster and
+use less bandwidth - especially when using Apache mod_proxy - and is
+also friendlier to the rest of the Internet.  Improper use of caching
+can lead to stale pages or to visitors getting content intended for
+other people.
+
+<p>Araneida's REQUEST-SEND-HEADERS allows all HTTP response headers to
+be sent, giving you full control over caching.  You are advised to
+read RFC 2616 for the detail, but here are a few tips:
+
+<ul>
+<li> Set a Last-Modified time, if at all possible.  With a
+correct :Last-Modified argument and :CONDITIONAL T to request-send-headers,
+Araneida will send appropriate "304 Not modified" responses on your behalf.
+
+<li> Caches use the Expires header to determine when a cached response
+is stale (meaning that it should be revalidated with the origin
+server), not necessarily when it should be flushed from the cache
+altogether.  If mod_proxy receives a request for which is has a fresh
+response, it will send that response without even consulting Araneida.
+If it has a stale response it will query Araneida first, using a
+conditional GET to which araneida may respond with a 304.  So even if
+you can't predict the future well enough to set long expiry times, you
+can still derive some benefit from caching at least in the case where
+it is cheaper to determine whether a resource has changed than it is
+to generate the resource afresh.
+
+<li> If you don't set Expires, mod_proxy (and other caches) will
+attempt to guess a suitable staleness time based on the Last-Modified
+header.  In mod_proxy this is controlled using
+CacheLastModifiedFactor.  I'd suggest that in a dynamic web
+application it's probably easiest to set this to 0 so that the cache
+defaults to revalidating every time, and send explicit Expires headers
+when you know that a request won't always need this conservative
+treatment (e.g. on static files).
+
+<p>Note that you can specialise request-send-headers on your static
+file handlers to implement your expiry policy.  For example
+
+<pre>
+(defclass cached-file-handler (static-file-handler) ())
+(defmethod request-send-headers ((h cached-file-handler) &rest rest)
+  (apply #'call-next-method :expires (+ (get-universal-time) 86400) rest))
+</pre>
+
+<li> If using mod_proxy, add "LogLevel debug" in the apache httpd.conf
+and watch the error log.  It will tell you a lot about the caching
+decisions that Apache is making: even more, if you read it with
+reference to the Apache source code.  Note that as well as per-request
+debugging this will also give you some more messages that indicate
+actual errors (e.g. when apache doesn't have permission to write to
+its cache directory)
+
+<li> Restarting Apache will not clear its cache, but it appears to be
+safe to wipe it out with <tt>rm</tt> whenever necessary.
+
+</ul>

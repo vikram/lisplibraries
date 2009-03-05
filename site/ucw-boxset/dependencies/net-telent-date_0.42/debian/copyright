@@ -1,0 +1,10 @@
+
+Most of the code in this package is parse-time.lisp, which was
+originally written by Jim Healy in June 1987, and has been lifted
+wholesale from CMUCL.  This is believed to be Public Domain
+
+The rest opf it is a few useful functions for printing dates in
+human-readable formats, and is likewise Public Domain
+
+
+

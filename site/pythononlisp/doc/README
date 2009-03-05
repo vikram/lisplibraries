@@ -1,0 +1,199 @@
+# Intro
+
+Welcome on pythononlisp, the Common Lisp package that aims to let you
+access the glories and treasures of the pyton standard library.
+
+# Non-Warranty
+
+Caveat user: This is alpha software. Past verions of it have been
+reported to work on the following CL implementations: CLisp on
+Windows, Allegro on Windows, LispWorks on WIndows, CLisp on
+Unix. However, there are no confirmed installs on SBCL, CMUCL, or
+other implementations. If you do get it to work, please tell us how! 
+We believe this code is probably a short step away from being
+compatible with most implementations, but that step requires a
+someone with an experienced hand.
+
+# Quick Start
+
+Most documentation is in the comments of pythononlisp.lisp. These are
+just quick start-up notes.
+
+## System Requirements:
+
+1) Python (version >= 2.2)
+
+pythononlisp should find your python installation automatically if you
+are using OS X, or if you are using Python 2.3 or Python 2.4 under
+Windows or Debian Linux.
+
+If this does not describe you, then you may need to edit the form
+(CFFI:DEFINE-FOREIGN-LIBRARY ... ) in pythononlisp.lisp so that it
+include the DLL or shared object file for your copy of Python. This
+should require no more than adding another path string to the (:OR
+...) form for your OS.
+
+If you make any amendments that would benefit others, please send us a
+patch. The goal is to modify that form so that it handles Windows, OS
+X, and the top Linux distros.
+
+2) CFFI (common foreign function interface) (version >= 0.9.2)
+
+pythononlisp uses CFFI to talk to Python. If you install pythononlisp
+through asdf-install, then cffi will also be installed automatically
+
+## Getting Started
+
+1) INSTALLING. Make sure you have python and asdf-install on your
+system. Download the tarball pythononlisp.tar.gz, load asdf-install,
+and install pythononlisp in the usual way:
+
+  (asdf-install:install "/path/to/pythononlisp.tar.gz")
+
+This will also install dependencies like cffi
+
+2) LOADING. To load it, you should do
+
+  (asdf:operate 'asdf:load-op :pythononlisp)
+
+If you want to load pythononlisp without asdf, load cffi, then do
+(LOAD "packages.lisp") and (LOAD "pythononlisp.lisp")
+
+3) USING. 
+
+  (py::py "print \"Hello from python\"")
+  (py::py get-web-page "http://www.google.com")
+
+(If you have problems with python-on-lisp output not appearing from within emacs, then Richard Fateman has reported that it is a solution to call py giving 'STRING as the last argument, as in (py::py "print 50"" 'STRING).)
+
+# Documentation
+
+;;;
+;;; *** Start of simple documentation ***
+;;;
+;;;     "Why" is a complex question, with a simple answer: I like
+;;;     Lisp's code and Python's extremely simple-to-use and
+;;;     easy-to-install library collection. I've never got a webserver
+;;;     to run in Clisp, but I got web.py (Aaron Swartz's server
+;;;     framework) running in minutes.
+
+;;;;;; Requirements:
+;;;
+;;; Common Lisp. 
+;;; This package is known to work on the following Common Lisp
+;;; implementations:
+;;;    - CLisp on Windows
+;;;    - Allegro on Windows
+;;;    - LispWorks on Windows
+;;;    - Clisp on Unix
+;;;    - SBCL 0.9.13, Python 2.4.2 on Gentoo Linux 3.4.4-r1
+;;;    - Clisp 2.35, Python 2.4.2 on Gentoo Linux 3.4.4-r1
+;;;
+;;; Python. 
+;;; Not the 'devel' version, but just the general consumer
+;;; version. All you need is the python/lib libraries and the Python
+;;; library binary (on Windows, it's "python22.dll" or "python24.dll"
+;;; etc, and on Linux it's (I think) libpython2.3.so.1.0 etc). If you
+;;; want to re-distribute, you can in some cases include the Python
+;;; DLL even in commercial distributions, perhaps the specific
+;;; python/lib .py libraries used. It's easiest just to ask people to
+;;; download Python first, but that's about 6mb.
+
+;;;;;; Usage notes:
+;;;
+;;; For those who don't want to read the code (I know I wouldn't!),
+;;; here's some tips on using it.
+;;;
+;;;     First, this code is only tested in Clisp, Allegro and
+;;;     Lispworks on Windows, and Clisp on Linux (but should work with
+;;;     the other two in Linux as well).
+;;;
+;;;     To run a bit of Python code and print its results to the Lisp
+;;;     console, type "(py::py [code])" where [code] is a string with
+;;;     the Python code you want to execute. It will also return a
+;;;     string with the text printed out. eg, (py::py "print 'abc'")
+;;;     will print "abc" to the Lisp REPL and return "abc" to the
+;;;     caller.
+;;;
+;;;     Use the ' for strings in Python code so you don't have to
+;;;     escape the quote character "
+;;;
+;;;     To escape Lisp calls to Python, use \"
+;;;
+;;;     When calling back from Python to Lisp, you may need to escape
+;;;     strings (if calling in a string from Lisp) with \\\" (which is
+;;;     \" in escaped Python code).
+;;;
+;;;     To run code and not print anything (the most efficient
+;;;     method), "(py::pythonlisp [code] T)"
+;;;
+;;;     To run code and define a module of callbacks which Python can
+;;;     run by module name and function name, add it as a 3rd
+;;;     parameter to pythonlisp or define it with add-python-module,
+;;;     and then you need to copy and paste the callbacks and rewrite
+;;;     as appropriate.
+;;;
+;;;          get-mbox-messages is a good example of how to pass a
+;;;          module definition to add-python-module, as is the
+;;;          definition in init-python
+;;;
+;;;          mbox-add-field is an example of a callback with 2
+;;;          string args
+;;;
+;;;          SetString is 1 arg
+;;;
+;;;          GetString is no args but a return value. I haven't done any work on having 'l' args (long integer), so use 'atol' with 's' args.
+
+;;;;;; There are some toys:
+;;;
+;;;          To interact with Python, "(py::py-repl)". Be very
+;;;          careful in this mode, in the same way you would be in
+;;;          the Lisp REPL. Don't paste code into the window, don't
+;;;          do anything like play around with file access unless
+;;;          you know what you're doing, and treat it as you would
+;;;          any console.
+;;;
+;;;          To get a webpage in a string, "(py::get-web-page
+;;;          [url])"
+;;;
+;;;          To get all the messages in a Unix-style mbox mail
+;;;          file, "(py::get-mbox-messages [filename])" - this does
+;;;          not open any files for write-access (only
+;;;          read-binary), so should be okay in all situations, but
+;;;          the file handles may remain open (untested). Works
+;;;          with Netscape mail files, probably Mozilla and
+;;;          Thunderbird too. It is not OS-dependent, so the same
+;;;          code will work in Windows, Linux, etc.
+
+;;;;;; Gotchas:
+;;;
+;;; Don't use too much Python or LispEval from Python, or you'll end
+;;; up with spaghetti code requiring 2 languages to unscramble.
+;;;
+;;; Don't run an infinite Python process (such as a webserver) before
+;;; saving your work, as you might not be able to Ctrl+C out. You
+;;; could find another way for the process to terminate. For instance,
+;;; I found that when you run web.py, it goes into a server
+;;; loop. Ctrl+C doesn't work, or so it seems, until you hard-reload a
+;;; webpage served up by web.py, and then it breaks out of Python with
+;;; a stack trace.
+;;;
+;;; Don't let anyone who has access to Python run malicious
+;;; code (they could call pol.LispEval even if you secure
+;;; Python), so observe all the usual security
+;;; requirements. You could also disable pol.LispEval by
+;;; specifying 'T' (secure) to init-python. eg (init-python
+;;; "program name" T)
+;;; 
+;;; I will eventually be moving to keyword arguments for the
+;;; more complex functions (such as ":secure T" to
+;;; init-python).
+;;;
+;;; I haven't put OS or distribution specific checks in (this
+;;; is an Alpha release), so set *python-library-path* to the
+;;; right value below, and make sure CFFI is in the right
+;;; place
+
+
+;;; *** End of simple documentation ***
+

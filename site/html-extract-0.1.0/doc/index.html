@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>HTML-EXTRACT - Extract plain text from HTML</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  a { text-decoration: none; }
+  a.noborder { border:0px }
+  a.noborder:hover { border:0px }  a.none { border:1px solid white; }
+  a.none { border:1px solid white; }
+  a.none:hover { border:1px solid white; }
+  a { border:1px solid white; }
+  a:hover   { border: 1px solid black; } 
+  a.noborder { border:0px }
+  a.noborder:hover { border:0px }
+  </style>
+</head>
+
+<body bgcolor=white>
+
+<h2>HTML-EXTRACT - Extract plain text from HTML</h2>
+
+This was written in 2002/2003 for a customer who wanted to have a
+simple Unix-like "filter" to extract the textual content from HTML
+files.  It was implemented in <a href="http://clisp.sf.net/">CLISP</a>
+due to its availability on many different platforms but contains
+virtually no implementation-dependent code and should thus be portable
+to other Common Lisp implementations without much effort.
+<p>
+HTML-EXTRACT can be downloaded
+from <a
+href="http://weitz.de/files/html-extract.tar.gz">http://weitz.de/files/html-extract.tar.gz</a>. It
+comes with
+a <a
+href="http://www.opensource.org/licenses/bsd-license.php">BSD-style
+license</a> so you can basically do with it whatever you want.
+<p>
+To build HTML-EXTRACT on a Unix-like OS you just have to execute the
+shell script <code>build.sh</code> in the HTML-EXTRACT directory - you
+might have to adjust the <code>CLISP</code> variable there first.
+This'll result in a small executable <code>html-extract</code> that you can
+put into, say, <code>/usr/local/bin</code> and use like this:
+<pre>
+html-extract &lt;input.html &gt;output.txt
+</pre>
+Here, <code>input.html</code> is an arbitrary HTML file
+and <code>output.txt</code> will be the result of stripping all HTML
+tags off of this file.
+
+<p>
+$Header: /usr/local/cvsrep/html-extract/doc/index.html,v 1.1.1.1 2005/09/22 22:09:22 edi Exp $
+<p><a href="http://weitz.de/index.html">BACK TO MY HOMEPAGE</a>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+Revision: pxmlutils--dev--1.1--base-0
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Wed Nov 17 14:25:10 CET 2004
+Standard-date: 2004-11-17 13:25:10 GMT
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--base-0
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-1
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-2
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-3
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-4
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-5
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-6
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-7
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-8
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-9
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-10
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-11
+    bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-12
+    bese-2004@common-lisp.net/pxmlutils--dev--1.1--base-0
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--base-0
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-1
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-2
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-3
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-4
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-5
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-6
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-7
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-8
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-9
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-10
+    bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-11
+    bese-devel@common-lisp.net/xmlutils--main--0.0--base-0
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-1
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-2
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-3
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-4
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-5
+    bese-devel@common-lisp.net/xmlutils--main--0.0--patch-6
+    bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+Continuation-of: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-12
+Summary: tag of bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-12
+
+(automatically generated log message)

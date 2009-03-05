@@ -1,0 +1,174 @@
+<html><head><title>Araneida - Handlers</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - Handlers</title>
+</head><body>
+
+<h1>Handlers</h1>
+
+<p>A handler is a CLOS object responsible for handling requests to a
+given portion of the URL space.  Typically, you create a subclass of
+HANDLER, and specialise methods on one or more of the generic
+functions listed in handler.lisp.  HANDLE-REQUEST-RESPONSE is a good
+place to start.  A response handler should return non-NIL, otherwise
+Araneida will send a 404
+
+<p>A dispatching handler calls authentication and authorization methods,
+then dispatches on the sub-handler, then logs.
+
+<p>The HTTP methods is a specialisable argument - it's not unusual to
+do different things for GET and POST at the same url.
+
+<h2>Installation</h2>
+
+<p>An <a href="listeners.html">http-listener</a> points at a
+dispatching-handler (which is usually created along with the listener);
+typically you install your handlers as child handlers of that root.
+
+For example,
+
+<pre>
+(install-handler (http-listener-handler *my-listener*)
+    (make-instance 'static-file-handler :pathname #p"/tmp/fooo")  
+    "http://ww.noetbook.telent.net/tmp/logo" nil)
+</pre>
+installs a STATIC-FILE-HANDLER to answer requests starting with
+<tt>http://ww.noetbook.telent.net/tmp/logo</tt>
+
+<p>The first argument to INSTALL-HANDLER is the parent handler: if you
+create your handler based on DISPATCHING-HANDLER (as distinct from the
+plain HANDLER) it can have subhandlers installed in it this way.
+CLiki is a real-world example of this technique.
+
+<h2>Handler invocation</h2>
+
+<p>When a request comes in, the http-listener's root handler's
+handle-request method is invoked on it.  This is usually a
+dispatching-handler, so calls whichever appropriate subhandler you've
+installed for the URL.  If you install more dispatching-handlers, the
+dispatch will happen again.
+
+<p>At each level of dispatch, another clause is pushed onto the request's
+HANDLED-BY slot value.  This is a list of lists
+
+<pre>
+((handler index)
+ (handler index)
+ ...)
+</pre>
+
+where index is the element after the last position in the urlstring
+that was used for discrimination.  You can get at the unmatched part
+of the URL string using REQUEST-UNHANDLED-PART.
+
+<h2>Producing output</h2>
+
+<p>
+Usually the HANDLE-REQUEST-RESPONSE stage is the one that gets to send
+back a response.  However, any earlier stage can send one if it wants
+(usually in an atypical situation, like "you have supplied an
+incorrect password").  If it does this, it should signal
+RESPONSE-SENT, so that the later methods are not invoked.
+
+<p>An HTTP response consists of a header and a body, and it's strongly
+recommended that you write the header using REQUEST-SEND-HEADERS.
+It returns the response code.
+
+REQUEST-SEND-HEADERS copes automatically with HTTP/0.9 requests and
+will also help you with conditional GETs if you ask it to: if you
+supply :conditional t and :last-modified some-universal-time, it will
+check for an If-Modified-Since header in the request, and send a 304
+if the response has been sent already.  If it sends a 304, it will then
+signal RESPONSE-SENT instead of returning, so if you wish to do 
+any further processing after sending the request be sure to wrap it in
+UNWIND-PROTECT.  See the documentation on <a href="caching.html">HTTP
+caching</a> for more detail.
+
+
+<h2>Errors</h2>
+
+<p>HTTP errors (e.g. 404, 500) can be signalled with SIGNAL; see the
+<a href="example.lisp">example</a>.  For a list of condition names,
+see <a href="../http-errors.lisp">http-errors.lisp</a>.
+
+<h2>Authentication and authorization methods</h2>
+
+<p>
+Identities (usernames, basically) are unique per realm
+
+<p>
+Typically, we arrange that the authentication method is responsible
+for checking that the supplied credentials are correct for the given
+identity in the given URL space.  It will only produce a page if the
+credentials were not supplied or don't match the claimed identity (and
+might not necessarily even then)
+
+<p>
+The authorization method has to check if the requested action is allowed
+to the given identity when connecting from the given host name (though
+note that IP-based authorization is not implemented currently - no
+point as the proxy loses all the relevant information for us)
+
+<p>
+For example
+
+<p>
+0) To use the HTTP authentication methods, make sure that your URL
+space corresponds to an HTTP realm.  You need an authentication
+handler that digs for the request header's Authorization: line and
+shoves a suitable user identifier into (request-user ) or hands out
+the appopriate 40x error.  A null authorization handler will produce
+a behaviour like the apache "require valid-user" directive, or you
+could actually write a handler that checked this to confine it
+further.
+
+<p>
+How your application reports "incorrect password" (not authenticated)
+as distinct from "we believe it's you, but you can't do that" (not
+authorized) is up to you.  Most browsers' user interface to this stuff
+makes it hard to distinguish the two cases anyway; you might find it's 
+simplest just to put everything in the authentication handler if the
+users aren't going to notice the difference.
+
+<p>
+1) cookie-based authentication, where the user's browser supplies a
+cookie that we previously sent him.  Our authentication handler
+checks the supplied cookie against our internal records, filling in
+the (request-user ) slot if it matches.  Our authorization handler
+checks if (request-user ) is one of the users allowed here, and
+prints a helpful error page if not. 
+
+<p>
+2) ident-based authentication - you don't want to use this for
+anything serious but in a secure intranet environment it might be
+appropriate.  Suggested implementation route would involve getting
+apache to do the actual lookup as (a) it won't block, and (b) you'll
+only end up identing the apache daemon if you do it yourself anyway.
+
+<p>
+Note 
+
+<p>
+1) that we don't care what you put in the request-user slot provided
+that your authentication and authorization handlers both agree on
+it.  It could be a string username, user id, CLOS object defining a user, or
+whatever.
+
+<p>
+2) When IP-based access control becomes possible, it could conceivably
+be used at authentication _or_ authorization stage.  We might decide
+for example that all requests from pc10.foo.com are from John Smith
+(authenticate the request as from "John Smith") or we might decide that
+all administrator requests must come from localhost - authentication
+is identifying the remote user whereas authorization is checking that
+he's "administrator" and connected from localhost.  Clear?
+
+<h2>Examples</h2>
+
+<p>Look at <a href="example.lisp">example.lisp</a> for "Hello World",
+then <a href="../static-file-handler.lisp"
+>static-file-handler.lisp</a> and <a
+href="../redirect-handler.lisp">redirect-handler.lisp</a> in the
+source distribution for some slightly more complex examples.  To see
+really interesting stuff, grab the source for <a
+href="http://www.cliki.net/CLiki">CLiki</a> and poke around in there.
+

@@ -1,0 +1,91 @@
+<html><head>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida Reference : Installation</title>
+</head><body>
+
+<h1>Installation</h1>
+
+<p>Araneida is distributed as an <a
+href="http://www.cliki.net/ASDF+System" >ASDF System</a>.  If you have
+a properly installed recent (0.8) SBCL, and you're on the Internet, do
+<pre>
+* (require 'asdf)
+* (require 'asdf-install)
+* (asdf-install:install :araneida)
+</pre>
+
+to download, install, compile and load.  Once compiled, you can reload
+Araneida in future sessions with just <tt>(asdf:operate 'asdf:load-op
+'araneida)</tt>.  Now skip forward to the Use section
+
+<p>If your target system is not sufficiently on the Internet for this to
+work, you may have to do a little more manual work:
+
+<ol>
+<li>You need an SBCL that has <a
+href="http://ww.telent.net/cliki/asdf" >asdf</a> loaded into it</a>.
+In SBCL 0.8 or later, asdf is bundled and you should just be able to
+type <tt>(require 'asdf)</tt> to ensure this is the case.
+
+<li>From your favourite <a
+href="http://ww.telent.net/cclan-choose-mirror" >cCLan mirror</a>,
+download <tt>net-telent-date</tt>, <tt>split-sequence</tt> and
+<tt>araneida</tt>, and untar them somewhere (for simplicity, have them
+share a common parent directory)
+
+<li> Create symlinks to the unpacked .asd files in a directory on your
+asdf <tt>*central-registry*</tt> list.  For example
+
+<pre>
+* asdf::*central-registry*
+(*DEFAULT-PATHNAME-DEFAULTS* "/home/dan/src/defsystems/")
+
+$ cd /home/dan/src/defsystems/
+$ ln -s ../telent/araneida/araneida.asd ../telent/net-telent-date/net-telent-date.asd ../telent/db-sockets/db-sockets.asd .
+</pre>
+
+<li> You should now be able to compile and load the systems with 
+<pre>
+* (asdf:operate 'asdf:load-op 'araneida)
+</pre>
+
+<li> If that gave you error messages, another system dependency was
+probably added since these instructions were last updated.  Grab the
+extra package from cclan and add it in much the same way, then report
+this bug in the documentation.
+
+<li> Congratulations.  It's now working. 
+
+</li>
+</ol>
+</p>
+
+<h2><a name="use">Use </a></h2>
+
+<p>Oh, you wanted to be able to actually use it?  Load Araneida with
+<pre>
+(require 'asdf)
+(asdf:operate 'asdf:load-op 'araneida)
+</pre>
+
+then compile and load <a href="example.lisp">doc/example.lisp</a> in
+the source distribution.  For more information, study that file
+carefully and read the rest of this <a href="reference.html" >documentation</a>.
+</pre>
+
+<p> Point your browser at http://your.host.name:8000/ to test
+
+<p>If you want to use Araneida mod_proxy (generally recommended), you
+have to configure that too.  Configuring Apache is Outside The Scope
+of these instructions, but as a start, here are the relevant lines
+from my Debian laptop:
+<pre>
+LoadModule proxy_module /usr/lib/apache/1.3/libproxy.so
+NameVirtualHost noetboot.telent.net
+Include /etc/apache.conf.include
+</pre>
+<p>For more information on using a reverse proxy in front of Araneida,
+see the <a href="listeners.html">Listeners</a> documentation.
+
+
+

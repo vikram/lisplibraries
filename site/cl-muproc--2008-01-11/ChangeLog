@@ -1,0 +1,432 @@
+2008-01-07  Klaus Harbo  <klaus@harbo.net>
+
+	* Changed contact info in muproc.{hjml,html}.
+
+2007-04-25  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-find): Changed specializer class to from
+	simple-base-string to simply, prompted by problem reported by
+	Masayuki Onjo.
+
+2006-10-24  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-spawn): Simplified - no need for lambda in
+	muproc-spawn, lambda code moved to `wrapper-function' (which is
+	renamed to `muproc-process-function').
+
+2006-09-21  Klaus Harbo  <klaus@harbo.net>
+
+	* generic-server.lisp (muproc-generic-call): Changed to allow
+	calls using muproc reference, not just a registered name.
+	(muproc-generic-cast): ditto.
+
+2006-07-12  Klaus Harbo  <klaus@harbo.net>
+
+	* Added convenience nicknames for cl-muproc's packages.
+
+	* Added support for Allegro Common Lisp, thanks to a patch from
+	Luis Oliveira.
+
+2006-07-10  Klaus Harbo  <klaus@mu.dk>
+
+	* Removed LW specific process-priority parameter to muproc-spawn.
+
+	* Added some extra %with-exclusive-access% clauses to protect
+	debug printing of special variables (*names*, *ports*, *links*,
+	*registrations*). 
+
+	* Added explicit dependencies between .lisp files in
+	cl-muproc.asd.
+
+	* Added support for CMUCL and SBCL, thanks to a patch from
+	Vladimir Setissov.  Patch means introduction of separate lock for
+	*muproc-errorstream*, with-process-lock introduced to reduce load
+	on *giant-lock*.
+
+2006-07-07  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc-packages.lisp: Removed %with-lock% and
+	%without-scheduling%. 
+	
+	* muproc-openmcl.lisp: eliminated use of *without-scheduling*,
+	saving-place, and %with-lock%.
+	
+	* muproc-lispworks.lisp: eliminated use of *without-scheduling*,
+	saving-place, and %with-lock%.
+	
+	* muproc.lisp: Moved *giant-lock* moved to implementation specific
+	files.
+
+	* cl-muproc.compat::*without-scheduling* eliminated entirely.
+
+	* muproc.lisp: %with-exclusive-access% used to serialize
+	muproc-spawn, instead *muproc-spawn-lock* initially introduced
+	with support for Open.
+
+2006-07-05  Klaus Harbo  <klaus@mu.dk>
+
+	* Support for OpenMCL added by Rudi Schlatte.
+
+2006-06-08  Klaus Harbo  <klaus@mu.dk>
+
+	* PORTING: Added brief note about the intended structure of
+	implementation specific code.
+
+	* muproc-lispworks.lisp (saving-place): Moved from
+	muproc-compat.lisp. 
+
+	* muproc-compat.lisp: Removed -- implementation-specific interface
+	now documented by cl-muproc.compat package.
+
+2006-05-04  Klaus Harbo  <klaus@mu.dk>
+
+	* Changed package name from :muproc to :cl-muproc, for
+	consistency. 
+
+2006-04-07  Klaus Harbo  <klaus@mu.dk>
+
+	* Fixed error in muproc-schedule
+
+2006-03-15  Klaus Harbo  <klaus@mu.dk>
+
+	* Added :muproc.compat package.
+	
+2006-03-13  Klaus Harbo  <klaus@mu.dk>
+
+	* Changed license -- now BSD.
+	
+2006-01-03  Klaus Harbo  <klaus@mu.dk>
+
+	* Started work on documentation.
+	
+2005-10-07  Klaus Harbo  <klaus@mu.dk>
+
+	* supervisor.lisp (initialize-instance): Changed supervisor
+	muproc-name to indicate restart-policy.
+
+	* muproc.lisp (unwind-muproc): Fixed error - muproc-ports also
+	need to be unregistered.
+
+	* generic-server.lisp (muproc-generic-start): Rewritten to not
+	spawn a child (necessary to cooperate with supervisor).  Got rid
+	of server-name and other muproc-starting-related arguments in the
+	process. 
+	(muproc-generic-stop): Removed - use muproc-exit or muproc-kill
+	instead. 
+
+2005-10-06  Klaus Harbo  <klaus@mu.dk>
+
+	* generic-server.lisp (main-loop): Added handling of
+	exit-after-handler condition.
+	(muproc-exit-after-handler): Added.
+
+2005-10-05  Klaus Harbo  <klaus@mu.dk>
+
+	* generic-server.lisp (%handle-terminated/reason-msg): Added to
+	LINKED-EXIT function in server package, if it exists and is
+	fboundp. 
+	(main-loop): Added call to TERMINATE function in server package,
+	if it exists and is fboundp.
+
+2005-10-04  Klaus Harbo  <klaus@mu.dk>
+
+	* Changed ASDF name to cl-muproc.
+
+	* generic-server.lisp (muproc-define-cast-handler): Fixed error -
+	should call generic-cast, not generic-call.
+	(muproc-generic-start): Add in-port and priority keyword
+	arguments, to match those of muproc-spawn.
+
+	* muproc.lisp (muproc-schedule): Added.
+	(muproc-schedule-relative): Added.
+
+2005-10-03  Klaus Harbo  <klaus@mu.dk>
+
+	* supervisor.lisp (supervisor-state-checker): Added :finished
+	state for supervisor.
+	(just-start): Add function to call to obtain arglist for muproc.
+	(generate-commands): Added exit iff all children are :finished.
+
+2005-09-30  Klaus Harbo  <klaus@mu.dk>
+
+	* supervisor.lisp: Major changes - implemented syntax for
+	expression supervisor hierarchies, nested supervisors, maximum
+	terminations per termination period.  Still no regression tests.
+
+	* muproc.lisp (muproc-exit): Now returns the muproc pertaining to
+	the exit.
+
+2005-09-28  Klaus Harbo  <klaus@mu.dk>
+
+	* supervisor.lisp: Changed to controller-style. Still not properly
+	integrated into muproc.
+
+	* muproc.lisp (atomically): Added, and undivisible access to
+	anything now uses this macro, to ensure that locks are not used
+	when muproc-without-scheduling is active.
+	(muproc-without-scheduling): Changed to without-preemption is
+	nested in without-interrupts, because we've seen some spurious
+	'process-wait called when not allowed' errors which theoretically
+	could be explained by the reverse nesting.
+	* muproc.lisp: Removed reader conditionals for allegro - muproc is
+	nowhere near running on allegro so it's better to remove
+	indications that it is.  I don't think it would be too hard to
+	make muproc portable, though.
+
+2005-09-27  Klaus Harbo  <klaus@mu.dk>
+
+	* Everywhere: Changed name of `muproc-submit' to `muproc-spawn'
+	and changed interface to make errorstream a keyword argument
+	instead of required.
+
+	* muproc.lisp: Changed naming conventions such that only function
+	which are exported from the :muproc package start with `muproc-'.
+	Only exceptions are functions which return properties of muprocs,
+	e.g. muproc-lock.
+	(muprocn): made timeout period and timeout action optional.
+
+	* muproc.lisp: Same change for variables.
+	* muproc.lisp: Added documentation strings where missing for
+	exported functions.
+
+2005-09-26  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-log-errorstream): Changed to use giant-lock
+	- instead of without-scheduling, which is necessary for
+	indivisible muproc wind-down to work.
+	(unwind-muproc): Added to enable using muproc-without-scheduling
+	in registering the termination of a muproc.
+	(muproc-start-fn): Changed as a result of the above.
+	(muproc-make-interrupt-timer): Added ability to NOT register a
+	timer (in which case the user is responsible for unscheduling it
+	before terminating).
+	(muproc-make-interrupt-timer): Do not remove timer from timer
+	registry when the timer is not registered.
+	(muproc-make-interrupt-timer): Removed ability to schedule
+	interrupts for other processes as it really violates the isolation
+	ideal we're aiming for.  A muproc should send a message
+	instead. This change has the added benefit that the timer registry
+	can be made muproc-local, with improved throughput as a result (we
+	do not have to use the giant lock).
+	(muproc-exit): Added ability to signal muproc-exit in other
+	muproc.
+
+2005-09-21  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (*muproc-inport* etc.): Added defvars, got rid of
+	(declare (special ...)) forms.
+	(muproc-make-interrupt-timer): Added.
+	(muproc-schedule-timer): Added.
+	(muproc-schedule-timer-relative): Added.	
+	(muproc-unschedule-timer): Added.
+
+2005-09-19  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc-packages.lisp (:muproc): Added export of muproc-link (why
+	wasn't it exported before?!)
+
+	* generic-server.lisp (muproc-generic-stop): Added warn when
+	unknown messages are received.
+	(%generic-start): Changed so server-initialization occurs in
+	spawned process, rather than spawning process.
+	(muproc-generic-stop): Changed to a macro, to allow defaulting of
+	server-name based on *default-server-name* in server package.
+	(%handle-terminated/reason-msg): Added handling of termination
+	messages from linked processes -- tries to call `linked-exit'
+	function in server-package.
+	(muproc-define-call-handler): Added proper handling of
+	docstrings. 
+	(muproc-define-cast-handler): Added proper handling of
+	docstrings. 
+
+2005-09-16  Klaus Harbo  <klaus@mu.dk>
+
+	* tests/gensrv1-test.lisp: Added - rtests for gensrv1.
+
+	* tests/gensrv1.lisp: Added.  Basic generic server for testing --
+	can store values in a hash-table store.
+
+	* tests/muproc-test-util.lisp: Added for sharing functionality
+	among testing modules.
+
+	* tests/muproc-test.asd: Added to enable easy loading of muproc
+	tests. 
+
+	* generic-server.lisp: Added generic server -- a way to define
+	muproc services with code-generated message passing based on the
+	service functions defined.  Supports both synchronous and
+	asynchronous calls.
+
+	* muproc.lisp (muproc-condition): Added id and aux fields.
+	(muproc-address-p): Added.
+	(muproc-name-p): Added.
+	(muproc-submit): Changed formatting of muproc namestrings.
+	(muproc-port-name-p): Added.
+	(muproc-find): Added lookup by symbol (no longer just be regex by
+	way of cl-ppcre).
+
+2005-09-14  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (mumsg-receive, mumsg-send): Major name change.
+	Sending and receiving of MUMSGs is now accomplished using the
+	operators `mumsg-send' and `mumsg-receive'.  (Formerly known as
+	`muproc-send' and `muproc-receive', respectively).
+	(muproc-send): New functionality (do NOT confuse with former
+	incarnation, which is now known as `mumsg-send') -- allows the
+	sending of any data, not just MUMSGs.
+	(muproc-receive): New funtionality (do NOT confuse with former
+	incarnation, which is now known as `mumsg-receive') -- allows the
+	receiving of any data, not just MUMSGs.  Do not perform in
+	scanning on input port, simply retrieves first available data from
+	input port.
+	(muproc-start-fn): Added handler-case protection of unwinding
+	forms to ensure that unwinding completes even on error paths.
+
+2005-09-13  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp: Moved some stuff around (macros at top).
+	(muproc-submit): handler-case added around with-scheduling form,
+	to ensure that errors are handled outside it, the theory being
+	that this will eliminate the 'process-wait called...'-error we've
+	been seeing.
+	(muproc-without-scheduling): Added mp:without-interrupts to LW
+	version.
+	(muproc-log-errorstream): No longer uses *giant-lock*, but
+	without-scheduling.  (But should NOT re-introduced 'process-wait
+	called while not allowed'-errors!)
+	(register-muproc-name): Added.
+	(unregister-muproc-name): Added.
+	(muproc-submit): Added registration of muproc-name, with check
+	that the name is unique.
+	(muproc-start-fn): Added de-registration of muproc-name.
+	(muproc-send): It no longer an error to send a message to a muproc
+	which has terminated, unless it is sent via a named port.
+
+2005-09-12  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-send): Added retry when sending to a named
+	port, but the cached name-port mapping points to a port to a
+	muproc which has already terminated.
+	(muproc-monitor): Added.  Also changed representation of links
+	between muprocs to accomodate asymmetric as wells symmetric linkage.
+
+2005-09-09  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (*muproc-packet*,*muproc-mumsg*,muproc-receive):
+	 Added symbol which is lexically bound by `muproc-receive' to be
+	 the value of the data retrieved from the input port.  Likewise
+	 *muproc-mumsg* is bound to the value of the PAYLOAD of the packet.
+	 (muproc-get-field): Added function to retrieve the fields of MUMSG
+	 objects. (Exported from package.)
+	(muproc-unmatched-input-count): Added.
+	(muproc-unmatched-input-p): Added.
+	(muproc-packet-age): Added, as well as :sent-at field in all
+	 packets sent by muproc-send.
+	(muproc-discard-all-pending-input): Removed use of *giant-lock* --
+	 does not seem necessary.
+	(muproc-get-field): Added.
+
+2005-08-25  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (pack-msg/packet): Changed to use keywordp.
+
+2005-08-24  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-log-errorstream): Changed to use giant lock
+	instead of without-scheduling in an attempt to eliminate
+	"process-wait called when not allowed"-errors.
+	(muproc-send-to-terminated-muproc-error): Added new condition to
+	enable recognition of sending messages to terminated muprocs.
+
+	* muproc.lisp (muprocn): Improved to handle multiple
+	values. 
+
+	* muproc.lisp (muproc-debug): Added macro to control
+	level of debugging output, got rid of all 
+
+	     #+(or) (muproc-log-errorstream ...)
+
+	forms.  Default debugging level (0) reports abnormal termination,
+	but not normal so log flooding due to processes terminating is
+	eliminated.  Set level to 1 to get normal terminations, 'real'
+	debug messages are at level 3.
+	
+2005-08-15  Edi Weitz  <edi@agharta.de>
+
+	* muproc.lisp (muproc-log-errorstream): Changed order of
+	definitions because MUPROC-WITHOUT-SCHEDULING was used before it
+	was defined.
+
+2005-07-07  Edi Weitz  <edi@agharta.de>
+
+	* muproc.lisp (muproc-log-errorstream): Fixed typo in
+	doc string.
+
+2005-07-06  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-log-errorstream): Added muproc name to
+	output from muproc-log-errorstream.  Also removed muproc
+	identifier from a few log entries.
+
+2005-07-05  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp: Added docstrings for *muproc-inport*,
+	  *muproc-errorstream*, *muproc-named-ports*, and
+	  *muproc-pending-input*.
+	
+	* muproc-package.lisp: Now exporting
+	*muproc-errorstream* and *muproc-inport*.
+
+2005-07-01  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (with-debugging-stack): Added debugging stack, to
+	enable stack dumps etc.
+	(muproc-signal-linked-muprocs): Added lock on signalling to linked
+	muprocs.
+
+2005-06-24  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-discard-all-pending-input): Added ability
+	for a muproc to discard all its pending input:
+	'muproc-discard-all-pending-input'.  Useful/necessary when
+	restarting.
+
+2005-06-22  Edi Weitz  <edi@agharta.de>
+	
+	* muproc.lisp (muproc-send): Add registered ports to documentation
+	string.
+
+2005-06-21  Edi Weitz  <edi@agharta.de>
+
+	* muproc.lisp (muproc-receive): Change &REST to &BODY for better
+	SLIME indentation.
+
+2005-06-18  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-with-message-tag): Added
+	`muproc-with-message-tag', for "uniqifying" requests for
+	subsequent matching in `muproc-receive', and `muproc-msgtag=' for
+	comparing two tags for equality.
+
+2005-06-16  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-submit): Added support for process priority
+	- default: inherit from parent process.
+
+2005-06-14  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-start-fn): Added code to set mailbox of
+	*muproc-inport* to NIL to ensure that an error occurs if any
+	process tries to send messages to that port.
+
+	* muproc.lisp (muprocn): Added return value, by way of mp:mailbox.
+	Interface change, though, now requires timeout value and timeout
+	form.
+
+2005-06-13  Klaus Harbo  <klaus@mu.dk>
+
+	* muproc.lisp (muproc-submit): Added new indefinite extent
+	variable *muproc-named-ports*.
+	(muproc-send): Added ability to send to named ports with automatic
+	lookup of port.
+

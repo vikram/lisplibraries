@@ -1,0 +1,18 @@
+[Initial
+-urso-@web.de**20060504163323] 
+[add licence information
+-urso-@web.de**20060505171335] 
+[WARNING: changed output path of make-qbook
+-urso-@web.de**20060507213928] 
+[added support for generating methods
+-urso-@web.de**20060509193252] 
+[defcfun* macro now adds a check on class types: if argument is nil or the specified slot is nil and the required type is :pointer or :string, pass a null-pointer
+-urso-@web.de**20060511154914] 
+[added clear-flag and set-flag to flag-system
+-urso-@web.de**20060525203231] 
+[renamed clear-flag to clr-flag. clf-flag and set-flag may use lists of flags or one flag
+-urso-@web.de**20060525231607] 
+[added input-stream-p and output-stream-p to cbuffer streams
+-urso-@web.de**20060603224545] 
+[fixed clisp compiling problems (input-stream-p and output-stream-p)
+-urso-@web.de**20060604204025] 

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    15
+	    --
+	    Namespaces: No xmlns attributes</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Namespaces: No xmlns attributes</h1>
+    Namespaces are declared implicitly.
+    <br>
+    <br>
+    Example (note absence of attributes named <tt>xmlns</tt>):
+    <example title="Namespaces are declared implicitly">
+      <pre class="repl">&lt;element xmlns="http://relaxng.org/ns/structure/1.0"
+	 xmlns:foo="http://foo"
+	 name="foo"
+	 foo:annotation="bar"&gt;
+  &lt;empty/&gt;
+&lt;/element&gt;</pre>
+      <pre class="result">#.(STP:ELEMENT
+   :LOCAL-NAME "element"
+   :NAMESPACE-URI "http://relaxng.org/ns/structure/1.0"
+   :ATTRIBUTES '(#.(<b>STP:ATTRIBUTE</b>
+                    :LOCAL-NAME "name"
+                    :VALUE "foo")
+                 #.(<b>STP:ATTRIBUTE</b>
+                    :LOCAL-NAME "annotation"
+                    :NAMESPACE-PREFIX "foo"
+                    :NAMESPACE-URI "http://foo"
+                    :VALUE "bar"))
+   <span style="color: #aaaaaa">:CHILDREN ... uninteresting child nodes elided ...</span>)</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="14.html">⬖</a>15/24<a class="icon" href="16.html">⬗</a>
+</div>
+</body>
+</html>

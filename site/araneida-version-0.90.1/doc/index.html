@@ -1,0 +1,70 @@
+<html><head><title>Araneida</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida: a free small extensible CL web server</title>
+</head><body>
+
+<h1>Araneida: a free CL web server</h1>
+
+<p> Araneida is a small extensible CL-based web server, designed to
+sit behind a proxying Apache but also capable of being run standalone.
+
+<h2>Prerequisites</h2>
+
+<ul>
+<li> SBCL.  Probably also works with CMUCL/db-sockets with only fairly minor tweaking
+<li> SBCL contrib packages: asdf, sb-bsd-sockets
+<li> Other <a href="http://ww.telent.net/cliki/ASDF+System">ASDF
+packages</a> from cCLan: net-telent-date
+</ul>
+
+<h2>News</h2>
+
+<p>See the <a href="../NEWS">NEWS</a> file
+
+<h2>Features/non-features</h2>
+<ul>
+<li> Free - <a href="../LICENCE">BSD-sans-advertising</a> licence, but
+for the modification that I'm not the Regents of the University of California
+<li> Does not use multiple threads.  Hooks into the SBCL/CMUCL event loop so
+for many purposes it behaves as though it does.
+<li> Designed to sit behind a caching proxy; can write appropriate
+bits of <a href="http://www.apache.org/httpd.html">Apache</a> config.
+If this bothers you, pretend that <tt>mod_proxy</tt> is a typo for
+<tt>mod_araneida</tt>.  This includes playing nicely with SSL
+<li> Understands HTTP/1.1 Host: header for multiple host support
+<li> All content is dynamic and created by calling user-defined
+handler functions (there is a handler in there already that outputs
+files, if you need it)
+<li> Cheesy HTML-from-sexpr generation function makes balancing 
+<tt>&lt;/td> </tt>
+tags suddenly trivially simple (if tending to generate lots of
+short-lived garbage)
+</ul>
+
+<h2>Documentation</h2>
+
+<ul>
+<li> <a href="examples.html">Examples</a>
+<li> <a href="faq.html">FAQ</a>
+<li> <a href="reference.html">Reference documentation</a>
+<li> <a href="cookies.html">Care and feeding of cookies</a>
+<li> <a href="utilities.html">Utilities to make working with Araneida more rewarding</a>
+</ul>
+
+<h2>Where to get it</h2>
+
+<ul>
+<li> Via your favourite <a href="http://ww.telent.net/cclan/araneida.tar.gz">cCLan</a> mirror
+</ul>
+
+<h2>Linking</h2>
+
+<P>Please don't link to pages on this site other than the one you're
+looking at now: the documentation is in need of some restructuring and
+its URLs will change.
+
+<p>Good luck!
+<hr>
+$Date: 2003/11/09 03:27:17 $ <address> <a href="http://ww.telent.net/">Daniel Barlow</a></address>
+</body></html>
+

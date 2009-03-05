@@ -1,0 +1,21 @@
+Starting with tag:
+[TAG 2008-11-27
+attila.lendvai@gmail.com**20081127150509
+ Ignore-this: 130c861e19237f1634b690048054d730
+] 
+[added :unquote-readtable-case to the qq syntax
+attila.lendvai@gmail.com**20081214154547
+ Ignore-this: 9a22ab89a7c9f9ce1e85a8d3f5657dc9
+] 
+[fix nested qq reader bug and add log statements. the interesting change is small, getting the previous unquote reader in read-quasi-quote, the rest is logging and indenting
+attila.lendvai@gmail.com**20081226180008
+ Ignore-this: 6fb58dad7a72583aa0171a3c31def381
+] 
+[fix qq reader thinko
+attila.lendvai@gmail.com**20081229222531
+ Ignore-this: d2a54b3ab738bda5bcb17db8eb45ae6e
+] 
+[follow cl-walker walk-ast rename
+attila.lendvai@gmail.com**20081230135656
+ Ignore-this: e3f04766224260764759543ab206b5df
+] 

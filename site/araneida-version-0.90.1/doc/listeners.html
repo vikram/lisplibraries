@@ -1,0 +1,56 @@
+<html><head><title>Araneida - Handlers</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - HTTP Listeners</title>
+</head><body>
+
+<h1>HTTP Listeners</h1>
+
+<p>HTTP-LISTENER is the object in Araneida responsible for listening
+to a TCP port and reading requests that come in.  When it gets a
+request, it calls a handler to process it.
+
+<p>It is possible to have more than one http-listener if you are
+publishing on more than one address or port.  Multiple http-listeners
+may share the same handler, if you wich to publish the same content on
+many endpoints.
+
+<p>There are presently two concrete implementations of the
+http-listener interface: THREADED-HTTP-LISTENER (only available if
+your SBCL has the SB-THREAD feature) and SERVE-EVENT-HTTP-LISTENER.
+Both of these operate 'in the background' - i.e. without interfering
+with your interactive use of Lisp, but the serve-event listener blocks
+requests while it's processing, so is only appropriate if your
+responses come back in reasonably short time.  On the other hand, it's
+seen a lot more use and is likely to be much more stable at present.
+
+<h2>Proxies</h2>
+
+<p>If you are using a reverse proxy (e.g. Apache's mod_proxy) in front
+of Araneida, you will probably want to use
+{THREADED,SERVE-EVENT}-REVERSE-PROXY-LISTENER.  These have an
+additional TRANSLATIONS slot - this is a list whose elements are
+urlstrings mapping from the external URL hierarchy that the proxy is
+configured for to the internal URL that Araneida is listening for.
+For example, 
+<pre>
+:translations '(("http://www.examples.com/" "http://www.internal:8000/")
+                ("http://images.examples.com/" "http://images.internal:8000/")
+</pre>
+
+<p>There are two reasons to use this: 
+<ol>
+<li>Araneida handlers now believe the requests they are seeing are
+from the public interface, so for example REQUEST-URL will return
+www.examples.com instead of www.internal.  This means that URLs
+can safely be displayed to the browser and will not cause subsequent
+requests to bypass the proxy.
+<li>the APACHE-CONF-SEGMENT function can be used to print out a chunk
+of apache.conf syntax containing VirtualHost definitions for the 
+specified translations.
+</ol>
+
+<p>Apache mod_proxy can also cache your responses when so configured.
+See the documentation on <a href="caching.html">HTTP caching</a> for details.
+
+<p>See <a href="example.lisp">example.lisp</a> to learn most of
+what you need to know about http listeners.

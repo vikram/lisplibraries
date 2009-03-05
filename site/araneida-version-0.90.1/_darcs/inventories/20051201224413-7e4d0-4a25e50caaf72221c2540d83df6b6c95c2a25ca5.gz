@@ -1,0 +1,223 @@
+Starting with tag:
+[TAG araneida-version-0.9-a3
+Alan-Shields@omrf.ouhsc.edu**20051012002144] 
+[araneida: html-escaped-stream
+Alan-Shields@omrf.ouhsc.edu**20051018190807
+ Trying to keep track of whether or not you've escaped the HTML properly is
+ quite a pain. Doing it instead at the stream level seems to work out much better.
+ 
+ Of course, if you have code that already does escaping then you shouldn't use this call.
+] 
+[araneida: link
+Alan-Shields@omrf.ouhsc.edu**20051018232233
+ Need to make a urlstring to link to something? Here's your function, baby.
+ 
+ Documentation in the docstring.
+] 
+[araneida: princ now prints the URL using urlstring. prin1 does the old behavior
+Alan-Shields@omrf.ouhsc.edu**20051019204405
+ We now have a human output for our URL objects. This lets you use URLs straight in
+ the HTML tree for the most part.
+] 
+[araneida: typo in too-many-urlmethods-matched
+Alan-Shields@omrf.ouhsc.edu**20051024221146
+ If you ever have too many urlmethods match, you'll get an error throwing the error. This fixes that.
+] 
+[araneida: forgot to update the version number in the asd. Whoops.
+Alan-Shields@omrf.ouhsc.edu**20051101192354] 
+[urlescape filenames in static-file-handler
+drewc@tech.coop**20051029010415
+ 
+ filenames can have spaces in them. 
+ The patch fixes the handler so that the url foo%20bar.jpg points to 'foo bar.jpg'
+] 
+[araneida: read in external files as octets - preparation for bivalent stream support
+Alan-Shields@omrf.ouhsc.edu**20051101215701
+ On advice (and repeated advice) from chandler - thanks!
+] 
+[araneida: stop checking stream element types in copy stream - bivalent streams are here
+Alan-Shields@omrf.ouhsc.edu**20051108202920] 
+[araneida: test default key values
+Alan-Shields@omrf.ouhsc.edu**20051108203003
+ Someone reported a problem with tainted defaults - checking this out now
+] 
+[araneida: give threads a reasonable name
+Alan-Shields@omrf.ouhsc.edu**20051110000158] 
+[araneida: rebind outputs when creating a new thread - fixes sbcl 0.9.6
+Alan-Shields@omrf.ouhsc.edu**20051110210141
+ In SLIME (warn) was no longer working. Someone on the SLIME list mentioned that this
+ was due to the SBCL thread updates in 0.9.6. Sure enough - rebind them and
+ everything works juuuuust fine.
+] 
+[araneida: fix key parameter issue with SBCL 0.9.6
+Alan-Shields@omrf.ouhsc.edu**20051110212147
+ The old SBCL would, if (intern) was passed a symbol, return the symbol.
+ I was accidentally using this. The new SBCL returns nil. All is well, now.
+] 
+[araneida: clean up html-stream and add comment tags
+Alan-Shields@omrf.ouhsc.edu**20051111211823
+ I wanted to be able to do:
+ '(p (comment ((a :href "blah") "this is a link")))
+ 
+ to yield:
+ 
+ <p><!--
+ <a href="blah">this is a link</a>
+ -->
+ 
+ As I'm into that sort of thing. I ended up doing a slight refactoring of
+ html-stream and html-escaped-stream.
+ 
+ You can also do
+ '(p ((comment "now with extra commenty goodness!") ((a :href "blah") "this is a link")))
+ 
+ to yield:
+ 
+ <p><!-- now with extra commenty goodness!
+ <a href="blah">this is a link</a>
+ -->
+ 
+ So enjoy!
+] 
+[araneida: url-query-string-from-alist
+Alan-Shields@omrf.ouhsc.edu**20051112003232
+ We have a function (several, even) to get an alist from a url query, but none to do the inverse.
+ As always, my whims are my demands, and so it is.
+] 
+[araneida: compatibility with TBNL
+Alan-Shields@omrf.ouhsc.edu**20051114220656
+ Using the patches from Bob Hutchison (hutch at recursive.ca) with modifications.
+ 
+ This does the following:
+ - :araneida now in *features*
+ - araneida:*araneida-mode* now controls how Araneida parses headers and bodies. This is
+   incompatible with the current patch to TBNL, but I think should work out better in the future.
+   I'll contact Edi about it.
+ - Adds an "unparsed-body" slot to the request class, along with accessors, etc
+ 
+ The lispworks compatibility code shall be merged seperately.
+] 
+[araneida: lispworks updates from Bob Hutchinson
+Alan-Shields@omrf.ouhsc.edu**20051114223143
+ Pulled out of the TBNL update patches at
+ 
+ http://common-lisp.net/pipermail/tbnl-devel/2005-March/000237.html
+ 
+] 
+[araneida: formatting change in daemon.lisp
+Alan-Shields@omrf.ouhsc.edu**20051114223954] 
+[araneida: ACL compatibility patch from Arthur Lemmens
+Alan-Shields@omrf.ouhsc.edu**20051114224838
+ Use make-string instead of make-array to contain the body of a request.
+ Because of bivalent streams element type is really not so good here.
+] 
+[araneida: unify html, html-stream, html-escaped-stream
+Alan-Shields@omrf.ouhsc.edu**20051115013412
+ There's so much code in common between these functions that I've finally folded them
+ all together. As a result, you can now use the :html-converter trick that was previously
+ only the domain of #'HTML, and #'HTML can use (comment) like the other boys and
+ girls. In addition, they should all now produce the same output (except for
+ escaped, of course).
+ 
+ This results in a non-backwards-compatible change, however; the function
+ signature of HTML is now:
+ 
+     (defun html (things &optional inline-elements)
+ 
+ while it used to be:
+ 
+ 	(defun html (things &key (newline '(p option table tr h1 h2 h3 h4 h5 h6)))
+ 
+ Luckily, the old :newline stuff was (declare (ignore'd, so there's no functional difference.
+] 
+[araneida: quick optimization for urlstring-escape
+Alan-Shields@omrf.ouhsc.edu**20051115220259
+ Someone (can't remember who) was complaining that urlstring-escape was very slow.
+ This version seems to be faster in both the very-long-string case and the bunch-of-short-strings case.
+ 
+ Thanks to the #lisp krew for slapping me around a bit when I needed it.
+] 
+[araneida: remove comment to code which is no longer there
+Alan-Shields@omrf.ouhsc.edu**20051115221820] 
+[araneida: eliminate case-sensitivity bug in html
+Alan-Shields@omrf.ouhsc.edu**20051115221835
+ Slowly but surely I'm working through here to eliminate places where we
+ rely upon uppercase interning.
+] 
+[araneida: integrate Parenscript into the HTML functions
+Alan-Shields@omrf.ouhsc.edu**20051116000255
+ If you load Parenscript before loading Araneida, you can now use
+ Parenscript within the HTML generation functions.
+ 
+ (span :css (:color "black" :size "200%"))
+ 
+ will become
+ 
+ <span style="color:black;size:200%">
+ 
+ and
+ (css (* :border "1px solid black")
+      (div.bl0rg :font-family "serif")
+      (("a:active" "a:hoover") :color "black" :size "200%"))
+ 
+ will produce
+ <style type="text/css">
+ blahblahblah
+ </style>
+ 
+ (js-script) is the equivalent for Javascript,
+ and you can call #'JS-INLINE for inline Javascript, just like normal.
+ 
+ There will be some docs soon.
+ 
+] 
+[araneida: css-file and js-file
+Alan-Shields@omrf.ouhsc.edu**20051116000746
+ Want to output Parenscript CSS or JS as a file?
+ 
+ Now you can.
+] 
+[araneida: small update to my internal, not used outside testing suite
+Alan-Shields@omrf.ouhsc.edu**20051116000831] 
+[araneida: add documentation on Parenscript integration
+Alan-Shields@omrf.ouhsc.edu**20051116002913] 
+[araneida: small update to my internal testing code
+Alan-Shields@omrf.ouhsc.edu**20051116002943] 
+[araneida: weakly depend upon parenscript
+Alan-Shields@omrf.ouhsc.edu**20051122231655
+ I've submitted a patch to ASDF that allows a system to weakly depend upon another
+ system. Until that is committed, use the horrid hack that does the same thing.
+] 
+[araneida: add templates
+Alan-Shields@omrf.ouhsc.edu**20051129204547
+ For our workflow we found it easier to have our web designer work in "template land"
+ where she's only concerned with templates and mockups. Mostly a matter of naming convention, really.
+ 
+ Then we found out how nice it was for finding where something was being defined and used, and
+ not having conflicts between function names and template names.
+ 
+ Templates are defined, called, traced, and untraced. Enjoy!
+] 
+[araneida: clean.sh, for cleaning up temporary files
+Alan-Shields@omrf.ouhsc.edu**20051129204806
+ I ended up cleaning out a lot of temporary files over and over again.
+ Maybe someone else will find this useful, maybe not.
+] 
+[araneida: easy interface to magic tags, as well as some utilities HTMLP and DESTRUCTURE-HTML
+Alan-Shields@omrf.ouhsc.edu**20051201212407
+ The HTML code has long allowed custom tags, but you had to know how to use them.
+ So, I wrote a small macro that exposes this feature for people, and added documentation
+ about how to use it.
+ 
+ While writing some sample code, I found it useful to have HTMLP and DESTRUCTURE-HTML.
+] 
+[araneida: typo in TBNL integration stuff
+Alan-Shields@omrf.ouhsc.edu**20051201213641] 
+[araneida: document the special comment tag
+Alan-Shields@omrf.ouhsc.edu**20051201224104] 
+[araneida: document deftemplate
+Alan-Shields@omrf.ouhsc.edu**20051201224145] 
+[araneida: release notes for 0.90
+Alan-Shields@omrf.ouhsc.edu**20051201224214] 
+[araneida: update version number
+Alan-Shields@omrf.ouhsc.edu**20051201224239] 

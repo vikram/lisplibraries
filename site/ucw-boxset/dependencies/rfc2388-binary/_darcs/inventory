@@ -1,0 +1,98 @@
+[Setup boringfile
+Marco Baringer <mb@bese.it>**20051215165012] 
+[Initial file import
+Marco Baringer <mb@bese.it>**20051215165100] 
+[Dropped constants.lisp. Using literal numbers and comments is more readable (avoids defining constants which are only used once)
+Marco Baringer <mb@bese.it>**20051215170359] 
+[documentation fixups
+Marco Baringer <mb@bese.it>**20051215170504] 
+[Fix bugs in parsing of key=value pairs. more tests.
+Marco Baringer <mb@bese.it>**20051215172124] 
+[Implement parse-header-value and added tests
+Marco Baringer <mb@bese.it>**20051215173444] 
+[Setup content-charset slot in mime-part (if found)
+Marco Baringer <mb@bese.it>**20051215173843] 
+[added content-charset test
+Marco Baringer <mb@bese.it>**20051215180745] 
+[Added debuging statements.
+Marco Baringer <mb@bese.it>**20051216130312
+ The debugging code is enabled by setting *debug* to T _before_
+ compiling the file.
+] 
+[Refactored to have an API compatible with the official rfc2388
+Marco Baringer <mb@bese.it>**20051216130602
+ 
+ PARSE-MIME now has the same api as the original PARSE-MIME (including
+ support for :write-to-file), READ-MIME now does what PARSe-MIME used
+ to do (and has the same source+boundray+callback API).
+] 
+[Fix misspelling of boundary
+Marco Baringer <mb@bese.it>**20051216131609] 
+[Added support for multipart/mixed structures; make mime headers CLOS objects
+Marco Baringer <mb@bese.it>**20051216140117] 
+[Export parse-header-value
+Marco Baringer <mb@bese.it>**20051216142454] 
+[fix comments
+Marco Baringer <mb@bese.it>**20051217181846] 
+[ascii-string-to-boundry-array is now called ascii-string-to-boundAry-array
+Marco Baringer <mb@bese.it>**20051218183634] 
+[Export the HEADERS symbol
+Marco Baringer <mb@bese.it>**20051218183643] 
+[Added test case where boundary includes #\- characters.
+Marco Baringer <mb@bese.it>**20051220023424] 
+[Fix handling of #\- characters in boundaries
+Marco Baringer <mb@bese.it>**20060110174843] 
+[Added debugging function print-mime-part
+Marco Baringer <mb@bese.it>**20060111184814] 
+[Added in test mime7
+Marco Baringer <mb@bese.it>**20060112202106] 
+[minor docstring fixup
+Marco Baringer <mb@bese.it>**20060112202135] 
+[Add helper function STRING-TO-VECTOR to improve readability.
+Maciek Pasternacki <maciekp@japhy.fnord.org>**20060205215848] 
+[Cosmetics.
+Maciek Pasternacki <maciekp@japhy.fnord.org>**20060205224353] 
+[Make tests *DEFAULT-PATHNAME-DEFAULTS*-independent.
+Maciek Pasternacki <maciekp@japhy.fnord.org>**20060205224429] 
+[Correctly handle CR inside data part.
+Maciek Pasternacki <maciekp@japhy.fnord.org>**20060205224516] 
+[New test: binary data (bytes from 0 to 255 and from 255 downto 0).
+Maciek Pasternacki <maciekp@japhy.fnord.org>**20060205224600] 
+[Use (asdf:component-pathname (asdf:find-system :rfc2388.test)) instead of *compile-file-pathname* for locating the test data directory
+Marco Baringer <mb@bese.it>**20060313215748] 
+[Fix stupid (but fatal) bug with handling of CR-LF sequences embedded in the mime body.
+Marco Baringer <mb@bese.it>**20060313220103
+ 
+ I have no idea how this ever could have worked before (odds are it
+ never did and nobody ever noticed).
+] 
+[Added a test which throws random data at the parser and expects to get the same data back.
+Marco Baringer <mb@bese.it>**20060313220500
+ 
+ You'd never guess, but occasionally the data we get back is different
+ than the data we sent in :(
+] 
+[added mime-part-p
+Marco Baringer <mb@bese.it>**20060314162521] 
+[Fix bug in handling of CR chars (we were ignoring them when we shouldn't have been)
+Marco Baringer <mb@bese.it>**20060314183001] 
+[Change the random tester to create characters which have a much higher probability of causing parser errors
+Marco Baringer <mb@bese.it>**20060314183037] 
+[Fix handling of escape characters in header-values
+Marco Baringer <mb@bese.it>**20060317123335] 
+[allegro stops complaining when safety is zero
+Henrik Hjelte <henrik@evahjelte.com>**20060714130902] 
+[patch for non-ascii chars in filename. now rfc2388 do not die yet, replaces unknown chars with #\X until rfc2231 is implemented. 
+evrim@core.gen.tr**20061006135813] 
+[Renamed to rfc2388-binary to live peacefully in the same image with its incompatible predecessor
+attila.lendvai@gmail.com**20070616122552] 
+[Make sure the termination-callback is called in an unwind-protect
+attila.lendvai@gmail.com**20070710231923] 
+[Fix test suite
+clinton@unknownlamer.org**20070829164730
+ Test suite was referencing the old rfc2388, and used names that would
+ conflict with normal rfc2388 if someone decided to use both in the
+ same image
+] 
+[Renamed missed static-file entry in .asd when renamed to rfc2388-binary
+attila.lendvai@gmail.com**20070909105343] 

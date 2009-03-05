@@ -1,0 +1,113 @@
+Starting with tag:
+[TAG 2008-04-03
+attila.lendvai@gmail.com**20080403203659] 
+[added some root macros for their unicode characters
+attila.lendvai@gmail.com**20080406131155] 
+[simplify test asd setup: the test system depends on all the dependencies and includes all the tests
+attila.lendvai@gmail.com**20080406131307] 
+[smarter quasi-quote reader, one step towards being able to use for xml
+attila.lendvai@gmail.com**20080406133818] 
+[make the *quasi-quote-nesting-level* variable customizable
+attila.lendvai@gmail.com**20080406135817] 
+[follow the quasi-quote changes in its tests
+attila.lendvai@gmail.com**20080406135846] 
+[fix the toplevel-reader-wrapper feature of qq reader and rename an arg
+attila.lendvai@gmail.com**20080406154309] 
+[move the λ macro into one-liners.lisp, it does not need the walker...
+attila.lendvai@gmail.com**20080407170351] 
+[follow cl-walker
+attila.lendvai@gmail.com**20080408124759] 
+[#l overwrites the end-character reader only under its body
+attila.lendvai@gmail.com**20080408144223] 
+[simpler names, it's start-character, end-character and dispatch-character everywhere (almost). qq reader can be installed on a dispatch, too.
+attila.lendvai@gmail.com**20080408144357] 
+[update tests
+attila.lendvai@gmail.com**20080408144508] 
+[added *toplevel-readtable*
+attila.lendvai@gmail.com**20080409115934] 
+[added an exported *quasi-quote-nesting-level*, refactor unquote so that it goes back to the parent readtable but sets readtable-case from the *toplevel-readtable*
+attila.lendvai@gmail.com**20080410210849] 
+[update qq tests to follow code changes
+attila.lendvai@gmail.com**20080410211013] 
+[simplify sharp-boolean reader. credit goes to Stelian Ionescu.
+attila.lendvai@gmail.com**20080413185308] 
+[follo cl-walker changes
+attila.lendvai@gmail.com**20080427140849] 
+[bleh, thinko: move the definitions emitted by define-syntax back to the toplevel
+attila.lendvai@gmail.com**20080427222542] 
+[added get-macro-character*
+attila.lendvai@gmail.com**20080428184534] 
+[fix quasi-quote reader, don't restore the reader on end-character and use get-macro-character*
+attila.lendvai@gmail.com**20080428185430] 
+[moved unicode stuff into its own .asd and package
+attila.lendvai@gmail.com**20080429220904] 
+[switch back readtable-case for #. inside the quasi-quote reader
+attila.lendvai@gmail.com**20080507125207] 
+[tests
+attila.lendvai@gmail.com**20080507125255] 
+[added error...
+attila.lendvai@gmail.com**20080508100849] 
+[test system depends on swank
+attila.lendvai@gmail.com**20080509120407] 
+[added support for dispatched-quasi-quote reader. e.g. `xml(element () (child))
+attila.lendvai@gmail.com**20080509220903] 
+[added string-quote syntax which is like "" but does not have any escaping, iow unconditionally reads until the close char
+attila.lendvai@gmail.com**20080509221047] 
+[add test for the dispatched-qq
+attila.lendvai@gmail.com**20080509221056] 
+[qq syntax may be enabled only on the `foo() dispatched qq reader without installing on other macro characters
+attila.lendvai@gmail.com**20080515122233] 
+[`foo() first compares symbol identity and then tries string= for more flexibility
+attila.lendvai@gmail.com**20080515122358] 
+[added with-readtable-case
+attila.lendvai@gmail.com**20080515214122] 
+[added *quasi-quote-depth*
+attila.lendvai@gmail.com**20080521170520] 
+[fix multiple `foo() qq readers
+attila.lendvai@gmail.com**20080521225043] 
+[added new lambda parser from stefil to duplicates, quote the defaults of the enable-* macro's &key and &optional args
+attila.lendvai@gmail.com**20080522131652] 
+[follow cl-walker changes
+attila.lendvai@gmail.com**20080522133130] 
+[export
+attila.lendvai@gmail.com**20080531172724] 
+[added support to specify a custom body-reader for the qq syntax
+attila.lendvai@gmail.com**20080601105800] 
+[added emacs file with syntax goodies
+attila.lendvai@gmail.com**20080608205925] 
+[comments
+attila.lendvai@gmail.com**20080723110911] 
+[fix qq syntax: restore reader on #\, when calling the original ` reader
+attila.lendvai@gmail.com**20080808155525] 
+[added with-local-readtable (moved here from cl-quasi-quote)
+attila.lendvai@gmail.com**20080906175755] 
+[added list-readers
+attila.lendvai@gmail.com**20080906175833] 
+[added feature-cond
+attila.lendvai@gmail.com**20080906191559] 
+[tests for feature-cond
+attila.lendvai@gmail.com**20080906191613] 
+[need to split the .asd because the test asd uses the functions provided by cl-syntax-sugar
+attila.lendvai@gmail.com**20080906192622] 
+[housekeeping
+attila.lendvai@gmail.com**20080906192703] 
+[with-preserved-readtable-case
+attila.lendvai@gmail.com**20080913112921] 
+[simplify readtime-wrapper, just call eval on the entire form (using the interpreter in sbcl)
+attila.lendvai@gmail.com**20080921111927] 
+[added system-connection-with-readtable
+attila.lendvai@gmail.com**20081020194429
+ Ignore-this: 9268e2f75861f31e7914169d279c104e
+] 
+[don't rebind *features*, it's not what the name suggests...
+attila.lendvai@gmail.com**20081020194440
+ Ignore-this: fe61face4dc922f8939209378301cb9c
+] 
+[follow asdf-system-connections
+attila.lendvai@gmail.com**20081025172819
+ Ignore-this: cb4b9a9001ee2f6968de3d550b53f109
+] 
+[added support for destructive-splice-character for qq
+attila.lendvai@gmail.com**20081025232306
+ Ignore-this: 34048c956c991ffed3dc667ce2612647
+] 

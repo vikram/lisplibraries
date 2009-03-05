@@ -1,0 +1,12 @@
+Revision: xmlutils--main--0.0--patch-6
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Fri Oct 24 11:17:56 CEST 2003
+Standard-date: 2003-10-24 09:17:56 GMT
+Renamed-files: .arch-ids/xmlutils.asd.id .arch-ids/pxmlutils.asd.id
+    xmlutils.asd pxmlutils.asd
+Modified-files: pxmlutils.asd
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-6
+Summary: changed system name to pxmlutils
+Keywords: 
+

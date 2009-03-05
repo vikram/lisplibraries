@@ -1,0 +1,1 @@
+../site/clsql-3.7.7/clsql-sqlite3.asd

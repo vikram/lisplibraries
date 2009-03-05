@@ -1,0 +1,12 @@
+Revision: pxmlutils--dev--1.0--patch-4
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Feb 17 14:55:34 CET 2004
+Standard-date: 2004-02-17 13:55:34 GMT
+Modified-files: pxml0.cl pxml1.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-4
+Summary: First part of implementation of *respect-readtable-case* (see body)
+Keywords: 
+
+Currently we do the proper conversion when interning symbols, but
+this change has caused namespace lookup to fail, working on it.

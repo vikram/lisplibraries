@@ -1,0 +1,58 @@
+#
+# apache2 site config for the UCW examples to be used with mod_lisp
+#
+# Sets up 3 applications at these url-prefixes:
+#   /
+#   /shared-counter
+#   /l10n
+
+NameVirtualHost *
+<VirtualHost *>
+        ServerAdmin webmaster@localhost
+
+        <Directory "/">
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+
+        #
+        # redirect requests matching the specified regex to mod_lisp
+        #
+        <LocationMatch "^/(|l10n|shared-counter)">
+                <IfModule mod_lisp2.c>
+                        LispServer 127.0.0.1 3000 ucw
+                        SetHandler lisp-handler
+                </IfModule>
+                RedirectMatch ^/l10n$ /l10n/
+                RedirectMatch ^/shared-counter$ /shared-counter/
+        </LocationMatch>
+
+        #
+        # map the www-root's
+        #
+        AliasMatch ^/(|shared-counter/|l10n/)(ucw|dojo)/(.*) /home/ati/workspace/ucw/wwwroot/$2/$3
+
+        <DirectoryMatch "^/home/ati/workspace/ucw/wwwroot/(ucw|dojo)/">
+                AllowOverride None
+                Options Indexes FollowSymLinks
+                Order allow,deny
+                allow from all
+        </DirectoryMatch>
+
+        #
+        # disable mod_lisp for the www-root's
+        #
+        <LocationMatch "^/(|shared-counter/|l10n/)(ucw|dojo)/">
+                SetHandler none
+        </LocationMatch>
+
+        ErrorLog /var/log/apache2/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/access.log combined
+        ServerSignature On
+
+</VirtualHost>

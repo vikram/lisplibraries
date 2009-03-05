@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <title>cl-berkeley-db</title>
+ <link rel="stylesheet" type="text/css" href="style.css"/>
+ <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+ <style type="text/css">
+       .complete {background-color:green}
+       .mostly-complete {background-color:yellow}
+       .incomplete {background-color:red}
+    </style>
+
+</head>
+<body>
+ <div class="header">
+  <h1>cl-berkeley-db</h1>
+  <h2>A Common Lisp wrapper to the Berkeley DB library</h2>
+ </div>
+ <div id="introduction">
+ <h3>Introduction</h3>
+ <p>This is a Common Lisp wrapper to the Berkeley DB library. It uses cffi and trivial-garbage. It's been tested on sbcl but should work on any distribution. There are a couple of functions that need to be implemented to make it work on other common-lisp implementations. This library has a BSD license.</p>
+
+ </div>
+ <div id="mailing-lists">
+ <h3>Mailing Lists</h3>
+ <ul>
+  <li>
+   <a href="http://www.common-lisp.net/mailman/listinfo/cl-berkeley-db-devel">cl-berkeley-db-devel</a>
+   <br/>for developers</li>
+  <li>
+   <a href="http://www.common-lisp.net/mailman/listinfo/cl-berkeley-db-cvs">cl-berkeley-db-cvs</a>
+   <br/>for uploading darcs patches</li>
+  <li>
+   <a href="http://www.common-lisp.net/mailman/listinfo/cl-berkeley-db-announce">cl-berkeley-db-announce</a>
+   <br/>for announcements.</li>
+
+ </ul>
+</div>
+<div id="download">
+ <h3>Download</h3>
+
+ <p>tarball distributions of all versions <a href="http://common-lisp.net/project/cl-berkeley-db/dist">available</a></p>
+ <p>The last <a href="http://common-lisp.net/project/cl-berkeley-db/dist/cl-berkeley-db-0.2.1">version</a> supporting Berkeley DB 4.5</p>
+</div>
+ <!-- h3>Project members</h3>
+ <pre><!--#include virtual="../../pprinted-project-members/sample" --></pre -->
+<div id="repository">
+ <h3>Repository</h3>
+   <p>You can <a href="http://common-lisp.net/project/cl-berkeley-db/darcs"> browse our darcs repository</a></p>
+</div>
+<div id="implemented-api">
+<p id="library versions">
+ The goal of this <a href="api/index.html">api</a> is to support the latest version (currently 4.6) of the Berkeley DB library. There are other wrappers for earlier versions (<a href="http://common-lisp.net/project/bdb/">Berkeley DB 4.3</a>) (<a href="http://users.actrix.co.nz/mycroft/cl.html">Berkeley DB 4.0</a>). 
+ </p>
+ <table id="api-matrix">
+     <caption>API Implementation Matrix</caption>
+      <thead>
+        <tr><th>section</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+           <tr class="complete"><td>Cursors</td><td>All methods start with cursor instead of c so c-get is cursor-get. There are also helper functions for the cursor get function such as cursor-get-first which is the same as cursor-get with the DB_FIRST flag set.</td></tr>
+           <tr class="mostly-complete"><td>Databases</td>
+           <td> Each db type (btree,queue,hash,recno) has a cooresponding type in lisp and a constructor function of the same name.
+           The following methods are not implemented (Contributions welcome)
+           <ul>
+           <li>db-compact</li>
+           <li>db-join</li>
+           <li>db-key-range</li>
+           <li>db-rename</li>
+           <li>db-stat</li>
+           <li>db-verify</li>
+           <li>db-set-alloc</li>
+           <li>(setf db-cache-size)</li>
+           <li>(setf db-err-call)</li>
+           <li>(setf db-msg-call)</li>
+           <li>db-err-file</li>
+           <li>(setf db-err-file)</li>
+           <li>db-msg-file</li>
+           <li>(setf db-msg-file)</li>
+           </ul>
+           </td></tr>
+           <tr class="mostly-complete"><td>Environments</td>
+           <td>
+           The following methods are not implemented (Contributions welcome)
+           <ul>
+           <li>(setf env-alloc)</li>
+           <li>(setf env-cache-size)</li>
+           <li>env-err-file</li>
+           <li>(setf env-err-file)</li>
+           <li>env-msg-file</li>
+           <li>(setf env-msg-file)</li>
+           <li>env-rpc-server</li>
+           </ul>
+           </td>
+           </tr>
+           <tr class="complete"><td>Key/Data Pairs</td><td>DBT's are divided into separate types with constructor functions of the same name:
+           <dl>
+           <dt>db-dbt</dt>
+           <dd>Creates a dbt handle that berkeley-db can fill in. Usually used as a result of a get requests</dd>
+           <dt>data-dbt</dt>
+           <dd>Creates a dbt initialized with user supplied (unsigned-byte 8) data.</dd>
+           <dt>buffer-dbt</dt>
+           <dd>Used with get style requests with results stored in the user supplied buffer</dd>
+           <dt>app-dbt</dt>
+           <dd>Used where the user needs to supply the type of memory allocation.</dd>
+           </dl>
+           </td></tr>
+           <tr class="incomplete"><td>Locking</td><td>Contributions welcome</td></tr>
+           <tr class="incomplete"><td>Logging</td><td>Contributions welcome</td></tr>
+           <tr class="incomplete"><td>Memory Pool</td><td>Contributions welcome</td></tr>
+<tr class="incomplete"><td>Mutexes</td><td>Contributions welcome</td></tr>
+           <tr class="incomplete"><td>Replication</td><td>Contributions welcome</td></tr>
+           <tr class="incomplete"><td>Sequences</td><td>Contributions welcome</td></tr>
+           <tr class="complete"><td>Transactions</td><td></td></tr>
+        </tbody>
+   </table>
+</div>
+<div id="TODO">
+ <h3>TODO</h3>
+ <h4>Ongoing</h4>
+ <ul>
+   <li>Improve documentation</li>
+ </ul>
+ <h4>For "1.0"</h4>
+ <ul>
+   <li>Expose all of the Berkeley DB library</li>
+   <li>Stabilize and standardize conventions for exposed api</li>
+   <li>Remove cl implementation specific code</li>
+ </ul>
+ <p>Once "1.0" status is reached, the version will be bumped up to the version of the Berkeley DB library is. It will have the version <emphasis>berkeley-major.berkeley-minor.cl-berkeley-version</emphasis>. So for example for 4.5 it will be 4.5.0. The very minor version number for the berkeley library will be droped in our versions</p>
+<div id="developers">
+<h3>Developer Notes</h3>
+      <p>There are 2 api's. An internal one created by swig and an external one that is seen by the users. The swig generated interface covers 70% of the direct interface to the package. But the swig needs help in understanding some of the structures in db.h. It ignores constant declarations inside structure declarations. Also, it assumes that sub-structures (structure declarations inside other structure declarations) are pointers, causing alignment problems. For these reasons, interface files need to be created for structures that aren't translated correctly.</p>
+      <p>berkeley-db is "object oriented" in the sense that all structure instances have function pointers for thier methods. There are helper macros to allow the creation of these methods in lisp. The functions in berkeley-db are of 3 types:
+      <ul>
+      <li>functions with error codes</li>
+      <li>void functions</li>
+      <li>functions that return other types</li>
+      </ul>
+      </p>
+</div>
+
+   <div class="footer">
+     Arthur T Smyles, December 25, 2007.
+   </div>
+
+ </body>
+</html>

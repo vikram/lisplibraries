@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    21
+	    --
+	    MORE STRICTNESS</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>MORE STRICTNESS</h1>
+    Some examples for well-formedness checks:
+    <example title="Not all strings are allowed as comments">
+      <pre class="repl">CL-USER&gt; (stp:make-comment "verboten: --")</pre>
+      <pre class="result">Error: forbidden -- in comment</pre>
+    </example>
+    <example title="Names must follow the XML grammar">
+      <pre class="repl">CL-USER&gt; (stp:make-element "1eadingdigit")</pre>
+      <pre class="result">Error: not an NCName: 1eadingdigit</pre>
+    </example>
+    <example title="Mild protection against bogus argument order">
+      <pre class="repl">CL-USER&gt; (stp:make-element "html" "oops")</pre>
+      <pre class="result">WARNING: namespace URI does not look like an absolute URL: "oops"</pre>
+    </example>
+    <example title="The XMLDecl is not a processing instruction">
+      <pre class="repl">CL-USER&gt; (stp:make-processing-instruction "xml" "version='1.0'")</pre>
+      <pre class="result">Error: attempt to pretend that a PI is an XMLDecl</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="20.html">⬖</a>21/24<a class="icon" href="22.html">⬗</a>
+</div>
+</body>
+</html>

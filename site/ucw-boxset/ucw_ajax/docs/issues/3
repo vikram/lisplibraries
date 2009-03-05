@@ -1,0 +1,36 @@
+Summary: error while handling htpd backend error
+Status: fixed by patch ucw-2004@common-lisp.net/ucw--dev--0.3--patch-396
+UCW-Version: ucw-2004@common-lisp.net/ucw--dev--0.3--patch-385
+Lisp: sb-threads openmcl
+
+The function
+  #<STANDARD-GENERIC-FUNCTION IT.BESE.UCW::SHUTDOWN (3)>
+requires at least 1 argument.
+   [Condition of type SIMPLE-ERROR]
+
+Restarts:
+  0: [ABORT] Return to sldb level 1.
+  1: [KILL-WORKER] Kill this worker.
+  2: [DESTROY-THREAD] Destroy this thread (19203)
+
+Backtrace:
+  0: (SB-PCL::ERROR-NEED-AT-LEAST-N-ARGS #<STANDARD-GENERIC-FUNCTION IT.BESE.UCW::SHUTDOWN (3)> 1)
+  1: (SB-PCL::ERROR-NEED-AT-LEAST-N-ARGS #<STANDARD-GENERIC-FUNCTION IT.BESE.UCW::SHUTDOWN (3)> 1)
+  2: (SB-PCL::INITIAL-DFUN #<STANDARD-GENERIC-FUNCTION IT.BESE.UCW::SHUTDOWN (3)> NIL)
+  3: (SWANK::SLDB-LOOP 1)
+  4: ((SB-PCL::FAST-METHOD SWANK-BACKEND:CALL-WITH-DEBUGGING-ENVIRONMENT (T)) #<unused argument> #<unused argument> #<FUNCTION (LAMBDA NIL) {9EB481D}>)
+  5: (SWANK::CALL-WITH-BINDINGS ((*PRINT-PRETTY*) (*PRINT-LEVEL* . 4) (*PRINT-LENGTH* . 10) (*PRINT-CIRCLE* . T) (*PRINT-READABLY*) (*PRINT-PPRINT-DISPATCH* . #<SB-PRETTY:PPRINT-DISPATCH-TABLE {A0B9221}>) (*PRINT-GENSYM* . T) (*PRINT-BASE* . 10) (*PRINT-RADIX*) (*PRINT-ARRAY* . T) ...) #<FUNCTION (LAMBDA NIL) {9EB47DD}>)
+  6: (SWANK::DEBUG-IN-EMACS #<SB-INT:SIMPLE-STREAM-ERROR {9940001}>)
+  7: ((FLET IT.BESE.UCW::ABORT-WORKER) #<SB-INT:SIMPLE-STREAM-ERROR {9940001}>)
+  8: ((FLET IT.BESE.UCW::ABORT-WORKER) #<SB-INT:SIMPLE-STREAM-ERROR {9940001}>)
+  9: (SIGNAL #<SB-INT:SIMPLE-STREAM-ERROR {9940001}>)
+ 10: (ERROR SB-INT:SIMPLE-STREAM-ERROR)
+ 11: (SB-IMPL::SIMPLE-STREAM-PERROR "couldn't read from ~S" #<SB-SYS:FD-STREAM for "a constant string" {9819E09}> 104)
+ 12: (SB-IMPL::INPUT-CHAR/LATIN-1 #<SB-SYS:FD-STREAM for "a constant string" {9819E09}> NIL NIL)
+ 13: (READ-LINE #<SB-SYS:FD-STREAM for "a constant string" {9819E09}> T NIL #<unused argument>)
+ 14: ((SB-PCL::FAST-METHOD IT.BESE.UCW::READ-REQUEST (IT.BESE.UCW:MOD-LISP-BACKEND T)) #<unavailable argument> #<unavailable argument> #<IT.BESE.UCW:MULTITHREAD-MOD-LISP-BACKEND {91EA051}> #<SB-SYS:FD-STREAM for "a constant string" {9819E09}>)
+ 15: (IT.BESE.UCW::HTTPD-WORKER-LOOP/HANDLE #<IT.BESE.UCW::HTTPD-WORKER {980C7D9}> #<IT.BESE.UCW:MULTITHREAD-MOD-LISP-BACKEND {91EA051}> #<SB-SYS:FD-STREAM for "a constant string" {9819E09}>)
+ 16: (IT.BESE.UCW::HTTPD-WORKER-LOOP #<IT.BESE.UCW::HTTPD-WORKER {980C7D9}>)
+ 17: ((LAMBDA NIL))
+ 18: ("foreign function: call_into_lisp")
+ 19: ("foreign function: funcall0")

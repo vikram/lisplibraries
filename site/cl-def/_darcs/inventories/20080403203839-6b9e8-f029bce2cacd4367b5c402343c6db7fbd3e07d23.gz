@@ -1,0 +1,99 @@
+[initial
+attila.lendvai@gmail.com**20070725110527] 
+[support definer options
+attila.lendvai@gmail.com**20070728102259] 
+[Fix.
+levente.meszaros@gmail.com**20070728125629] 
+[Handle nils.
+levente.meszaros@gmail.com**20070728130600] 
+[added README
+attila.lendvai@gmail.com**20070728115615] 
+[fix loading from fasl's
+attila.lendvai@gmail.com**20070728121444] 
+[bah, this way the eval-when will warn when...
+attila.lendvai@gmail.com**20070728122206] 
+[Added method, test, variable, constant definers and a test suite.
+levente.meszaros@gmail.com**20070728222042] 
+[renamed to definers.lisp
+attila.lendvai@gmail.com**20070802155836] 
+[moved stefil dependency into an asdf-system-connection
+attila.lendvai@gmail.com**20070802155851] 
+[made -definer- also available
+attila.lendvai@gmail.com**20070804110549] 
+[added macro definer
+attila.lendvai@gmail.com**20070804110621] 
+[added missing stefil.lisp
+attila.lendvai@gmail.com**20070805130839] 
+[the definer-definer accepts :available-flags and supports exporting the defined definer. smarted up definers to support exporting
+attila.lendvai@gmail.com**20070808130206] 
+[support documentation for definers
+attila.lendvai@gmail.com**20070809135953] 
+[smarten up constant definer to support :test
+attila.lendvai@gmail.com**20070809140216] 
+[added print-object definer
+attila.lendvai@gmail.com**20070810135159] 
+[added slime integration (inspector lookup hook for definers)
+attila.lendvai@gmail.com**20070810135219] 
+[smarter print-object definer, can accept a single class name
+attila.lendvai@gmail.com**20070811210632] 
+[special-variable definer
+attila.lendvai@gmail.com**20070813150429] 
+[fix special-variable documentation
+attila.lendvai@gmail.com**20070820183807] 
+[fixes
+attila.lendvai@gmail.com**20070821233729] 
+[fix with-standard-definer-options and stuff
+attila.lendvai@gmail.com**20070824191615] 
+[fix style warning when compiling and loading a file with definers
+attila.lendvai@gmail.com**20070825105629] 
+[do not expect swank to be loaded, but set up *readtable-alist* when it is
+attila.lendvai@gmail.com**20070825203621] 
+[fix special variable documentation
+attila.lendvai@gmail.com**20070903084505] 
+[declare optimizations in a locally and add safety 2. this way declare dynamic-extent get effect on sbcl.
+attila.lendvai@gmail.com**20070908204308] 
+[in the constructor definer, do not specify &allow-other-keys to initialize-instance (it disables initarg checking)
+attila.lendvai@gmail.com**20070922153710] 
+[added with-macro definer
+attila.lendvai@gmail.com**20071011152924] 
+[fix loading
+attila.lendvai@gmail.com**20071011154714] 
+[Added with/without definer.
+levente.meszaros@gmail.com**20071011155033] 
+[Export -body- and fix funcall-with function name.
+levente.meszaros@gmail.com**20071011160140] 
+[added e flag support for the with-macro definer
+attila.lendvai@gmail.com**20071023203719] 
+[added class definer
+attila.lendvai@gmail.com**20071101132615] 
+[added condition
+attila.lendvai@gmail.com**20071101152505] 
+[fix class definer exporting when there are no slots and/or accessors
+attila.lendvai@gmail.com**20071101222800] 
+[allow using both symbols and strings as definer name.
+attila.lendvai@gmail.com**20071102112026
+ 
+ symbols have priority, but if a symbol was not found then its symbol-name is tried, too
+] 
+[oops, "TEST"
+attila.lendvai@gmail.com**20071102114353] 
+[fix: put the inline declaim outside of a locally in function definer to silence an sbcl warning
+attila.lendvai@gmail.com**20071205214926] 
+[Added definer for deftype.
+levente.meszaros@gmail.com**20080101134744] 
+[added stefil:suite definer
+attila.lendvai@gmail.com**20080219181110] 
+[housekeeping
+attila.lendvai@gmail.com**20080219181141] 
+[update emacs customization in readme
+attila.lendvai@gmail.com**20080316195816] 
+[follow bind :values changes
+attila.lendvai@gmail.com**20080316195833] 
+[print-object definer parses the body and docstring properly
+attila.lendvai@gmail.com**20080323110437] 
+[typo
+attila.lendvai@gmail.com**20080323110606] 
+[fix: do not turn NIL into n i l available-flags
+attila.lendvai@gmail.com**20080403193129] 
+[update def constant, factor out redefinition into a function
+attila.lendvai@gmail.com**20080403193151] 

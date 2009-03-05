@@ -1,0 +1,10 @@
+Revision: pxmlutils--main--0.0--patch-7
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Mon Dec  1 15:13:30 CET 2003
+Standard-date: 2003-12-01 14:13:30 GMT
+Modified-files: pxml3.cl
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-7
+Summary: Get rid of warnings due to use of compile, load, eval in eval-when
+Keywords: 
+

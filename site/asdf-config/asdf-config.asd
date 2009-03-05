@@ -1,0 +1,17 @@
+;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+
+(defpackage :asdf-config.system
+  (:use #:cl #:asdf))
+
+(in-package #:asdf-config.system)
+
+(defsystem asdf-config
+  :version "0.8.3"
+  :author "Gary Warren King <gwking@metabang.com>"
+  :maintainer "Gary Warren King <gwking@metabang.com>"
+  :licence "MIT Style License"
+  :description "Allows for ASDF system to be connected so that auto-loading may occur."
+  :components 
+  ((:file "package")
+   (:file "asdf-config" :depends-on ("package"))))
+   

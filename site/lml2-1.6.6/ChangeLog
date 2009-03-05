@@ -1,0 +1,45 @@
+2007-12-10  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* Version 1.6.6
+	* tests.lisp: Fix package names
+
+2007-10-22  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* Version 1.6.5
+	* htmlgen.lisp: Remove dependency on simple string, thanks to Anton Vodonosov
+
+Versions 1.6.2-1.6.4 not noted
+	
+2006-11-07  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* Version 1.6.1
+	* apache-dir.lisp: Image source link fix -- thanks to Matthew Kennedy
+
+2006-11-07  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* Version 1.6.0
+	* stdstite.lisp, files.lisp: Add optional final and rightcol files
+
+
+2006-01-17  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* cl-lml2.asd: Apply modified patch from Gary King
+	so that asdf:test-op always performs test.
+	
+2005-09-03  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* files.lisp: Apply patch from Gary King to 
+	identify output files
+	
+2003-07-21  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* htmlgen.lisp: 
+	- Add code walker to combine sequential write-string
+ 	  calls
+	
+2003-07-15  Kevin M. Rosenberg  <kevin@rosenberg.net>
+	* htmlgen.lisp: 
+	  - Finished removal of if* macro
+	  - Added attribute processing tags 
+	    (:if :when :optional :format :fformat)
+	  - Ensured that attribute values are quoted
+	    (html ((:div width 5))) => <div width="5"></div>
+	* lml2.asd: Remove ifstar.lisp
+	* tests.lisp: 
+	  - Port tests from first LML package
+	  - Add tests for new features
+	
+	

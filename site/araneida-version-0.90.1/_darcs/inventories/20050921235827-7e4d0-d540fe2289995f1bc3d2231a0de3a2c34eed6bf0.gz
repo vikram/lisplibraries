@@ -1,0 +1,119 @@
+Starting with tag:
+[TAG araneida-version-0.9-a1
+Alan-Shields@omrf.ouhsc.edu**20050825215157] 
+[Put the main source in its own component for dependency reasons
+Alan-Shields@omrf.ouhsc.edu**20050915225000
+ A few of the files were requiring "compat" and almost all of the files required "defpackage",
+ so I tucked the main source in its own module - the :pathname "" makes it still look in the
+ root directory.
+ 
+ This should simplify the ASDF file a bit.
+ 
+ In retrospect, this is a semi-pointless change, but one that I sank the time into doing while
+ I was chasing a semi-bug...why not record it?
+] 
+[Ignore some extraneous variables so as to stop some warnings
+Alan-Shields@omrf.ouhsc.edu**20050915225030] 
+[Removed unused macro "maybe-output"
+Alan-Shields@omrf.ouhsc.edu**20050915230517
+ We don't use it any more, and it didn't seem to be working anymore, besides.
+ I left the name in the patch subject, though, which should make it easy
+ to undo if/when we need it again.
+] 
+[Lambda passed where there shouldn't have been one
+Alan-Shields@omrf.ouhsc.edu**20050915230654
+ the macro that wraps this call automagically wraps it
+ in a lambda - so we don't need this one any more.
+] 
+[Memoize takes functions, not (or function symbol)
+Alan-Shields@omrf.ouhsc.edu**20050915231848
+ This speeds up memoize a bit and removes an annoying compiler note.
+ Yeah, I'm tweaked like that.
+] 
+[araneida: create the obsolete directory
+Alan-Shields@omrf.ouhsc.edu**20050920193150
+ The obsolete directory is for code that I plan to remove, but
+ should stay in for at least one release. For some of the independent code,
+ such as dhttp.lisp, this has the added benefit that people will have to update
+ their code and be aware that they are using depricated code.
+] 
+[araneida: move dhttp to obsolete/
+Alan-Shields@omrf.ouhsc.edu**20050920193348
+ Does anyone USE dhttp anymore?
+] 
+[rfc2109: allow nil to be passed to safe-parse-cookies
+Alan-Shields@omrf.ouhsc.edu**20050920212250
+ The docs say that you can pass nil to safe-parse-cookies to have no
+ legal domains to allow cookies to come from (ie they must come from your
+ server or not at all).
+ Whoops.
+] 
+[araneida: request-send-error modified to show client error message
+Alan-Shields@omrf.ouhsc.edu**20050921192602
+ The condition system stipulates a :CLIENT-MESSAGE that will be sent
+ to the user. The current request-send-error doesn't receive that.
+ 
+ I rewrote it to where it does - note that any direct callers of
+ request-send-error must be modified to take this into account.
+ 
+ The signature change should clue people in to this. I hope.
+] 
+[araneida: export SEND-FILE
+Alan-Shields@omrf.ouhsc.edu**20050921192856
+ Many people don't want to use the static-file-handler but do
+ want to be able to send files. This lets you do that now.
+] 
+[araneida: documentation change to note use of inexact matching
+Alan-Shields@omrf.ouhsc.edu**20050921192938] 
+[araneida: initial commit of test server and client
+Alan-Shields@omrf.ouhsc.edu**20050921193013] 
+[TAG rfc2109-version-0.3.1
+Alan-Shields@omrf.ouhsc.edu**20050825202618] 
+[araneida: add test for alternate content type
+Alan-Shields@omrf.ouhsc.edu**20050921200338] 
+[araneida: authentication handler was not signaling response sent
+Alan-Shields@omrf.ouhsc.edu**20050921210329
+ I don't know how many people use this function, but it seemed best
+ to have it work.
+ 
+ It works now.
+] 
+[araneida: test authentication and authorization
+Alan-Shields@omrf.ouhsc.edu**20050921210502] 
+[araneida: add quitting to test server
+Alan-Shields@omrf.ouhsc.edu**20050921213814] 
+[araneida: test script calls quit for server, now
+Alan-Shields@omrf.ouhsc.edu**20050921213855] 
+[araneida: test-server now works on a LOAD
+Alan-Shields@omrf.ouhsc.edu**20050921213946] 
+[araneida: basic test script
+Alan-Shields@omrf.ouhsc.edu**20050921214012] 
+[araneida: ensure that quit is called for the server even if there is an error
+Alan-Shields@omrf.ouhsc.edu**20050921214637] 
+[araneida: big patch to get test server working even better
+Alan-Shields@omrf.ouhsc.edu**20050921225124
+ Test server now produces random text which the test client looks for.
+ Works with threaded and non-threaded SBCL, and should be pretty
+ easily extended to other servers.
+ As a test, I'm going to try out CMUCL next.
+] 
+[Remove smoketest - we have a real test suite now
+Alan-Shields@omrf.ouhsc.edu**20050921225320] 
+[Move the new test suite to it's rightful place of ascendancy
+Alan-Shields@omrf.ouhsc.edu**20050921225400] 
+[araneida: test suite correction - look before leaping error
+Alan-Shields@omrf.ouhsc.edu**20050921232717
+ Turns out that we need to set *quit* BEFORE we stop listening,
+ as stop-listening breaks us out of the function in some lisps (SBCL).
+] 
+[araneida: add CMUCL to test suite
+Alan-Shields@omrf.ouhsc.edu**20050921232809
+ This patch is a good example of what you have to do to
+ add a new lisp to the test suite. It's small, thankfully.
+ 
+ Enjoy!
+] 
+[araneida: release notes added
+Alan-Shields@omrf.ouhsc.edu**20050921235437] 
+[TAG rfc2109-version-0.3.2
+Alan-Shields@omrf.ouhsc.edu**20050921193537] 

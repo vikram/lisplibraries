@@ -1,0 +1,145 @@
+Starting with tag:
+[TAG araneida-version-0.9-a2
+Alan-Shields@omrf.ouhsc.edu**20050921235827] 
+[araneida: bring macros into the ASDF system, add once-only and with-gensyms
+Alan-Shields@omrf.ouhsc.edu**20050923231411] 
+[araneida: append-url
+Alan-Shields@omrf.ouhsc.edu**20050924002149
+ It makes sense if you think about the name of the function, but the first time merge-url
+ pulls this action on you, you get a little...irate:
+ (merge-url (merge-url (parse-url "http://example.com/") "/foo") "/bar")
+ becomes
+ <URL "http://example.com/bar">
+ 
+ Nevermind that this is exactly what you want sometimes.
+ 
+ So, I've created append-url, that would, given the same sequence as above, become:
+ <URL "http://example.com/foo/bar">
+ 
+ It's a little rough right now, but it should work. I'll clarify the docs for merge-url
+ Real Soon Now.
+] 
+[arnaeida: a little more information on test failure
+Alan-Shields@omrf.ouhsc.edu**20050924002456] 
+[araneida: attach-hierarchy added
+Alan-Shields@omrf.ouhsc.edu**20050924002519
+ I'm the type that likes declarative sentences. Just like that last one.
+ I find that I like declaring the hierarchy and handlers of my web app
+ in one place as a sort of table of contents for the app.
+ 
+ So, I thought to myself: self, why don't you make that executable?
+ 
+ And so it was.
+ 
+ ...please help me with the documentation. I'm certain it's horrid.
+] 
+[araneida: html docs for some utilities
+Alan-Shields@omrf.ouhsc.edu**20050924003828] 
+[araneida: sleep longer, know cmucl
+Alan-Shields@omrf.ouhsc.edu**20050928234555
+ On a fresh compile it can take longer than 5 seconds before the server is ready.
+ 10 seconds seems to do the trick most of the time - I might consider putting in
+ a sleep loop in the client script, though.
+ 
+ CMUCL was added to the test suite last time, but not to the help docs. Whoops.
+] 
+[araneida: (setf don't-be-stupid t)
+Alan-Shields@omrf.ouhsc.edu**20050928234811
+ Turns out I DO know how to do quotes-within-quotes, but SLIME was showing me the string
+ representation, so of COURSE there were escaped quotes. Argh. Right.
+] 
+[araneida: handle proxy stuff with attach-hierarchy
+Alan-Shields@omrf.ouhsc.edu**20050928234916
+ You know, almost all of my stuff is proxy'd, why didn't I take this into account
+ while finishing up the macro? Right. Anyways.
+ ATTACH-HIERARCHY requires two url parameters, now: internal and external. Internal
+ is used for attaching, external is used for (-url) functions.
+ If you're not using a reverse-proxy or any sort of translation, you'll be fine
+ by just giving the URL twice.
+] 
+[araneida: pmp.lisp unused - move to obsolete
+Alan-Shields@omrf.ouhsc.edu**20050929193445] 
+[araneida: ensure that there are directives - helps catch parameter issues
+Alan-Shields@omrf.ouhsc.edu**20050929193519] 
+[araneida: with-url-params, with-tainted-url-params
+Alan-Shields@omrf.ouhsc.edu**20050930191820
+ Common pattern of use is grabbing url parameters
+ and doing something with them. with- makes sense here.
+ It is so.
+] 
+[taint: add tainted-p
+Alan-Shields@omrf.ouhsc.edu**20051002005436
+ Surprisingly enough, it sometimes comes in handy to be able to tell
+ when a value is tainted. Crazy stuff.
+] 
+[araneida: add tainted-p to exports
+Alan-Shields@omrf.ouhsc.edu**20051002005722] 
+[araneida: defurlmethod
+Alan-Shields@omrf.ouhsc.edu**20051002013953
+ I'm a bit nuts, I know, but I've always wanted to treat url parameters
+ and body parameters as dispatchable function parameters.
+ 
+ ...now you can.
+ More documentation forthcoming.
+] 
+[araneida: update todo on defurlmethod
+Alan-Shields@omrf.ouhsc.edu**20051002022016] 
+[araneida: defurlmethod uses conditions instead of text warnings now
+Alan-Shields@omrf.ouhsc.edu**20051003191224] 
+[araneida: defurlmethod parameter order issue
+Alan-Shields@omrf.ouhsc.edu**20051004190942
+ I forgot that set-difference doesn't guarantee the order of the result set,
+ so I have to remove-if instead.
+ 
+ Test added.
+] 
+[araneida: update bookmarks for tests
+Alan-Shields@omrf.ouhsc.edu**20051004191238
+ I noticed that I hadn't put down the right URLs in the comment bookmarks. Whoops. Fixed.
+] 
+[araneida: better error when html element attribute is not a symbol
+Alan-Shields@omrf.ouhsc.edu**20051004202357
+ I got tired of receiving '"Internal ID" is not a symbol' in the middle
+ of a huge block of code, not having any clue what was going on.
+ 
+ Now it will spit out a more specific error along with the parameters passed.
+] 
+[araneida: brain error on parameter order test
+Alan-Shields@omrf.ouhsc.edu**20051005025311
+ ...I was NOT actually testing parameter order. I forgot to take
+ the final step. Whoops. Done now.
+ 
+ A B C
+ A C B
+] 
+[araneida: handle end-of-file while reading from socket with listener
+Alan-Shields@omrf.ouhsc.edu**20051005231755
+ It's a pretty unremarkable thing for the client to disconnect in the middle
+ of a request. This patch causes the server to skip on to abort response
+ when it encounters this condition.
+] 
+[araneida: wrap evals in test suite with mutex
+Alan-Shields@omrf.ouhsc.edu**20051005233750
+ SBCL doesn't seem to like concurrent calls to eval - maybe it's a problem
+ with my macro expansion and threads, I don't know. What I DO know is that
+ wrapping the eval calls in a mutex causes the problem to go away.
+ 
+ So guess what I'm doing.
+] 
+[araneida: allow forcing serve-event in test suite
+Alan-Shields@omrf.ouhsc.edu**20051006003153] 
+[araneida: siege benchmark
+Alan-Shields@omrf.ouhsc.edu**20051006003259
+ A question was raised on LispWeb about how well Araneida would hold up to repeated
+ requests. This benchmark lets you see for yourself. I found a few bugs using it.
+] 
+[araneida: document defurlmethod
+Alan-Shields@omrf.ouhsc.edu**20051012000412] 
+[araneida: paragraph the paragraphs in urls.html
+Alan-Shields@omrf.ouhsc.edu**20051012000610] 
+[document append-url
+Alan-Shields@omrf.ouhsc.edu**20051012000635] 
+[araneida: remember to mention deftaintedurlmethod in the docs
+Alan-Shields@omrf.ouhsc.edu**20051012001411] 
+[araneida: update release notes for 0.9-a3
+Alan-Shields@omrf.ouhsc.edu**20051012001941] 

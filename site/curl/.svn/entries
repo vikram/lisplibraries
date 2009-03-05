@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="35"
+   name=""
+   committed-date="2005-08-16T03:41:12.748972Z"
+   url="svn://common-lisp.net/project/cl-curl/subversion/trunk"
+   last-author="lhealy"
+   kind="dir"
+   uuid="47c31f7a-90f0-0310-991a-882670050eca"
+   revision="35"/>
+<entry
+   name="clcurl"
+   kind="dir"/>
+<entry
+   committed-rev="34"
+   name="style.css"
+   text-time="2005-11-06T23:43:46.000000Z"
+   committed-date="2005-03-14T00:05:38.997797Z"
+   checksum="edc51a8acf44a1be02475d7bb5a0e951"
+   last-author="lhealy"
+   kind="file"
+   prop-time="2005-11-06T23:43:46.000000Z"/>
+<entry
+   committed-rev="35"
+   name="index.html"
+   text-time="2005-11-06T23:43:46.000000Z"
+   committed-date="2005-08-16T03:41:12.748972Z"
+   checksum="1d05a7f1f3b27a77cd39fcb648244c90"
+   last-author="lhealy"
+   kind="file"
+   prop-time="2005-11-06T23:43:46.000000Z"/>
+<entry
+   committed-rev="35"
+   name="curl.asd"
+   text-time="2005-11-06T23:43:46.000000Z"
+   committed-date="2005-08-16T03:41:12.748972Z"
+   checksum="639c56eba614c49597ba4e7e64a13a91"
+   last-author="lhealy"
+   kind="file"
+   prop-time="2005-11-06T23:43:46.000000Z"/>
+<entry
+   committed-rev="34"
+   name="curl.lisp"
+   text-time="2005-11-06T23:43:46.000000Z"
+   committed-date="2005-03-14T00:05:38.997797Z"
+   checksum="9befe16e463fda1967f6c7801c32f1f7"
+   last-author="lhealy"
+   kind="file"
+   prop-time="2005-11-06T23:43:46.000000Z"/>
+</wc-entries>

@@ -1,0 +1,58 @@
+<page title="Closure HTML">
+  <p>An HTML parser written in Common Lisp.</p>
+
+  <h3>About</h3>
+
+  <p>
+    Closure HTML was written
+    by <a href="http://www.stud.uni-karlsruhe.de/~unk6/">Gilbert
+    Baumann</a> as part of the Closure web browser.  It was first
+    converted into a stand-alone installation by Ignas Mikalajūnas, and
+    finally reassembled and documented for integration with Closure XML
+    and use with the Closure browser by David Lichteblau under its
+    current name.
+  </p>
+  <p>
+    It available under an MIT-style license.
+  </p>      
+
+  <p>
+    Please send bug reports
+    to <a href="mailto:closure-devel@common-lisp.net">
+      closure-devel@common-lisp.net</a>
+    (<a href="http://common-lisp.net/cgi-bin/mailman/listinfo/closure-devel">list information</a>).
+  </p>
+
+  <h3>Related projects</h3>
+  <ul>
+    <li>
+      <a href="http://common-lisp.net/project/cxml/">Closure XML</a>:
+      An XML library that can be used together with Closure HTML.
+    </li>
+<!--
+    <li>
+      <a href="http://www.lichteblau.com/cxml-stp/">cxml-stp</a>:
+      STP, an alternative to DOM
+    </li>
+-->
+    <li>
+      <a href="http://common-lisp.net/project/closure/">Closure</a>:
+      The web browser based on Closure HTML.
+    </li>
+  </ul>
+
+  <h3>History</h3>
+  <p><b>2007-10-28</b></p>
+  <ul>
+    <li>Closure HTML released as a stand-alone project.</li>
+  </ul>
+  <!-- 2002-07-22 -->
+  <p><b>2005-03-13</b></p>
+  <ul>
+    <li>Closure released unter an MIT-style license.</li>
+  </ul>
+  <p><b>1996-10-21</b></p>
+  <ul>
+    <li>sgml-parse.lisp created.</li>
+  </ul>
+</page>

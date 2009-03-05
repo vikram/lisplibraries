@@ -1,0 +1,1 @@
+../site/defsystem-compatibility/defsystem-compatibility-test.asd

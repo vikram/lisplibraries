@@ -1,0 +1,251 @@
+<html>
+<head>
+<title>TIMER - an event scheduler for SBCL</title>
+</head>
+
+<body>
+
+<h2>TIMER - an event scheduler for SBCL</h2>
+
+<h3>Abstract</h3>
+
+<blockquote>
+<p>TIMER is an SBCL interface for scheduling events to occur at
+specified times. It allows relative and absolute scheduling and event
+repetition. It is loosely based on the LispWorks timer scheduling
+interface.
+
+<p>It is released in the public domain by its author, Zachary Beane
+&lt;<a href="mailto:xach@xach.com">xach@xach.com</a>&gt;.
+</blockquote>
+
+<h3>Contents</h3>
+
+<ol>
+<li> <a href="#download">Download and Installation</a>
+<li> <a href="#timers">Timers</a>
+<li> <a href="#dictionary">The TIMER Dictionary</a>
+ <ol>
+ <li> <a href="#enable-timers">enable-timers</a>
+ <li> <a href="#timers-enabled-p">timers-enabled-p</a>
+ <li> <a href="#make-timer">make-timer</a>
+ <li> <a href="#timer-name">timer-name</a>
+ <li> <a href="#schedule-timer">schedule-timer</a>
+ <li> <a href="#schedule-timer-relative">schedule-timer-relative</a>
+ <li> <a href="#unschedule-timer">unschedule-timer</a>
+ <li> <a href="#timer-expired-p">timer-expired-p</a>
+ </ol>
+<li> <a href="#examples">Examples</a>
+<li> <a href="#differences">Differences from LispWorks</a>
+</ol>
+
+<a name="download"></a>
+<h3>Download and Installation</h3>
+
+<p>The latest version of this package should always be available from
+<a
+href="http://www.xach.com/lisp/timer/">http://www.xach.com/lisp/timer/</a>.
+
+<p>The easiest way to install TIMER is via asdf-install. From inside a
+running SBCL session:
+
+<blockquote>
+<pre>
+* <b>(require 'asdf)</b>
+* <b>(require 'asdf-install)</b>
+* <b>(asdf-install:install 'timer)</b>
+</pre>
+</blockquote>
+
+<p>If you download this package as a source tarball, unpack it
+anywhere you like, then symlink the timer.asd file into a directory in
+<tt>asdf:*central-registry*</tt>, such as <tt>~/.sbcl/systems/</tt>
+
+<p>After TIMER is installed, you can bring it into your SBCL session
+with "(require 'timer)".
+
+
+
+<a name="timers"></a>
+<h3>Timers</h3>
+
+<p>A timer is an object that contains a function. The timer may be
+scheduled to run at an absolute or relative time. When the time
+arrives, the timer <i>expires</i>, and its associated function is
+invoked with no arguments.
+
+<p>A timer may also be scheduled to have a <i>repeat time</i>. When
+set, this value is used when the timer expires as a relative time to
+reschedule the timer.
+
+<p>Timers may be <i>named</i> at creation time. This option affects
+how the object is displayed with <tt>PRINT-OBJECT</tt>.
+
+
+<a name="dictionary"></a>
+<h3>The TIMER Dictionary</h3>
+
+<p>TIMER exports the following symbols:
+
+<a name="enable-timers"></a>
+<p>[Function]<br>
+<b>enable-timers</b> =&gt; &lt;no values&gt;
+
+<p>This function initializes and starts the timer scheduling
+system. It must be called before using timer scheduling functions.
+
+
+<a name="timers-enabled-p"></a>
+<p>[Function]<br>
+<b>timers-enabled-p</b> =&gt; <i>result</i>
+
+<p>This function returns <i>true</i> if the timer scheduling system
+is currently running, <tt>NIL</tt> otherwise.
+
+
+<a name="make-timer"></a>
+<p>[Function]<br>
+<b>make-timer</b> <i>function <tt>&amp;key</tt> name (thread t)</i> =&gt; <i>timer</i>
+
+<p>This function will create and return a timer object. If
+<tt><i>thread</i></tt> is non-<tt>NIL</tt>, <tt><i>function</i></tt>
+will run in a new thread when the timer expires.
+
+<p><b>Note:</b> If a new thread is not created, a timer function that
+has a significant run time or raises an error can disrupt the timer
+scheduling system.
+
+
+<a name="timer-name"></a>
+<p>[Function]<br>
+<b>timer-name</b> <i>timer</i>
+
+<p>Return the name of <tt><i>timer</i></tt> that was specified at
+creation time, or <tt>NIL</tt> if the timer is unnamed.
+
+
+<a name="schedule-timer"></a>
+<p>[Function]<br>
+<b>schedule-timer</b> <i>timer absolute-time <tt>&amp;optional</tt>
+repeat-time</i> =&gt; &lt;no values&gt;
+
+<p>This function will schedule <tt><i>timer</i></tt> to expire at
+<tt><i>absolute-time</i></tt>. <tt><i>absolute-time</i></tt> is a time
+as returned by <tt>get-universal-time</tt>, but it may be a real (that
+is, include partial seconds). If a positive real number
+<tt><i>repeat-time</i></tt> is provided, the timer will be rescheduled
+after its first expiration to expire every <tt><i>repeat-time</i></tt>
+seconds.
+
+<p><tt><i>absolute-time</i></tt> and <tt><i>repeat-time</i></tt> must
+not be negative.
+
+<p>If <tt><i>timer</i></tt> has already been scheduled by a call to
+schedule-timer or <a
+href="#schedule-timer-relative">schedule-timer-relative</a> and has
+not yet expired, it is unscheduled and rescheduled with the new
+expiration and repeat times.
+
+<p>The consequences are unspecified if <tt><i>absolute-time</i></tt>
+is a non-negative number representing a date in the past.
+
+
+<a name="schedule-timer-relative"></a>
+<p>[Function]<br>
+<b>schedule-timer-relative</b> <i>timer relative-time
+<tt>&amp;optional</tt> repeat-time</i> =&gt; &lt;no values&gt;
+
+<p>This function is identical to <a
+href="#schedule-timer">schedule-timer</a>, except the timer is
+scheduled to expire at the current time plus the non-negative real
+number <tt><i>relative-time</i></tt>.
+
+
+<a name="unschedule-timer">
+<p>[Function]<br>
+<b>unschedule-timer</b> <i>timer</i> =&gt; <i>result</i>
+
+<p>This function unschedules and returns <i>true</i> if
+<tt><i>timer</i></tt> is scheduled, and <tt>NIL</tt> if
+<tt><i>timer</i></tt> is not scheduled.
+
+<a name="timer-expired-p"></a>
+<p>[Function]<br>
+<b>timer-expired-p</b> <i>timer <tt>&amp;optional</tt> relative-time</i> =&gt;
+<i>result</i>
+
+<p>This function returns <i>true</i> if <tt><i>timer</i></tt> has not
+been scheduled or if it has expired, or <tt>NIL</tt> otherwise. 
+
+<p>If <tt><i>relative-time</i></tt> is provided, this function returns
+<i>true</i> if <tt><i>timer</i></tt> has not been scheduled or if it
+will expire within <tt><i>relative-time</i></tt> seconds, or
+<tt>NIL</tt> otherwise.
+
+
+<a name="examples"></a>
+<h3>Examples</h3>
+
+<blockquote>
+<pre>
+CL-USER(3): <b>(timer:enable-timers)</b>
+
+12374
+CL-USER(4): <b>(defun show-time () (format t "~%The time is now ~D~%" (get-universal-time)))</b>
+
+SHOW-TIME
+CL-USER(5): <b>(defvar *timer* (timer:make-timer #'show-time))</b>
+
+*TIMER*
+CL-USER(7): <b>(progn (show-time) (timer:schedule-timer-relative *timer* 10 5))</b>
+
+The time is now 3277307432
+CL-USER(8): 
+The time is now 3277307442
+
+The time is now 3277307447
+
+The time is now 3277307452
+
+CL-USER(8): 
+The time is now 3277307457
+
+The time is now 3277307462
+
+CL-USER(9): <b>(timer:unschedule-timer *timer*)</b>
+#&lt;TIMER (unnamed) {96410E1}&gt;
+</pre>
+</blockquote>
+
+
+<a name="differences"></a>
+<h3>Differences from Lispworks</h3>
+
+
+<p>This interface is inspired by the LispWorks timer interface, with a
+few differences:
+
+<ul>
+<li> LispWorks timers are initialized with a symbol and a list of
+arguments. When the timer expires, the symbol is applied as a function
+to the arguments. TIMER uses a single function object which is invoked
+with no arguments.
+
+<li> The absolute value given to LispWorks' schedule-timer is relative
+to the start of the program. TIMER uses a value based on
+<tt>get-universal-time</tt>.
+
+<li> <tt>make-named-timer</tt> is eliminated; the <tt>name</tt>
+keyword argument to <a href="#make-timer">make-timer</a> is available
+instead.
+
+<li> TIMER functions, by default, run in a new dedicated
+thread. LispWorks timer functions run in the system idle thread. The
+<tt>thread</tt> keyword argument to <a
+href="#make-timer">make-timer</a> is available to cause timer
+functions to run in the timer scheduler thread.
+
+</ul>
+
+<p><hr>
+<i>index.html,v 1.5 2003/11/12 22:41:57 xach Exp</i>

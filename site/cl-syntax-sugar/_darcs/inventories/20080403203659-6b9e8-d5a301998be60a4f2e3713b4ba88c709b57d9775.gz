@@ -1,0 +1,50 @@
+[initial
+attila.lendvai@gmail.com**20080318164712] 
+[added readtime-wraper.lisp to the .asd
+attila.lendvai@gmail.com**20080318171227] 
+[added test infrastructure
+attila.lendvai@gmail.com**20080318173521] 
+[more work, mostly a quasi-quote reader with some tests
+attila.lendvai@gmail.com**20080318215022] 
+[added some asdf extenstions that help dealing with readtables. and also with swank's readtable alist.
+attila.lendvai@gmail.com**20080318225102] 
+[Stuff
+levente.meszaros@gmail.com**20080319135412] 
+[get rid of a style warning
+attila.lendvai@gmail.com**20080320102728] 
+[Added sharp-l with tests
+attila.lendvai@gmail.com**20080320114118] 
+[drop test that tested old behaviour of the readtime-wrapper-syntax
+attila.lendvai@gmail.com**20080320114210] 
+[fix lambda reader syntax to be installable on [+ 40 !1]
+attila.lendvai@gmail.com**20080320123106] 
+[add test for [+ !1 40]
+attila.lendvai@gmail.com**20080320123132] 
+[Enable transforming the result returned by readtime-wrapper syntax.
+levente.meszaros@gmail.com**20080320163428] 
+[added a macro called λ that expands into cl:lambda
+attila.lendvai@gmail.com**20080320231534] 
+[get rid of the iterate dependency by converting the lambda parsing stuff to loop
+attila.lendvai@gmail.com**20080320233242] 
+[renamed to register-readtable-for-swank
+attila.lendvai@gmail.com**20080323101603] 
+[fix swank integration
+attila.lendvai@gmail.com**20080323150031] 
+[added missed tests/lambda.lisp
+attila.lendvai@gmail.com**20080323150110] 
+[follow cl-walk make-walk-environment rename
+attila.lendvai@gmail.com**20080323193032] 
+[fix minimum arg for the #2L(+ !1 40), add tests
+attila.lendvai@gmail.com**20080323213128] 
+[housekeeping
+attila.lendvai@gmail.com**20080323213241] 
+[extend the λ macro to ignore args with name _
+attila.lendvai@gmail.com**20080329174730] 
+[simplify some code in the quasi-quote reader
+attila.lendvai@gmail.com**20080329174757] 
+[fix sharpl reader
+attila.lendvai@gmail.com**20080403173745] 
+[:use cl-walker in the test packages
+attila.lendvai@gmail.com**20080403173755] 
+[added TODO
+attila.lendvai@gmail.com**20080403174503] 

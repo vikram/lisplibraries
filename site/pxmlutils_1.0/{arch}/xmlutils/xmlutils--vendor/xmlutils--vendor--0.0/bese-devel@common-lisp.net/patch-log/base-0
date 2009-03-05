@@ -1,0 +1,14 @@
+Revision: xmlutils--vendor--0.0--base-0
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 09:52:56 CEST 2003
+Standard-date: 2003-10-07 07:52:56 GMT
+Summary: initial import
+Keywords: 
+New-files: ./ChangeLog ./build.cl ./phtml-test.cl ./phtml.cl
+    ./phtml.htm ./phtml.txt ./pxml-test.cl ./pxml.htm
+    ./pxml.txt ./pxml0.cl ./pxml1.cl ./pxml2.cl ./pxml3.cl
+New-patches: bese-devel@common-lisp.net/xmlutils--vendor--0.0--base-0
+
+
+(automatically generated log message)

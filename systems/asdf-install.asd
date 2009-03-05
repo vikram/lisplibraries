@@ -1,0 +1,1 @@
+/usr/local/lib/sbcl/asdf-install/asdf-install.asd

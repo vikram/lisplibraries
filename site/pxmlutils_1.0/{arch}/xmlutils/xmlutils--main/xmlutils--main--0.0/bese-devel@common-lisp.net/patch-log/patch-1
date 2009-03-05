@@ -1,0 +1,18 @@
+Revision: xmlutils--main--0.0--patch-1
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Oct  7 09:58:33 CEST 2003
+Standard-date: 2003-10-07 07:58:33 GMT
+Summary: added README
+Keywords: 
+New-files: ./.arch-ids/README.id ./README
+New-directories: 
+Removed-files: 
+Removed-directories: 
+Renamed-files: 
+Renamed-directories: 
+Modified-files: 
+Modified-directories: 
+New-patches: bese-devel@common-lisp.net/xmlutils--main--0.0--patch-1
+Removed-patches: 
+

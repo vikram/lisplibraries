@@ -1,0 +1,34 @@
+Version 0.2.4
+2007-02-08
+Allow more characters in cookie names/values according to original Netscape spec
+Robustified READ-COOKIE-VALUE
+
+Version 0.2.3
+2007-01-17
+Guard against stray semicolons when reading name/value pairs (thanks to Bülent Murtezaoglu)
+
+Version 0.2.2
+2007-01-10
+Faster vesion of READ-LINE* (provided by Gábor Melis)
+
+Version 0.2.1
+2006-10-26
+Added explicit element types for CLISP to fix problems reported by Anton Vodonosov
+
+Version 0.2.0
+2006-10-06
+Only wrap inner stream with flexi stream if really needed
+
+Version 0.1.2
+2006-09-05
+Exported CHUNKED-STREAM-STREAM
+Mentioned Gentoo port in docs
+Added info about mailing lists
+
+Version 0.1.1
+2006-09-02
+Added missing CRLF for output chunking
+
+Version 0.1.0
+2006-09-01
+First public release

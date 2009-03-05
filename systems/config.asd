@@ -1,0 +1,1 @@
+../site/lisa/src/config/config.asd

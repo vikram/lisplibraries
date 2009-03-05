@@ -1,0 +1,1 @@
+/Volumes/home/vb/repositories/vendorsrc/.sbcl/site/xlunit-0.6.2/xlunit.asd

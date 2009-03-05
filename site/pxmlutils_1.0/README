@@ -1,0 +1,12 @@
+This is Franz's LLGPL xmlutils package modified to work under other
+Common Lisp implementations. It depends on ACL-COMPAT.
+
+The HTML parser works fine.
+
+The XML parser works but:
+
+1) Unicode support has been removed. This was done by brutally
+   redefining unicode-check to do nothing. The consequences of this
+   change are as yet untested.
+
+2) Not a great deal of testing has been done.

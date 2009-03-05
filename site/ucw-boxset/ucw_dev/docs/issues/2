@@ -1,0 +1,38 @@
+Summary: What happens when we want to reference a static resource "outside" of our url-prefix?
+
+What's come out of this conversation is that we could really use a
+function which maps urls to files (and maybe even entry points). We'd
+also need a few convienece functions for generating these functions
+(map-from-directory, map-by-regexp, etc.)
+
+See http://meme.b9.com/cview.html?channel=ucw&date=today#hour17 for the context
+
+<segv> timjr: the problem with publish-directory is due to the examples
+    attempting to access a file outside the their url-root. i don't think this
+    supposed to be allowed (it kindof violates the
+    application-as-an-independent-isolated-entity rule)                                        
+<timjr> maybe a warning is in order if one of the :tal-roots is outside of the
+    :url-prefix, then?                                                                         
+<timjr> or do I misunderstand?
+<segv> you understand. i think the url-prefix, tal-root and www-root
+    combination is more complex than it needs to be.                                           
+<segv> or maybe it would be easier to make www-root being an alist of
+    directory-as-seen-by-url -> directory-on-local-file-system                                 
+<segv> (which is what publish-directory needs to do eventually anyway)
+<segv> this would allow you to share static resources (like javascript) across
+    applications (not that i'm convinced this is such a great idea)                            
+<timjr> you could go all the way and allow users to provide their own
+    url->filesystem mapping function, and then provide a
+    generate-mapping-function that takes an alist and returns a closure, to
+    handle the staightforward cases :)                                                         
+<segv> this could, if done right, get rid on the :url-prefix slot as well.
+<segv> what should said closure get? the entire url? just the part after the
+    url-prefix? (with the url-prefix part we'd have contention issue with
+    multiple apps).                                                                            
+<timjr> if you just give it the part after the url-prefix, then you sort of
+    help people not tie their app to a specific root                                           
+<segv> i'd like, if i can, to use this mechanism for entry-points as well (one
+    thing that's always bugged me is that you can't write reusable
+    entry-ponits since they're tied to a name).
+<segv> s/name/url/
+<segv> timjr: agreed.                                                                          

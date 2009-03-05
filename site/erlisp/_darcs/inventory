@@ -1,0 +1,163 @@
+[Initial commit (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041225130902] 
+[Added copyright and BSD license information. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-2)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041024092156
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-2
+ Keywords: 
+ 
+ * erlisp.asd, src/package.lisp, src/mailbox.lisp, test/mailbox.lisp,
+   test/suite.lisp: Added copyright and BSD license information.
+ 
+] 
+[Added test trying to take a non-existant message from a mailbox. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-3)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041024102424
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-3
+ Keywords: 
+ 
+ * test/mailbox.lisp (mailbox-take-if): Added test trying to take a
+   non-existant message from a mailbox.
+ 
+ 
+] 
+[Fixed grammatical mistake in license. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-4)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041103172826
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-4
+ Keywords: 
+ 
+ * erlisp.asd, src/package.lisp, src/mailbox.lisp, test/suite.lisp,
+   test/mailbox.lisp: Fixed grammatical mistake in license.
+ 
+ 
+] 
+[Reindented license notice. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-5)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041105203111
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-5
+ Keywords: 
+ 
+ * erlisp.asd, src/mailbox.lisp, src/package.lisp, test/mailbox.lisp,
+   test/suite.lisp: Reindented license notice.
+ 
+] 
+[Added threaded processes without communication. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-6)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041105211903
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-6
+ Keywords: 
+ 
+ * src/compatibility.lisp: Wrappers around (implementation specific) threading.
+ 
+ * src/node.lisp, test/node.lisp: Dummy node functionality.
+ 
+ * src/process.lisp, test/process.lisp: Threaded process implementation
+   without communication support.
+ 
+ * erlisp.asd: Added dependencies on new files.
+ 
+] 
+[Added pattern matcher API and simplistic "matcher". (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-7)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041106184721
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-7
+ Keywords: 
+ 
+ * erlisp.asd, src/matcher.lisp, test/matcher.lisp: Added pattern
+   matcher API and simplistic "matcher".
+ 
+] 
+[Easier to use pattern matching API. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-8)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041126182907
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-8
+ Keywords: 
+ 
+ * src/matcher.lisp: Easier to use API through MATCH(-WITH-MATCHER.  Added
+   COND-MATCHER and made it the default.
+ * test/matcher.lisp: Added tests for MATCH and for COND-MATCHER and
+   CASE-MATCHER through MATCH-WITH-MATCHER.
+ 
+] 
+[Implemented message passing for threaded processes. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-9)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041126183759
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-9
+ Keywords: 
+ 
+ * src/compatibility.lisp: Added mutexes and events/conditions/signals/
+   whatever you like to call them. 
+ 
+ * src/mailbox.lisp: Complicated the API :( to make sure each message is
+   tested against each RECEIVE only once. 
+ * test/mailbox.lisp: Refactored TAKE-IF test.
+ 
+ * src/process.lisp: Added much needed synchronization to threaded
+   processes.
+ 
+ * src/messaging.lisp: Implemented message sending and receiving for
+   threaded processes. 
+ * test/messaging.lisp: Tests message sending and receiving.
+ 
+] 
+[Small fixups for pattern matching tests. (dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-10)
+Dirk Gerrits <dirk@dirkgerrits.com>**20041126190550
+ dirk@dirkgerrits.com--lisp-2004/erlisp--mainline--0.1--patch-10
+ Keywords: 
+ 
+ * src/matcher.lisp: Made COND- and CASE-MATCHER's bound variables
+   IGNORABLE.
+ * test/matcher.lisp: Fixed missing EQL and EQ instead of EQL.
+ 
+] 
+[Implemented timeouts for RECEIVE.
+Dirk Gerrits <dirk@dirkgerrits.com>**20050221204346
+ 
+ * src/compatibility.lisp (with-timeout): New macro to abort evaluation
+ after a certain number of milliseconds.
+ 
+ * src/messaging.lisp (parse-receive-clauses,maybe-wrap-in-timeout)
+ (generate-receive): Implement timeout clauses for RECEIVE.
+ 	
+ * test/messaging.lisp (receive-with-timeout): Added test for RECEIVE with
+ timeout clause.
+] 
+[Expanded timeout clause syntax to support time-units.
+Dirk Gerrits <dirk@dirkgerrits.com>**20050221205227
+ 
+ * src/messaging.lisp (*time-units*, time-unit-p, timeout-pattern-p)
+ (timeout-factor, timeout-milliseconds, parse-receive-clauses): Expanded
+ timeout clause syntax to support time-units.
+ 
+ * test/messaging.lisp (receive-with-timeout): Expanded test to use timeout
+ clauses with time-units.
+] 
+[Moved license information into a separate file.
+Dirk Gerrits <dirk@dirkgerrits.com>**20050615235950] 
+[allegro-threads
+Eric Lavigne <lavigne.eric@gmail.com>**20050711110548
+ Modified threading procedures in compatibility.lisp 
+ to support Allegro Common Lisp. Added structure
+ erlisp-event to emulate SBCL's wait-queue. Added
+ low-level mutex operations (lock-mutex and
+ unlock-mutex) to support erlisp-event.
+] 
+[cmucl-threads
+Eric Lavigne <lavigne.eric@gmail.com>**20050723181545
+ Modified threading procedures in compatibility.lisp
+ to support CMU Common Lisp.
+] 
+[condition-terminates-process
+Eric Lavigne <lavigne.eric@gmail.com>**20050824163858
+ handler-case added to spawn. Unhandled conditions signalled by a process 
+ will kill that process, rather than interrupting the entire lisp image.
+ This provides a convenient way to kill processes, by signalling a
+ condition. In later patches, the handler-case for may include code for
+ sending termination messages to linked processes.
+] 
+[openmcl-threads
+bryan d. o'connor <bryan@lunch.org>**20050830025955
+ Modified threading procedures in compatibility.lisp
+ to support OpenMCL.
+] 
+[sbcl no longer supports (sb-thread:current-thread-id).
+bryan d. o'connor <bryan@lunch.org>**20050830023327] 
+[openmcl-threads using semaphores.
+bryan d. o'connor <bryan@lunch.org>**20050901181244] 
+[allegro-threads using gates.
+bryan d. o'connor <bryan@lunch.org>**20050901235948
+ patch written by Dirk Gerrits.
+] 

@@ -1,0 +1,9 @@
+Revision: pxmlutils--dev--1.0--patch-7
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Feb 17 15:14:28 CET 2004
+Standard-date: 2004-02-17 14:14:28 GMT
+Modified-files: pxml2.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-7
+Summary: Fix previous patch
+

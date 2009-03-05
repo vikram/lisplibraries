@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    20
+	    --
+	    document-type</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>document-type</h1>
+    Optional child of <tt>document</tt>.
+    <pre class="code">(defclass <b>document-type</b> (leaf-node)
+  ((<b>root-element-name</b> :accessor root-element-name)
+   (<b>system-id</b>         :accessor system-id)
+   (<b>public-id</b>         :accessor public-id)
+   (<b>internal-subset</b>   :accessor internal-subset)))</pre>
+    <br>
+    Records what DTD the document <i>claims</i> to be following.<br>
+    <ul>
+      <li>STP checks for well-formedness, not validity.</li>
+      <li>Internal subset only preserved as a string for serialization.</li>
+      <li>
+	Entities and notations not represented as objects.
+	(Nobody cares.)
+	<ul>
+	  <li>
+	    But documentation of cxml's entire DTD structure forthcoming.
+	  </li>
+	</ul>
+      </li>
+    </ul>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="19.html">⬖</a>20/24<a class="icon" href="21.html">⬗</a>
+</div>
+</body>
+</html>

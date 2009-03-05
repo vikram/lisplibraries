@@ -1,0 +1,1 @@
+../site/lisa/src/2.0-core/core.asd

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    19
+	    --
+	    Easy Classes</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Easy Classes</h1>
+    Text nodes are the <i>chit-chat</i> in <tt>&lt;p&gt;chit-chat&lt;/p&gt;</tt>.
+    <example title="Text nodes">
+      <pre class="repl">CL-USER&gt; (stp:make-text "chit-chat")</pre>
+      <pre class="result">#.(STP:TEXT :DATA "chit-chat")</pre>
+    </example>
+    <tt>&lt;!--Ich bin ein Blindtext.--&gt;</tt> is preserved by the parser
+    as a node, too.
+    <example title="Comment nodes">
+      <pre class="repl">CL-USER&gt; (stp:make-comment "Ich bin ein Blindtext.")</pre>
+      <pre class="result">#.(STP:COMMENT :DATA "Ich bin ein Blindtext.")</pre>
+    </example>
+    <example title="Processing instruction nodes">
+      <tt>&lt;?xml-stylesheet type='text/xsl' href='style.xsl'?&gt;</tt>
+      <pre class="repl">CL-USER&gt; (stp:make-processing-instruction "xml-stylesheet" "type='text/xsl' href='style.xsl'")</pre>
+      <pre class="result">#.(STP:PROCESSING-INSTRUCTION
+   :DATA "type='text/xsl' href='style.xsl'"
+   :TARGET "xml-stylesheet")</pre>
+    </example>
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="18.html">⬖</a>19/24<a class="icon" href="20.html">⬗</a>
+</div>
+</body>
+</html>

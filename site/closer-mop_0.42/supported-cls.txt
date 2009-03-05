@@ -1,0 +1,10 @@
+Allegro 7.0 & 8.0
+CLisp 2.35 - 2.41
+CMU Common Lisp 19c, 19d
+LispWorks 4.4.5, 4.4.6 Personal Edition
+LispWorks 4.4.5, 4.4.6 Professional Edition
+LispWorks 5.0, 5.0.1, Personal Edition
+LispWorks 5.0 - 5.0.2, Professional Edition
+Macintosh Common Lisp 5.1
+OpenMCL 1.0
+SBCL 0.9.16 - 0.9.18, 1.0.1 - 1.0.4

@@ -1,0 +1,2 @@
+<tal:tal tal:in-package=":it.bese.yaclml.test" 
+         xmlns:tal="http://common-lisp.net/project/bese/tal/core">foo is <tal:tal tal:replace="$foo">bad bad bad</tal:tal>, and bar is <tal:tal tal:replace="$bar"/></tal:tal>

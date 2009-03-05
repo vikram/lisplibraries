@@ -1,0 +1,10 @@
+Revision: pxmlutils--main--0.0--patch-6
+Archive: bese-devel@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Fri Nov 28 17:44:59 CET 2003
+Standard-date: 2003-11-28 16:44:59 GMT
+Modified-files: pxml1.cl
+New-patches: bese-devel@common-lisp.net/pxmlutils--main--0.0--patch-6
+Summary: bug fixes. (mp package exists in cmucl and openmcl, not in sbcl)
+Keywords: 
+

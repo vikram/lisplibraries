@@ -1,0 +1,56 @@
+README for Package CL-L10N
+Author: Sean Ross
+i18n stuff: Levente Mészáros, Attila Lendvai
+Homepage: http://www.common-lisp.net/project/cl-l10n/
+
+
+*** About
+
+cl-l10n is a localization package for common-lisp. It is meant 
+to be serve the same purpose as Allegro Common Lisp's
+various locale functions. It currently runs on 
+CMUCL, SBCL, CLISP, ECL, Lispworks and Allegro CL although porting 
+to a new implementation should be trivial.
+It is distributed under an MIT style license although the locale
+files themselves are distributed under the LGPL.
+
+There is also i18n support, read on for details.
+
+*** API
+
+See docs/cl-l10n.texi
+
+
+*** i18n
+
+When locales are loaded cl-l10n also tries to load locale-specific
+resource files. They are simple lisp files that are read into the
+*resource-package* package when defined. Use with-resource-package
+to define it at an appriately high level of your application (e.g.
+the request loop of web-apps after the Accept-Language header has
+been parsed. See UCW for examples.)
+
+I suggest to create a separate package for language resources and
+don't import it in your app, so you can easily see/search for
+lang:foo references.
+
+The resources in these files are either constants or lambdas. For
+lambdas we create a function with the resource name that looks up
+the locale specific implementation and calls it. This way you can
+write in your code (lang:plural-of #"foot") and it will return
+"feet" in the language given in *locale*.
+
+#"" is a reader macro that expands into a lookup-resource call.
+
+Resource lookup can fall back to less preferred languages when
+*locale* is a list.
+
+
+*** Testing
+
+Run (asdf:oos 'asdf:test-op :cl-l10n) to test the package.
+If any tests fail please drop me a line at the mailing lists
+or at (sross <at> common-lisp.net).
+
+Enjoy 
+  Sean.

@@ -1,0 +1,2 @@
+<!-- -*- html -*- -->
+<tal:tal xmlns:tal="http://common-lisp.net/project/bese/tal/core">Ciao! Questo e' italiano!</tal:tal>

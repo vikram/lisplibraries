@@ -1,0 +1,444 @@
+\input texinfo          @c -*- texinfo -*-
+@c %**start of header
+@setfilename trivial-sockets.info
+@settitle TRIVIAL-SOCKETS Manual
+@c %**end of header
+
+@c merge type index into function index
+@syncodeindex tp fn
+@c ... and concept index, too.
+@synindex cp fn
+
+@c for install-info
+@dircategory Software development
+@direntry
+* trivial-sockets: (trivial-sockets).  CL socket interface for scripting/interactive use
+@end direntry
+
+@copying
+This manual describes TRIVIAL-SOCKETS, a simple socket interface for Common
+Lisp programs and libraries.
+     
+Copyright @copyright{} 2004 Daniel Barlow and contributors
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+@end copying
+
+
+
+@titlepage
+@title TRIVIAL-SOCKETS
+     
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+     
+@c Output the table of contents at the beginning.
+@contents
+
+@c -------------------
+
+@ifnottex
+
+@node Top
+@top TRIVIAL-SOCKETS: a socket interface for scripting and interactive use
+
+@insertcopying
+
+@menu
+* Introduction::        Design goals and target audience
+* Installation::        How to download and install
+* API::
+* Index::              
+@end menu
+
+@end ifnottex
+
+@c -------------------
+
+@node  Introduction
+@chapter Introduction
+
+TRIVIAL-SOCKETS is a portable socket interface that allows CL programs
+to open connected (client) stream sockets to network services
+(e.g. HTTP, FTP, SMTP servers) and communicate with them.  It's
+intended mostly for use by small ``script'' programs and for
+interactive use where the effort involved in writing one's own
+portable wrapper layer for several Lisp implementations would outweigh
+that spent on the actual application.
+
+In the interests of simplicity and ease of porting, the functionality
+available through TRIVIAL-SOCKETS has been deliberately restricted.
+For a more general sockets interface which may allow access to more
+functionality, the reader is encouraged to consult his Lisp
+implementation's documentation.
+
+@node Installation
+@chapter Installation
+@cindex{Installation}
+
+TRIVIAL-SOCKETS is distributed via asdf-install.  If you are on the
+Internet and your Lisp implementation has asdf-install available, you
+may download and compile this package with an invocation like
+
+@lisp
+(asdf-install:install 'trivial-sockets)
+@end lisp
+
+The trivial-sockets package has been PGP-signed by Daniel Barlow, and
+asdf-install will by default check that the signature is good and that
+a trust path exists between you and him.  If not, you will be prompted
+for a decision on whether to install anyway.  See asdf-install
+documentation for more details on how this works.
+
+Once you have installed trivial-sockets, the next time you wish to
+load it you need only evaluate
+
+@lisp
+(asdf:operate 'asdf:load-op 'trivial-sockets)
+@end lisp
+
+or if you have an asdf system that uses it, add
+@code{trivial-sockets} to the @code{:depends-on} clause of that system
+and it will be loaded whenever your system is.
+
+@chapter API
+@node API
+
+@section Types
+@cindex{Host designator}
+@cindex{IP address}
+@cindex{Address}
+@cindex{Protocol}
+
+A @emph{host designator} is one of the following:
+
+@enumerate
+@item A string, which is resolved as a hostname by the system resolver,
+typically using DNS or YP or some other implementation-defined
+mechanism.  For example, @code{"www.google.com"}
+
+@item An IPv4 address in "dotted quad" notation: e.g. @code{"127.0.0.1"}
+
+@item (Implementation-defined): An IPv4 address in whatever ``native''
+format the implementation uses to represent same, if applicable.
+For example, @code{#(127 0 0 1)} or @code{2130706433}
+
+@item The keyword @code{:ANY}, which corresponds to INADDR_ANY or "0.0.0.0"
+@end enumerate
+
+A @emph{protocol specifier} is a keyword naming an
+@uref{http://www.iana.org/assignments/protocol-numbers,,IANA protocol
+number} (as typically found in @file{/etc/protocols} on Unix-like
+systems) or the corresponding number.  Implementations must support
+@code{:TCP} at a minimum.
+
+@section Functions
+
+@anchor{Function open-stream}
+@defun open-stream peer-host peer-port &key local-host local-port external-format element-type protocol
+@result{} stream
+
+@strong{Arguments and Values:}
+
+@var{peer-host}--a host designator.
+
+@var{peer-port}--an integer.
+
+@var{local-host}--a host designator.  The default is @code{:any}.
+
+@var{local-port}--an integer.  The default is @code{0}.
+
+@var{external-format}--an external file format designator.  The default
+is @code{:default}.
+
+@var{element-type}--a type specifier; see the Common Lisp function
+@code{open} for valid values.  The default is @code{'character}.
+
+@var{protocol}--a protocol specifier.  The default is @code{:tcp}.
+
+@strong{Description:}
+
+Return a stream to the named service, open for both reading and writing.
+The stream is usually buffered, so be sure to use @code{force-output}
+where necessary.
+
+If the stream cannot be created for any reason, an error of type
+@code{socket-error} is signaled. 
+
+The stream should be closed in the usual way when no longer needed:
+see the Common Lisp functions @code{close}, @code{with-open-stream}
+@end defun
+
+@anchor{Function open-server}
+@defun open-server &key host port reuse-address backlog protocol
+@result{} server socket
+
+@strong{Arguments and Values:}
+
+@var{host}--a host designator.  The default is @code{:any}.
+
+@var{port}--an integer.  The default is @code{0}.
+
+@var{reuse-address}--@code{t} or @code{nil}.  The default is @code{t}.
+
+@var{backlog}--an integer.  The default is @code{1}.
+
+@var{protocol}--a protocol specifier.  The default is @code{:tcp}.
+
+@strong{Description:}
+
+Create a listening server socket.  If @var{port} is 0, an unused port
+will be chosen by the implementation/operating system.  @var{Host}
+may be set to the address of any local network interface to restrict
+the socket to that interface.
+
+If @var{reuse-address} is true (the default, as recommended by Stevens)
+then the @code{SO_REUSEADDR} socket option will be set, which allows the
+the port to be reused immediately after it has been closed, without
+waiting for a timeout (``2*MSL'') to expire.
+
+@var{Backlog} sets how many pending connections are queued by the
+operating system.
+
+If the socket cannot be created for any reason, an error of type
+@code{socket-error} is signaled. 
+
+The nature of the object returned is implementation-dependent.  When
+the socket is no longer needed it should be closed with
+@code{close-server}.
+
+@xref{Macro with-server}.
+@end defun
+
+@c <3dqes6$e49@bosnia.pop.psu.edu> or see 242-246 of 
+@c "TCP/IP Illustrated, Volume 1"
+
+@anchor{Function close-server}
+@defun close-server server
+@result{} result
+
+@strong{Arguments and Values:}
+
+@var{server}--a server socket.
+
+@var{result}--implementation-dependent.
+
+@strong{Description:}
+
+Close @var{server} and release all resources associated with it.
+Note that opening a new server on the same address/port will not be
+immediately possible unless the earlier server was created with the
+@code{:reuse-address} argument.
+@end defun
+
+@anchor{Macro with-server}
+@defmac with-server (server args) declaration* form*
+@result{} results
+
+@strong{Arguments and Values:}
+
+@var{server}--a variable.
+
+@var{args}--a list of arguments.
+
+@var{declaration}--a declare expression.
+
+@var{forms}--an implicit @code{progn}.
+
+@var{results}--the values returned by the @var{forms}.
+
+@strong{Description:}
+
+@code{with-server} uses @code{open-server} to create a server socket
+named by @var{server}.  @var{Args} are used as keyword arguments to
+@code{open-server}.
+
+@code{with-server} evaluates the @var{forms} as an implicit progn with
+@var{server} bound to the value returned by @code{open-server}.
+
+When control leaves the body, either normally or abnormally (such as by
+use of @code{throw}), the server socket is automatically closed.
+
+The consequences are undefined if an attempt is made to assign to 
+the variable @var{server} within the body forms.
+@end defmac
+
+@anchor{Function accept-connection}
+@defun accept-connection server &key external-format element-type
+@result{} stream
+
+@strong{Arguments and Values:}
+
+@var{server}--a server socket.
+
+@var{external-format}--an external file format designator.  The default
+is @code{:default}.
+
+@var{element-type}--a type specifier; see the Common Lisp function
+@code{open} for valid values.  The default is @code{'character}.
+
+@strong{Description:}
+
+Accept a connection to @var{server}, returning a stream connected to
+the client which is open for both reading and writing.  The stream is
+usually buffered, so be sure to use @code{force-output} where
+necessary.
+
+If no connection is pending, @code{accept-connection} waits until one
+arrives.
+
+If anything goes wrong, an error of type @code{socket-error} is
+signaled.
+@end defun
+
+@section Examples
+
+@subsection Simple client
+
+@lisp
+;; this is not HTTP compliant, really.  But it's good enough
+;; for a demonstration
+(with-open-stream (s (trivial-sockets:open-stream "www.google.com" 80)) 
+  (format s "HEAD / HTTP/1.0~%Host: www.google.com~%~%") 
+  (force-output s) 
+  (loop 
+    (let ((l (read-line s nil nil))) 
+      (unless l (return)) 
+      (princ l) (terpri))))
+@end lisp
+
+@subsection Simple (single-threaded) server
+
+@lisp
+(trivial-sockets:with-server (s (:port 8913 :reuse-address t))
+   (loop
+    (with-open-stream (c (trivial-sockets:accept-connection s)) 
+        (read-line c)
+        (format c "This is a compliant though pointless implementation ~
+of the finger protocol~%"))))
+@end lisp
+
+
+@section Errors
+
+@anchor{Condition unsupported}
+@deftp {Condition} unsupported
+Class precedence list: @w{error}
+
+This exists so that partial implementations of this interface may be
+created for environments which are incapable of supporting the full
+API.  An @code{unsupported} error is signaled if the user requests
+functionality that is not implemented for the Lisp environment in use.
+@end deftp
+
+@anchor{Condition socket-error}
+@deftp {Condition} socket-error
+Class precedence list: @w{error}
+
+A @code{socket-error} error is signaled when an error situation occurs
+during opening of the stream.  If you need more detail, this is
+probably a sign that you have outgrown this interface and will have to
+resort to unportable code (error codes vary between systems:were you
+expecting @code{HOST_UNREACH} or @code{NET_UNREACH}?).  With that in
+mind, you can access the implementation-specific error using
+
+@lisp
+(socket-nested-error condition)
+@end lisp
+
+@end deftp
+
+@chapter Implementation-dependent
+@node Implementation-dependent
+
+Not all features in this interface are supported on all platforms,
+owing to deficiencies in the underlying socket layers that it uses.
+
+Many implementations signal socket-related errors using non-specific
+error classes such as ERROR or SIMPLE-ERROR.  (Some others, perhaps,
+signal more specific errors but the code in trivial-sockets does not
+know that.  Patches welcome).  Where we don't know of a specific
+error, we catch the general ones and resignal @code{SOCKET-ERROR}, so
+it's possible sometimes that errors shich are nothing at all to do
+with sockets (e.g. keyboard interrupts or external signals) also get
+presented as SOCKET-ERRORs.  This applies in all implementations
+listed except where noted.
+
+@itemize
+
+@item Armed Bear CL currently supports only client sockets, and only
+for TCP, with unspecified local endpoint, and with the default
+external-format.
+
+@item Allegro CL (tested in Allegro 6.2. trial) has no support for
+protocols other than @code{:tcp} or non-default external-formats.
+Allegro sockets are multivalent, so it ignores the
+@code{:element-type}.  
+
+@item CLISP has no support for protocols that are not @code{:tcp}, or for
+binding the local address/port.  Its streams are unbuffered, as CLISP
+buffered streams do not return any data at all on reads until the
+buffer is full - making them no use for any protocol in which one side
+sends less than 4k at a time.  (CLISP ``interactively buffered''
+streams are likely to fix this, but as of October 2004 have not yet
+been implemented). 
+
+@item CMUCL has no support for external-formats other than
+@code{:default}, for protocols that are not @code{:tcp}, or for
+binding the local address/port. 
+
+@item Lispworks supports TCP only,  It doesn't do
+non-default local address in server sockets, or listen backlog length.
+It doesn't do non-default external-formats.  If the local port is 0,
+@code{open-server} doesn't return the real port number.  It also uses
+an odd construction involving multiple threads for server sockets
+which in principle should be transparent but don't say we didn't warn
+you.
+
+@item OpenMCL socket support is very similar to that of Allegro: all
+implementation notes applicable to Allegro also hold for OpenMCL.
+Additionally, errors signaled by instances of @code{ccl:socket-error}
+are caught and resignaled as @code{socket-error}.
+
+@item SBCL has no support for external-formats other than @code{:default}.
+Errors signaled by @code{sb-bsd-sockets:socket-error} and @code
+{sb-bsd-sockets:name-service-error} are caught and resignaled as
+@code{socket-error}.
+
+@end itemize
+
+Patches to improve per-implementation support for this interface are
+welcome.  Patches which include an appropriate update for the manual
+are doubly if not sevenfoldly so.
+
+@c -------------------
+
+
+@node Index,
+@unnumbered Index
+     
+@printindex fn
+
+@bye
+

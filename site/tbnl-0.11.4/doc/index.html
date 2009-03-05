@@ -1,0 +1,2192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>TBNL - A toolkit for dynamic Lisp websites</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  a { text-decoration: none; }
+  a.none { border:1px solid white; }
+  a.none:hover { border:1px solid white; }
+  a { border:1px solid white; }
+  a:hover   { border: 1px solid black; } 
+  a.noborder { border:0px }
+  a.noborder:hover { border:0px }
+  pre.none { padding:5px; background-color:#ffffff }
+  </style>
+</head>
+
+<body bgcolor=white>
+
+<h2>TBNL - A toolkit for dynamic Lisp websites</h2>
+
+<blockquote>
+<br>&nbsp;<br><h3><a name=abstract class=none>Abstract</a></h3>
+
+TBNL is a toolkit for building dynamic websites
+with <a href="http://www.lisp.org/">Common&nbsp;Lisp</a>. It can sit
+behind front-ends
+like <a href="http://weitz.de/hunchentoot/">Hunchentoot</a>, <a href="http://www.cliki.net/Araneida">Araneida</a> (two web
+servers written in Common Lisp), or the
+popular <a href='http://httpd.apache.org/'>Apache</a> combined with
+Marc
+Battyani's <a
+href='http://www.fractalconcept.com/asp/html/mod_lisp.html'>mod_lisp</a>.
+It can also pretend to be a HTTP server itself.
+
+<p>
+
+TBNL provides facilities like automatic session handling (with and
+without cookies), logging (to Apache's log files or to a file in the file system), customizable error
+handling, and easy access to GET and POST parameters sent by the
+client. It does <em>not</em> include functionality to programmatically generate HTML output. For this task you can use any library you like, e.g. (shameless self-plug) <a
+href="http://weitz.de/cl-who/">CL-WHO</a> or <a
+href="http://weitz.de/html-template/">HTML-TEMPLATE</a>.
+
+<p>
+
+TBNL talks with its front-end or with the client over a socket and
+uses Kevin Rosenberg's <a href="http://www.cliki.net/kmrcl">KMRCL</a>
+library for this task (except on LispWorks where it doesn't need KMRCL
+but uses <a href="http://weitz.de/hunchentoot/">Hunchentoot</a>
+instead). As sockets aren't part of
+the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Front/index.htm">ANSI
+Standard</a> TBNL isn't portable to all Common Lisp implementations
+but it should work
+with <a href="http://www.lispworks.com/">LispWorks</a> and all Lisps
+KMRCL has been ported to - including at
+least <a
+href="http://www.cons.org/cmucl/">CMUCL</a>, <a
+href="http://sbcl.sourceforge.net/">SBCL</a> (but <a href="#sbcl">see
+below</a>),
+and <a href="http://www.franz.com/products/allegrocl/">Allegro Common
+Lisp</a>.  TBNL also needs an implementation that offers
+multi-processing facilities.
+
+<p>
+
+It comes with a <a
+href="http://www.opensource.org/licenses/bsd-license.php">BSD-style
+license</a> so you can basically do with it whatever you want.
+<p>
+
+TBNL is used
+by <a
+href="http://cafespot.net/">CafeSpot</a>, <a href="http://www.cleartrip.com/">Cleartrip</a>, <a
+href="http://www.pkbasstackle.com/">PK&nbsp;Bass&nbsp;&amp;&nbsp;Tackle</a>, <a
+href="http://ergoweb.de/">ERGO</a>, and
+the <a href="http://multitext.ucc.ie/">Cork Multitext Project</a>.
+
+<p>
+<b><font color=red>Note: TBNL is deprecated and has been replaced by </font><a href="http://weitz.de/hunchentoot/"><font color=red>Hunchentoot</font></a><font color=red>.</font></b>
+
+<p>
+<font color=red>Download shortcut:</font> <a href="http://weitz.de/files/tbnl.tar.gz">http://weitz.de/files/tbnl.tar.gz</a>.
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+<ol>
+  <li><a href="#overview">General overview</a>
+  <li><a href="#install">Requirements, download, installation, configuration</a>
+  <ol>
+    <li><a href="#apache">Installing the Apache/mod_lisp front-end</a>
+    <li><a href="#araneida">Installing the Araneida front-end</a>
+    <li><a href="#tbnl">Installing TBNL itself</a>
+    <li><a href="#apache-start">Activating the Apache/mod_lisp front-end</a>
+    <li><a href="#araneida-start">Activating the Araneida front-end</a>
+    <li><a href="#tbnl-start">Using TBNL without a front-end</a>
+    <li><a href="#misc-inst">Miscellaneous</a>
+  </ol>
+  <li><a href="#mail">Support and mailing lists</a>
+  <li><a href="#dictionary">The TBNL dictionary</a>
+  <ol>
+    <li><a href='#handlers'>Handlers</a>
+    <ol>
+      <li><a href='#*dispatch-table*'><code>*dispatch-table*</code></a>
+      <li><a href='#default-dispatcher'><code>default-dispatcher</code></a>
+      <li><a href='#*default-handler*'><code>*default-handler*</code></a>
+      <li><a href='#create-prefix-dispatcher'><code>create-prefix-dispatcher</code></a>
+      <li><a href='#create-regex-dispatcher'><code>create-regex-dispatcher</code></a>
+      <li><a href='#handle-static-file'><code>handle-static-file</code></a>
+      <li><a href='#create-static-file-dispatcher-and-handler'><code>create-static-file-dispatcher-and-handler</code></a>
+      <li><a href='#create-folder-dispatcher-and-handler'><code>create-folder-dispatcher-and-handler</code></a>
+      <li><a href='#dispatch-request'><code>dispatch-request</code></a>
+      <li><a href='#define-easy-handler'><code>define-easy-handler</code></a>
+      <li><a href='#dispatch-easy-handlers'><code>dispatch-easy-handlers</code></a>
+    </ol>
+    <li><a href='#requests'>Requests</a>
+    <ol>
+      <li><a href='#*request*'><code>*request*</code></a>
+      <li><a href='#host'><code>host</code></a>
+      <li><a href='#request-method'><code>request-method</code></a>
+      <li><a href='#request-uri'><code>request-uri</code></a>
+      <li><a href='#script-name'><code>script-name</code></a>
+      <li><a href='#query-string'><code>query-string</code></a>
+      <li><a href='#get-parameter'><code>get-parameter</code></a>
+      <li><a href='#get-parameters'><code>get-parameters</code></a>
+      <li><a href='#post-parameter'><code>post-parameter</code></a>
+      <li><a href='#post-parameters'><code>post-parameters</code></a>
+      <li><a href='#*file-upload-hook*'><code>*file-upload-hook*</code></a>
+      <li><a href='#raw-post-data'><code>raw-post-data</code></a>
+      <li><a href='#parameter'><code>parameter</code></a>
+      <li><a href='#header-in'><code>header-in</code></a>
+      <li><a href='#headers-in'><code>headers-in</code></a>
+      <li><a href='#authorization'><code>authorization</code></a>
+      <li><a href='#remote-addr'><code>remote-addr</code></a>
+      <li><a href='#remote-port'><code>remote-port</code></a>
+      <li><a href='#real-remote-addr'><code>real-remote-addr</code></a>
+      <li><a href='#server-addr'><code>server-addr</code></a>
+      <li><a href='#server-port'><code>server-port</code></a>
+      <li><a href='#server-protocol'><code>server-protocol</code></a>
+      <li><a href='#mod-lisp-id'><code>mod-lisp-id</code></a>
+      <li><a href='#ssl-session-id'><code>ssl-session-id</code></a>
+      <li><a href='#user-agent'><code>user-agent</code></a>
+      <li><a href='#referer'><code>referer</code></a>
+      <li><a href='#cookie-in'><code>cookie-in</code></a>
+      <li><a href='#cookies-in'><code>cookies-in</code></a>
+      <li><a href='#aux-request-value'><code>aux-request-value</code></a>
+      <li><a href='#delete-aux-request-value'><code>delete-aux-request-value</code></a>
+      <li><a href='#recompute-request-parameters'><code>recompute-request-parameters</code></a>
+    </ol>
+    <li><a href='#replies'>Replies</a>
+    <ol>
+      <li><a href='#*reply*'><code>*reply*</code></a>
+      <li><a href='#header-out'><code>header-out</code></a>
+      <li><a href='#headers-out'><code>headers-out</code></a>
+      <li><a href='#cookie-out'><code>cookie-out</code></a>
+      <li><a href='#cookies-out'><code>cookies-out</code></a>
+      <li><a href='#return-code'><code>return-code</code></a>
+      <li><a href='#content-type'><code>content-type</code></a>
+      <li><a href='#content-length'><code>content-length</code></a>
+      <li><a href='#send-headers'><code>send-headers</code></a>
+      <li><a href='#+http-continue+'><code>+http-continue+</code></a>
+      <li><a href='#+http-switching-protocols+'><code>+http-switching-protocols+</code></a>
+      <li><a href='#+http-ok+'><code>+http-ok+</code></a>
+      <li><a href='#+http-created+'><code>+http-created+</code></a>
+      <li><a href='#+http-accepted+'><code>+http-accepted+</code></a>
+      <li><a href='#+http-non-authoritative-information+'><code>+http-non-authoritative-information+</code></a>
+      <li><a href='#+http-no-content+'><code>+http-no-content+</code></a>
+      <li><a href='#+http-reset-content+'><code>+http-reset-content+</code></a>
+      <li><a href='#+http-partial-content+'><code>+http-partial-content+</code></a>
+      <li><a href='#+http-multiple-choices+'><code>+http-multiple-choices+</code></a>
+      <li><a href='#+http-moved-permanently+'><code>+http-moved-permanently+</code></a>
+      <li><a href='#+http-moved-temporarily+'><code>+http-moved-temporarily+</code></a>
+      <li><a href='#+http-see-other+'><code>+http-see-other+</code></a>
+      <li><a href='#+http-not-modified+'><code>+http-not-modified+</code></a>
+      <li><a href='#+http-use-proxy+'><code>+http-use-proxy+</code></a>
+      <li><a href='#+http-temporary-redirect+'><code>+http-temporary-redirect+</code></a>
+      <li><a href='#+http-bad-request+'><code>+http-bad-request+</code></a>
+      <li><a href='#+http-authorization-required+'><code>+http-authorization-required+</code></a>
+      <li><a href='#+http-payment-required+'><code>+http-payment-required+</code></a>
+      <li><a href='#+http-forbidden+'><code>+http-forbidden+</code></a>
+      <li><a href='#+http-not-found+'><code>+http-not-found+</code></a>
+      <li><a href='#+http-method-not-allowed+'><code>+http-method-not-allowed+</code></a>
+      <li><a href='#+http-not-acceptable+'><code>+http-not-acceptable+</code></a>
+      <li><a href='#+http-proxy-authentication-required+'><code>+http-proxy-authentication-required+</code></a>
+      <li><a href='#+http-request-time-out+'><code>+http-request-time-out+</code></a>
+      <li><a href='#+http-conflict+'><code>+http-conflict+</code></a>
+      <li><a href='#+http-gone+'><code>+http-gone+</code></a>
+      <li><a href='#+http-length-required+'><code>+http-length-required+</code></a>
+      <li><a href='#+http-precondition-failed+'><code>+http-precondition-failed+</code></a>
+      <li><a href='#+http-request-entity-too-large+'><code>+http-request-entity-too-large+</code></a>
+      <li><a href='#+http-request-uri-too-large+'><code>+http-request-uri-too-large+</code></a>
+      <li><a href='#+http-unsupported-media-type+'><code>+http-unsupported-media-type+</code></a>
+      <li><a href='#+http-requested-range-not-satisfiable+'><code>+http-requested-range-not-satisfiable+</code></a>
+      <li><a href='#+http-expectation-failed+'><code>+http-expectation-failed+</code></a>
+      <li><a href='#+http-internal-server-error+'><code>+http-internal-server-error+</code></a>
+      <li><a href='#+http-not-implemented+'><code>+http-not-implemented+</code></a>
+      <li><a href='#+http-bad-gateway+'><code>+http-bad-gateway+</code></a>
+      <li><a href='#+http-service-unavailable+'><code>+http-service-unavailable+</code></a>
+      <li><a href='#+http-gateway-time-out+'><code>+http-gateway-time-out+</code></a>
+      <li><a href='#+http-version-not-supported+'><code>+http-version-not-supported+</code></a>
+      <li><a href='#*default-content-type*'><code>*default-content-type*</code></a>
+    </ol>
+    <li><a href='#cookies'>Cookies</a>
+    <ol>
+      <li><a href='#cookie-name'><code>cookie-name</code></a>
+      <li><a href='#cookie-value'><code>cookie-value</code></a>
+      <li><a href='#cookie-expires'><code>cookie-expires</code></a>
+      <li><a href='#cookie-path'><code>cookie-path</code></a>
+      <li><a href='#cookie-domain'><code>cookie-domain</code></a>
+      <li><a href='#cookie-secure'><code>cookie-secure</code></a>
+      <li><a href='#set-cookie'><code>set-cookie</code></a>
+      <li><a href='#set-cookie*'><code>set-cookie*</code></a>
+    </ol>
+    <li><a href='#sessions'>Sessions</a>
+    <ol>
+      <li><a href='#*session*'><code>*session*</code></a>
+      <li><a href='#start-session'><code>start-session</code></a>
+      <li><a href='#session-value'><code>session-value</code></a>
+      <li><a href='#delete-session-value'><code>delete-session-value</code></a>
+      <li><a href='#reset-sessions'><code>reset-sessions</code></a>
+      <li><a href='#session-string'><code>session-string</code></a>
+      <li><a href='#session-counter'><code>session-counter</code></a>
+      <li><a href='#session-max-time'><code>session-max-time</code></a>
+      <li><a href='#session-remote-addr'><code>session-remote-addr</code></a>
+      <li><a href='#session-user-agent'><code>session-user-agent</code></a>
+      <li><a href='#*use-remote-addr-for-sessions*'><code>*use-remote-addr-for-sessions*</code></a>
+      <li><a href='#*use-user-agent-for-sessions*'><code>*use-user-agent-for-sessions*</code></a>
+      <li><a href='#*rewrite-for-session-urls*'><code>*rewrite-for-session-urls*</code></a>
+      <li><a href='#*content-types-for-url-rewrite*'><code>*content-types-for-url-rewrite*</code></a>
+      <li><a href='#*session-cookie-name*'><code>*session-cookie-name*</code></a>
+      <li><a href='#*session-removal-hook*'><code>*session-removal-hook*</code></a>
+      <li><a href='#*session-max-time*'><code>*session-max-time*</code></a>
+      <li><a href='#do-sessions'><code>do-sessions</code></a>
+    </ol>
+    <li><a href='#log'>Logging and error handling</a>
+    <ol>
+      <li><a href='#*use-apache-log*'><code>*use-apache-log*</code></a>
+      <li><a href='#log-file'><code>log-file</code></a>
+      <li><a href='#log-message'><code>log-message</code></a>
+      <li><a href='#log-message*'><code>log-message*</code></a>
+      <li><a href='#*default-log-level*'><code>*default-log-level*</code></a>
+      <li><a href='#*log-lisp-errors-p*'><code>*log-lisp-errors-p*</code></a>
+      <li><a href='#*lisp-errors-log-level*'><code>*lisp-errors-log-level*</code></a>
+      <li><a href='#*log-lisp-warnings-p*'><code>*log-lisp-warnings-p*</code></a>
+      <li><a href='#*lisp-warnings-log-level*'><code>*lisp-warnings-log-level*</code></a>
+      <li><a href='#*log-lisp-backtraces-p*'><code>*log-lisp-backtraces-p*</code></a>
+      <li><a href='#*log-prefix*'><code>*log-prefix*</code></a>
+      <li><a href='#*show-lisp-errors-p*'><code>*show-lisp-errors-p*</code></a>
+      <li><a href='#*show-lisp-backtraces-p*'><code>*show-lisp-backtraces-p*</code></a>
+      <li><a href='#*show-access-log-messages*'><code>*show-access-log-messages*</code></a>
+      <li><a href='#*http-error-handler*'><code>*http-error-handler*</code></a>
+      <li><a href='#get-backtrace'><code>get-backtrace</code></a>
+    </ol>
+    <li><a href='#misc'>Miscellaneous</a>
+    <ol>
+      <li><a href='#start-tbnl'><code>start-tbnl</code></a>
+      <li><a href='#stop-tbnl'><code>stop-tbnl</code></a>
+      <li><a href='#*listener*'><code>*listener*</code></a>
+      <li><a href='#*tbnl-port*'><code>*tbnl-port*</code></a>
+      <li><a href='#tbnl-handler-done'><code>tbnl-handler-done</code></a>
+      <li><a href='#no-cache'><code>no-cache</code></a>
+      <li><a href='#handle-if-modified-since'><code>handle-if-modified-since</code></a>
+      <li><a href='#rfc-1123-date'><code>rfc-1123-date</code></a>
+      <li><a href='#redirect'><code>redirect</code></a>      
+      <li><a href='#require-authorization'><code>require-authorization</code></a>
+      <li><a href='#escape-for-html'><code>escape-for-html</code></a>
+      <li><a href='#url-encode'><code>url-encode</code></a>
+      <li><a href='#url-decode'><code>url-decode</code></a>
+      <li><a href='#read-from-string*'><code>read-from-string*</code></a>
+      <li><a href='#http-token-p'><code>http-token-p</code></a>
+      <li><a href='#*tmp-directory*'><code>*tmp-directory*</code></a>
+      <li><a href='#*tbnl-default-external-format*'><code>*tbnl-default-external-format*</code></a>
+      <li><a href='#+latin-1+'><code>+latin-1+</code></a>
+      <li><a href='#+utf-8+'><code>+utf-8+</code></a>
+    </ol>
+    <li><a href='#debug'>Debugging TBNL applications</a>
+    <ol>
+      <li><a href='#*catch-errors-p*'><code>*catch-errors-p*</code></a>
+      <li><a href='#*debug-mode*'><code>*debug-mode*</code></a>
+      <li><a href='#*backtrace*'><code>*backtrace*</code></a>
+      <li><a href='#*body*'><code>*body*</code></a>
+      <li><a href='#*command*'><code>*command*</code></a>
+      <li><a href='#*error*'><code>*error*</code></a>
+    </ol>
+  </ol>
+  <li><a href="#quirks">Known quirks</a>
+  <li><a href="#history">History</a>
+  <li><a href="#ack">Acknowledgements</a>
+</ol>
+
+<br>&nbsp;<br><h3><a name="overview" class=none>General overview</a></h3>
+
+Once it's started TBNL will listen on a TCP/IP port
+(see <a href="#*tbnl-port*"><code>*TBNL-PORT*</code></a>) waiting for
+requests to come in.  The usual setup is to use a "real" HTTP server
+like Apache (combined with mod_lisp) or Araneida as TBNL's "front-end"
+and let it handle the requests coming in from the clients (i.e. from
+browsers).  The front-end will hand over these requests to TBNL and
+TBNL will then send back its reply to the front-end which in turn
+forwards it to the client, so the actual HTTP communication is handled
+by the front-end.  It is possible to leave out the front-end and let
+clients connect directly to TBNL but this is not recommend for
+production sites, only for demos or small in-house applications.
+TBNL is <em>not</em> a full-blown HTTP server.  (This implies that you should usually protect the TBNL port from the outside world by a firewall!)
+
+<p>
+
+If Apache is your front-end, Apache and your Lisp (with TBNL) will
+actually act as two separate servers which are mostly
+independent. (They can in fact reside on different physical machines
+and one TBNL instance can serve multiple Apaches - think load
+balancing - or one Apache can talk to multiple Lisp images.) This also
+means that Apache can be restarted while TBNL keeps running or vice
+versa.
+
+<p>
+
+TBNL will wrap all relevant information about the incoming request in
+a <a href='#requests'><code>REQUEST</code></a> object and then, depending on its <a
+href='#*dispatch-table*'>dispatch table</a>, call a function which is
+responsible to serve the request. This will be a function with no
+arguments which can access the request object via the special
+variable <a href="#*request*"><code>*REQUEST*</code></a>. This
+function will generally return the body of the reply as a string but
+it can also manipulate the http headers which will be sent to the
+client 
+
+<p>
+
+Note that due to this control flow there's an upper bound (depending
+on your Lisp implementation - see <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/v_ar_tot.htm"><code>ARRAY-TOTAL-SIZE-LIMIT</code></a>)
+for the size of the replies which can be served by TBNL.  This is a
+deliberate design decision to facilitate error handling and other
+things.  See <a href="#send-headers"><code>SEND-HEADERS</code></a> if you want to serve very large static files.
+
+<br>&nbsp;<br><h3><a name="install" class=none>Requirements, download, installation, and configuration</a></h3>
+
+<h4><a name="apache" class=none>Installing the Apache/mod_lisp front-end</a></h4>
+
+For this front-end you need two things:
+
+<ul>
+  <li>The <a href='http://httpd.apache.org/'>Apache web server</a>. You can use either 1.3.x or 2.x. It is recommend that you use or build an Apache with <a href='http://httpd.apache.org/docs/dso.html'>DSO support</a>.
+
+  <li>The <a
+href='http://www.fractalconcept.com/asp/html/mod_lisp.html'>mod_lisp</a>
+Apache module by Marc Battyani. It is beyond the scope of this document to explain the
+details of how to install mod_lisp but if your Apache has DSO support
+it should suffice to issue a command like
+
+<pre>
+apxs -c -i -a mod_lisp.c
+</pre>
+
+as root (and afterwards restart Apache).
+<p>
+The newest version of mod_lisp is available from <a
+href="http://www.fractalconcept.com:8000/public/open-source/mod_lisp/">http://www.fractalconcept.com:8000/public/open-source/mod_lisp/</a>. For Apache&nbsp;1.3.x you
+should use mod_lisp.c (version&nbsp;2.42 or later), for Apache&nbsp;2.x you should use mod_lisp2.c, which is a reimplementation of Marc's mod_lisp by Chris Hanson, (version&nbsp;1.1 or later).
+<p>
+You can get pre-compiled modules for the Win32 version of Apache&nbsp;2 from <a href="http://www.fractalconcept.com:8000/public/open-source/mod_lisp/windows/">http://www.fractalconcept.com:8000/public/open-source/mod_lisp/windows/</a>. Put the file into Apache's <code>modules</code> folder and add the line
+<pre>
+LoadModule lisp_module modules/mod_lisp2.so
+</pre>
+to your <code>httpd.conf</code> file.
+
+</ul>
+
+Then you will have to configure Apache and mod_lisp to make them aware
+of TBNL. First, in your Apache configuration file (usually
+called <code>httpd.conf</code>) add these lines
+
+<pre>
+<a name='LispServer' class=noborder>LispServer</a> 127.0.0.1 3000 &quot;tbnl&quot;
+
+&lt;Location /tbnl&gt;
+  SetHandler lisp-handler
+&lt;/Location&gt;
+</pre>
+
+and afterwards restart Apache. This informs mod_lisp that there's a
+Lisp listening on port&nbsp;3000 (see <a
+href="#*tbnl-port*"><code>*TBNL-PORT*</code></a>) and named
+&quot;tbnl&quot; - you can of course use any other name or port or
+even put TBNL on another physical machine. (In the latter case you'll
+have to replace <code>127.0.0.1</code> with the FQDN or IP address of
+this machine.)
+<p>
+The <code>Location/SetHandler</code> part means that every URL which
+starts with <code>/tbnl</code> will be handled by mod_lisp (and thus
+TBNL) on this server. (Again, you can of course use other locations. See the
+Apache documentation for things like <em>virtual hosts</em> or
+directives like <code>LocationMatch</code>.)
+
+<h4><a name="araneida" class=none>Installing the Araneida front-end</a></h4>
+
+For this front-end you'll have to install, compile and load
+<a href="http://www.cliki.net/araneida">Araneida</a> <em>before</em> you build TBNL - if you had already compiled
+TBNL you must delete the FASL files first.  In other words: You need
+to build a version of TBNL that knows about Araneida and therefore
+Araneida must be already loaded when you compile TBNL.
+
+<p>
+It is beyond the scope of this document to explain how to install Araneida - see Araneida's documentation.
+
+<h4><a name="tbnl" class=none>Installing TBNL itself</a></h4>
+
+TBNL depends on a couple of other Lisp libraries which you'll need
+to install first:
+<ul>
+      <li>Pierre R. Mai's <a href='http://www.cliki.net/md5'>MD5</a>,
+
+      <li>Kevin Rosenberg's <a href='http://www.cliki.net/kmrcl'>KMRCL</a> (<em>not</em> for LispWorks, though) and <a href='http://www.cliki.net/cl-base64'>CL-BASE64</a> (version&nbsp;3.3.2 or higher),
+
+      <li>Janis Dzerins' <a href='http://common-lisp.net/project/rfc2388/'>RFC2388</a>,
+
+      <li>and my own <a href='http://weitz.de/cl-ppcre/'>CL-PPCRE</a>, <a href='http://weitz.de/url-rewrite/'>URL-REWRITE</a>, and (only for LispWorks) <a href="http://weitz.de/hunchentoot/">Hunchentoot</a>.
+
+</ul>
+<a name="sbcl" class=none>Note:</a> TBNL has been notorious to not
+work as expected with SBCL.  I don't use SBCL myself, so I don't
+usually test against it.  If you think TBNL fails on SBCL because of
+an error in TBNL, please <a href="#mail">report it</a>, preferably
+with a patch to fix the problem.  Note, however, that many of the
+recent problems with the SBCL/TBNL combo were due to problems in
+third-party libraries and/or due to the fast development of SBCL
+itself.  Check if you use the latest versions of all dependencies
+listed above and search the TBNL mailing list - see
+for example <a
+href="http://common-lisp.net/pipermail/tbnl-devel/2005-December/000524.html">here</a>,
+<a href="http://common-lisp.net/pipermail/tbnl-devel/2006-August/000631.html">here</a>, and
+<a href="http://common-lisp.net/pipermail/tbnl-devel/2006-September/000647.html">here</a>.
+<p>
+TBNL together with this documentation can be downloaded from <a
+href="http://weitz.de/files/tbnl.tar.gz">http://weitz.de/files/tbnl.tar.gz</a>. The
+current version is 0.11.4.
+You can (assuming you have <a href="http://www.cliki.net/asdf">ASDF</a> available) install TBNL with
+<pre>
+(asdf:oos 'asdf:load-op #+:lispworks :hunchentoot #:-lispworks :tbnl)
+</pre>
+
+<p>
+There are some shortcuts available to make the above a bit less painful:
+<ul>
+
+  <li>All of the Lisp libraries above (including
+  TBNL) can be downloaded and installed automatically with <a
+  href="http://www.cliki.net/asdf-install">ASDF-INSTALL</a>.
+
+  <li>On <a
+  href='http://www.cliki.net/gentoo'>Gentoo Linux</a> it's even easier: TBNL is fully integrated into the <a href="http://www.gentoo.org/main/en/about.xml"><em>Portage</em></a> system thanks to the efforts of Matthew Kennedy.  The same will soon apply to <a
+  href='http://www.cliki.net/Debian'>Debian</a> thanks to Alceste Scalas.
+
+</ul>
+
+Now in your Lisp evaluate
+<pre>
+(asdf:oos 'asdf:load-op :tbnl-test)
+<a href="#start-tbnl" class=noborder>(tbnl:start-tbnl)</a>
+</pre>
+
+<a class=none name="test">This</a> will start TBNL with a couple of test pages defined in the
+file <code>test/test.lisp</code> within the TBNL source directory.
+
+<h4><a name="apache-start" class=none>Activating the Apache/mod_lisp front-end</a></h4>
+
+Point your browser
+at <code>http://localhost/tbnl/test</code> and you should see
+something. (This last step assumes that, for the purpose of this test,
+you have <em>not</em> changed the <code>Location</code> line above and that Apache is listening on port 80.)
+
+<h4><a name="araneida-start" class=none>Activating the Araneida front-end</a></h4>
+
+Start Araneida with
+<pre>
+(tbnl-test:start-araneida-listener)
+</pre>
+and point your browser
+at <code>http://localhost:8000/tbnl/test</code>.  See the file <code>test/araneida-test.lisp</code> for other options like putting Araneida behind a HTTP proxy.
+
+<p>
+Note: The TBNL/Araneida combination should be considered experimental.
+I'm not aware of anyone who uses it in earnest, and I don't test it
+when I make new releases.
+
+<h4><a name="tbnl-start" class=none>Using TBNL without a front-end</a></h4>
+
+Just point your browser
+at <code>http://localhost:3000/tbnl/test</code>.
+
+<h4><a name="misc-inst" class=none>Miscellaneous</a></h4>
+
+Look into the <code>contrib</code> directory that comes with TBNL for
+additions to TBNL and example code that uses TBNL.  Also,
+the <code>test</code> directory is slightly misnamed and should
+probably be called <code>examples</code>, i.e. there you'll find some
+"Hello World" code to get you started.
+<p>
+A tutorial for TBNL can be found at <a href="http://www.jalat.com/blogs/lisp?id=3">http://www.jalat.com/blogs/lisp?id=3</a> thanks to Asbj&oslash;rn Bj&oslash;rnstad.
+And there's
+another <a href="http://www.frank-buss.de/lisp/tbnl.html">TBNL tutorial
+from Frank Buss</a>.
+
+<p>
+For Win32, <a href="http://bc.tech.coop/blog/">Bill Clementson</a>
+explains how to set up TBNL with Apache/mod_lisp in his blog entry
+at <a
+href="http://bc.tech.coop/blog/041105.html">http://bc.tech.coop/blog/041105.html</a>.
+
+<p>
+There is, by the way, <em>no</em> public CVS repository for TBNL - the repository at <a href="http://common-lisp.net/">common-lisp.net</a> is out of date and not in sync with the (current) version distributed from <a href="http://weitz.de/">weitz.de</a>.</p>
+
+<br>&nbsp;<br><h3><a name="mail" class=none>Support and mailing lists</a></h3>
+
+For questions, bug reports, feature requests, improvements, or patches
+please use the <a
+href="http://common-lisp.net/mailman/listinfo/tbnl-devel">tbnl-devel
+mailing list</a>. If you want to be notified about future releases
+subscribe to the <a
+href="http://common-lisp.net/mailman/listinfo/tbnl-announce">tbnl-announce
+mailing list</a>. These mailing lists were made available thanks to
+the services of <a href="http://common-lisp.net/">common-lisp.net</a>.
+
+<br>&nbsp;<br><h3><a class=none name="dictionary">The TBNL dictionary</a></h3>
+
+<h4><a class=none name="handlers">Handlers</a></h4>
+
+TBNL handles each incoming request dynamically depending on the
+contents of a global <em>dispatch table</em>. The details can be found
+below. (See the file <code>test/test.lisp</code> for an example.)
+
+<p><br>[Special variable]
+<br><a class=none name="*dispatch-table*"><b>*dispatch-table*</b></a>
+
+<blockquote><br>
+
+This is a list of <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#function_designator">function
+designators</a> for <em>dispatch functions</em> each of which should
+be a function of one argument which accepts a <a
+href='#requests'><code>REQUEST</code></a> object and, depending on
+this object, should either return a <em>handler</em> to handle the
+request or <code>NIL</code> which means that the next dispatcher will
+be queried. A <em>handler</em> is a designator for a function with no
+arguments which usually returns a string to be sent to the client as
+the body of the http reply. (Note that if you use symbols as function
+designators you can redefine your handler functions without the need
+to change the dispatch functions.)  See <a href='#replies'>the section
+about replies</a> for more about what handlers can do.
+<p>
+The dispatchers in <code>*DISPATCH-TABLE*</code> are tried in turn
+until one of them returns a handler. If this doesn't happen, TBNL will
+return a 404 status code (Not Found) to the client.
+<p>
+The default value of <code>*DISPATCH-TABLE*</code> is a list which
+just contains the symbol <a
+href='#default-dispatcher'><code>DEFAULT-DISPATCHER</code></a>. 
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="default-dispatcher"><b>default-dispatcher</b> <i>request</i> =&gt; <i>handler</i></a>
+
+<blockquote><br>
+
+This is a function which will always unconditionally returns the value of <a
+href='#*default-handler*'><code>*DEFAULT-HANDLER*</code></a>. It is intended to be the last element of <a
+href='#*dispatch-table*'><code>*DISPATCH-TABLE*</code></a>
+
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*default-handler*"><b>*default-handler*</b></a>
+
+<blockquote><br>
+
+This variable holds the handler which is always returned by <a
+href='#default-dispatcher'><code>DEFAULT-DISPATCHER</code></a>. The
+default value is a function which unconditonally shows a short TBNL
+info page.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="create-prefix-dispatcher"><b>create-prefix-dispatcher</b> <i>prefix handler</i> =&gt; <i>dispatch-fn</i></a>
+
+<blockquote><br>
+
+A convenience function which will return a dispatcher that returns <code><i>handler</i></code> whenever the path part of the request URI starts with the string <code><i>prefix</i></code>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="create-regex-dispatcher"><b>create-regex-dispatcher</b> <i>regex handler</i> =&gt; <i>dispatch-fn</i></a>
+
+<blockquote><br>
+
+A convenience function which will return a dispatcher that returns <code><i>handler</i></code> whenever the path part of the request URI matches the <a href='http://weitz.de/cl-ppcre/'>CL-PPCRE</a> regular expression <code><i>regex</i></code> (which can be a string, an s-expression, or a scanner).
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="handle-static-file"><b>handle-static-file</b> <i>path <tt>&amp;optional</tt> content-type</i> =&gt; <i>nil</i></a>
+
+<blockquote><br>
+Sends the file denote by the pathname designator
+<code><i>path</i></code> with content type
+<code><i>content-type</i></code> to the client.  Sets the necessary handlers.  In particular the function employs
+<a href="#handle-if-modified-since"><code>HANDLE-IF-MODIFIED-SINCE</code></a>.
+<p>
+If <code><i>content-type</i></code> is <code>NIL</code> the function tries to determine the correct content type from the file's suffix
+or falls back to the value of
+<a href='#*default-content-type*'><code>*DEFAULT-CONTENT-TYPE*</code></a>.
+<p>
+Note that this function
+calls <a href="#send-headers"><code>SEND-HEADERS</code></a>
+internally, so after you've called it the headers are sent and the
+return value of your handler is ignored.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="create-static-file-dispatcher-and-handler"><b>create-static-file-dispatcher-and-handler</b> <i>uri path <tt>&amp;optional</tt> content-type</i> =&gt; <i>dispatch-fn</i></a>
+
+<blockquote><br>
+
+A convenience function which will return a dispatcher that dispatches
+to a handler which emits the file denoted by the pathname designator
+<code><i>path</i></code> with content type
+<code><i>content-type</i></code> 
+if the <a href='#script-name'><code>SCRIPT-NAME</code></a> of the
+request matches the string <code><i>uri</i></code>.  Uses <a href="#handle-static-file"><code>HANDLE-STATIC-FILE</code></a> internally.
+<p>
+If <code><i>content-type</i></code> is <code>NIL</code> the function tries to determine the correct content type from the file's suffix
+or falls back to the value of
+<a href='#*default-content-type*'><code>*DEFAULT-CONTENT-TYPE*</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="create-folder-dispatcher-and-handler"><b>create-folder-dispatcher-and-handler</b> <i>uri-prefix base-path <tt>&amp;optional</tt> default-content-type</i> =&gt; <i>dispatch-fn</i></a>
+
+<blockquote><br>
+Creates and returns a dispatch function which will dispatch to a
+handler function which emits the file relative to <code><i>base-path</i></code> that is
+denoted by the URI of the request relative to <code><i>uri-prefix</i></code>.  <code><i>uri-prefix</i></code>
+must be a string ending with a slash, <code><i>base-path</i></code> must be a pathname
+designator for an existing directory.  The content types of the files
+are determined via their suffix, falling back to
+<code><i>default-content-type</i></code> if the suffix is unknown.
+<p>
+Uses <a href="#handle-static-file"><code>HANDLE-STATIC-FILE</code></a> internally.
+</blockquote>
+
+<p><br>[Generic function]
+<br><a class=none name="dispatch-request"><b>dispatch-request</b> <i>dispatch-table</i> =&gt; <i>result</i></a>
+
+<blockquote><br>
+This is a generic function so users can customize its behaviour.  Look at the source code for details.
+</blockquote>
+
+<p><br>[Macro]
+<br><a class=none name="define-easy-handler"><b>define-easy-handler</b> <i>description lambda-list [[declaration* | documentation]] form*</i></a>
+
+<blockquote><br>
+
+Defines a handler as if
+by <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm"><code>DEFUN</code></a>
+and optionally registers it with a URI so that it will be found
+by <a
+href="#dispatch-easy-handlers"><code>DISPATCH-EASY-HANDLERS</code></a>.
+<p>
+<code><i>description</i></code> is either a symbol <code><i>name</i></code> or a list matching the
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/03_de.htm">destructuring lambda list</a>
+
+<pre>
+  (name &amp;key uri default-parameter-type default-request-type).
+</pre>
+
+<code><i>lambda-list</i></code> is a list the elements of which are either a symbol
+<code><i>var</i></code> or a list matching the destructuring lambda list
+
+<pre>
+  (var &amp;key real-name parameter-type init-form request-type).
+</pre>
+
+The resulting handler will be a Lisp function with the
+name <code><i>name</i></code> and keyword parameters named by
+the <code><i>var</i></code> symbols.  Each <code><i>var</i></code>
+will be bound to the value of the GET or POST parameter
+called <code><i>real-name</i></code> (a string) before the body of the
+function is executed.  If <code><i>real-name</i></code> is not
+provided, it will be computed by <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_stg_up.htm#string-downcase">downcasing</a> the symbol name
+of <code><i>name</i></code>.
+<p>
+If <code><i>uri</i></code> (which is evaluated) is provided, then it must be a string or
+a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#function_designator">function
+designator</a> for a unary function.  In this case,
+the handler will be returned by <a href="#dispatch-easy-handlers"><code>DISPATCH-EASY-HANDLERS</code></a>, if <code><i>uri</i></code> is a
+string and the <a href="#script-name">script name</a> of the current request is <code><i>uri</i></code>, or if <code><i>uri</i></code> designates a
+function and applying this function to the <a href="#*request*">current <code>REQUEST</code> object</a>
+returns a true value.
+<p>
+Whether the GET or POST parameter (or both) will be taken into
+consideration, depends on <code><i>request-type</i></code> which can
+be <code>:GET</code>, <code>:POST</code>, <code>:BOTH</code>, or <code>NIL</code>.  In the last case, the value of
+<code><i>default-request-type</i></code> (the default of which
+is <code>:BOTH</code>) will be used.
+<p>
+The value of <code><i>var</i></code> will usually be a string (unless
+it resulted from a <a href="#upload">file upload</a> in which case it won't be converted at
+all), but if <code><i>parameter-type</i></code> (which is evaluated)
+is provided, the string will be converted to another Lisp type by the
+following rules:
+<p>
+If the corresponding GET or POST parameter wasn't provided by the
+client, <code><i>var</i></code>'s value will be <code>NIL</code>.  If <code><i>parameter-type</i></code> is <code>'STRING</code>,
+<code><i>var</i></code>'s value remains as is.  If <code><i>parameter-type</i></code> is <code>'INTEGER</code> and the
+parameter string consists solely of decimal digits, <code><i>var</i></code>'s value will be
+the corresponding integer, otherwise <code>NIL</code>.  If <code><i>parameter-type</i></code> is
+<code>'KEYWORD</code>, <code><i>var</i></code>'s value will be the
+keyword obtained
+by <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_intern.htm">interning</a>
+the parameter string into
+the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/11_abc.htm">keyword
+package</a>.  If <code><i>parameter-type</i></code>
+is <code>'CHARACTER</code> and the parameter string is of length
+one, <code><i>var</i></code>'s value will be the single character of
+this string, otherwise <code>NIL</code>.
+If <code><i>parameter-type</i></code>
+is <code>'BOOLEAN</code>, <code><i>var</i></code>'s value will always
+be <code>T</code> (unless it is <code>NIL</code> by the first rule
+above, of course).  If <code><i>parameter-type</i></code> is any other
+atom, it is supposed to be
+a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#function_designator">function
+designator</a> for a unary function which will be called to
+convert the string to something else.
+<p>
+Those were the rules for <em>simple</em> parameter types, but
+<code><i>parameter-type</i></code> can also be a list starting with one of the symbols
+<code>LIST</code>, <code>ARRAY</code>, or <code>HASH-TABLE</code>.
+The second value of the list must always be a simple parameter type as
+in the last paragraph - we'll call it the <em>inner type</em> below.
+<p>
+In the case of <code>'LIST</code>, all GET/POST parameters
+called <code><i>real-name</i></code> will be collected, converted to
+the inner type as by the rules above, and assembled into a list which
+will be the value of
+<code><i>var</i></code>.
+<p>
+In the case of <code>'ARRAY</code>, all GET/POST parameters which have
+a name like the result of
+
+<pre>
+  (format nil "~A[~A]" real-name n)
+</pre>
+
+where <code><i>n</i></code> is a non-negative integer, will be
+assembled into an array where the <code><i>n</i></code>th element will
+be set accordingly, after conversion to the inner type.  The array,
+which will become the value of <code><i>var</i></code>, will be big
+enough to hold all matching parameters, but not bigger.  Array
+elements not set as described above will be <code>NIL</code>.  Note
+that <code>VAR</code> will always be bound to an array, which may be
+empty, so it will never be <code>NIL</code>, even if no appropriate
+GET/POST parameters are found.
+<p>
+The full form of a <code>'HASH-TABLE</code> parameter type is
+
+<pre>
+  (hash-table inner-type key-type test-function),
+</pre>
+
+but <code><i>key-type</i></code> and <code><i>test-function</i></code>
+can be left out in which case they default to <code>'STRING</code>
+and <code>'EQUAL</code>, respectively.  For this parameter type, all
+GET/POST parameters which have a name like the result of
+
+<pre>
+  (format nil "~A{~A}" real-name key)
+</pre>
+
+(where <code><i>key</i></code> is a string that doesn't contain curly brackets) will
+become the values (after conversion to <code><i>inner-type</i></code>) of a hash
+table with test function <code><i>test-function</i></code> where <code><i>key</i></code> (after
+conversion to <code><i>key-type</i></code>) will be the corresponding key.  Note that
+<code><i>var</i></code> will always be bound to a hash table, which
+may be empty, so it will never be <code>NIL</code>, even if no
+appropriate GET/POST parameters are found.
+<p>
+To make matters even more complicated, the three compound parameter
+types also have an abbreviated form - just one of the
+symbols <code>LIST</code>, <code>ARRAY</code>,
+or <code>HASH-TABLE</code>.  In this case, the inner type will default
+to <code>'STRING</code>.
+<p>
+If <code><i>parameter-type</i></code> is not provided
+or <code>NIL</code>, <code><i>default-parameter-type</i></code> (the
+default of which is <code>'STRING</code>) will be used instead.
+<p>
+If the result of the computations above would be
+that <code><i>var</i></code> would be bound to <code>NIL</code>,
+then <code><i>init-form</i></code> (if provided) will be evaluated
+instead, and <code><i>var</i></code> will be bound to the result of
+this evaluation.
+<p>
+Handlers built with this macro are constructed in such a way that the
+resulting Lisp function is useful even outside of TBNL.  Specifically,
+all the parameter computations above will only happen
+if <a href="#*request*"><code>*REQUEST*</code></a> is bound, i.e. if
+we're within a TBNL request.  Otherwise, <code><i>var</i></code> will
+always be bound to the result of
+evaluating <code><i>init-form</i></code> unless a corresponding
+keyword argument is provided.
+<p>
+The <a href="#test">test code</a> that comes with TBNL contains an
+example which demonstrates some of the features
+of <a
+href="#define-easy-handler"><code>DEFINE-EASY-HANDLER</code></a>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="dispatch-easy-handlers"><b>dispatch-easy-handlers</b> <i>request</i> =&gt; <i>handler</i></a>
+
+<blockquote><br>
+
+This is a dispatcher which returns the appropriate handler defined
+with <a
+href="#define-easy-handler"><code>DEFINE-EASY-HANDLER</code></a>, if
+there is one.  The newest handlers are checked
+first.  <a
+href="#define-easy-handler"><code>DEFINE-EASY-HANDLER</code></a> makes
+sure that there's always only one handler per name and one per URI.
+URIs are compared
+by <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_equal.htm"><code>EQUAL</code></a>,
+so anonymous functions won't be recognized as being identical.
+
+</blockquote>
+
+<h4><a class=none name="requests">Requests</a></h4>
+
+When a request comes in, TBNL creates a <code>REQUEST</code> object
+which is available to the <a href="#handlers">handler</a> via the
+special variable <a href='#*request*'><code>*REQUEST*</code></a>. This object holds
+all the information available about the request and can be queried
+with the functions described in this chapter. Note that the internal
+structure of <code>REQUEST</code> objects should be considered opaque and may chance
+in future releases of TBNL.
+<p>
+In all of the functions below the default value
+for <code><i>request</i></code> (which is either an optional or a
+keyword argument) is the value of <a href='#*request*'><code>*REQUEST*</code></a>,
+i.e. handlers will usually not need to provide this argument when
+calling the function.
+
+<p><br>[Special variable]
+<br><a class=none name="*request*"><b>*request*</b></a>
+
+<blockquote><br>
+
+Holds the current <code>REQUEST</code> object.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="host"><b>host</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the value of the incoming <code>Host</code> http header.
+(This corresponds to
+the environment variable <code>HTTP_HOST</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="request-method"><b>request-method</b> <i><tt>&amp;key</tt> request as-keyword</i> =&gt; <i>keyword/string</i></a>
+
+<blockquote><br>
+
+Returns the request method. If <code><i>as-keyword</i></code> is <em>true</em> (which is the default), then the result is returned as a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_k.htm#keyword">keyword</a>, otherwise as a string.
+(This corresponds to
+the environment variable <code>REQUEST_METHOD</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="request-uri"><b>request-uri</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the URI for <code><i>request</i></code>. Note that this not the full URI but only the part behind the
+scheme and authority components, so that if the user has typed <code>http://user:password@www.domain.com/xxx/frob.html?foo=bar</code> into his browser, this function will return <code>"/xxx/frob.html?foo=bar"</code>.
+(This corresponds to
+the environment variable <code>REQUEST_URI</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="script-name"><b>script-name</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the file name (or path) component of the URI
+for <code><i>request</i></code>, i.e. the part of the string returned
+by <a href="#request-uri"><code>REQUEST-URI</code></a> in front of the
+first question mark (if any).
+(This corresponds to
+the environment variable <code>SCRIPT_NAME</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="query-string"><b>query-string</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the query component of the URI
+for <code><i>request</i></code>, i.e. the part of the string returned
+by <a href="#request-uri"><code>REQUEST-URI</code></a> behind the
+first question mark (if any).
+(This corresponds to
+the environment variable <code>QUERY_STRING</code> in CGI
+scripts.) See also <a href="#get-parameter"><code>GET-PARAMETER</code></a> and <a href="#get-parameters"><code>GET-PARAMETERS</code></a>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="get-parameter"><b>get-parameter</b> <i>name <tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns the value of the GET parameter (as provided via the request URI) named by the string <code><i>name</i></code> as a string (or <code>NIL</code> if there ain't no GET parameter with this name). Note that only the first value will be returned if the client provided more than one GET parameter with the name <code><i>name</i></code>. See also <a href="#get-parameters"><code>GET-PARAMETERS</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="get-parameters"><b>get-parameters</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all GET parameters (as provided via the request URI). The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the parameter's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is its value (as a string). The elements of this list are in the same order as they were within the request URI. See also <a href="#get-parameter"><code>GET-PARAMETER</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="post-parameter"><b>post-parameter</b> <i>name <tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns the value of the POST parameter (as provided in the request's body) named by the string <code><i>name</i></code>. Note that only the first value will be returned if the client provided more than one POST parameter with the name <code><i>name</i></code>.
+This value will usually be a string (or <code>NIL</code> if there ain't no POST parameter with this name). If, however, the browser sent a <a class=none name="upload">file</a> through a <a href="http://www.faqs.org/rfcs/rfc2388.html">multipart/form-data</a> form, the value of this function is a three-element list
+<pre>
+(path file-name content-type)
+</pre>
+where <code><i>path</i></code> is a pathname denoting the place were the uploaded file was stored, <code><i>file-name</i></code> (a string) is the file name sent by the browser, and <code><i>content-type</i></code> (also a string) is the content type sent by the browser. The file denoted by <code><i>path</i></code> will be deleted after the request has been handled - you have to move or copy it somewhere else if you want to keep it.
+See also <a href="#post-parameters"><code>POST-PARAMETERS</code></a> and <a href="#*tmp-directory*"><code>*TMP-DIRECTORY*</code></a>.
+<p>
+File uploads don't seem to work with Araneida at the moment - use the Apache/mod_lisp front-end if you need them.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="post-parameters"><b>post-parameters</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all POST parameters (as provided via the request's body). The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the parameter's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is its value. The elements of this list are in the same order as they were within the request's body. See also <a href="#post-parameter"><code>POST-PARAMETER</code></a>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*file-upload-hook*"><b>*file-upload-hook*</b></a>
+
+<blockquote><br> If this is not <code>NIL</code>, it should be
+a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#function_designator">designator</a>
+for a unary function which will be called with a pathname for each
+file which is <a href="#upload">uploaded</a> to TBNL.  The pathname
+denotes the temporary file to which the uploaded file is written.  The
+hook is called directly <em>before</em> the file is created.  At this
+point, <a href="#*request*"><code>*REQUEST*</code></a> is already
+bound to the current <code>REQUEST</code> object, but obviously you
+can't access the post parameters yet.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="raw-post-data"><b>raw-post-data</b> <tt>&amp;optional</tt> <i>request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+If the request is a POST request (which is <em>not</em> of type <code>multipart/form-data</code>), returns the raw body of
+the request, otherwise returns <code>T</code>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="parameter"><b>parameter</b> <i>name <tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns the value of the GET or POST parameter named by the string <code><i>name</i></code> as a string (or <code>NIL</code> if there ain't no parameter with this name). If both a GET and a POST parameter with the name <code><i>name</i></code> exist, the GET parameter will be returned. See also <a href="#get-parameter"><code>GET-PARAMETER</code></a> and <a href="#post-parameter"><code>POST-PARAMETER</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="header-in"><b>header-in</b> <i>name <tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns the incoming header named by the string <code><i>name</i></code> as a string (or <code>NIL</code> if there ain't no header with this name). Note that this queries the headers sent to TBNL by the front-end <em>or</em> by the client.  This may not only include the incoming http headers but also some <a href='http://www.fractalconcept.com/asp/debug'>headers sent by mod_lisp</a> or Araneida. <code><i>name</i></code> is matched case-insensitively.  See also <a href="#headers-in"><code>HEADERS-IN</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="headers-in"><b>headers-in</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all incoming headers. The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the headers's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is its value (as a string). There's no guarantee about the order of this list. See also <a href="#header-in"><code>HEADER-IN</code></a> and the remark about incoming headers there.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="authorization"><b>authorization</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>user, password</i></a>
+
+<blockquote><br>
+Returns as two values the user and password (if any) from the incoming <code>Authorization</code> http header.
+</blockquote>
+
+
+<p><br>[Function]
+<br><a class=none name="remote-addr"><b>remote-addr</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the IP address (as a string) of the client which sent the
+request.  (This corresponds to the environment
+variable <code>REMOTE_ADDR</code> in CGI scripts.) See also <a
+href="#real-remote-addr"><code>REAL-REMOTE-ADDR</code></a>.  This function doesn't necessarily return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="remote-port"><b>remote-port</b> <i><tt>&amp;key</tt> request as-number</i> =&gt; <i>number/string</i></a>
+
+<blockquote><br>
+
+Returns the IP port of the client which sent the
+request. If <code><i>as-number</i></code> is <em>true</em>, which is the default, the result will be returned as a number, otherwise as a string.
+(This corresponds to the environment
+variable <code>REMOTE_PORT</code> in CGI scripts.)  This function doesn't necessarily return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="real-remote-addr"><b>real-remote-addr</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the value of the incoming <a href="http://en.wikipedia.org/wiki/XFF"><code>X-Forwarded-For</code></a> http header if it
+exists. Otherwise returns the value of <a
+href="#remote-addr"><code>REMOTE-ADDR</code></a>.  This function doesn't necessarily return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="server-addr"><b>server-addr</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the IP address (as a string) where the request came in. Note
+that this is not necessarily the IP address of the machine TBNL is
+running on. (This corresponds to the environment
+variable <code>SERVER_ADDR</code> in CGI scripts.)  This function doesn't necessarily return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="server-port"><b>server-port</b> <i><tt>&amp;key</tt> request as-number</i> =&gt; <i>number/string</i></a>
+
+<blockquote><br>
+
+Returns the IP port (usually 80 for http and 443 for https) where the request came in. If <code><i>as-number</i></code> is <em>true</em>, which is the default, the result will be returned as a number, otherwise as a string.
+(This corresponds to the environment
+variable <code>SERVER_PORT</code> in CGI scripts.) This function doesn't necessarily return a meaningful value if you use TBNL without a front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="server-protocol"><b>server-protocol</b> <i><tt>&amp;key</tt> request as-keyword</i> =&gt; <i>keyword/string</i></a>
+
+<blockquote><br>
+
+Returns the version of the http protocol which is used by the client - this is usually either <code>"HTTP/1.0"</code> or <code>"HTTP/1.1"</code>. If <code><i>as-keyword</i></code> is <em>true</em>, which is the default, the result will be returned as a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_k.htm#keyword">keyword</a>, otherwise as a string.
+(This corresponds to the environment
+variable <code>SERVER_PROTOCOL</code> in CGI scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="mod-lisp-id"><b>mod-lisp-id</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the 'Server ID' sent by mod_lisp. This corresponds to the
+third parameter in the &quot;<a
+href='#LispServer'>LispServer</a>&quot; directive in Apache's
+configuration file and can be interesting if you deploy several different
+Apaches or TBNL instances at once.  This function doesn't return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="ssl-session-id"><b>ssl-session-id</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the SSL session ID if it exists. Note that SSL sessions aren't related to <a href='#sessions'>TBNL sessions</a>.
+(This corresponds to
+the environment variable <code>SSL_SESSION_ID</code> in CGI
+scripts.)   This function doesn't return a meaningful value unless you use the mod_lisp front-end.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="user-agent"><b>user-agent</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the value of the incoming <code>User-Agent</code> http header.
+(This corresponds to
+the environment variable <code>HTTP_USER_AGENT</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="referer"><b>referer</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+Returns the value of the incoming <code>Referer</code> (sic!) http header.
+(This corresponds to
+the environment variable <code>HTTP_REFERER</code> in CGI
+scripts.)
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="cookie-in"><b>cookie-in</b> <i>name <tt>&amp;optional</tt> request</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns the value of the incoming cookie named by the string <code><i>name</i></code> (or <code>NIL</code> if there ain't no cookie with this name). See also <a href="#cookies-in"><code>COOKIES-IN</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="cookies-in"><b>cookies-in</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all incoming cookies. The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the cookie's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is the cookie's value. See also <a href="#cookie-in"><code>COOKIE-IN</code></a>.
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="aux-request-value"><b>aux-request-value</b> <i>symbol <tt>&amp;optional</tt> request</i> =&gt; <i>value, present-p</i>
+<br><tt>(setf (</tt><b>aux-request-value</b> <i>symbol <tt>&amp;optional</tt> request</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+This accessor can be used to associate arbitrary data with the the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#symbol">symbol</a> <code><i>symbol</i></code> in the <code>REQUEST</code>
+object <code><i>request</i></code>.
+<code><i>present-p</i></code> is <em>true</em> if such data was found,
+otherwise <code>NIL</code>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="delete-aux-request-value"><b>delete-aux-request-value</b> <i>symbol <tt>&amp;optional</tt> request</i> =&gt; |</a>
+
+<blockquote><br>
+Completely removes any data associated with the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#symbol">symbol</a> <code><i>symbol</i></code> from the <code>REQUEST</code>
+object <code><i>request</i></code>. Note that this is different from 
+using <a href="#aux-request-value"><code>AUX-REQUEST-VALUE</code></a> to set the data to <code>NIL</code>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="recompute-request-parameters"><b>recompute-request-parameters</b> <i><tt>&amp;key</tt> request external-format</i> =&gt; |</a>
+
+<blockquote><br> Recomputes the GET and POST parameters for
+the <code>REQUEST</code> object
+<code><i>request</i></code>.  This only makes sense if you've changed
+the external format and with POST parameters it will only work if the
+request body was sent with a <code>Content-Length</code> header and
+the <code>application/x-www-form-urlencoded</code> content type.
+<p>
+The default value for
+<code><i>external-format</i></code> is <a
+href="#*tbnl-default-external-format*"><code>*TBNL-DEFAULT-EXTERNAL-FORMAT*</code></a>.
+Note that external formats are usually implementation-dependent but
+you can use the predefined
+values <a href="#+latin-1+"><code>+LATIN-1+</code></a>
+and <a href="#+utf-8+"><code>+UTF-8+</code></a>.
+See <code>test/test.lisp</code> for an example.
+</blockquote>
+
+<h4><a class=none name="replies">Replies</a></h4>
+
+It is the responsibility of a <a href='#handlers'>handler</a> function to prepare the reply for the client. This is done by
+
+<ul>
+  <li>returning a string which will be the reply's body and
+  <li>manipulating a <code>REPLY</code> object which will be described in this section.
+</ul>
+
+For each request there's one <code>REPLY</code> object which is accessible 
+to the handler via the
+special variable <a href='#*reply*'>*REPLY*</a>. This object holds
+all the information available about the reply and can be accessed
+with the functions described in this chapter. Note that the internal
+structure of <code>REPLY</code> objects should be considered opaque and may chance
+in future releases of TBNL.
+<p>
+In all of the functions below the default value
+for the optional argument <code><i>reply</i></code> is the value of <a href='#*reply*'>*REPLY*</a>,
+i.e. handlers will usually not need to provide this argument when
+calling the function.
+<p>
+While TBNL's preferred way of sending data to the client is the one
+described above (i.e. the handler returns the whole payload as a
+string or an <a href="#quirks">array of octets</a>) you can, if you
+really need to, get a stream you can write to directly.  This is
+achieved by first setting
+up <a href="#*reply*"><code>*REPLY*</code></a> and then
+calling <a href="#send-headers"><code>SEND-HEADERS</code></a>.  Note
+that in this case the usual <a href="#log">error handling</a> is
+disabled.  See the file <code>test/test.lisp</code> for an example.
+
+<p><br>[Special variable]
+<br><a class=none name="*reply*"><b>*reply*</b></a>
+
+<blockquote><br>
+
+Holds the current <code>REPLY</code> object.
+
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="header-out"><b>header-out</b> <i>name <tt>&amp;optional</tt> reply</i> =&gt; <i>string</i>
+<br><tt>(setf (</tt><b>header-out</b> <i>name <tt>&amp;optional</tt> reply</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+
+<code>HEADER-OUT</code> returns the outgoing http header named by the
+string <code><i>name</i></code> if there is one,
+otherwise <code>NIL</code>. <code>SETF</code>
+of <code>HEADER-OUT</code> changes the current value of the header
+named <code><i>name</i></code>. If no header
+named <code><i>name</i></code> exists it is created. The association
+between a header and its name is case-insensitive.
+<p>
+Note that the
+headers <code>Set-Cookie</code>, <code>Content-Length</code>,
+and <code>Content-Type</code> cannot be queried by <code>HEADER-OUT</code> and <em>must not</em> be set by <code>SETF</code>
+of <code>HEADER-OUT</code>.
+<p>
+See also <a href="#headers-out"><code>HEADERS-OUT</code></a>, <a href="#content-type"><code>CONTENT-TYPE</code></a>, <a href="#content-length"><code>CONTENT-LENGTH</code></a>, <a href="#cookies-out"><code>COOKIES-OUT</code></a>, and <a href="#cookie-out"><code>COOKIE-OUT</code></a>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="headers-out"><b>headers-out</b> <i><tt>&amp;optional</tt> request</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all outgoing http parameters (except for <code>Set-Cookie</code>, <code>Content-Length</code>,
+and <code>Content-Type</code>). The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the headers's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is its value. This alist should not be manipulated directly, use <code>SETF</code> of <a href="#header-out"><code>HEADER-OUT</code></a> instead.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="cookie-out"><b>cookie-out</b> <i>name <tt>&amp;optional</tt> reply</i> =&gt; <i>cookie</i></a>
+
+<blockquote><br>
+Returns the outgoing cookie named by the string <code><i>name</i></code> (or <code>NIL</code> if there ain't no cookie with this name). See also <a href="#cookies-out"><code>COOKIES-OUT</code></a> and <a href='#cookies'>the section about cookies</a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="cookies-out"><b>cookies-out</b> <i><tt>&amp;optional</tt> reply</i> =&gt; <i>alist</i></a>
+
+<blockquote><br>
+Returns an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of all outgoing cookies. The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#car">car</a> of each element of this list is the cookie's name while the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#cdr">cdr</a> is the cookie itself. See also <a href="#cookie-out"><code>COOKIE-OUT</code></a> and <a href='#cookies'>the section about cookies</a>.
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="return-code"><b>return-code</b> <i><tt>&amp;optional</tt> reply</i> =&gt; <i>string</i>
+<br><tt>(setf (</tt><b>return-code</b> <i><tt>&amp;optional</tt> reply</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+
+<code>RETURN-CODE</code> returns the http return code of the
+reply, <code>SETF</code> of <code>RETURN-CODE</code> changes it. The
+return code of each <code>REPLY</code> object is initially set to <a
+href="#+http-ok+"><code>+HTTP-OK+</code></a>.
+
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="content-type"><b>content-type</b> <i><tt>&amp;optional</tt> reply</i> =&gt; <i>string</i>
+<br><tt>(setf (</tt><b>content-type</b> <i><tt>&amp;optional</tt> reply</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+
+<code>CONTENT-TYPE</code> returns the
+outgoing <code>Content-Type</code> http header. <code>SETF</code>
+of <code>CONTENT-TYPE</code> changes the current value of this header. The content type of each <code>REPLY</code> object is initially set to the value of <a href="#*default-content-type*"><code>*DEFAULT-CONTENT-TYPE*</code></a>.
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="content-length"><b>content-length</b> <i><tt>&amp;optional</tt> reply</i> =&gt; <i>length</i>
+<br><tt>(setf (</tt><b>content-length</b> <i><tt>&amp;optional</tt> reply</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+
+<code>CONTENT-LENGTH</code> returns the outgoing
+<code>Content-Length</code> http header. <code>SETF</code> of
+<code>CONTENT-LENGTH</code> changes the current value of this
+header. The content length of each <code>REPLY</code> object is
+initially set to <code>NIL</code>.  If you leave it like that TBNL
+will automatically try to compute the correct value using <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_length.htm"><code>LENGTH</code></a>.
+If you set the value yourself you <em>must</em> make sure that it's
+the correct length of the body in <em>octets</em> (not in characters).
+<p>
+Note that setting this value explicitely doesn't mix well with <a
+href="#*rewrite-for-session-urls*">URL rewriting</a>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="send-headers"><b>send-headers</b> =&gt; <i>stream</i></a>
+
+<blockquote><br>
+Sends the initial status line and all headers as determined by
+the <code>REPLY</code> object <a href="#*reply*"><code>*REPLY*</code></a>.  Returns a stream to which the body of
+the reply can be written.  Once this function has been called
+further changes to <a href="#*reply*"><code>*REPLY*</code></a> don't have any effect.  Also,
+<a href="#log">automatic handling of errors</a> (i.e. sending the
+corresponding status code to the browser, etc.) is turned off for this
+request.  Likewise, functions
+like <a href="#redirect"><code>REDIRECT</code></a> or throwing
+to <a href="#tbnl-handler-done"><code>TBNL-HANDLER-DONE</code></a>
+won't have the desired effect once the headers are sent.
+<p>
+If your handlers return the full body as a string or as an array of
+octets you should <em>not</em> call this function.  If a handler
+calls <a href="#send-headers"><code>SEND-HEADERS</code></a>, its return
+value is ignored.
+</blockquote>
+
+<p><br>[Constants]
+<br><a class=none name='+http-continue+'><b>+http-continue+</b></a>
+<br><a class=none name='+http-switching-protocols+'><b>+http-switching-protocols+</b></a>
+<br><a class=none name='+http-ok+'><b>+http-ok+</b></a>
+<br><a class=none name='+http-created+'><b>+http-created+</b></a>
+<br><a class=none name='+http-accepted+'><b>+http-accepted+</b></a>
+<br><a class=none name='+http-non-authoritative-information+'><b>+http-non-authoritative-information+</b></a>
+<br><a class=none name='+http-no-content+'><b>+http-no-content+</b></a>
+<br><a class=none name='+http-reset-content+'><b>+http-reset-content+</b></a>
+<br><a class=none name='+http-partial-content+'><b>+http-partial-content+</b></a>
+<br><a class=none name='+http-multiple-choices+'><b>+http-multiple-choices+</b></a>
+<br><a class=none name='+http-moved-permanently+'><b>+http-moved-permanently+</b></a>
+<br><a class=none name='+http-moved-temporarily+'><b>+http-moved-temporarily+</b></a>
+<br><a class=none name='+http-see-other+'><b>+http-see-other+</b></a>
+<br><a class=none name='+http-not-modified+'><b>+http-not-modified+</b></a>
+<br><a class=none name='+http-use-proxy+'><b>+http-use-proxy+</b></a>
+<br><a class=none name='+http-temporary-redirect+'><b>+http-temporary-redirect+</b></a>
+<br><a class=none name='+http-bad-request+'><b>+http-bad-request+</b></a>
+<br><a class=none name='+http-authorization-required+'><b>+http-authorization-required+</b></a>
+<br><a class=none name='+http-payment-required+'><b>+http-payment-required+</b></a>
+<br><a class=none name='+http-forbidden+'><b>+http-forbidden+</b></a>
+<br><a class=none name='+http-not-found+'><b>+http-not-found+</b></a>
+<br><a class=none name='+http-method-not-allowed+'><b>+http-method-not-allowed+</b></a>
+<br><a class=none name='+http-not-acceptable+'><b>+http-not-acceptable+</b></a>
+<br><a class=none name='+http-proxy-authentication-required+'><b>+http-proxy-authentication-required+</b></a>
+<br><a class=none name='+http-request-time-out+'><b>+http-request-time-out+</b></a>
+<br><a class=none name='+http-conflict+'><b>+http-conflict+</b></a>
+<br><a class=none name='+http-gone+'><b>+http-gone+</b></a>
+<br><a class=none name='+http-length-required+'><b>+http-length-required+</b></a>
+<br><a class=none name='+http-precondition-failed+'><b>+http-precondition-failed+</b></a>
+<br><a class=none name='+http-request-entity-too-large+'><b>+http-request-entity-too-large+</b></a>
+<br><a class=none name='+http-request-uri-too-large+'><b>+http-request-uri-too-large+</b></a>
+<br><a class=none name='+http-unsupported-media-type+'><b>+http-unsupported-media-type+</b></a>
+<br><a class=none name='+http-requested-range-not-satisfiable+'><b>+http-requested-range-not-satisfiable+</b></a>
+<br><a class=none name='+http-expectation-failed+'><b>+http-expectation-failed+</b></a>
+<br><a class=none name='+http-internal-server-error+'><b>+http-internal-server-error+</b></a>
+<br><a class=none name='+http-not-implemented+'><b>+http-not-implemented+</b></a>
+<br><a class=none name='+http-bad-gateway+'><b>+http-bad-gateway+</b></a>
+<br><a class=none name='+http-service-unavailable+'><b>+http-service-unavailable+</b></a>
+<br><a class=none name='+http-gateway-time-out+'><b>+http-gateway-time-out+</b></a>
+<br><a class=none name='+http-version-not-supported+'><b>+http-version-not-supported+</b></a>
+
+<blockquote><br>
+The values of these constants are 100, 101, 200, 201, 202, 203, 204, 205, 206, 300, 301, 302, 303, 304, 305, 307, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 500, 501, 502, 503, 504, and 505. See <a href="#return-code"><code>RETURN-CODE</code></a>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name='*default-content-type*'><b>*default-content-type*</b></a>
+
+<blockquote><br>
+The value of this variable is used to initialize the content type of each <code>REPLY</code> object. Its initial value is <code>"text/html; charset=iso-8859-1"</code>. See <a href="#content-type"><code>CONTENT-TYPE</code></a>.
+</blockquote>
+
+<h4><a class=none name="cookies">Cookies</a></h4>
+
+Outgoing cookies are stored in the request's <code>REPLY</code> object (see <a href="#cookie-out"><code>COOKIE-OUT</code></a> and <a href="#cookies-out"><code>COOKIES-OUT</code></a>). They are CLOS objects defined like this:
+
+<pre>
+(defclass cookie ()
+  ((name :initarg :name
+         :reader <a class=noborder name='cookie-name'>cookie-name</a>
+         :type string
+         :documentation &quot;The name of the cookie - a string.&quot;)
+   (value :initarg :value
+          :accessor <a class=noborder name='cookie-value'>cookie-value</a>
+          :initform &quot;&quot;
+          :documentation &quot;The value of the cookie. Will be URL-encoded when sent to the browser.&quot;)
+   (expires :initarg :expires
+            :initform nil
+            :accessor <a class=noborder name='cookie-expires'>cookie-expires</a>
+            :documentation &quot;The time (a universal time) when the cookie expires (or NIL).&quot;)
+   (path :initarg :path
+         :initform nil
+         :accessor <a class=noborder name='cookie-path'>cookie-path</a>
+         :documentation &quot;The path this cookie is valid for (or NIL).&quot;)
+   (domain :initarg :domain
+           :initform nil
+           :accessor <a class=noborder name='cookie-domain'>cookie-domain</a>
+           :documentation &quot;The domain this cookie is valid for (or NIL).&quot;)
+   (secure :initarg :secure
+           :initform nil
+           :accessor <a class=noborder name='cookie-secure'>cookie-secure</a>
+           :documentation &quot;A generalized boolean denoting whether this cookie is a secure cookie.&quot;)))
+</pre>
+
+The <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_r.htm#reader">reader</a> <a href="#cookie-name"><code>COOKIE-NAME</code></a> and
+the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#accessor">accessors</a>
+<a href="#cookie-value"><code>COOKIE-VALUE</code></a>, <a
+href="#cookie-expires"><code>COOKIE-EXPIRES</code></a>, <a
+href="#cookie-path"><code>COOKIE-PATH</code></a>, <a
+href="#cookie-domain"><code>COOKIE-DOMAIN</code></a>, and <a
+href="#cookie-secure"><code>COOKIE-SECURE</code></a> are all exported
+from the TBNL package.
+
+<p><br>[Function]
+<br><a class=none name="set-cookie"><b>set-cookie</b> <i>name <tt>&amp;key</tt> value expires path domain secure reply</i> =&gt; <i>cookie</i></a>
+
+<blockquote><br> Creates a <code>COOKIE</code> object from the
+parameters provided to this function and adds it to the outgoing
+cookies of the <a href='#replies'><code>REPLY</code>
+object</a> <code><i>reply</i></code>. If a cookie with the same name
+(case-sensitive) already exists, it is replaced. The default
+for <code><i>reply</i></code> is <a
+href="#*reply*"><code>*REPLY*</code></a>. The default for <code><i>value</i></code> is the empty string.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="set-cookie*"><b>set-cookie*</b> <i>cookie <tt>&amp;optional</tt> reply</i> =&gt; <i>cookie</i></a>
+
+<blockquote><br> Adds the <code>COOKIE</code>
+object <code><i>cookie</i></code> to the outgoing cookies of the <a
+href='#replies'><code>REPLY</code>
+object</a> <code><i>reply</i></code>. If a cookie with the same name
+(case-sensitive) already exists, it is replaced. The default for <code><i>reply</i></code> is <a href="#*reply*"><code>*REPLY*</code></a>.
+</blockquote>
+
+<h4><a class=none name="sessions">Sessions</a></h4>
+
+TNBL supports <em>sessions</em>: Once a TBNL page has called <a
+href="#start-session"><code>START-SESSION</code></a> TBNL uses either
+cookies or (if the client doesn't send the cookies back) rewrites URLs
+to keep track of this client, i.e. to provide a kind of 'state' for
+the stateless http protocol. The session associated with the client is
+an opaque CLOS object which can be used to store arbitrary data
+between requests.
+<p>
+TBNL makes some reasonable effort to prevent eavesdroppers from
+hijacking sessions (see below) but this should not be considered
+really secure. Don't store sensitive data into sessions and rely
+solely on the session mechanism as a safeguard against malicious users
+who want to get at this data!
+<p>
+For each request there's one <code>SESSION</code> object which is accessible 
+to the handler via the
+special variable <a href='#*session*'><code>*SESSION*</code></a>. This object holds
+all the information available about the session and can be accessed
+with the functions described in this chapter. Note that the internal
+structure of <code>SESSION</code> objects should be considered opaque and may chance
+in future releases of TBNL.
+<p>
+Sessions are automatically verified for validity and age when
+the <a href='#requests'><code>REQUEST</code> object</a> is instantiated, i.e. if <a
+href='#*session*'><code>*SESSION*</code></a> is not <code>NIL</code> then this
+session is valid (as far as TBNL is concerned) and not too old.
+
+<p><br>[Special variable]
+<br><a class=none name="*session*"><b>*session*</b></a>
+
+<blockquote><br>
+
+Holds the current <code>SESSION</code> object (if any) or <code>NIL</code>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="start-session"><b>start-session</b> =&gt; <i>session</i></a>
+
+<blockquote><br> Returns <a
+href="#*session*"><code>*SESSION*</code></a> if it
+isn't <code>NIL</code>, otherwise creates a new <code>SESSION</code>
+object and returns it.
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="session-value"><b>session-value</b> <i>symbol <tt>&amp;optional</tt> session</i> =&gt; <i>value, present-p</i>
+<br><tt>(setf (</tt><b>session-value</b> <i>symbol <tt>&amp;optional</tt> session</i>) <i>new-value</i><tt>)</tt></a>
+
+<blockquote><br>
+This accessor can be used to associate arbitrary data with the the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#symbol">symbol</a> <code><i>symbol</i></code> in the <code>SESSION</code>
+object <code><i>session</i></code>.
+<code><i>present-p</i></code> is <em>true</em> if such data was found,
+otherwise <code>NIL</code>. The default value
+for <code><i>session</i></code> is <a
+href="#*session*"><code>*SESSION*</code></a>.
+<p>
+If <code>SETF</code> of <code>SESSION-VALUE</code> is called with <code><i>session</i></code> being <code>NIL</code> then a session is automatically instantiated with <a href="#start-session"><code>START-SESSION</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="delete-session-value"><b>delete-session-value</b> <i>symbol <tt>&amp;optional</tt> session</i> =&gt; |</a>
+
+<blockquote><br>
+Completely removes any data associated with the <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#symbol">symbol</a> <code><i>symbol</i></code> from the <code>SESSION</code>
+object <code><i>session</i></code>. Note that this is different from 
+using <a href="#session-value"><code>SESSION-VALUE</code></a> to set the data to <code>NIL</code>.
+The default value
+for <code><i>session</i></code> is <a
+href="#*session*"><code>*SESSION*</code></a>.
+</blockquote>
+
+
+<p><br>[Function]
+<br><a class=none name="reset-sessions"><b>reset-sessions</b> =&gt; |</a>
+
+<blockquote><br>
+This function unconditionally invalidates and destroys <em>all</em> sessions immediately.
+</blockquote>
+
+
+<p><br>[Function]
+<br><a class=none name="session-string"><b>session-string</b> <i>session</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+Returns a unique string that's associated with the <code>SESSION</code> object <code><i>session</i></code>. This string is sent to the browser as a
+cookie value or as a GET parameter,
+</blockquote>
+
+
+<p><br>[Function]
+<br><a class=none name="session-counter"><b>session-counter</b> <i>session</i> =&gt; <i>count</i></a>
+
+<blockquote><br>
+Returns the number of times (requests) the <code>SESSION</code> object <code><i>session</i></code> has been used.
+</blockquote>
+
+
+
+<p><br>[Accessor]
+<br><a class=none name="session-max-time"><b>session-max-time</b> <i>session</i> =&gt; <i>seconds</i>
+<br><tt>(setf (</tt><b>session-max-time</b> <i>session</i>) <i>seconds</i><tt>)</tt></a>
+
+<blockquote><br> This gets or sets the maximum time (in seconds)
+the <code>SESSION</code> object <code><i>session</i></code> should be
+valid before it's invalidated: If a request associated with this
+session comes in and the last request for the same session was more
+than <code><i>seconds</i></code> seconds ago
+than the session is deleted and a new one is started for this client.  The default value is determined by <a href="#*session-max-time*"><code>*SESSION-MAX-TIME*</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="session-remote-addr"><b>session-remote-addr</b> <i>session</i> =&gt; <i>address</i></a>
+
+<blockquote><br> Returns the 'real' remote address (see <a
+href="#real-remote-addr"><code>REAL-REMOTE-ADDR</code></a>) of the
+client for which the <code>SESSION</code>
+object <code><i>session</i></code> was initiated.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="session-user-agent"><b>session-user-agent</b> <i>session</i> =&gt; <i>address</i></a>
+
+<blockquote><br> Returns the 'User-Agent' http header (see <a
+href="#user-agent"><code>USER-AGENT</code></a>) of the
+client for which the <code>SESSION</code>
+object <code><i>session</i></code> was initiated.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*use-remote-addr-for-sessions*"><b>*use-remote-addr-for-sessions*</b></a>
+
+<blockquote><br>
+
+If this value is <em>true</em> (the default is <code>NIL</code>) then
+the 'real' remote address (see <a
+href="#real-remote-addr"><code>REAL-REMOTE-ADDR</code></a>) of the
+client will be encoded into the session identifier, i.e. if this value
+changes on the client side the session will automatically be
+invalidated.
+<p>
+Note that this is not secure because it's obviously not very hard to
+fake an <code>X_FORWARDED_FOR</code> header. On the other hand,
+relying on the remote address (see <a
+href="#remote-addr"><code>REMOTE-ADDR</code></a>) of the client isn't
+an ideal solution either because some of your users may connect
+through http proxies and the proxy they use may change during the
+session. But then again, some proxies don't
+send <code>X_FORWARDED_FOR</code> headers anyway. Sigh...
+
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*use-user-agent-for-sessions*"><b>*use-user-agent-for-sessions*</b></a>
+
+<blockquote><br> If this value is <em>true</em> (which is the default)
+then the 'User-Agent' http header (see <a
+href="#user-agent"><code>USER-AGENT</code></a>) of the client will be
+encoded into the session identifier, i.e. if this value changes on the
+client side the session will automatically be invalidated.
+<p>
+While this is intended to make the life of malicious users harder it
+might affect legitimate users as well: I've seen the this http
+header change with certain browsers when the Java plug-in was used.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*rewrite-for-session-urls*"><b>*rewrite-for-session-urls*</b></a>
+
+<blockquote><br> If this value is <em>true</em> (which is the default)
+then content bodies sent by TBNL will be rewritten
+(using <a href='http://weitz.de/url-rewrite/'>URL-REWRITE</a>) such
+that GET parameters for session handling are appended to all relevant
+URLs. This only happens, though, if the body's content type (see <a
+href="#content-type"><code>CONTENT-TYPE</code></a>) starts
+with one of the strings in <a href="#*content-types-for-url-rewrite*"><code>*CONTENT-TYPES-FOR-URL-REWRITE*</code></a> and unless the client has already sent a cookie named <a href="#*session-cookie-name*"><code>*SESSION-COOKIE-NAME*</code></a>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*content-types-for-url-rewrite*"><b>*content-types-for-url-rewrite*</b></a>
+
+<blockquote><br>
+This is a list of strings (the initial value is
+<code>("text/html"&nbsp;"application/xhtml+xml")</code>) the
+content-type of an outgoing body is compared with if <a
+href="#*rewrite-for-session-urls*"><code>*REWRITE-FOR-SESSION-URLS*</code></a>
+is true. If the content-type starts with one of these strings then
+url-rewriting will happen, otherwise it won't.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*session-cookie-name*"><b>*session-cookie-name*</b></a>
+
+<blockquote><br>
+
+This is the name that is used for the session-related cookie or GET
+parameter sent to the client. Its default value
+is <code>"tbnl-session"</code>. Note that changing this name while
+TBNL is running will invalidate existing sessions.
+
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*session-removal-hook*"><b>*session-removal-hook*</b></a>
+
+<blockquote><br>
+The value of this variable should be a function of one argument, a <code>SESSION</code> object. This function is called directly before the session is destroyed, either by <a href="#reset-sessions"><code>RESET-SESSIONS</code></a> or when it's invalidated because it's too old.
+
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*session-max-time*"><b>*session-max-time*</b></a>
+
+<blockquote><br>
+The default time (in seconds) after which a session times out - see <a href="#session-max-time"><code>SESSION-MAX-TIME</code></a>.  This value is initially set to&nbsp;1800.
+</blockquote>
+
+<p><br>[Macro]
+<br><a class=none name="do-sessions"><b>do-sessions</b> <i>(var</i> <tt>&amp;optional</tt> <i>result-form) statement*</i> =&gt; <i>result</i></a>
+
+<blockquote><br>
+
+Executes the statements with <code><i>var</i></code> bound to each
+existing <code>SESSION</code> object consecutively. An implicit block
+named <code>NIL</code> surrounds the body of this macro. Returns the
+values returned by <code><i>result-form</i></code> unless
+<code>RETURN</code> is executed. The scope of the binding of
+<code><i>var</i></code> does <em>not</em> include
+<code><i>result-form</i></code>.
+
+</blockquote>
+
+<h4><a class=none name="log">Logging and error handling</a></h4>
+
+TBNL provides facilities for writing to Apache's error log
+file (when using the mod_lisp front-end) or for logging to an arbitrary file in the file system. Note that due to the nature of mod_lisp Apache log mesages don't appear immediately but only after all data has been sent from TBNL to Apache/mod_lisp.
+<p>
+Furthermore, all errors happening within a <a href='#handlers'>handler</a> which are not
+caught by the handler itself are handled by TBNL - see details below.
+
+<p><br>[Special variable]
+<br><a class=none name="*use-apache-log*"><b>*use-apache-log*</b></a>
+
+<blockquote><br>
+If this variable is <em>true</em> log messages are forwarded to Apache/mod_lisp. If it is <code>NIL</code> log messages are written to the <a href="#log-file">log file</a>. The default value of this variable is <code>NIL</code> if and only if <code>:ARANEIDA</code> is an element of <a href="http://www.lispworks.com/documentation/HyperSpec/Body/v_featur.htm"><code>*FEATURES*</code></a> when building TBNL.
+</blockquote>
+
+<p><br>[Accessor]
+<br><a class=none name="log-file"><b>log-file</b> =&gt; <i>pathname</i>
+<br><tt>(setf (</tt><b>log-file</b>) <i>pathspec</i><tt>)</tt></a>
+
+<blockquote><br>
+The function <code>LOG-FILE</code> returns a pathname designating the log file which is currently used (unless log messages are forwarded to Apache).  This destination for log messages can be changed with <code>(SETF&nbsp;LOG-FILE)</code>.  The initial location of the log file is implementation-dependent.
+</blockquote>
+
+<p><br>[Generic function]
+<br><a class=none name="log-message"><b>log-message</b> <i>log-level format</i> <tt>&amp;rest</tt> <i>args</i> =&gt; |</a>
+
+<blockquote><br> Schedules a message for the Apache log
+file or writes it directly to <a href="#log-file">the current log file</a> depending on the value of <a href="#*use-apache-log*"><code>*USE-APACHE-LOG*</code></a>. <code><i>log-level</i></code> should be one of the
+keywords <code>:EMERG</code>, <code>:ALERT</code>, <code>:CRIT</code>, <code>:ERROR</code>, <code>:WARNING</code>, <code>:NOTICE</code>, <code>:INFO</code>,
+or <code>:DEBUG</code> which correspond to the various Apache log
+levels. <code><i>log-level</i></code> can also be <code>NIL</code> in which case mod_lisp's default log level is used.
+If Apache isn't used the log level is just written to the log file unless it's <code>NIL</code>.
+<code><i>format</i></code> and <code><i>args</i></code> are used as with 
+<a href='http://www.lispworks.com/documentation/HyperSpec/Body/f_format.htm'><code>FORMAT</code></a>.
+<p>
+<code>LOG-MESSAGE</code> is a generic function so you can specialize it or bypass it completely with an around method.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="log-message*"><b>log-message*</b> <i>format</i> <tt>&amp;rest</tt> <i>args</i> =&gt; |</a>
+
+<blockquote><br>
+Like <a href="#log-message"><code>LOG-MESSAGE</code></a> but with <code><i>log-level</i></code> set to <a href="#*default-log-level*"><code>*DEFAULT-LOG-LEVEL*</code></a>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*default-log-level*"><b>*default-log-level*</b></a>
+
+<blockquote><br>
+The log level used by <a href="#log-message*"><code>LOG-MESSAGE*</code></a>. The initial value is <code>NIL</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*log-lisp-errors-p*"><b>*log-lisp-errors-p*</b></a>
+
+<blockquote><br>
+Whether unhandled errors in <a href='#handlers'>handlers</a> should be logged. See also <a href="#*lisp-errors-log-level*"><code>*LISP-ERRORS-LOG-LEVEL*</code></a>. The default value is <code>T</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*lisp-errors-log-level*"><b>*lisp-errors-log-level*</b></a>
+
+<blockquote><br>
+The log level used to log Lisp errors. See also <a href="#*log-lisp-errors-p*"><code>*LOG-LISP-ERRORS-P*</code></a>. The default value is <code>:ERROR</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*log-lisp-warnings-p*"><b>*log-lisp-warnings-p*</b></a>
+
+<blockquote><br>
+Whether unhandled warnings in <a href='#handlers'>handlers</a> should be logged. See also <a href="#*lisp-warnings-log-level*"><code>*LISP-WARNINGS-LOG-LEVEL*</code></a>. The default value is <code>T</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*lisp-warnings-log-level*"><b>*lisp-warnings-log-level*</b></a>
+
+<blockquote><br>
+The log level used to log Lisp warnings. See also <a href="#*log-lisp-warnings-p*"><code>*LOG-LISP-WARNINGS-P*</code></a>. The default value is <code>:WARNING</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*log-lisp-backtraces-p*"><b>*log-lisp-backtraces-p*</b></a>
+
+<blockquote><br>
+Whether backtraces should also be logged in addition to error messages and warnings. This value will only have effect if <a href="#*log-lisp-errors-p*"><code>*LOG-LISP-ERRORS-P*</code></a> or <a href="#*log-lisp-warnings-p*"><code>*LOG-LISP-WARNINGS-P*</code></a> is <em>true</em>. Note that logging of backtraces is currently only supported for CMUCL, SBCL, AllegroCL, and LispWorks. The default value is <code>NIL</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*log-prefix*"><b>*log-prefix*</b></a>
+
+<blockquote><br>
+All messages written to the Apache error log by TBNL are prepended by a string which is the value of this variable enclosed in square brackets. If the value is <code>NIL</code>, however, no such prefix will be written. If the value is <code>T</code> (which is the default) the prefix will be <code>"[TBNL]"</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*show-lisp-errors-p*"><b>*show-lisp-errors-p*</b></a>
+
+<blockquote><br>
+Whether unhandled Lisp errors should be shown to the user. If this value is <code>NIL</code> (which is the default) only the message <em>An error has occurred</em> will be shown.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*show-lisp-backtraces-p*"><b>*show-lisp-backtraces-p*</b></a>
+
+<blockquote><br>
+Whether backtraces should also be shown to the user. This value will only have effect if <a href="#*show-lisp-errors-p*"><code>*SHOW-LISP-ERRORS-P*</code></a> is <em>true</em>. Note that the display of backtraces is currently only supported for CMUCL, SBCL, AllegroCL, and LispWorks. The default value is <code>NIL</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*show-access-log-messages*"><b>*show-access-log-messages*</b></a>
+
+<blockquote><br>
+If this variable is <em>true</em> <em>and</em> if <a href="#*use-apache-log*"><code>*USE-APACHE-LOG*</code></a> is <code>NIL</code> then for each request a line somewhat similar to what can be found in Apache's access log will be written to the <a href="#log-file">log file</a>.  The default value of this variable is <code>T</code>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none
+name="*http-error-handler*"><b>*http-error-handler*</b></a>
+
+<blockquote><br>
+This variable holds <code>NIL</code> (the default) or a <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#function_designator">function designator</a> for a function of one argument.  The function gets called if the responsible <a href="#handlers">handler</a> has set a return code other than <a href="#+http-ok+"><code>+HTTP-OK+</code></a> or <a href="#+http-not-modified+"><code>+HTTP-NOT-MODIFIED+</code></a> and receives this return code as its argument.  It can return the contents of an
+error page or <code>NIL</code> if it refuses to handle the error, i.e. if TBNL's default error page should be shown.
+(Note that the function can access the request and reply data.)
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="get-backtrace"><b>get-backtrace</b> <i>condition</i> =&gt; <i>backtrace</i></a>
+
+<blockquote><br>
+This is the function that is used internally by TBNL to
+show or log backtraces.  It accepts a condition object <code><i>condition</i></code> and
+returns a string with the corresponding backtrace.
+</blockquote>
+
+<h4><a class=none name="misc">Miscellaneous</a></h4>
+
+Various functions and variables which didn't fit into one of the other categories.
+
+<p><br>[Function]
+<br><a class=none name="start-tbnl"><b>start-tbnl</b> =&gt; <i>listener</i></a>
+
+<blockquote><br> This will start TBNL by creating a 'listener' which listens
+on <a href="#*tbnl-port*"><code>*TBNL-PORT*</code></a>. This
+listener is bound to <a href="#*listener*"><code>*LISTENER*</code></a>
+and returned. If <a href="#*listener*"><code>*LISTENER*</code></a> is
+already bound to a <em>true</em> value this value is simply returned
+and a warning is issued.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="stop-tbnl"><b>stop-tbnl</b> =&gt; |</a>
+
+<blockquote><br>
+Stops the listener the variable <a href="#*listener*"><code>*LISTENER*</code></a> is bound to. If this variable isn't bound to a <em>true</em> value a warning is issued.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*listener*"><b>*listener*</b></a>
+
+<blockquote><br> This variable is bound to the 'listener' (see <a href="#start-tbnl"><code>START-TBNL</code></a>) which is
+currently used by TBNL (if TBNL active).
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*tbnl-port*"><b>*tbnl-port*</b></a>
+
+<blockquote><br> The port TBNL listens on. You have to <a href='#LispServer'>configure
+your front-end</a> appropriately. The default value is <code>3000</code>.
+</blockquote>
+
+<p><br>[Symbol]
+<br><a class=none name="tbnl-handler-done"><b>tbnl-handler-done</b></a>
+
+<blockquote><br> This is a <a
+href='http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#catch_tag'><em>catch
+tag</em></a> which names a <a
+href='http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#catch'><em>catch</em></a>
+which is active during the lifetime of a <a
+href='#handlers'>handler</a>. The handler can at any time <a
+href='http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_t.htm#throw'><em>throw</em></a>
+the outgoing content body (or <code>NIL</code>) to this catch to immediately abort handling the request. See the source code of <a href="#redirect"><code>REDIRECT</code></a> for an example.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="no-cache"><b>no-cache</b> =&gt; |</a>
+
+<blockquote><br> 
+This function will set appropriate outgoing headers to completely prevent caching on virtually all browsers.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="handle-if-modified-since"><b>handle-if-modified-since</b> <i>time</i> =&gt; |</a>
+
+<blockquote><br>
+
+This function is designed to be used inside a <a
+href='#handlers'>handler</a>. If the client has sent an
+'If-Modified-Since' header (see <a
+href='http://www.faqs.org/rfcs/rfc2616.html'>RFC&nbsp;2616</a>,
+section 14.25) and the time specified matches the universal time
+<code><i>time</i></code> then the header <a
+href="#+http-not-modified+"><code>+HTTP-NOT-MODIFIED+</code></a> with
+no content is immediately returned to the client.
+<p>
+Note that for this function to be useful you should usually send
+'Last-Modified' headers back to the client. See the code of <a
+href="#create-static-file-dispatcher-and-handler"><code>CREATE-STATIC-FILE-DISPATCHER-AND-HANDLER</code></a>
+for an example.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="rfc-1123-date"><b>rfc-1123-date</b> <tt>&amp;optional</tt> <i>time</i> =&gt; <i>string</i></a>
+
+<blockquote><br>
+
+This function accepts a universal time <code><i>time</i></code>
+(default is the current time) and returns a string which encodes this time according to <a
+href='http://www.faqs.org/rfcs/rfc1123.html'>RFC&nbsp;1123</a>. This can be used to send a 'Last-Modified' header - see <a
+href="#handle-if-modified-since"><code>HANDLE-IF-MODIFIED-SINCE</code></a>.
+
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="redirect"><b>redirect</b> <i>script-name</i> <tt>&amp;key</tt> <i>host protocol add-session-id permanently</i> =&gt; |</a>
+
+<blockquote><br> Sends back appropriate headers to redirect the client
+to the resource <code><i>script-name</i></code> on the
+host <code><i>host</i></code>. If <code><i>permanently</i></code>
+is <em>true</em> (the default is <code>NIL</code>) a 301&nbsp;status
+code will be sent, otherwise a 302&nbsp;status code. If <code><i>host</i></code>
+is not provided the current host (see <a
+href="#host"><code>HOST</code></a>) will be
+used. If <code><i>protocol</i></code> is the
+keyword <code>:HTTPS</code> the client will be redirected to a https
+URL, if it's <code>:HTTP</code> it'll be sent to a http URL.  If
+both <code><i>host</i></code> and <code><i>protocol</i></code> aren't
+provided then the value of <code><i>protocol</i></code> will
+match the current request.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="require-authorization"><b>require-authorization</b> <tt>&amp;optional</tt> <i>realm</i> =&gt; |</a>
+
+<blockquote><br> 
+Sends back appropriate headers to require basic http authentication (see <a href='http://www.faqs.org/rfcs/rfc2617.html'>RFC&nbsp;2617</a>) for the realm <code><i>realm</i></code>. The default value vor <code><i>realm</i></code> is <code>"TBNL"</code>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="escape-for-html"><b>escape-for-html</b> <i>string</i> =&gt; <i>escaped-string</i></a>
+
+<blockquote><br> 
+Escapes all occurrences of the characters <code>#\&lt;</code>, <code>#\&gt;</code>, <code>#\'</code>, <code>#&quot;</code>, and <code>#\&amp;</code> within <code><i>string</i></code> for HTML output.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="url-encode"><b>url-encode</b> <i>string</i> <tt>&amp;optional</tt> <i>external-format</i> =&gt; <i>url-encoded-string</i></a>
+
+<blockquote><br>
+URL-encodes a string using the external format <code><i>external-format</i></code>.  The default for <code><i>external-format</i></code> is the value of <a href="#*tbnl-default-external-format*"><code>*TBNL-DEFAULT-EXTERNAL-FORMAT*</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="url-decode"><b>url-decode</b> <i>string</i> <tt>&amp;optional</tt> <i>external-format</i> =&gt; <i>url-encoded-string</i></a>
+
+<blockquote><br>
+URL-decodes a string using the external format <code><i>external-format</i></code>, i.e. this is the inverse of <a href="#url-encode"><code>URL-ENCODE</code></a>.
+It is assumed that you'll rarely need this function, if ever.  But just in case here it is.
+The default for <code><i>external-format</i></code> is the value of <a href="#*tbnl-default-external-format*"><code>*TBNL-DEFAULT-EXTERNAL-FORMAT*</code></a>.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="read-from-string*"><b>read-from-string*</b> <i>string</i> =&gt; <i>object, position</i></a>
+
+<blockquote><br>
+This is like <a href='http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_fro.htm'><code>READ-FROM-STRING</code></a> but <a href='http://www.lispworks.com/documentation/HyperSpec/Body/v_rd_eva.htm'><code>*READ-EVAL*</code></a> is bound to <code>NIL</code> and <a href='http://www.lispworks.com/documentation/HyperSpec/Body/v_pkg.htm'><code>*PACKAGE*</code></a> is bound to the package named <code>TBNL-DUMMY</code> which exists solely for this purpose.
+</blockquote>
+
+<p><br>[Function]
+<br><a class=none name="http-token-p"><b>http-token-p</b> <i>object</i> =&gt; <i>generalized-boolean</i></a>
+
+<blockquote><br> This function tests
+whether <code><i>object</i></code> is a non-empty string which is
+a <em>token</em> according to <a href='http://www.faqs.org/rfcs/rfc2068.html'>RFC 2068</a> (i.e. whether it may be used
+for, say, cookie names).
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*tmp-directory*"><b>*tmp-directory*</b></a>
+
+<blockquote><br>
+This should be a pathname denoting a directory where temporary files can be stored. It is used for <a href="#upload">file uploads</a>.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none
+name="*tbnl-default-external-format*"><b>*tbnl-default-external-format*</b></a>
+
+<blockquote><br>
+The external format used when computing the <a href="#requests"><code>REQUEST</code></a> object.  The default value is <a href="#+latin-1+"><code>+LATIN-1+</code></a>.
+</blockquote>
+
+<p><br>[Constants]
+<br><a class=none name="+latin-1+"><b>+latin-1+</b></a>
+<br><a class=none name="+utf-8+"><b>+utf-8+</b></a>
+
+<blockquote><br>
+Constants representing the corresponding external formats in some supported implementations.  (As of version 0.8.0 these are LispWorks, AllegroCL, and SBCL with Unicode support.)
+</blockquote>
+
+<h4><a class=none name="debug">Debugging TBNL applications</a></h4>
+
+The best option to debug a TBNL application is probably <a href="#*catch-errors-p*">to use the debugger</a>.
+<p>
+If you want to debug your TBNL/mod_lisp applications it is also
+recommended that you start Apache (i.e. the <code>httpd</code> binary)
+with the
+<code>-X</code> command-line option. Then set <a
+href="#*debug-mode*"><code>*DEBUG-MODE*</code></a> to a <em>true</em>
+value and poke around in the listener.
+<p>
+Another thing you should try is to use <a href="#log">an external log
+file</a> (as opposed to Apache's log) because it can reveal error
+messages that might get lost if something's broken in the
+communication between TBNL and mod_lisp.
+<p>
+Good luck... :)
+
+<p><br>[Special variable]
+<br><a class=none name="*catch-errors-p*"><b>*catch-errors-p*</b></a>
+
+<blockquote><br> If the value of this variable is <code>NIL</code>
+(the default is <code>T</code>), then errors
+which happen while a request is handled aren't <a href="#log">caught
+as usual</a>, but instead your
+Lisp's <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_d.htm#debugger">debugger</a>
+is <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_invoke.htm">invoked</a>.
+This variable should obviously always be set to a <em>true</em> value in a
+production environment.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*debug-mode*"><b>*debug-mode*</b></a>
+
+<blockquote><br>
+If the value of this variable is set to a <em>true</em> value (the default is <code>NIL</code>), then on each request the global values of the special variables <a href="#*request*"><code>*REQUEST*</code></a>, <a href="#*reply*"><code>*REPLY*</code></a>, <a href="#*body*"><code>*BODY*</code></a>, <a href="#*command*"><code>*COMMAND*</code></a>, <a href="#*backtrace*"><code>*BACKTRACE*</code></a>, and <a href="#*error*"><code>*ERROR*</code></a> will be set accordingly, i.e. you'll have access to them after the request has been handled.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*backtrace*"><b>*backtrace*</b></a>
+
+<blockquote><br> If <a
+href="#*debug-mode*"><code>*DEBUG-MODE*</code></a> is <em>true</em>
+this variable holds the backtrace (as a string) of the last error or
+warning that was handled by TBNL. Note that capturing of backtraces is
+currently only supported for CMUCL, SBCL, and LispWorks.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*body*"><b>*body*</b></a>
+
+<blockquote><br> If <a
+href="#*debug-mode*"><code>*DEBUG-MODE*</code></a> is <em>true</em>
+this variable holds the last content body that was sent by TBNL.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*error*"><b>*error*</b></a>
+
+<blockquote><br> If <a
+href="#*debug-mode*"><code>*DEBUG-MODE*</code></a> is <em>true</em>
+this variable holds the last condition that was handled by TBNL.
+</blockquote>
+
+<p><br>[Special variable]
+<br><a class=none name="*command*"><b>*command*</b></a>
+
+<blockquote><br> If <a
+href="#*debug-mode*"><code>*DEBUG-MODE*</code></a> is <em>true</em>
+this variable holds the last input received from the front-end or the client. This is an <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_a.htm#alist">alist</a> of keys and values the details of which depend on the front-end.
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="quirks">Known quirks</a></h3>
+
+Here are a couple of things to watch out for:
+
+<ul>
+
+  <li>It was said <a href='#handlers'>above</a> that handlers usually
+  return a string. What if you want to send binary data to the client?
+  One way is to send the binary data as a string, i.e. to identify the
+  characters with their <a
+  href='http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_c.htm#character_code'>character
+  codes</a> interpreted as 8-bit bytes. This will work with an
+  implementation like CMUCL which only supports 8-bit characters.  The
+  other way is to return an array of <a
+  href='http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_e.htm#element_type'>element
+  type</a> <code>(UNSIGNED-BYTE&nbsp;8)</code>. This is currently
+  implemented for AllegroCL&nbsp;6.0 and higher and for
+  LispWorks&nbsp;4.3 and higher. See the code for <code>*TEST-IMAGE*</code> in <code>test/test.lisp</code> for an example.
+
+  <li>The string you return from a <a href='#handlers'>handler</a>
+  should consist of 8-bit characters. Don't expect to be able to send
+  arbitrary Unicode characters without further modifications. The <a
+  href="#test">test web page</a> included with the TBNL distribution
+  contains a LispWorks example that shows how to send a UTF-8 page to
+  the browser.
+
+</ul>
+
+<br>&nbsp;<br><h3><a class=none name="history">History</a></h3>
+
+TBNL (which is short for &quot;To Be Named Later&quot;) grew over the
+years as a toolkit that I used for various commercial and private
+projects. In August&nbsp;2003 Daniel Barlow started a <a
+href='http://article.gmane.org/gmane.lisp.web/148'>review of web
+APIs</a> on the <a href='http://www.red-bean.com/lispweb/'>lispweb</a>
+mailing list and I <a
+href='http://article.gmane.org/gmane.lisp.web/153'>described</a> the
+API of my hitherto-unreleased bunch of code (and christened it "TBNL").
+<p>
+It turned out that <a href='http://www.jeffcaldwell.com/'>Jeff
+Caldwell</a> had worked on something similar so he emailed me and
+proposed to join our efforts. As I had no immediate plans to release
+my code (which was poorly organized, undocumented, and mostly
+CMUCL-specific) I gave it to Jeff and he worked towards a release. He
+added docstrings, refactored, added some stuff, and based it on KMRCL
+to make it portable across several Lisp implementations.
+<p>
+Unfortunately, Jeff is at least as busy as I am so he didn't find the
+time to finish a full release. But now (in spring&nbsp;2004) I needed
+a documented version of the code for a client of mine who also thought
+it would be good if the toolkit were publicly available under an open
+source license. So I took Jeff's code, refactored again (to sync with
+the changes I had done in the meantime), and added documentation. This
+resulted in TBNL as it is now. Jeff's code (which includes a lot more
+stuff that I didn't use) is still available from his own website <a
+href='http://tbnl.org/'>tbnl.org</a>.
+<p>
+I have added and modified some stuff while preparing this release and
+I probably introduced some bugs. So don't think TBNL will work for you
+just because it has worked for me in the last years. <a
+href='#mail'>Let me know</a> if you have problems.
+
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+Thanks to Jeff Caldwell - TBNL would not have been released without
+his efforts. Thanks to <a href="http://www.fractalconcept.com/">Marc
+Battyani</a> for mod_lisp and to <a
+href="http://www.swiss.ai.mit.edu/~cph/">Chris Hanson</a> for
+mod_lisp2. Thanks to <a
+href="http://www.cliki.net/Stefan%20Scholl">Stefan Scholl</a> for various additions and fixes, to <a href="http://www.foldr.org/~michaelw/">Michael Weber</a> for initial file upload code, and to <a href="http://www.ltn.lv/~jonis/">Janis Dzerins</a> for his <a href="http://common-lisp.net/project/rfc2388/">RFC&nbsp;2388 code</a>. Thanks to Bob Hutchison for his code for multiple front-ends and the UTF-8 example.
+
+<p>
+$Header: /usr/local/cvsrep/tbnl/doc/index.html,v 1.146 2006/10/09 23:46:41 edi Exp $
+<p><a href="http://weitz.de/index.html">BACK TO MY HOMEPAGE</a>
+
+</body>
+</html>

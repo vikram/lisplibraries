@@ -1,0 +1,40 @@
+07 Jan 2007  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.94
+	* signals.lisp: Conditionalize Lispworks support to :unix *features*
+
+07 Jan 2007  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.93
+	* signals.lisp: Add new file for signal processing
+	
+31 Dec 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* impl.lisp, sockets.lisp, equal.lisp, datetime.lisp: Declare ignored variables
+	
+29 Nov 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.92
+	* strings.lisp: Add uri-query-to-alist
+
+24 Oct 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.91
+	* io.lisp: Fix output from read-file-to-string
+
+22 Sep 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.90
+	* sockets.lisp: Commit patch from Joerg Hoehle for CLISP sockets
+
+04 Sep 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.89
+	* kmrcl.asd, mop.lisp: Add support for CLISP MOP
+	* strings.lisp: Add prefixed-number-string macro with type optimization used
+	by prefixed-fixnum-string and prefixed-integer-string
+	* package.lisp: export prefixed-integer-string
+
+27 Jul 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.88
+	* strings.lisp, package.lisp: Add binary-sequence-to-hex-string
+
+26 Jul 2006  Kevin Rosenberg <kevin@rosenberg.net>
+	* Version 1.87
+	* proceeses.lisp, sockets.lisp: Apply patch from Travis Cross
+	for SBCL, posted on
+	http://common-lisp.net/pipermail/tbnl-devel/2005-December/000524.html
+	

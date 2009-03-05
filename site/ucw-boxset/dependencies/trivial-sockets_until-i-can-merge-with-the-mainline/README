@@ -1,0 +1,58 @@
+Trivial-sockets: 
+  server and client stream sockets for undemanding network applications
+
+Usage examples:
+
+(with-open-stream (s (trivial-sockets:open-stream "www.google.com" 80)) 
+  (format s "HEAD / HTTP/1.0~%Host: www.google.com~%~%") 
+  (force-output s) 
+  (loop 
+    (let ((l (read-line s nil nil))) 
+      (unless l (return)) 
+      (princ l) (terpri))))
+
+(trivial-sockets:with-server (s (:port 8913 :reuse-address t))
+   (loop
+    (with-open-stream (c (trivial-sockets:accept-connection s)) 
+        (read-line c)
+        (format c "Hi there!~%"))))
+
+
+Proper documentation is in trivial-sockets.texi.  If you have Texinfo
+installed you can convert this to DVI or PDF using texi2dvi or
+texi2pdf, or use makeinfo to create an Info file for use with Emacs or
+the standalone info reader.
+
+
+Installation:
+
+Use asdf-install.  
+
+  * (asdf:operate 'asdf:load-op 'asdf-install)
+  * (asdf-install:install 'trivial-sockets)
+
+Or if you don't have asdf-install but you do have asdf, create a
+symlink from a directory in your asdf:*central-registry* and run
+
+  * (asdf:operate 'asdf:load-op 'trivial-sockets)
+
+Or if you don't have asdf, either (a) get it, or (b) compile the files by
+hand in an order that satisfies the dependencies in trivial-sockets.asd
+
+
+References:
+
+http://www.cliki.net/asdf-install
+http://www.cliki.net/asdf
+
+
+Thanks to: (alphabetical order)
+
+- Andras Simon for Armed Bear CL support
+- Edi Weitz, by whose asdf-install work some of the code was inspired
+- Oliver Markovic, for OpenMCL support
+- Rudi Schlatte, for a ton of stuff including OpenMCL and CMUCL server 
+  support, work on the manual, and also the Stevens justification I 
+  needed to make SO_REUSEADDR default 
+- Sven Van Caekenberghe provided Lispworks support
+

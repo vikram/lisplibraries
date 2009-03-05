@@ -1,0 +1,96 @@
+
++Z-OK+ (0)                                                       [CONSTANT]
+
++Z-ERRNO+ (-1)                                                   [CONSTANT]
+
++Z-STREAM-ERROR+ (-2)                                            [CONSTANT]
+
++Z-DATA-ERROR+ (-3)                                              [CONSTANT]
+
++Z-MEM-ERROR+ (-4)                                               [CONSTANT]
+
++Z-BUF-ERROR+ (-5)                                               [CONSTANT]
+
++Z-VERSION-ERROR+ (-6)                                           [CONSTANT]
+
+*UNCOMPRESS-BUFFER-SCALE-FACTOR* (4)                            [PARAMETER]
+   Buffer increased to this value times then UNCOMPRESS-STRING
+   need more space for operation.
+
+*READ-BUFFER-LENGTH* (4096)                                     [PARAMETER]
+   Length of buffer for reading (GZ-READ-LINE).
+   Doesn't affect the actual length of returning string.
+
+*ZLIB-SYMBOLS* ('(*zlib-path* zcompress zuncompress              [VARIABLE]
+                compress-string uncompress-string gz-open
+                gz-close gz-read gz-write gz-read-line
+                gz-write-line with-gz))
+
+*ZLIB-SEARCH-PATHS* (`(,(directory-namestring                    [VARIABLE]
+                     (or *load-truename* (truename "./")))
+                     "/usr/local/lib/" "/usr/lib/"
+                     "/windows/system32/" "/winnt/system32/"))
+   The paths where to search the zlib shared library
+
+*ZLIB-NAMES* ('("libz" "zlib"))                                  [VARIABLE]
+   Various library names depending from the system.
+
+FIND-ZLIB-PATH "()"                                              [FUNCTION]
+
+*ZLIB-LOADED* (nil)                                              [VARIABLE]
+
+ZCOMPRESS (source sourcelen dest)                                [FUNCTION]
+   Compress the first SOURCELEN bytes of SOURCE into DEST. DEST should
+   be an array of (unsigned-byte 8), and should be large enough to hold
+   the compressed contents. Returns the compressed length.
+   Note that the size of the DEST array should be at least 0.1% more
+   than sourcelen plus 12 bytes, but the actual number of array elements
+   filled in by the compression algorithm will usually be smaller
+   (depending on how 'predictable' the input data is).
+
+ZUNCOMPRESS (source sourcelen dest)                              [FUNCTION]
+   Uncompress the first SOURCELEN bytes of SOURCE into DEST. DEST
+   should be long enough to hold the uncompressed contents. Returns the
+   uncompressed length.
+
+COMPRESS-STRING (source)                                         [FUNCTION]
+   Returns two values: array of bytes containing the compressed data
+   and the number of compressed bytes
+
+UNCOMPRESS-STRING (source &optional destsize)                    [FUNCTION]
+   Uncompress the contents of the SOURCE byte array to a string.
+   DESTSIZE is the length of the resulting string (it should be recorded
+   during compression).
+
+GZ-OPEN (pathname &optional (direction :input))                  [FUNCTION]
+   Open a compressed stream to the given PATHNAME. The optional 
+   argument DIRECTION should be one of :input (the default) or 
+   :output. If an existing file is opened for output, it is truncated 
+   to zero length.
+
+GZ-READ (file-descriptor len)                                    [FUNCTION]
+   Read LEN uncompressed bytes from FILE-DESCRIPTOR of compressed file
+   opened with GZ-OPEN. If the input file was not in gzip format,
+   GZ-READ copies the given number of bytes. GZ-READ returns the string
+   and number of bytes actually read or FALSE in case of error.
+
+GZ-WRITE (file-descriptor str &optional (len (length str)))      [FUNCTION]
+   Write STR into the FILE-DESCRIPTOR of compressed file
+   opened with GZ-OPEN.
+   Returns the number of uncompressed bytes actually written or FALSE
+   in case of error.
+
+GZ-READ-LINE (file-descriptor &optional (eof-error-p t) eof)     [FUNCTION]
+   Read a line of text from the FILE-DESCRIPTOR of compressed file
+   opened with GZ-OPEN.
+   Returns the uncompressed string or
+   EOF and FALSE in case of error.
+
+GZ-WRITE-LINE (file-descriptor str)                              [FUNCTION]
+   Write the string STR to the FILE-DESCRIPTOR of compressed file
+   opened with GZ-OPEN.
+   Returns the number of characters written, or FALSE in case of error.
+
+WITH-GZ ((fd filename &key (direction :input)) &body forms)         [MACRO]
+   Open FILENAME using gz-open with the specified DIRECTION, assign
+   the open file to FD and exectute FORMS.

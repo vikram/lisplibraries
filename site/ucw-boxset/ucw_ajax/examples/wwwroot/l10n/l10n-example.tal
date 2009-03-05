@@ -1,0 +1,10 @@
+<!-- -*- html -*- -->
+
+<div xmlns:tal='http://common-lisp.net/project/bese/tal/core'
+    xmlns:ucw='http://common-lisp.net/project/ucw/core'
+    xmlns:l10n='http://common-lisp.net/project/ucw/l10n'
+    tal:in-package=':it.bese.ucw'>
+
+  <p>Here is an included tal template, which is a localized greeting: <tal:include tal:name='greeting.tal'/></p>
+
+</div>

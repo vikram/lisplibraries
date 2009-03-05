@@ -1,0 +1,69 @@
+Last Updated 1 Dec 2005
+
+Araneida 0.90  - 1 Dec 2005
+* First non-a
+* Features:
+  - Integration with Parenscript!
+    If you have Marco Baringer's maintained version of Parenscript (darcs: http://common-lisp.net/project/ucw/repos/parenscript)
+	Araneida will load it and use it. HTML, HTML-STREAM, and HTML-ESCAPED-STREAM work with it.
+	Please see the documentation in doc/html.html for more info on how to use it with Araneida.
+  - DEFTEMPLATE, CALL-TEMPLATE - a nice set of convenience functions for prettily separating out your template code.
+    See the documentation in doc/html.html
+  - DEFHTMLTAG - Araneida has long been able to define custom tags in HTML that do special things.
+    This macro lets you easily access this functionality. Some sample code and instructions are in doc/html.html
+  - LINK - (url :param-a value :param-b value) becomes: "http://url?param-a=value&param-b=value" with proper escaping
+  - URL objects now princ as you'd expect. prin1 is the old behavior.
+    (to clarify: (html '(span url)) will become: <span>http://url.goes.here</span> rather than the old behavior
+	 which was to do <span>#<URL http://url.goes.here></span>)
+  - HTML-ESCAPED-STREAM - properly HTML escapes content, otherwise the equivalent of HTML-STREAM.
+  - URL-QUERY-STRING-FROM-ALIST - create a ?a=b&c=d... string from an alist. The opposite of URL-QUERY-ALIST
+  - enhancements to HTML, HTML-STREAM, and HTML-ESCAPED-STREAM:
+   	+ '(comment (span "yes")) becomes <!-- <span>yes</span> -->
+  - URLSTRING-ESCAPE faster(?)
+* Bugfixes:
+  - too-many-url-methods-matched, if ever thrown, would itself cause an error. This has been fixed.
+  - static-file-handler now properly url unescapes the file name
+  - properly bind *trace-output* and friends when creating new threads to handle the changes in SBCL.
+  - key values in parametermethods fixed
+* Handle bivalent streams in SBCL properly(?). More work is necessary to do everything people want to do, but
+  the basics are there.
+* Patchless TBNL compatibility!
+* Increased compatibility with Allegro Common Lisp (thank you Arthur Lemmens!)
+* Backwards-incompatible changes:
+  - HTML has a different function signature now. It should not functionally affect any code, as the old parameter was ignored.
+    HTML now works like HTML-STREAM, where you pass the tags that cause newlines as a key parameter. Most code should
+	not need to be changed - your compiler should notify you if yours does.
+
+Araneida 0.9-a3 - 21 Sept 2005
+* Last -a3 planned.
+* Additional documentation
+* Minor fixes to the test suite
+* Some better error reporting with HTML generation
+* Gracefully handle client disconnects (pronounced "drop it on the floor")
+* tainted-p, the tainted predicate
+* append-url, the younger, cruder cousin of merge-url. Used in attach-hierarchy
+* attach-hierarchy - a way to declare the url structure of a website and
+  how that matches up to the classes in the system. You'll want to read the docs
+  in doc/utilities.html - even more docs in convenience.lisp.
+* with-url-params and with-tainted-url-params, documented in doc/request_parameters.html
+* defurlmethod and deftaintedurlmethod: multi-method-dispatch on url parameters.
+  Documented in doc/request_parameters.html.
+* Stress testing script for testing massive numbers of clients in araneida using siege.
+  Script is benchmark.sh.
+
+Araneida 0.9-a2
+* .asd file simplified a bit
+* Some cruft removed
+* Compiles without style warnings in SBCL 0.9.4.65
+* Moved dhttp.lisp to obsolete/ - will be deleting next release
+  unless someone tells me they use it.
+* Updated version of cookie library RFC2109
+* error conditions now honor :client-message, as a result
+  any direct calls of REQUEST-SEND-ERROR need to be updated!
+* SEND-FILE now exported
+* Test server and client for automated unit testing for SBCL and CMUCL
+  currently tests major functionality of araneida.
+  I hope to add detection for bugs as I find them.
+  You will need perl and WWW::Mechanize to run the tests.
+* Bugfixes
+

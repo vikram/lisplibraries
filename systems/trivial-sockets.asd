@@ -1,0 +1,1 @@
+../site/ucw-boxset/dependencies/trivial-sockets_until-i-can-merge-with-the-mainline/trivial-sockets.asd

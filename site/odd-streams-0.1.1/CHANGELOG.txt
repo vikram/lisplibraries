@@ -1,0 +1,9 @@
+Version 0.1.1
+2007-12-31
+Exported condition types
+Added HTML documentation
+First public release
+
+Version 0.1.0
+2007-12-18
+First internal release

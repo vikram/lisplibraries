@@ -1,0 +1,1686 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+  <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>cxml-rng API reference</title>
+<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+	Index of packages:
+      </div>
+    <table cellspacing="0" cellpadding="0"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h2 class="page-title">
+            <a href="pages/cxml-rng.html">
+		  Package
+		  cxml-rng</a>
+          </h2>
+          <div style="left: 100px">
+            <div class="indent">
+<tt>cxml-rng</tt> implements <a href="http://relaxng.org/spec-20011203.html">    Relax NG</a> schema validation for Closure XML.<br><br>    Support for <a href="http://relaxng.org/compact-20021121.html">Compact Syntax</a>    and <a href="http://relaxng.org/compatibility-20011203.html">DTD Compatibility</a>
+    is included.<br><br>                </div>
+            <div class="indent">
+              <p>
+                <i>About this package:</i>
+              </p>
+              <ul>
+                <li>
+                  <a href="pages/cxml-rng.html#id58058">Example</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-rng.html#id58067">Classes</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-rng.html#id58082">Parsing and validating</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-rng.html#id58113">Grammar introspection</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <h2 class="page-title">
+            <a href="pages/cxml-types.html">
+		  Package
+		  cxml-types</a>
+          </h2>
+          <div style="left: 100px">
+            <div class="indent">
+<tt>cxml-types</tt> defines an extensible interface for XML-related
+    data types as required for use in Relax NG validation.<br><br>
+    It includes Relax NG's minimal built-in type library, which is named    <tt>:||</tt> and defines the types "string" and "token".<br><br>
+    In addition, it implements the built-in types of    <a href="http://www.w3.org/TR/xmlschema-2/">XML Schema Datatypes</a>    as specified in <a href="http://relaxng.org/xsd-20010907.html">Guidelines for    using W3C XML Schema Datatypes with RELAX NG</a>.  The XSD type library    is named <tt>:|http://www.w3.org/2001/XMLSchema-datatypes|</tt>.<br><br>    The types defined by <a href="http://relaxng.org/compatibility-20011203.html">      RELAX NG DTD Compatibility</a>
+    are available through the data type library named    <tt>:|http://relaxng.org/ns/compatibility/datatypes/1.0|</tt>.<br><br>                                    </div>
+            <div class="indent">
+              <p>
+                <i>About this package:</i>
+              </p>
+              <ul>
+                <li>
+                  <a href="pages/cxml-types.html#id62780">Example</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id62793">Type instances</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id62864">Using types</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id62932">The validation context</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id62984">Relax NG built-in types</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id62999">DTD compatibility types</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id63018">Primitive XSD built-in types</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id63092">Enumerated XSD built-in types</a>
+                </li>
+                <li>
+                  <a href="pages/cxml-types.html#id63113">Derived XSD built-in types</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td valign="top">
+        <h3>
+<a name="index"></a>Symbol Index</h3>
+        <table cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__any-name.html"><tt>any-name</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__any-name-except.html"><tt>any-name-except</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__any-uri-type.html"><tt>any-uri-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__attribute.html"><tt>attribute</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__base64-binary-type.html"><tt>base64-binary-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__boolean-type.html"><tt>boolean-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__byte-type.html"><tt>byte-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__choice.html"><tt>choice</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__context-find-namespace-binding.html"><tt>context-find-namespace-binding</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__context-find-unparsed-entity.html"><tt>context-find-unparsed-entity</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__data.html"><tt>data</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__data-type.html"><tt>data-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__date-time-type.html"><tt>date-time-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__date-type.html"><tt>date-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__day-type.html"><tt>day-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__decimal-type.html"><tt>decimal-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__double-type.html"><tt>double-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__dtd-compatibility-error.html"><tt>dtd-compatibility-error</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__dtd-compatibility-type.html"><tt>dtd-compatibility-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__duration-type.html"><tt>duration-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__element.html"><tt>element</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__empty.html"><tt>empty</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__entities-type.html"><tt>entities-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__entity-type.html"><tt>entity-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__equal-using-type.html"><tt>equal-using-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__exact-length.html"><tt>exact-length</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__find-type.html"><tt>find-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__float-type.html"><tt>float-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__fraction-digits.html"><tt>fraction-digits</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__group.html"><tt>group</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__hex-binary-type.html"><tt>hex-binary-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__id-type.html"><tt>id-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__idref-type.html"><tt>idref-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__idrefs-type.html"><tt>idrefs-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__int-type.html"><tt>int-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__integer-type.html"><tt>integer-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__interleave.html"><tt>interleave</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__klacks-validation-context.html"><tt>klacks-validation-context</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__language-type.html"><tt>language-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__lessp-using-type.html"><tt>lessp-using-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__list-pattern.html"><tt>list-pattern</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__long-type.html"><tt>long-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__make-dtd-compatibility-handler.html"><tt>make-dtd-compatibility-handler</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__make-klacks-validation-context.html"><tt>make-klacks-validation-context</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__make-param.html"><tt>make-param</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__make-validating-source.html"><tt>make-validating-source</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__make-validator.html"><tt>make-validator</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__max-exclusive.html"><tt>max-exclusive</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__max-inclusive.html"><tt>max-inclusive</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__max-length.html"><tt>max-length</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__min-exclusive.html"><tt>min-exclusive</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__min-inclusive.html"><tt>min-inclusive</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__min-length.html"><tt>min-length</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__month-day-type.html"><tt>month-day-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__month-type.html"><tt>month-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__name.html"><tt>name</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__name-class.html"><tt>name-class</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__name-class-choice.html"><tt>name-class-choice</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__name-class-choice-a.html"><tt>name-class-choice-a</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__name-class-choice-b.html"><tt>name-class-choice-b</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__name-lname.html"><tt>name-lname</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__name-type.html"><tt>name-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__name-uri.html"><tt>name-uri</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__ncname-type.html"><tt>ncname-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__negative-integer-type.html"><tt>negative-integer-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__nmtoken-type.html"><tt>nmtoken-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__nmtokens-type.html"><tt>nmtokens-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__non-negative-integer-type.html"><tt>non-negative-integer-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__non-positive-integer-type.html"><tt>non-positive-integer-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__normalized-string-type.html"><tt>normalized-string-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__not-allowed.html"><tt>not-allowed</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__notation-type.html"><tt>notation-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__ns-name.html"><tt>ns-name</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__ns-name-except.html"><tt>ns-name-except</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__ns-name-uri.html"><tt>ns-name-uri</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__one-or-more.html"><tt>one-or-more</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__param.html"><tt>param</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__param-name.html"><tt>param-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__param-value.html"><tt>param-value</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__parse.html"><tt>parse</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__parse-compact.html"><tt>parse-compact</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__parse-schema.html"><tt>parse-schema</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__pattern.html"><tt>pattern</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-a.html"><tt>pattern-a</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-b.html"><tt>pattern-b</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-child.html"><tt>pattern-child</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-element.html"><tt>pattern-element</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-except.html"><tt>pattern-except</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-name.html"><tt>pattern-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-params.html"><tt>pattern-params</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-string.html"><tt>pattern-string</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-type.html"><tt>pattern-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__pattern-value.html"><tt>pattern-value</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__patterns.html"><tt>patterns</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__positive-integer-type.html"><tt>positive-integer-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__qname-type.html"><tt>qname-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__ref.html"><tt>ref</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__rng-error.html"><tt>rng-error</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__rng-error-column-number.html"><tt>rng-error-column-number</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__rng-error-line-number.html"><tt>rng-error-line-number</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__rng-error-system-id.html"><tt>rng-error-system-id</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__rng-type.html"><tt>rng-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__sax-validation-context-mixin.html"><tt>sax-validation-context-mixin</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__schema.html"><tt>schema</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__schema-start.html"><tt>schema-start</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__fun__serialize-schema.html"><tt>serialize-schema</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__short-type.html"><tt>short-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__string-type.html"><tt>string-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__text.html"><tt>text</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__time-type.html"><tt>time-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__token-type.html"><tt>token-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__total-digits.html"><tt>total-digits</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__type-context-dependent-p.html"><tt>type-context-dependent-p</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__type-id-type.html"><tt>type-id-type</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__type-library.html"><tt>type-library</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__type-name.html"><tt>type-name</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__unsigned-byte-type.html"><tt>unsigned-byte-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__unsigned-int-type.html"><tt>unsigned-int-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__unsigned-long-type.html"><tt>unsigned-long-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__unsigned-short-type.html"><tt>unsigned-short-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__validation-context.html"><tt>validation-context</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__fun__validp.html"><tt>validp</tt></a>, function</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-rng:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-rng__class__value.html"><tt>value</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-id-type.html"><tt>xsd-id-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-idref-type.html"><tt>xsd-idref-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-idrefs-type.html"><tt>xsd-idrefs-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-string-type.html"><tt>xsd-string-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-token-type.html"><tt>xsd-token-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__xsd-type.html"><tt>xsd-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__year-month-type.html"><tt>year-month-type</tt></a>, class</td>
+          </tr>
+          <tr>
+            <td valign="top" align="right" nowrap>
+              <span class="nonlink">
+                <tt>
+                  <span style="color: #777777">cxml-types:</span>
+                </tt>
+              </span>
+            </td>
+            <td valign="top">
+<a href="pages/cxml-types__class__year-type.html"><tt>year-type</tt></a>, class</td>
+          </tr>
+        </table>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+

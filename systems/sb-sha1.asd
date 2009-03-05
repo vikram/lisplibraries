@@ -1,0 +1,1 @@
+../site/sb-sha1/sb-sha1.asd

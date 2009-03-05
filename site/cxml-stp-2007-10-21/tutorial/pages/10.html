@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+	    Page
+	    10
+	    --
+	    Elements (2)</title>
+<link rel="stylesheet" type="text/css" href="../tutorial.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center"><div style="margin-left: 30px"><a href="../../index.html"><b><span>cxml–</span><span style="color: #55a6e0">stp</span></b></a></div></td>
+<td valign="center" align="right"><b>Tutorial</b></td>
+</tr></table></div>
+<div class="main">
+<h1>Elements (2)</h1>
+    <example title="Making an element (no namespace)">
+      <pre class="repl">CL-USER&gt; (stp:make-element "list")</pre>
+      <pre class="result">#.(STP:ELEMENT :LOCAL-NAME "list")</pre>
+    </example>
+    <br>
+    Namespace URI is an optional argument:
+    <br>
+    <example title="Making an element (with namespace)">
+      <pre class="repl">CL-USER&gt; (stp:make-element "z:list" "http://namespace")</pre>
+      <pre class="result">
+#.(STP:ELEMENT
+   :LOCAL-NAME "list"
+   :NAMESPACE-PREFIX "z"
+   :NAMESPACE-URI "http://namespace")</pre>
+    </example>
+  <br>
+  It's always <span class="em">Name</span> and <span class="em">URI</span> in that order.
+  <br>
+  <br>
+  URI defaults to <tt>""</tt>.
+  </div>
+<div class="navigation">
+<center><a class="icon" href="../index.html">
+		⬘
+	      </a></center>
+<a class="icon" href="9.html">⬖</a>10/24<a class="icon" href="11.html">⬗</a>
+</div>
+</body>
+</html>

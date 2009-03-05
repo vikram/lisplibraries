@@ -1,0 +1,74 @@
+2003-11-19  Zach Beane  <xach@xach.com>
+
+	* Made 0.4.0 release.
+
+	* queue.lisp: Made priority-queue-remove permissive about removing
+	an item that might not be in the priority queue.
+
+	* timers.lisp: Removed the no-longer-needed scheduled-p field from
+	the timer struct.
+
+	* scheduler.lisp: Completely reworked scheduling system to reduce
+	locking complexity. Also, change the notion of
+	sufficiently-short-as-to-be-nonexistent timeout from 0 to a small
+	but nonzero value. This eliminates a problem with timers with a
+	very small repeat time.
+
+2003-11-14  Zach Beane  <xach@xach.com>
+
+	* Made 0.3.2 release.
+
+	* time.lisp: Changed GET-PRECISE-TIME to do a floating division
+	instead of a rational coercion, which speeds it up about 5x.
+
+2003-11-13  Zach Beane  <xach@xach.com>
+
+	* timers.lisp, scheduler.lisp: Move expire-timer from timers to
+	scheduler.
+
+	* timer.asd: Added version info.
+
+	* scheduler.lisp: Wrap enable-timers operation in a mutex to
+	prevent multiple scheduler threads.
+
+2003-11-12  Zach Beane  <xach@xach.com>
+
+	* doc/index.html: Cleaned up the abstract a little bit, added a
+	HTML head and title.
+
+	* Made 0.3.1 release.
+
+	* scheduler.lisp: Add a new path for rescheduling a repeating
+	timer, and don't repeat a timer that's been unscheduled.
+
+	* timers.lisp: Reschedule repeating timers via a different path
+	than new timers.
+
+	* Made 0.3 release.
+
+	* scheduler.lisp: Unscheduling a timer failed to remove it from
+	the queue of incoming timers. Fixed.
+	%INCOMING-POP did not check to see if the condition it was waiting
+	for actually occurred. Fixed.
+
+	* queue.lisp: Fixed priority-queue-remove to use the right :key
+	and :test argument to the underlying heap-extract.
+
+2003-11-09  Zach Beane  <xach@xach.com>
+
+	* queue.lisp: Deleted queue and atomic queue stuff, since it's
+	simplified in scheduler.lisp.
+
+	* doc/index.html: Added info about download and installation, and
+	about what happens if a scheduled timer is scheduled again.
+
+	* scheduler.lisp (with-optional-timeout): Signal TIMEOUT when
+	given a timeout less than or equal to zero.
+
+	* time.lisp (get-precise-time): Switch from UNIX-GETTIMEOFDAY to
+	the more portable GET-INTERNAL-REAL-TIME.
+
+2003-11-08  Zach Beane  <xach@xach.com>
+
+	* doc/index.html: Fixed stray &key and &optional formatting.
+

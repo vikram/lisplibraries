@@ -1,0 +1,285 @@
+Starting with tag:
+[TAG release_0_9 
+chandler**20041001005507] 
+[Added MCL compatibility; fixed some unportable EOL issues.
+chandler**20041010133159
+ Added MCL compatibility; fixed some unportable EOL issues.
+ Renamed reverse-proxy-listener-class.lisp to reverse-proxy-listener.lisp to deal with MacOS filename limit of 32 characters.
+ 
+] 
+[print port correctly for https urls.  Patch from Cyrus Harmon
+dan**20041114153930] 
+[Per pjb: add a call to #+clisp (host-serve-events)
+chandler**20041223014745] 
+[Lightly tested way of responding to wild hosts
+chandler**20050315135925] 
+[Do appropriate stuff for a Unicode build: pass :external-format :iso-8859-1 to open, so that arbitrary octets can pass through without encoding errors. This is probably not the right thing, but it makes things work.
+chandler**20050425231512] 
+[Um, yeah. Forgot NEWS.
+chandler**20050425231552] 
+[araneida-repl-create
+Alan-Shields@omrf.ouhsc.edu**20050616225541
+ Create the araneida-repl directory, and include the first functions that
+ are designed to be used from the repl to get information about araneida.
+ 
+ I suppose that these could be useful outside of the repl, but I didn't think
+ cluttering up araneida proper was such a great idea.
+] 
+[Include the request-url for errors
+Alan-Shields@omrf.ouhsc.edu**20050617000849
+ 404 errors were difficult to track down, as they only showed up as "404". So I
+ altered error reporting to include the URL requested.
+] 
+[Eliminate implicit generic style warnings by adding generics - also includes some extra documentation
+Alan-Shields@omrf.ouhsc.edu**20050617001756
+ Moved docstrings from methods to generics, added necessary generics, etc, etc, etc. Documentation
+ should exist for all the generics I added...though maybe not.
+] 
+[Minor typo corrections
+Petri Latvala <petri.latvala@realityescape.net>**20050624153808] 
+[The end of headers needs to be CRLFCRLF, not CRLFLF
+petri.latvala@realityescape.net**20050626125413] 
+[Stop-listening didn't make listening-p return t because it didn't setf the socket to nil
+petri.latvala@realityescape.net**20050626125631] 
+[Export request-response-logging
+petri.latvala@realityescape.net**20050627031337] 
+[Basic "does-it-compile" testing, with error counting.
+Alan-Shields@omrf.ouhsc.edu**20050628211918
+ Add the ability to check and make sure that the araneida system
+ in the current directory does - in fact - compile.
+ 
+ A report is generated at the end with a count of errors.
+ The script will error out with 1 if any serious conditions are encountered
+ while compiling.
+] 
+[Generate lower-case HTML with less redundant spaces
+petri.latvala@realityescape.net**20050628193845] 
+[locale-independent urlstring-escape
+frederic.gobry@epfl.ch**20050705062333
+ 
+ At least with sbcl-0.9.2 w/ unicode support, working in an utf-8 environment causes the
+ behavior of alphanumericalp to change, and return t for more characters than the us-ascii
+ version. This patch explicitely lists the characters that can be made part of an URL without
+ escaping.
+ 
+] 
+[Temporarily eliminate all references to muffle-warning
+Alan-Shields@omrf.ouhsc.edu**20050705205712
+ For some reason, muffle-warning is not available. I'll have to come back through
+ and make it available. In the meantime, make things work.
+] 
+[+allowed-url-symbols+ as parameter, not constant
+Alan-Shields@omrf.ouhsc.edu**20050705210901
+ reference http://www.sbcl.org/manual/Defining-Constants.html#Defining%20Constants
+ defconstant ran into trouble on compile/load, due to the issues described in the above document
+ (basically being compiled then loaded produces an undefined situation for constants. Joy, no?).
+ 
+ This could be solved either by a macro to only define the constant once, or by making the constant
+ a parameter. I went with the latter option.
+] 
+[Add documentation string for +allowed-url-symbols+
+Alan-Shields@omrf.ouhsc.edu**20050705211913] 
+[Fix muffle-warning error in test.lisp, re-enable muffled warnings
+Alan-Shields@omrf.ouhsc.edu**20050705220230
+ Turns out that muffle-warning is a restart that I needed to add. I added it.
+ Cleans up output beautifully, though SBCL shows that 2 important errors are caught.
+ I think those are the "cannot optimize" errors that used to show up.
+] 
+[test.lisp "works" on SBCL
+Alan-Shields@omrf.ouhsc.edu**20050705230049
+ Implements my-quit, to abstract away quitting - only works for SBCL right now.
+ Get rid of the debugger, just quit instead.
+ Block some SBCL-specific warnings, get muffle warning working, and that yields
+ a working test!
+] 
+[Initial creation of rfc2109.lisp
+Alan-Shields@omrf.ouhsc.edu**20050802233948
+ Basic functionality works - you can create RFC compliant cookies.
+] 
+[Move rfc2109 into utilities where it belongs
+Alan-Shields@omrf.ouhsc.edu**20050802235951] 
+[Turn off testing
+Alan-Shields@omrf.ouhsc.edu**20050808204414
+ Okay, run test.sh by hand if you care. It was just getting annoying to
+ work with. I'll run it by hand before I commit, but other people don't
+ have SBCL.
+] 
+[Include the license text and some bookmark-like strings
+Alan-Shields@omrf.ouhsc.edu**20050803202346
+ Marco suggested that I include the license text in its entirety.
+ Also included some text strings that are easy to find so as to get
+ to the most externally-relevant code.
+] 
+[Fix token? and quoted-string? to account for empty and non-empty strings
+Alan-Shields@omrf.ouhsc.edu**20050803212954
+ The specification for tokens says that they must be at least one character.
+ Fixed.
+ 
+ The specification for quoted strings says that the empty quoted string is
+ acceptible. Fixed. So we can now have "" values.
+] 
+[cookie-struct
+Alan-Shields@omrf.ouhsc.edu**20050803213257
+ Add a structure for cookies, for those who like that sort of thing.
+] 
+[Tiny patch - update comment for domain
+Alan-Shields@omrf.ouhsc.edu**20050803214449] 
+[Swap arefs for elts when accessing strings
+Alan-Shields@omrf.ouhsc.edu**20050803235538] 
+[Parse cookies
+Alan-Shields@omrf.ouhsc.edu**20050803235648
+ We now parse RFC2109 cookies. We don't parse old Netscape cookies just yet.
+] 
+[Quiet the compiler about *ht* *cr* and *lf*
+Alan-Shields@omrf.ouhsc.edu**20050804002844
+ SBCL was whining about vars being used before they're declared. Sensible, I suppose.
+ Moved and made a note.
+] 
+[Wrap assemble-matches in an eval-when so it's available at macro time
+Alan-Shields@omrf.ouhsc.edu**20050804002956] 
+[Parse Netscape-style cookies
+Alan-Shields@omrf.ouhsc.edu**20050804003030] 
+[Mention split-sequence
+Alan-Shields@omrf.ouhsc.edu**20050804003605] 
+[ASDF package
+Alan-Shields@omrf.ouhsc.edu**20050804190743] 
+[TAG version-0.1
+Alan-Shields@omrf.ouhsc.edu**20050804190939] 
+[Fix QUOTED-STRING? to take into account escaped quotes
+Alan-Shields@omrf.ouhsc.edu**20050804214959
+ You know, I wrote a function to remove escaped quotes from a string...
+ amazing that I didn't use it. Now I do.
+ 
+ Also, I tucked the helper function for removing escaped quotes into
+ the function that uses it. Much cleaner that way.
+] 
+[No longer demand domains of the style ".blah.blah"
+Alan-Shields@omrf.ouhsc.edu**20050804215246
+ Turns out that the RFC allows (in fact desires) domains of the style "blah.blah",
+ so those are now legal.
+] 
+[parse-cookie-string needs to allow quoted strings inside it
+Alan-Shields@omrf.ouhsc.edu**20050804215336
+ Wrote a small tokenizer that splits - taking into account quoted strings.
+ We're really getting to the point that a pattern language would be useful.
+ 
+ Anyways, it works well, now.
+] 
+[Implement domain-match-p
+Alan-Shields@omrf.ouhsc.edu**20050804215558
+ While debugging an issue with w3m and cookies (which hasn't gone away, btw),
+ I needed to check my knowledge of a "domain-match" - I've included the function
+ in case others find it useful.
+] 
+[TAG version-0.2
+Alan-Shields@omrf.ouhsc.edu**20050804215726] 
+[Add a changelog - I'll update it each release
+Alan-Shields@omrf.ouhsc.edu**20050804215842] 
+[TAG version-0.2.1
+Alan-Shields@omrf.ouhsc.edu**20050804215956] 
+[Use RFC2109 for parsing cookies - should be drop-in replacement for current cookie code
+Alan-Shields@omrf.ouhsc.edu**20050808212746] 
+[Add documentation on cookies
+Alan-Shields@omrf.ouhsc.edu**20050808215918
+ Shows basically how to use cookies and how to use the spoofing protections.
+] 
+[araneida: swap THREAD-ALIVE-P for UNIX-KILL
+Alan-Shields@omrf.ouhsc.edu**20050810225617
+ On the advice of Friedrich Dominicus <frido@q-software-solutions.de>,
+ swapping thread-alive-p for unix-kill makes things work on Debian for AMD64.
+ 
+ Seems to work for me as well - by which I mean it compiles.
+] 
+[rfc2109: redefine valid domain based on a re-reading of 4.3.2
+Alan-Shields@omrf.ouhsc.edu**20050810200905
+ w3m and the Mozilla bugs set me straight on the reading of 4.3.2.
+ This patch requires an explicitly defined domain for domain, meaning
+ it must be:
+ a value
+ start with a "."
+ and contain an embedded "."
+] 
+[rfc2109: Update safe-parse-cookies using new understanding of domain cookies
+Alan-Shields@omrf.ouhsc.edu**20050810221808
+ After sorting out what the issue was with explicit domains, update safe-parse-cookies
+ (mostly documentation) to reflect this knowledge.
+] 
+[rfc2109: add a note about Moz and IE's lack of RFC compliance
+Alan-Shields@omrf.ouhsc.edu**20050810222004
+ Mozilla, Links, and IE all have a problem with quoted PATHs. As quoted paths
+ are demanded by the RFC, there's really no way around this. Luckily, Moz
+ has this fixed in latest alpha. Note added to docs as well as workaround suggestion.
+ 
+ Bug reference:
+ https://bugzilla.mozilla.org/show_bug.cgi?id=277033
+ 
+ There is the option of adding a bonus-points-compatible-cookie-string option for
+ outputing compatible code, but I would really rather not go down that road.
+ Output strict, accept loose.
+] 
+[rfc2109: update version number for release
+Alan-Shields@omrf.ouhsc.edu**20050810222725
+ Don't really know how I missed updating the version number for 0.2 and 0.2.1...
+] 
+[rfc2109: update changelog for release
+Alan-Shields@omrf.ouhsc.edu**20050810223101] 
+[TAG rfc2109-version-0.3
+Alan-Shields@omrf.ouhsc.edu**20050810223125] 
+[Optional condition to signal when cookie not found
+Alan-Shields@omrf.ouhsc.edu**20050819185215
+ In some code it's easier to assume the cookie is found and have a
+ signal handler for when it's not. This adds a parameter to the cookie
+ fetching routines that enables the signaling of said condition.
+ 
+ Share and enjoy.
+] 
+[Update cookie documentation to reflect new understanding of domain cookies
+Alan-Shields@omrf.ouhsc.edu**20050819190816] 
+[Correct minor whoops regarding cookies
+Alan-Shields@omrf.ouhsc.edu**20050819190855] 
+[cl-taint: add the core functionality (really simple, no?)
+Alan-Shields@omrf.ouhsc.edu**20050819192033
+ Adds a small, small library for tainting and untainting values.
+ I hope to add tainted versions of parameter fetching
+] 
+[Add tainted variants of query functions and optional warnings when not using them
+Alan-Shields@omrf.ouhsc.edu**20050819194757
+ So as to increase safety (and make some code cleaner, I've found), make tainted
+ versions of url-query-param and url-query-alist. Share and enjoy!
+] 
+[Fix to taint because of ASDF dependencies. Whoops.
+Alan-Shields@omrf.ouhsc.edu**20050819195446] 
+[Further updates to taint parameters
+Alan-Shields@omrf.ouhsc.edu**20050819225524
+ I wasn't tainting values, I was tainting the list of values. This has been fixed.
+] 
+[Export taint and untaint
+Alan-Shields@omrf.ouhsc.edu**20050819225616] 
+[rfc2109: Add basic testing and a tester
+Alan-Shields@omrf.ouhsc.edu**20050811221815
+ Decided to add a basic testing framework - mostly because I'm mucking about
+ with parsing and another library, want something to let me know when I've
+ REALLY screwed up.
+ 
+ Please note that the current stable version of FiveAM will not run these tests,
+ as it doesn't have the *features* that are needed to define them. I've submitted
+ a patch to Marco, we'll see if he adds it.
+] 
+[Update safe-parse-cookie to properly nconc instead of append - thanks Richard!
+Alan-Shields@omrf.ouhsc.edu**20050825193902
+ Whoops. I fixed the regular version but not the safe version. Heck of a lot of good that does.
+] 
+[Ensure that input to destructuring-bind in parse-cookies-vnetscape is a 2-element list.
+rich@holygoat.co.uk**20050825165956] 
+[rfc2109 - Marco applied the 5am patch, changed keyword
+Alan-Shields@omrf.ouhsc.edu**20050825200651
+ Marco wanted the feature keyword to be 5am. Less typing for me!
+] 
+[Resolve test.sh conflict between rfc2109 and araneida
+Alan-Shields@omrf.ouhsc.edu**20050825201554] 
+[Remove all the rfc2109 stuff we Just Don't Need
+Alan-Shields@omrf.ouhsc.edu**20050825211138] 
+[Add documentation on request URL parameters as well as tainting them
+Alan-Shields@omrf.ouhsc.edu**20050825214957] 
+[Update version for 0.9-a1
+Alan-Shields@omrf.ouhsc.edu**20050825215127] 

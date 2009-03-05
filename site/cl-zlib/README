@@ -1,0 +1,44 @@
+;;; cl-zlib
+;;; version 1.0, 2/9/2002
+;;; Copyright (c) 2002, Alberto Riva
+;;; Alberto.Riva@TCH.Harvard.edu
+
+This package contains a foreign-function interface to the zlib
+compression library (version 1.1.3). The functions in this package
+allow you to:
+
+- perform in-memory compression and decompression of strings and
+arbitrary byte arrays;
+
+- read and write compressed files in gzip format.
+
+INSTALLATION
+
+Installation of the package is ASDF-oriented.
+
+1. Add this directory to the variable ASDF:*CENTRAL-REGISTRY*
+
+2. At the Lisp prompt type
+
+(asdf:oos 'asdf:load-op "split-sequence")
+
+This will compile and load the package into your running lisp.
+If compilation is failed at zlib library loading look at
+*zlib-search-paths* and *zlib-names* variables in "cl-zlib.lisp".
+
+3. If you want to run existing tests then at the Lisp prompt type
+
+(load "test.lisp")
+(zlib-test:zlib-test)
+
+RUNNING CL-ZLIB
+
+See the source file, tests and the manual.txt file for documentation and
+examples. See LICENSE.txt for licensing details. The zlib library is
+available at http://www.zlib.org/. This code was tested with CMUCL-19b
+under GNU/Linux only.
+
+FEEDBACK
+
+Please send feedback, bug reports and comments to the author at:
+Alberto.Riva@TCH.Harvard.edu. 

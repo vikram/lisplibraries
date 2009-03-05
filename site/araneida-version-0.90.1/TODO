@@ -1,0 +1,54 @@
+-*- mode: outline -*-
+
+* New functionality
+
+** http/1.1 persistence
+
+needs chunked encoding to be particuarly useful.
+
+** new response model 
+
+Make request and response into two separate objects; currently they're
+conflated into one and arbitrarily called request. 
+
+*** fits the client as well as the server 
+
+Allow a request to be created from scratch and handed to a server
+which returns a response.
+
+*** message bodies have a streamsy interface
+
+Don't want to precompute the whole thing.  Important w.r.t (a)
+printing long/slow responses, (b) parsing big requests (e.g. file
+uploads)
+
+** merge in the multipart/form-data patch
+
+subject to efficiency noise I've already made.  with new handler model
+we could implement lazy request-header stuff because we'd be able to
+tell people they have to use request-send-headers if they want to use
+the new interface
+
+** persistent connections
+
+This would be a significant change:
+
+1) It will only work with the object-based handler model where a
+response-sent condition can be signalled without closing the socket
+
+2) This is also going to need all responses to set a Content-length, or to
+use a chunked encoding.  This would be best done at the stream layer:
+let's wait for simple-streams
+
+** Request methods: general-purpose PUT handler.
+
+** HTTP caching 
+
+Documentation should explain use of Vary
+
+* Bugs:
+
+html.lisp : html-reserved-p
+ - the test for whether a character requires URL-escaping is wrong
+
+** Check for conformance with rfc1945/2168; I bet it doesn't

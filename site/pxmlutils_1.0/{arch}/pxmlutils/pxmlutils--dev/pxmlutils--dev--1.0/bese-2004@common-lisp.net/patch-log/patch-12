@@ -1,0 +1,9 @@
+Revision: pxmlutils--dev--1.0--patch-12
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Wed Feb 25 13:08:44 CET 2004
+Standard-date: 2004-02-25 12:08:44 GMT
+Modified-files: {arch}/=tagging-method
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-12
+Summary: Added .ppcf files to precious tagging method
+

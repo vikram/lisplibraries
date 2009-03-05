@@ -1,0 +1,11 @@
+Revision: pxmlutils--dev--1.0--patch-2
+Archive: bese-2004@common-lisp.net
+Creator: Marco Baringer <mb@bese.it>
+Date: Tue Feb 10 16:54:49 CET 2004
+Standard-date: 2004-02-10 15:54:49 GMT
+Modified-files: pxml-test.cl pxml0.cl pxml2.cl
+New-patches: bese-2004@common-lisp.net/pxmlutils--dev--1.0--patch-2
+Summary: Changes due to portableaserve using PURI which provide the PURI package not a NET.URI package.
+Keywords: 
+
+Since puri is a complete implementation we also removed our implementation of uri=.

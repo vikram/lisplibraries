@@ -1,0 +1,86 @@
+[initial version
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015154202] 
+[tests passing
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015160607] 
+[Added .boring and added public_html to it, so you can darcs get it into your local alexandria repo
+attila.lendvai@gmail.com**20061015170133] 
+[documentation
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015215052] 
+[variance and standard-deviation biased by default, documentation fixes for both
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016114618] 
+[ROTATE-RIGHT and ROTATE-LEFT replaced by a single function ROTATE
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016123238] 
+[REMOVE-KEYS renamed to SANS, with new --arguably better-- argument order
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016125413] 
+[new: flatten, map-product, setp. fixed: set-equal
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016150600] 
+[SETF-functions for lastcar, first-elt, and last-elt. :KEY and :TEST for starts-with and ends-with
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061017155126] 
+[Added (declare (ignore sub)) for type=
+attila.lendvai@gmail.com**20061017155937] 
+[Extended parse-body with a :whole arg, report multiple docstring error.
+attila.lendvai@gmail.com**20061022105744] 
+[IF-LET, IF-LET*, WHEN-LET, and WHEN-LET*
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061107104944] 
+[required-argument
+Nikodemus Siivola <nikodemus@random-state.net>**20070225160010] 
+[with-gensyms
+Nikodemus Siivola <nikodemus@random-state.net>**20070225160042] 
+[Patch by Tayssin John Gabbour, fixing two typos.
+Nikodemus Siivola <nikodemus@random-state.net>**20070318015005] 
+[Fix when-let documentation string.
+langstefan@gmx.at**20070318132238] 
+[Docstring typo
+attila.lendvai@gmail.com**20070501143516] 
+[Added a REMOVE-FROM-PLIST (same as SANS)
+attila.lendvai@gmail.com**20070501143706] 
+[Added a faster loop based remove-from-plist
+attila.lendvai@gmail.com**20070501144915] 
+[Nothing Can Stop The Progressive Revolution
+Nikodemus Siivola <nikodemus@random-state.net>**20070601123336
+ 
+ Added:
+  * XOR
+  * WHICHEVER
+  * SWITCH, ESWITCH, CSWItCH
+  * UNIONF, NUNIONF
+  * ALIST-PLIST, PLIST-ALIST
+  * ENSURE-CONS
+  * NAMED-LAMDBA
+  * DEFINE-CONSTANT
+  * STRING-DESIGNATOR
+ 
+ Note:
+  Documentation strings of many new operators are sorely lacking, particularly
+  NAMED-LAMBDA and *SWITCH.
+ 
+] 
+[MAP-IOTA, misc. fixes, and tests up to 100% coverage
+Nikodemus Siivola <nikodemus@random-state.net>**20070601143059] 
+[Added delete-from-plist, delete-from-plistf, remove-from-plistf.
+attila.lendvai@gmail.com**20070625191357] 
+[Added starts-with-subseq and ends-with-subseq
+attila.lendvai@gmail.com**20070625193029] 
+[deftype for ARRAY-LENGTH
+Nikodemus Siivola <nikodemus@random-state.net>**20070701120827] 
+[Documentation and comment tweaks
+Nikodemus Siivola <nikodemus@random-state.net>**20070701121316] 
+[ENSURE-FUNCTION
+Nikodemus Siivola <nikodemus@random-state.net>**20070701121903] 
+[ENSURE-CAR
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122110] 
+[Compiler-macro for OF-TYPE
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122227] 
+[Factorial, binomial-coefficient, subfactorial, and count-permutations.
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122419] 
+[Combinations, permutations, and derangements
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122604] 
+[DECLAIM, not DECLARE.
+Nikodemus Siivola <nikodemus@random-state.net>**20070703103139] 
+[Make define-constant understand :test 'string= and #'string=. Feel free to 'darcs undo' it if it's considered too dwim'y.
+attila.lendvai@gmail.com**20070706215246] 
+[Use a shared expander for the SWITCH macros
+attila.lendvai@gmail.com**20070802120334
+  - support #'eq and 'eq style :test arg
+  - support T and OTHERWISE clause instead of the :default keyword arg
+] 

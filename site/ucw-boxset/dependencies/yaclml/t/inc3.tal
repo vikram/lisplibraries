@@ -1,0 +1,7 @@
+<tal:include tal:in-package=":it.bese.yaclml.test" 
+             xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+             xmlns:param="http://common-lisp.net/project/bese/tal/params" 
+             tal:name="inc4.tal" 
+             param:foo="$foo">
+  <param:bar><tal:include tal:name="inc5.tal"/></param:bar>
+</tal:include>

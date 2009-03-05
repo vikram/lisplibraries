@@ -1,0 +1,25 @@
+
+- untill now everything was tested on Unbuntu Linux 5.10
+  with Berkley DB 4.3
+
+LISP IMPLEMENTATIONS
+=============
+if you test with another lisp implementation or system
+please tell me if it runs or not (fixing the problems will be fine too).
+These are the systems i tried to use bdb (on a x86 Linux system with libdb4.3)
+
+- sbcl (successfully tested with sbcl 0.9.10 and newer on x86 , 
+        didn't tried older versions)
+- cmucl (successfully tested with release-19a)
+- clisp (successfully tested with version 2.38)
+
+INSTALLATION
+============
+1. cd into "lib" directory
+2. edit installation path in Makefile
+3. "make" and "make install"
+4. use ldconfig ...
+5. update src/packages.lisp to the libary path
+
+The library may be loaded using asdf now
+(asdf:oos 'asdf:load-op :bdb)

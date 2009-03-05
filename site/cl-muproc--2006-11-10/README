@@ -1,0 +1,56 @@
+To run CL-MUPROC you'll need
+
+- a copy of ASDF (cf. http://www.cliki.net/asdf)
+- a copy acl-compat (cf. http://www.cliki.net/ACL-COMPAT)
+- to add cl-muproc.asd to your ASDF registry
+
+If you want to run CL-MUPROC's regression test (recommended), you will
+also need
+
+- a copy MIT's RT regression test package (cf. http://www.cliki.net/RT)
+
+Having done that, you should be able to do something like
+
+     CL-USER> (asdf:oos 'asdf:load-op :cl-muproc)
+     ; loading system definition from
+     ; /mu/home/klaus/lab/tmp/cl-muproc-devel/cl-muproc.asd
+     ; into #<PACKAGE ASDF1292>
+;;;  LOTS OF OUTPUT OMITTED
+     ;; ** Automatic Minor Clean Down
+     ; Loading fasl file /mu/home/klaus/lab/tmp/cl-muproc-devel/generic-server.ufsl
+     ; Loading fasl file /mu/home/klaus/lab/tmp/cl-muproc-devel/supervisor.ufsl
+     NIL
+;;; ONLY IF YOU HAVE RT.LISP   
+     CL-USER> (asdf:oos 'asdf:load-op :cl-muproc-test)
+     ; loading system definition from
+     ; /mu/home/klaus/lab/tmp/cl-muproc-devel/tests/cl-muproc-test.asd
+     ; into #<PACKAGE ASDF3699>
+;;;  LOTS OF OUTPUT OMITTED
+     ; Loading fasl file /mu/home/klaus/lab/tmp/cl-muproc-devel/tests/muproc-test.ufsl
+     ; Loading fasl file /mu/home/klaus/lab/tmp/cl-muproc-devel/tests/gensrv1-test.ufsl
+     NIL
+     CL-USER> (muproc-test::do-tests)
+     Doing 27 pending tests of 27 tests total.
+      MUPROC-TEST::SIMPLE-1 MUPROC-TEST::SIMPLE-2 MUPROC-TEST::SIMPLE-3
+      MUPROC-TEST::SIMPLE-4 MUPROC-TEST::SIMPLE-5
+      MUPROC-TEST::MUPROC-EXIT-LINK-1 MUPROC-TEST::NORMAL-EXIT-LINK-2
+      MUPROC-TEST::LINKED-EXITS-3 MUPROC-TEST::RIPPLING-LINKED-EXITS-4
+      MUPROC-TEST::RIPPLING-LINKED-EXITS-4A MUPROC-TEST::REGISTER-1
+      MUPROC-TEST::COMPUTATION-1 MUPROC-TEST::UNIQUE-MUPROC-NAMES-1
+      MUPROC-TEST::UNIQUE-MUPROC-NAMES-2 MUPROC-TEST::SEND-TO-TERMINATED-1
+      MUPROC-TEST::SEND-TO-TERMINATED-2 MUPROC-TEST::MUPROC-SEND-1
+      MUPROC-TEST::MUPROC-MONITOR-1 MUPROC-TEST::INTERRUPT-1
+      MUPROC-TEST::TWO-INSTANCES-1 MUPROC-TEST::TWO-INSTANCES-2
+      MUPROC-TEST::TWO-INSTANCES-3 MUPROC-TEST::DEFAULT-INSTANCE-1
+      MUPROC-TEST::DEFAULT-INSTANCE-2 MUPROC-TEST::CAST-1
+      MUPROC-TEST::PORT-NAME-1 MUPROC-TEST::HANDLE-TERM-1
+     No tests failed.
+     T
+     CL-USER> 
+
+If all tests pass, you should be ready to use CL-MUPROC.
+
+Enjoy!
+
+
+Klaus Harbo

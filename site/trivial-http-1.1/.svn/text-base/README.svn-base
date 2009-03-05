@@ -1,0 +1,14 @@
+trivial-http is a trivial library for doing HTTP POST and GET over a
+socket interface. It establishes a package TRIVIAL-HTTP, also called
+THTTP, from which the following functions are exported:
+
+(THTTP:HTTP-GET URL) - returns a list of three elements: a response
+code as integer, an association list of headers returned from the
+server, and a stream from which the request can be read.
+
+(THTTP:HTTP-POST URL CONTENT-TYPE CONTENT) - given a URL, a MIME
+content type, and the content as a character stream, POST to the URL
+and return the list of three elements as described for HTTP-GET.
+
+(THTTP:ESCAPE-URL-QUERY QUERY) - escapes a query string in accordance
+with the HTTP specification.

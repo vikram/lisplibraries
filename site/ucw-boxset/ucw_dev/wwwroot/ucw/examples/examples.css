@@ -1,0 +1,152 @@
+body {
+     margin: 5px;
+     padding: 5px;
+     font-family: sans-serif;
+     width: 100%;
+}
+
+#option-menu {
+  position: relative;
+  float: right;
+  margin: 3em;
+}             
+
+#option-menu ul li {
+  margin: 4px;
+  padding: 4px;
+  border: 4px solid #000066;
+}
+
+h1 {
+   border-bottom: 5px solid #000066;
+   width: 50%;
+}
+
+.shadowbox {
+  background: #cccccc;
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+
+.shadowbox div {
+  background: #ffffff;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  color: #000000;
+  padding: 10px;
+  position: relative;
+  top: -2px;
+  left: -2px;
+}
+
+input {
+  background-color: #cccccc;
+  color: #000000;
+  font-family: arial, verdana, ms sans serif;
+  font-weight: bold;
+  font-size: 12pt
+}
+
+div#example-input-results { 
+  border: 1px solid #ff0000; 
+  margin: 0px; 
+  padding: 0px; 
+  position: fixed;
+}
+
+div#example-input-results ul { 
+  list-style: none; 
+  margin: 0px; 
+  padding: 0px; 
+}
+
+div#example-input-results li { margin: 0px; padding: 0px; }
+
+li#example-input-highlight { background-color: #cccccc; }
+
+div.ucw-form-box {
+  position: relative;
+  margin: 0em;
+  padding: 0.1%;
+  border: 1px solid #666666;
+  overflow: hidden;
+}
+
+div.ucw-form-label {
+  width: 100%;
+  position: relative;
+  background-color: #b9c9df;
+  color: #333333;
+}
+
+div.ucw-composite {
+  position: relative;
+}
+
+tr.odd-row {
+  background-color: #fffddd;
+}
+
+tr.even-row {
+  background-color: #eeeeee;
+}
+
+.ucw-composite td {
+  padding: 3px;
+  color: #333333;
+}
+
+.ucw-composite input[type="submit"],
+.ucw-composite input[type="reset"] {
+  padding-left: 1px;
+  padding-right: 1px;  
+  border: 1px solid #666666;
+  background-color: #7c7c7c;
+  color: #ffffff;
+}
+
+.ucw-composite input[type="text"],
+.ucw-composite input[type="password"],
+.ucw-composite select,
+.ucw-composite textarea {
+  border: 1px solid #666666;
+  color: #333333;
+}
+
+.ucw-composite a {
+  border: 2px solid #666666;
+  background-color: #7c7c7c;
+}
+
+.ucw-composite a:link,
+.ucw-composite a:visited {
+  color: #dddddd;
+  text-decoration: none;
+}
+
+.ucw-composite  a:hover,
+.ucw-composite a:active {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.ucw-status-bar-info {
+margin: 0em;
+padding: 0.1%;
+background-color:#53868b;
+color:#ffffff;
+}
+
+.ucw-status-bar-error {
+margin: 0em;
+padding: 0.1%;
+background-color:#ffff99;
+color:#ff0000;
+}
+
+.ucw-invalid-slot {
+border: 2px solid #cc3333;
+}
+
+

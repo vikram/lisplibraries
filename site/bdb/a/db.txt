@@ -1,0 +1,930 @@
+;; $Revision: 1.8 $
+
+To compile dbx.c, use
+
+  gcc -c -fPIC -O3 -shared -o dbx.so dbx.c
+
+and move the resulting dbx.so file to /usr/local/lib/ (or modify the path
+in db-pkg.lisp, if you want to keep it somewhere else).
+
+Then compile and load db-pkg.lisp, db-cmu.lisp, db-ffi.lisp, constants.lisp,
+and db.lisp in that order.  Or (mk:compile-system 'db) or (mk:oos 'db 'compile)
+
+You can just concatenate all the .x86f files together (in the same order)
+so that you only need to load a single file.
+
+
+Alain Picard has kindly written a compatibility layer for enough of
+CMUCL's foreign function interface to work on Xanalys LispWorks.  If
+you're using LispWorks, compile and load cmucl-ffi-compat.lisp after
+db-pkg.lisp and before db-cmu.lisp.
+
+Johannes Grødem informs me that on his Debian system, the functions in
+libdb-4 are named "db_create_4000", etc., necessitating changes in a
+few of the def-alien-routine definitions in db-cmu.lisp (the dbx_
+functions and dbx.c aren't affected).  [This seems to be a Debian
+thing; anyone know why?  Surely noone uses db3 and db4 in the same
+program?]
+
+David Lichteblau has written a compatibility layer for Allegro Common
+Lisp (thank you, David!).  Compile and load cmucl-ffi-acl.lisp
+immediately after db-pkg.lisp.
+
+Thanks to Edi Weitz and Xanalys for the LispWorks LOOP extension.
+
+
+All symbols exported by the BERKELEY-DB package are described below.
+
+
+Non-backwards-compatible changes between versions:
+  1.4: change from db-3.2 to db-4.0
+       dbx.so must be recompiled
+  1.5: arguments to DB-BEGIN-TRANSACTION and DO-DATABASE changed
+  1.7: change from db-4.0 to db-4.1
+       dbx.so must be recompiled
+       DB-DEL changed to DB-DELETE
+       various transaction-related changes in db-4.1
+
+
+[be sure to read the upgrade information regarding transactions in
+db-4.1; it's no longer possible to use transactions on a database
+handle unless the database itself was opened in the transaction]
+
+
+===========================================================================
+[Most of the following functions and macros accept a :flags keyword
+argument, which specifies the flags used by the Berkeley DB C API.
+It should not normally be used; other keyword arguments should be
+provided to request any functionality for which :flags is needed]
+
+
+Variable   *ENVIRONMENT*
+
+  Value type: an environment, or NIL
+  Initial value: NIL
+  Description:
+    The current (default) Berkeley DB environment.
+
+Variable   *TRANSACTION*
+
+  Value type: a transaction, or NIL
+  Initial value: NIL
+  Description:
+    The current active transaction.
+
+Type       CURSOR
+
+  Description:
+    Lisp-level representation of a cursor.
+
+Function   CURSOR-P
+
+  Syntax: cursor-p object => boolean
+  Arguments:
+    object -- an object
+    boolean -- a boolean
+  Description:
+    Returns T if object is a cursor; otherwise returns NIL.
+
+Type       DB
+
+  Description:
+    Lisp-level representation of a DB handle.
+
+Function   DB-ABORT-TRANSACTION
+
+  Syntax: db-abort-transaction &optional transaction => T
+  Arguments:
+    transaction -- a transaction
+  Description:
+    Aborts a transaction.  If transaction is not given, the current
+    transaction (from *transaction*) is aborted.
+    See WITH-TRANSACTION.
+
+Function   DB-ADD-DATA-DIRECTORIES
+
+  Syntax: db-add-data-directories env dirs => T
+  Arguments:
+    env -- an environment
+    dirs -- a designator for a list of pathname designators
+  Description:
+    Adds a list of directories to the search path used to locate data
+    files.  The second argument may be a single pathname or a list of
+    pathnames.
+
+Function   DB-APPEND
+
+  Syntax: db-append db datum &key start end transaction flags => recno
+  Arguments:
+    db -- a DB
+    datum -- a string
+    start -- an integer
+    end -- an integer
+    transaction -- a transaction
+    flags -- an integer
+    recno -- an integer
+  Description:
+    Appends to a Queue or RecNo database and returns the record number.
+
+Function   DB-ASSOCIATE                          [CMUCL only; see notes]
+
+  Syntax: db-associate primary secondary callback
+                       &key transaction create auto-commit flags
+          => T
+  Arguments:
+    primary -- a DB
+    secondary -- a DB
+    callback -- a function designator
+    transaction -- a transaction, or NIL
+    create -- a boolean
+    auto-commit -- a boolean
+    flags -- an integer
+  Description:
+    Associates secondary with primary as a secondary index.  Whenever
+    primary is read or modified, callback is called with three arguments:
+    primary, the key, and the datum of the entry being modified.
+    It should return the key to be used as the secondary index for that
+    entry, or NIL if there should be no such index.  If create is true,
+    secondary should be an empty database; primary will be scanned to
+    populate it (which could take a while!)
+
+Function   DB-BEGIN-TRANSACTION
+
+  Syntax: db-begin-transaction &optional parent &key environment flags
+          => transaction
+  Arguments:
+    parent -- a transaction
+    environment -- an environment
+    flags -- an integer
+    transaction -- a transaction
+  Description:
+    Begins a new transaction, a child of parent, which defaults to the
+    value of *transaction*.  If environment is not supplied, the value
+    of *environment* will be used.
+    See WITH-TRANSACTION.
+
+Function   DB-CHECKPOINT
+
+  Syntax: db-checkpoint &key environment kbytes minutes flags => T
+  Arguments:
+    environment -- an environment
+    kbytes -- an integer
+    minutes -- an integer
+    flags -- an integer
+  Description:
+    Writes a checkpoint record to the log. If either kbytes or minutes
+    is non-zero, the checkpoint is only done if there has been activity
+    since the last checkpoint and either that amount of time has passed
+    or that number of kilobytes of log data have been written since the
+    last checkpoint.
+
+Function   DB-CLEAR
+
+  Syntax: db-clear db &key transaction auto-commit flags => count
+  Arguments:
+    db -- a DB
+    transaction -- a transaction, or NIL
+    auto-commit -- a boolean
+    flags -- an integer
+    count -- an integer
+  Description:
+    Discards all records in the database.
+
+Function   DB-CLOSE
+
+  Syntax: db-close handle &key flags => T
+  Arguments:
+    handle -- a DB, a cursor, or an environment
+    flags -- an integer
+  Description:
+    Closes a database, cursor or environment.  If handle is a DB which
+    was opened inside a transaction, the close is delayed until the
+    transaction is closed (committed or aborted).
+
+Function   DB-COMMIT-TRANSACTION
+
+  Syntax: db-commit-transaction &optional transaction &key flags => T
+  Arguments:
+    transaction -- a transaction
+    flags -- an integer
+  Description:
+    Commits a transaction.  If transaction is not specified, the current
+    transaction (from *transaction*) is used.
+    See WITH-TRANSACTION.
+
+Function   DB-COPY-CURSOR
+
+  Syntax: db-copy-cursor cursor &key position flags => new-cursor
+  Arguments:
+    cursor -- a cursor
+    position -- a boolean
+    flags -- an integer
+    new-cursor -- a cursor
+  Description:
+    Duplicates an open cursor.  If position is non-NIL, the new cursor
+    references the same record as the original.
+
+Function   DB-COUNT
+
+  Syntax: db-count cursor &key flags => count
+  Arguments:
+    cursor -- a cursor
+    flags -- an integer
+    count -- an integer
+  Description:
+    Returns the number of duplicate data items for the key referenced by
+    cursor.
+
+Function   DB-CREATE
+
+  Syntax: db-create &key environment flags => db
+  Arguments:
+    environment -- an environment
+    flags -- an integer
+    db -- a DB
+  Description:
+    Returns a new DB instance.
+    See WITH-DATABASE.
+
+Function   DB-CREATE-ENVIRONMENT
+
+  Syntax: db-create-environment &key flags => env
+  Arguments:
+    flags -- an integer
+    env -- an environment
+  Description:
+    Returns a new environment.
+    See WITH-ENVIRONMENT.
+
+Function   DB-CURSOR
+
+  Syntax: db-cursor db &key transaction flags => cursor
+  Arguments:
+    db -- a DB or a cursor
+    transaction -- a transaction
+    flags -- an integer
+    cursor -- a cursor
+  Description:
+    Returns a new cursor.  If db is a cursor, the new cursor references the
+    same record as db.
+    See WITH-CURSOR.
+
+Function   DB-CURSOR-GET
+
+  Syntax: db-cursor-get cursor mode &optional key datum default
+                        &key start end db-start db-end for-update flags
+          => datum-result key-result datum-length
+  Arguments:
+    cursor -- a cursor
+    mode -- a keyword (see description)
+    key -- a string, or NIL
+    datum -- a string, or NIL
+    default -- an object
+    start -- an integer
+    end -- an integer
+    db-start -- an integer
+    db-end -- an integer
+    for-update -- a boolean
+    flags -- an integer
+    datum-result -- a string, or the value of default
+    key-result -- a string, or NIL
+    datum-length -- an integer, or NIL
+  Description:
+    Returns a key and corresponding datum from the database.  The mode
+    argument must be one of the following keywords:
+      :current    -- return the key/datum pair currently referenced.
+      :first      -- return the first key/datum pair in the database.
+      :last       -- return the last key/datum pair in the database.
+      :get-both   -- identical to :set, except that both the key and datum
+                     must be matched by the key and datum in the database.
+      :get-recno  -- return the current record number.
+      :join-item  -- [what does this mean?]
+      :next       -- move to and return the next record in the database.
+      :prev       -- move to and return the previous record in the database.
+      :next-dup   -- return the next duplicate record.
+      :next-nodup -- return the next non-duplicate record.
+      :prev-nodup -- return the previous non-duplicate record.
+      :set        -- move to the specified key and return the datum.
+      :set-range  -- identical to :set, except that the key is returned as
+                     well as the datum, and on btree databases partial
+                     matches are possible.
+      :set-recno  -- move to the specified record number and return the
+                     key and datum.
+    If strings are supplied for key and/or datum, they will be modified
+    in-place, otherwise fresh strings will be allocated.  A key must be
+    supplied for the :set, :set-range and :set-recno modes, and both key
+    and datum must be supplied for the :get-both mode.
+    When datum is supplied, start and end can be used to specify a substring
+    of datum into which the retrieved value will be written.
+    The db-start and db-end values specify a substring of the database value
+    to retrieve.
+    Note: in-place modification of key and datum is not available on
+    LispWorks.
+
+Function   DB-CURSOR-PUT
+
+  Syntax: db-cursor-put cursor mode datum-or-key &optional datum
+                        &key start end db-start db-end flags
+          => boolean
+  Arguments:
+    cursor -- a cursor
+    mode -- a keyword (see description)
+    datum-or-key -- a string
+    datum -- a string, or NIL
+    start -- an integer
+    end -- an integer
+    db-start -- an integer
+    db-end -- an integer
+    flags -- an integer
+    boolean -- a generalized boolean
+  Description:
+    Inserts a datum into the database.  Mode must be one of the following
+    keywords:
+      :after    -- insert datum-or-key after the current cursor position, as
+                   a duplicate element of the key currently referenced by the
+                   cursor.
+      :before   -- insert datum-or-key before the current cursor position, as
+                   a duplicate element of the key currently referenced by the
+                   cursor.
+      :current  -- overwrite the datum currently referenced by the cursor
+                   with datum-or-key.
+      :keyfirst -- insert the key/value pair given by datum-or-key and datum
+                   as the first item for that key.
+      :keylast  -- insert the key/value pair given by datum-or-key and datum
+                   as the last item for that key.
+      :nodup    -- insert the key/value pair given by datum-or-key and datum
+                   unless that key already exists.
+    If specified, start and end select a substring of the datum value to
+    be inserted, and db-start and db-end select a substring of the database
+    value to be overwritten.
+
+Condition  DB-DEADLOCK-ERROR
+
+  Class precedence list: db-deadlock-error db-error error serious-condition
+                         condition t
+  Description:
+    The db-deadlock-error condition is signalled when a deadlock is detected
+    during transaction processing.
+
+Function   DB-DELETE
+
+  Syntax: db-delete db key &key transaction auto-commit flags => boolean
+  Arguments:
+    db -- a DB or a cursor
+    key -- if db is a DB, a string; otherwise NIL
+    transaction -- a transaction
+    auto-commit -- a boolean
+    flags -- an integer
+    boolean -- a boolean
+  Description:
+    Deletes a record from the database.  If db is a cursor, deletes the
+    current record, otherwise deletes all records associated with key.
+    If transaction is not supplied, the current transaction (from
+    *transaction*) is used.
+
+Condition  DB-ERROR
+
+  Class precedence list: db-error error serious-condition condition t
+  Description:
+    The type db-error consists of error conditions that occur due to
+    database failures.
+
+Function   DB-ERROR-ERRNO
+
+  Syntax: db-error-errno condition => errno
+  Arguments:
+    condition -- a db-error condition
+    errno -- an integer
+  Description:
+    Returns the C API errno that caused the condition.
+
+Condition  DB-FATAL-ERROR
+
+  Class precedence list: db-fatal-error error serious-condition condition t
+   Description:
+     The db-fatal-error condition is signalled when a fatal error occurs.
+
+Function   DB-GET
+
+  Syntax: db-get db key &optional datum default
+                 &key start end db-start db-end for-update transaction flags
+          => datum-result datum-length
+  Arguments:
+    db -- a DB or a cursor
+    key -- a string
+    datum -- a string, or NIL
+    default -- an object
+    start -- an integer
+    end -- an integer
+    db-start -- an integer
+    db-end -- an integer
+    for-update -- a boolean
+    transaction -- a transaction
+    flags -- an integer
+    datum-result -- a string, or the value of default
+    datum-length -- an integer, or NIL
+  Description:
+    Retrieves a datum from the database.  If db is a cursor, it is moved
+    to the given key.  If datum is supplied, it will be modified in-place,
+    otherwise a fresh string will be allocated.
+    When datum is supplied, start and end can be used to specify a substring
+    of datum into which the retrieved value will be written.
+    The db-start and db-end values specify a substring of the database value
+    to retrieve.
+    Note: in-place modification of datum is not available on LispWorks.
+
+Function   DB-KEY-EXISTS
+
+  Syntax: db-key-exists db key &key transaction flags => boolean
+  Arguments:
+    db -- a DB
+    key -- a string
+    transaction -- a transaction
+    flags -- an integer
+    boolean -- a boolean
+  Description:
+    Returns T if key is present in the database; otherwise returns NIL.
+
+Function   DB-LOCK-DETECT
+
+  Syntax: db-lock-detect &optional atype &key environment flags => aborted
+  Arguments:
+    atype -- one of :default, :expire, :maxlocks, :minlocks, :minwrite,
+             :oldest, :random or :youngest
+    environment -- an environment
+    flags -- an integer
+  Description:
+    Runs one iteration of the deadlock detector and returns the number 
+    of lock requests which were rejected.
+
+Condition  DB-OLD-VERSION-ERROR
+
+  Class precedence list: db-old-version-error db-error error serious-condition
+                         condition t
+  Description:
+    The db-old-version-error condition is signalled when an attempt is 
+    made to open a database created by an older version of Berkeley DB,
+    whose files cannot be used with the current version.
+
+Function   DB-OPEN
+
+  Syntax: db-open db file &optional database &key type create read-only
+                                                  mode transaction
+                                                  auto-commit flags
+          => T
+  Arguments:
+    db -- a DB
+    file -- a pathname designator
+    database -- a string, or NIL
+    type -- one of :btree, :hash, :queue, :recno or :unknown
+    create -- one of T, NIL or :excl
+    read-only -- a boolean
+    mode -- an integer
+    transaction -- a transaction, or NIL
+    auto-commit -- a boolean
+    flags -- an integer
+  Description:
+    Opens db, associating it with a file and optionally a named database
+    within that file.  If type is :unknown (the default), the database
+    type will be detected automatically (the database must already exist).
+    If create is true, the database will be created if it doesn't already
+    exist.  If read-only is true, the database will be opened for read only
+    operation.  When creating a new file, the file permissions are set to
+    mode (as affected by the user's umask).
+    See WITH-DATABASE, WITH-DATABASES.
+
+Function   DB-OPEN-ENVIRONMENT
+
+  Syntax: db-open-environment environment home
+                              &key create mode init-lock init-log init-mpool
+                                   init-txn init-cdb recover flags
+          => T
+  Arguments:
+    environment -- an environment
+    home -- a pathname designator
+    create -- a boolean
+    mode -- an integer
+    init-lock -- a boolean
+    init-log -- a boolean
+    init-mpool -- a boolean
+    init-txn -- a boolean
+    init-cdb -- a boolean
+    recover -- one of T, NIL or :recover-fatal
+    flags -- an integer
+  Description:
+    Opens environment, setting its home directory to home.
+    See WITH-ENVIRONMENT.
+
+Function   DB-P
+
+  Syntax: db-p object => boolean
+  Arguments:
+    object -- an object
+    boolean -- a boolean
+  Description:
+    Returns T is object is a DB; otherwise returns NIL.
+
+Function:  DB-PLIST
+
+  Syntax: db-plist db => plist
+  Arguments:
+    db -- a DB
+    plist -- a property list
+  Description:
+    Returns db's property list.  SETFable.
+
+Function   DB-PUT
+
+  Syntax: db-put db key datum &key start end db-start db-end transaction
+                                   auto-commit flags
+          => datum, id
+  Arguments:
+    db -- a DB or a cursor
+    key -- a string
+    datum -- a string
+    start -- an integer
+    end -- an integer
+    db-start -- an integer
+    db-end -- an integer
+    transaction -- a transaction
+    auto-commit -- a boolean
+    flags -- an integer
+    id -- a string or an integer
+  Description:
+    Inserts a key/datum pair into the database.
+    When supplied, start and end specify a substring of datum which is to
+    be inserted, while db-start and db-end specify a substring of database
+    value which is to be written into.
+
+Function   DB-REMOVE
+
+  Syntax: db-remove handle file &optional database
+                    &key transaction auto-commit flags
+          => T
+  Arguments:
+    handle -- an environment or a DB
+    file -- a pathname designator
+    database -- a string, or NIL
+    transaction -- a transaction, or NIL
+    auto-commit -- a boolean
+    flags -- an integer
+  Description:
+    Removes the database specified by the file and database arguments.
+    If no database argument is specified, the file is removed in toto.
+    If the first argument is an environment, the operation may take
+    place inside a transaction.
+
+Function   DB-REMOVE-ENVIRONMENT
+
+  Syntax: db-remove-environment environment home &key flags => T
+  Arguments:
+    environment -- an environment
+    home -- a pathname designator
+    flags -- an integer
+  Description:
+    Destroys a Berkeley DB environment.
+
+Function   DB-RENAME
+
+  Syntax: db-rename handle file name1 &optional name2
+                    &key transaction auto-commit flags
+          => T
+  Arguments:
+    handle --  an environment or a DB
+    file -- a pathname designator
+    name1 -- a pathname designator or a string
+    name2 -- a string, or NIL
+    transaction -- a transaction, or NIL
+    auto-commit -- a boolean
+    flags -- an integer
+  Description:
+    Renames a database.  If name2 is NIL, name1 is a pathname designator
+    and the file will be renamed; if name2 is a string, name1 must be a
+    string naming a database within the file, and that database will be
+    renamed.  If handle is an environment, the operation may take place
+    inside a transaction.
+
+Function   DB-SET-DEADLOCK-DETECTION
+
+  Syntax: db-set-deadlock-detection atype &key environment => T
+  Arguments:
+    atype -- one of :default, :expire, :maxlocks, :minlocks, :minwrite,
+             :oldest, :random or :youngest
+    environment -- an environment
+  Description:
+    Enable deadlock detection whenever a lock conflict occurs, and specify
+    how conflicts are to be resolved.
+    See WITH-ENVIRONMENT.
+
+Function   DB-SET-ENCRYPTION
+
+  Syntax: db-set-encryption handle password &key cipher flags => boolean
+  Arguments:
+    handle -- an environment or a DB
+    password -- a string
+    cipher -- one of :unknown, :aes or :rijndael
+    flags -- an integer
+    boolean -- a boolean
+  Description:
+    Enable encryption on an environment or database.  :AES and :Rijndael
+    are the same thing.  If cipher is :unknown, the cipher will be detected
+    automatically (the database must already exist).
+    Returns NIL if encryption is not supported.
+    Note that DB-SET-ENCRYPTION only sets the password; databases are not
+    encrypted until the DB_ENCRYPT flag is set.
+    See WITH-ENVIRONMENT and WITH-DATABASE.
+
+Function   DB-SET-FEEDBACK                       [CMUCL only; see notes]
+
+  Syntax: db-set-feedback handle callback => T
+  Arguments:
+    handle -- an environment or a DB
+    callback -- a function designator
+  Description:
+    Defines a callback to be used to monitor long-running database
+    operations.  The callback is called with three arguments: handle,
+    an opcode, and an integer between 0 and 100 representing the state
+    of completion, as a percentage.  The opcode is one of :db-recover,
+    :db-upgrade, or :db-verify.
+
+Function   DB-SET-FLAGS
+
+  Syntax: db-set-flags db flags
+  Arguments:
+    db -- a DB
+    flags -- an integer
+  Description:
+    See the C API description of DB->set_flags()
+    See WITH-DATABASE.
+
+Function   DB-SET-LOG-DIRECTORY
+
+  Syntax: db-set-log-directory env dir => T
+  Arguments:
+    env -- an environment
+    dir -- a pathname designator
+  Description:
+    Sets the path used for log files.
+
+Function   DB-SET-TMP-DIRECTORY
+
+  Syntax: db-set-tmp-directory env dir => T
+  Arguments:
+    env -- an environment
+    dir -- a pathname designator
+  Description:
+    Sets the path used for temporary files.
+
+Function   DB-SYNC
+
+  Syntax: db-sync db &key flags => T
+  Arguments:
+    db -- a DB
+    flags -- an integer
+  Description:
+    Flush any cached information to disk.
+
+Function   DB-VERSION
+
+  Syntax: db-version => version, major, minor, patchlevel
+  Arguments:
+    version -- a string
+    major -- an integer
+    minor -- an integer
+    patchlevel -- an integer
+  Description:
+    Returns the Berkeley DB library version number in a human-readable string,
+    as well as the major, minor and patchlevel version numbers as integers.
+
+Macro      DO-DATABASE
+
+  Syntax: do-database (key datum db &optional return) decl* form* => result*
+  Arguments:
+    key -- a variable
+    datum -- a variable
+    db -- a DB
+    return -- a form
+    decl -- a declare expression, not evaluated
+    form -- an implicit progn
+    result -- one or more objects
+  Description:
+    Iterates over the database contents evaluating form* with key and datum
+    bound to each key/datum pair in turn.  When the last pair has been seen,
+    return is evaluated and its value(s) are returned.
+
+Type       ENVIRONMENT
+
+  Description:
+    Lisp-level representation of a Berkeley DB environment.
+
+Function   ENVIRONMENT-P
+
+  Syntax: environment-p object => boolean
+  Arguments:
+    object -- an object
+    boolean -- a boolean
+  Description:
+    Returns T is object is an environment; otherwise returns NIL.
+
+Function   ENVIRONMENT-PLIST
+
+  Syntax: environment-plist environment => plist
+  Arguments:
+    environment -- an environment
+    plist -- a property list
+  Description:
+    Returns environment's property list.  SETFable.
+
+Macro      LOOP                                   [CMUCL/LispWorks only]
+
+  An extension to LOOP is added providing the capability to loop over
+  key and/or data values from a database.  The syntax is
+
+    for-as-db::= var [type-spec] being {each | the}  
+                 {{db-key | db-keys} {in | of} DB
+                  {[using (db-value other-var)] |
+                   [using (transaction txn-var)]}* |
+                  {db-value | db-values} {in | of} DB
+                  {[using (db-key other-var)] |
+                   [using (transaction txn-var)]}*}
+
+  where for-as-db is added to for-as-subclause [see the entry for LOOP
+  in the Common Lisp HyperSpec or ANSI standard]
+    
+Function   MAPDB
+
+  Syntax: mapdb function db &optional keys => results
+  Arguments:
+    function -- a function of two arguments
+    db -- a DB
+    keys -- a list of strings
+    results -- a list
+  Description:
+    The function is applied to each key/datum pair in the database, if
+    keys is not given, or to just those keys (and their associated data)
+    if it is, and the return value of each call is accumulated into a list
+    and returned.
+
+Type       TRANSACTION
+
+  Description:
+    Lisp-level representation of a transaction handle.
+
+Function   TRANSACTION-P
+
+  Syntax: transaction-p object => boolean
+  Arguments:
+    object -- an object
+    boolean -- a boolean
+  Description:
+    Returns T is object is a transaction; otherwise returns NIL.
+
+Macro      WITH-CURSOR
+
+  Syntax: with-cursor (name db &key transaction flags) form* => result*
+  Arguments:
+    name -- a variable
+    db -- a DB
+    transaction -- a transaction
+    flags -- an integer
+    form -- an implicit progn
+    result -- the results returned by the body
+  Description:
+    Evaluates its body with name bound to a new cursor.  The cursor is
+    closed when control leaves the WITH-CURSOR form.
+
+Macro      WITH-DATABASE
+
+  Syntax: with-database (name &optional file database
+                              &key environment type create read-only mode
+                                   transaction password cipher encrypt
+                                   allow-duplicates allow-btree-record-numbers
+				   coalesce-empty-pages renumber snapshot
+                                   flags)
+                        form*
+          => result*
+  Arguments:
+    name -- a variable
+    file -- a pathname designator
+    database -- a string, or NIL
+    environment -- an environment
+    type -- one of :btree, :hash, :queue, :recno or :unknown
+    create -- one of T, NIL or :excl
+    read-only -- a boolean
+    mode -- an integer
+    transaction -- a transaction, or NIL
+    password -- a string
+    cipher -- one of :unknown, :aes, or :rijndael
+    encrypt -- a boolean
+    allow-duplicates -- one of T, NIL or :sorted
+    allow-btree-record-numbers -- a boolean
+    coalesce-empty-pages -- a boolean
+    renumber -- a boolean
+    snapshot -- a boolean
+    flags -- an integer
+    form -- an implicit progn
+    result -- the results returned by the body
+  Description:
+    Evaluates its body with name bound to a DB.
+    When file is given, the DB will be created and opened on that
+    file, optionally to a named database within that file.  If type is
+    :unknown (the default), the database type will be detected
+    automatically (the database must already exist).  If create is
+    true, the database will be created if it doesn't already exist.
+    If read-only is true, the database will be opened for read only
+    operation.  When creating a new file, the file permissions are set
+    to mode (as affected by the user's umask).
+    If file is not given, the database will not be opened; in this
+    case the :environment keyword and value can be given without
+    having to supply NIL values for file and database.
+    If password is given, DB-SET-ENCRYPTION will be called to set the
+    password, and encryption will be enabled.  If environment is non-NIL,
+    the password should be set in the environment, not on the database,
+    and encrypt should be true to enable encryption of the database.
+    The DB will be closed when control leaves the WITH-DATABASE form.
+
+Macro      WITH-DATABASES
+
+  Syntax: with-databases ({(name &optional file database
+                                 &key environment type create read-only mode
+                                      transaction password cipher encrypt
+                                      allow-duplicates
+                                      allow-btree-record-numbers
+                                      coalesce-empty-pages renumber snapshot
+                                      flags)}*)
+                         form*
+          => result*
+  Arguments:
+    name -- a variable
+    file -- a pathname designator
+    database -- a string, or NIL
+    environment -- an environment
+    type -- one of :btree, :hash, :queue, :recno or :unknown
+    create -- one of T, NIL or :excl
+    read-only -- a boolean
+    mode -- an integer
+    transaction -- a transaction, or NIL
+    password -- a string
+    cipher -- one of :unknown, :aes, or :rijndael
+    encrypt -- a boolean
+    allow-duplicates -- one of T, NIL or :sorted
+    allow-btree-record-numbers -- a boolean
+    coalesce-empty-pages -- a boolean
+    renumber -- a boolean
+    snapshot -- a boolean
+    flags -- an integer
+    form -- an implicit progn
+    result -- the results returned by the body
+  Description:
+    Equivalent to several nested uses of WITH-DATABASE (q.v.)
+
+Macro      WITH-ENVIRONMENT
+
+  Syntax: with-environment (&optional home &key create mode password cipher
+                                                init-lock init-log init-mpool
+                                                init-txn init-cdb recover
+                                                deadlock-detection flags)
+            form*
+          => result*
+  Arguments:
+    home -- a pathname designator
+    create -- a boolean
+    mode -- an integer
+    password -- a string
+    cipher -- one of :unknown, :aes or :rijndael
+    init-lock -- a boolean
+    init-log -- a boolean
+    init-mpool -- a boolean
+    init-txn -- a boolean
+    init-cdb -- a boolean
+    recover -- one of T, NIL or :recover-fatal
+    deadlock-detection -- one of :expire, :maxlocks, :minlocks, :minwrite,
+                          :oldest, :random, :youngest or NIL
+    flags -- an integer
+    form -- an implicit progn
+    result -- the results returned by the body
+  Description:
+    Evaluates its body in a new environment, which is closed when control
+    leaves the WITH-ENVIRONMENT form.
+    The special variable *environment* is bound to the new environment.
+
+Macro      WITH-TRANSACTION
+
+  Syntax: with-transaction (&optional parent &key environment retry flags)
+            form*
+          => result*
+  Arguments:
+    parent -- a transaction, T or NIL
+    environment -- an environment
+    retry -- a boolean
+    flags -- an integer
+    form -- an implicit progn
+    result -- the results returned by the body
+  Description:
+    Evaluates its body in a new transaction.  The transaction is automatically
+    aborted if control is thrown out of the WITH-TRANSACTION form abnormally,
+    and committed otherwise.  If parent is T (the default), the current
+    transaction is used as parent for the new transaction.  If retry is
+    non-NIL and a deadlock occurs, the transaction will be aborted and 
+    the WITH-TRANSACTION form will be retried.
+    The special variable *transaction* is bound to the new transaction.

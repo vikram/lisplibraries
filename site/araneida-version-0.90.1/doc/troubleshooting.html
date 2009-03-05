@@ -1,0 +1,58 @@
+<html><head>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida Reference: Troubleshooting</title>
+</head><body>
+
+<h1>Troubleshooting</h1>
+
+<h2> Handler debugging</h2>
+
+<p>The special variable *RESTART-ON-HANDLER-ERRORS* governs whether
+errors signalled during handler execution should drop you into the
+debugger or not.  
+<ul>
+<li> If it's T (the default), you just get a backtrace on
+*TRACE-OUTPUT* and processing continues as normal.  Obviously this is
+recommended for production sites.  
+<li> Setting it to NIL drops you into the debugger.
+<li> If it's a function designator, we call that function with the
+condition that was signalled, and it is expected to handle the error
+or return T or NIL (which will be treated as above)
+</ul>
+
+<p>This can be used as a hook for alternative debugger interfaces: for
+example, SLIME users may run
+<pre>
+(setf *restart-on-handler-errors* (swank:slime-debugger-function))
+</pre>
+from their *slime-repl* to make Araneida handler errors invoke the
+emacs-based interactive debugger.
+
+<p>Note that this variable has the opposite sense of the (badly-named)
+*BREAK-ON-HANDLER-ERRORS* flag in older versions.  That variable still
+exists (and works) but is deprecated and may be removed in future.
+
+<p>The THREADED-HTTP-LISTENER also has a timeout for responses: any
+thread spending more than *HANDLER-TIMEOUT* seconds in a response will
+be automatically timed out and made to select the ABORT-RESPONSE
+restart so that it can answer another request.  The default timeout is
+60, which is probably too short in all situations that it is not too long.
+
+<h2> Threads</h2>
+
+<p>The thread support has not been hammered on very hard, and 
+depends on SBCL threads which have not themselves been tested
+particularly hard.  If you run into weird threading bugs, (a) I'd like to
+know about anything you can reproduce, (b) the serve-event support is
+probably more stable.
+
+<p> If you're using threads with SBCL, it gets easier if you're also
+using sb-aclrepl <tt>(require 'sb-aclrepl)</tt>.  If you get a 
+"debugger invoked" message followed by "Thread <i>n</i> suspended", 
+you can use the <tt>:focus</tt> command to switch that thread to the
+foreground.  When you exit the debugger by selecting any restart, 
+the thread will background before continuing.
+
+<p>Note that a thread in the debugger will eventually be reset by the
+timeout mechanism (see above).
+

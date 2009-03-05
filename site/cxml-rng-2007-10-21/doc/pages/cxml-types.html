@@ -1,0 +1,635 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Package cxml-types</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	    Up:
+	    <a href="../index.html">cxml-rng API reference</a></p>
+      <h1>
+	  Package
+	  cxml-types</h1>
+      <div class="indent">
+<tt>cxml-types</tt> defines an extensible interface for XML-related
+    data types as required for use in Relax NG validation.<br><br>
+    It includes Relax NG's minimal built-in type library, which is named    <tt>:||</tt> and defines the types "string" and "token".<br><br>
+    In addition, it implements the built-in types of    <a href="http://www.w3.org/TR/xmlschema-2/">XML Schema Datatypes</a>    as specified in <a href="http://relaxng.org/xsd-20010907.html">Guidelines for    using W3C XML Schema Datatypes with RELAX NG</a>.  The XSD type library    is named <tt>:|http://www.w3.org/2001/XMLSchema-datatypes|</tt>.<br><br>    The types defined by <a href="http://relaxng.org/compatibility-20011203.html">      RELAX NG DTD Compatibility</a>
+    are available through the data type library named    <tt>:|http://relaxng.org/ns/compatibility/datatypes/1.0|</tt>.<br><br>                                    </div>
+    </div>
+    <table cellspacing="0" cellpadding="0"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+<div style="margin-left: -30px"><h3>About This Package</h3></div>
+<a href="#id62780" style="font-weight: bold">Example</a><br><a href="#id62793" style="font-weight: bold">Type instances</a><br><a href="#id62864" style="font-weight: bold">Using types</a><br><a href="#id62932" style="font-weight: bold">The validation context</a><br><a href="#id62984" style="font-weight: bold">Relax NG built-in types</a><br><a href="#id62999" style="font-weight: bold">DTD compatibility types</a><br><a href="#id63018" style="font-weight: bold">Primitive XSD built-in types</a><br><a href="#id63092" style="font-weight: bold">Enumerated XSD built-in types</a><br><a href="#id63113" style="font-weight: bold">Derived XSD built-in types</a><br><br><h2>
+<a name="id62780"></a>Example</h2>    <pre>
+* (setf ttt (cxml-types:find-type :|| "token"))
+#&lt;CXML-TYPES:TOKEN-TYPE {1002D16B71}&gt;
+* (cxml-types:parse ttt "a b")
+"a b"
+* (cxml-types:parse ttt "a     b")
+"a b"
+* (cxml-types:equal-using-type ttt ** *)
+T    </pre>    <h2>
+<a name="id62793"></a>Type instances</h2>
+      Each type, together with its parameters, is represented by an      instance of <tt>data-type</tt>.  The generic function <a href="cxml-types__fun__find-type.html"><tt>find-type</tt></a>,
+      defined for each library, creates type instances.  A type's properties      are accessible using <a href="cxml-types__fun__type-name.html"><tt>type-name</tt></a>, <a href="cxml-types__fun__type-library.html"><tt>type-library</tt></a>, and      <a href="cxml-types__fun__type-context-dependent-p.html"><tt>type-context-dependent-p</tt></a>.<br><br>      <div class="def"><a href="cxml-types__class__data-type.html">
+	  Class
+	  data-type</a></div>
+<div style="margin-left: 3em">The abstract superclass of all types. <a href="cxml-types__class__data-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__rng-type.html">
+	  Class
+	  rng-type</a></div>
+<div style="margin-left: 3em">The class of Relax NG built-in types. <a href="cxml-types__class__rng-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__xsd-type.html">
+	  Class
+	  xsd-type</a></div>
+<div style="margin-left: 3em">The class of XML Schema built-in types. <a href="cxml-types__class__xsd-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__find-type.html">Function find-type (library name params)</a></div>
+<div style="margin-left: 3em">Look up the type named <i>name</i> in datatype library <i>library</i>. <a href="cxml-types__fun__find-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__type-name.html">Function type-name (type)</a></div>
+<div style="margin-left: 3em">Return the name this type has within its library. <a href="cxml-types__fun__type-name.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__type-library.html">Function type-library (type)</a></div>
+<div style="margin-left: 3em">Return the name of the library this type belongs to. <a href="cxml-types__fun__type-library.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__type-context-dependent-p.html">Function type-context-dependent-p (type)</a></div>
+<div style="margin-left: 3em">Return true if parsing and validation of values by this type      depends on the validation context. <a href="cxml-types__fun__type-context-dependent-p.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id62864"></a>Using types</h2>
+      Types allow strings to be tested for validity and equality.      <a href="cxml-types__fun__validp.html"><tt>validp</tt></a> checks whether a string can be parsed.  If it is valid,      <a href="cxml-types__fun__parse.html"><tt>parse</tt></a> will compute the string's value, and return a
+      Lisp object of a type-specific class as a representation of that value.      Values returned by <a href="cxml-types__fun__parse.html"><tt>parse</tt></a> can be compared for equality using      <a href="cxml-types__fun__equal-using-type.html"><tt>equal-using-type</tt></a>.  Some types also define a partial ordering,      which can be queried using <a href="cxml-types__fun__lessp-using-type.html"><tt>lessp-using-type</tt></a>.<br><br>      <div class="def"><a href="cxml-types__fun__validp.html">Function validp (type e &amp;optional context)</a></div>
+<div style="margin-left: 3em">Determine whether a string is a valid lexical representation    for a type. <a href="cxml-types__fun__validp.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__parse.html">Function parse (type e &amp;optional context)</a></div>
+<div style="margin-left: 3em">Parse string <tt>e</tt> and return a representation of its value      as defined by the data type. <a href="cxml-types__fun__parse.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__equal-using-type.html">Function equal-using-type (type u v)</a></div>
+<div style="margin-left: 3em">Compare the values <tt>u</tt> and <tt>v</tt> using a      data-type-dependent equality function. <a href="cxml-types__fun__equal-using-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__lessp-using-type.html">Function lessp-using-type (type u v)</a></div>
+<div style="margin-left: 3em">Compare the values <tt>u</tt> and <tt>v</tt> using a      data-type-dependent partial ordering. <a href="cxml-types__fun__lessp-using-type.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id62932"></a>The validation context</h2>
+      Some types are context dependent, as indicated by      <a href="cxml-types__fun__type-context-dependent-p.html"><tt>type-context-dependent-p</tt></a>.  Those types need access to state
+      computed by the XML parser implicitly, like namespace bindings or
+      the Base URI.<br><br>      An abstract class <a href="cxml-types__class__validation-context.html"><tt>validation-context</tt></a> is defined that
+      users of this API can implement a subclass of
+      to define methods for the generic functions listed below.<br><br>
+      In addition, two pre-defined validation context implementations are
+      provided, one for use with SAX, the other based on Klacks.<br><br>      <div class="def"><a href="cxml-types__class__validation-context.html">
+	  Class
+	  validation-context</a></div>
+<div style="margin-left: 3em">This abstract class defines a protocol allowing data types    to query the XML parser about its current state. <a href="cxml-types__class__validation-context.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__sax-validation-context-mixin.html">
+	  Class
+	  sax-validation-context-mixin</a></div>
+<div style="margin-left: 3em">A class that implements validation-context as a mixin for     user-defined SAX handler classes. <a href="cxml-types__class__sax-validation-context-mixin.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__klacks-validation-context.html">
+	  Class
+	  klacks-validation-context</a></div>
+<div style="margin-left: 3em"><div class="indent">A validation-context implementation that queries
+    a klacks source for information about the parser's current state.    </div></div>
+<br>      <div class="def"><a href="cxml-types__fun__context-find-namespace-binding.html">Function context-find-namespace-binding (context prefix)</a></div>
+<div style="margin-left: 3em">This function resolves a namespace prefix to a namespace URI in the    current context. <a href="cxml-types__fun__context-find-namespace-binding.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__fun__context-find-unparsed-entity.html">Function context-find-unparsed-entity (context name)</a></div>
+<div style="margin-left: 3em"><div class="indent">            This function looks for an unparsed entity in the current context.</div></div>
+<br>    <h2>
+<a name="id62984"></a>Relax NG built-in types</h2>
+      The following primitive types are defined by Relax NG:<br><br>      <div class="def"><a href="cxml-types__class__string-type.html">
+	  Class
+	  string-type</a></div>
+<div style="margin-left: 3em">The Relax NG 'string' type. <a href="cxml-types__class__string-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__token-type.html">
+	  Class
+	  token-type</a></div>
+<div style="margin-left: 3em">The Relax NG 'token' type. <a href="cxml-types__class__token-type.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id62999"></a>DTD compatibility types</h2>
+      The following primitive types are defined by Relax NG DTD
+      Compatibility:<br><br>      <div class="def"><a href="cxml-types__class__id-type.html">
+	  Class
+	  id-type</a></div>
+<div style="margin-left: 3em">The DTD compatibility 'ID' type. <a href="cxml-types__class__id-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__idref-type.html">
+	  Class
+	  idref-type</a></div>
+<div style="margin-left: 3em">The DTD compatibility 'IDREF' type. <a href="cxml-types__class__idref-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__idrefs-type.html">
+	  Class
+	  idrefs-type</a></div>
+<div style="margin-left: 3em">The DTD compatibility 'IDREFS' type. <a href="cxml-types__class__idrefs-type.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id63018"></a>Primitive XSD built-in types</h2>
+      The following primitive types are part of the XSD built-in data type
+      library:<br><br>      <div class="def"><a href="cxml-types__class__duration-type.html">
+	  Class
+	  duration-type</a></div>
+<div style="margin-left: 3em">The duration data type, representing a duration of time. <a href="cxml-types__class__duration-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__date-time-type.html">
+	  Class
+	  date-time-type</a></div>
+<div style="margin-left: 3em">The dateTime data type, representing a moment in time. <a href="cxml-types__class__date-time-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__time-type.html">
+	  Class
+	  time-type</a></div>
+<div style="margin-left: 3em">The time data type, representing a time of day. <a href="cxml-types__class__time-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__date-type.html">
+	  Class
+	  date-type</a></div>
+<div style="margin-left: 3em">The date data type, representing a day of the year. <a href="cxml-types__class__date-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__year-month-type.html">
+	  Class
+	  year-month-type</a></div>
+<div style="margin-left: 3em">The gYearMonth data type, representing the calendar month of a    specific year. <a href="cxml-types__class__year-month-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__year-type.html">
+	  Class
+	  year-type</a></div>
+<div style="margin-left: 3em">The gYear data type, representing a calendar year. <a href="cxml-types__class__year-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__month-day-type.html">
+	  Class
+	  month-day-type</a></div>
+<div style="margin-left: 3em">The gMonthDay data type, representing a calendar month and day. <a href="cxml-types__class__month-day-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__day-type.html">
+	  Class
+	  day-type</a></div>
+<div style="margin-left: 3em">The gDay data type, representing a calendar day. <a href="cxml-types__class__day-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__month-type.html">
+	  Class
+	  month-type</a></div>
+<div style="margin-left: 3em">The gMonth data type, representing a calendar month. <a href="cxml-types__class__month-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__boolean-type.html">
+	  Class
+	  boolean-type</a></div>
+<div style="margin-left: 3em">The boolean data type. <a href="cxml-types__class__boolean-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__base64-binary-type.html">
+	  Class
+	  base64-binary-type</a></div>
+<div style="margin-left: 3em">The base64Binary data type. <a href="cxml-types__class__base64-binary-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__hex-binary-type.html">
+	  Class
+	  hex-binary-type</a></div>
+<div style="margin-left: 3em">The hexBinary data type. <a href="cxml-types__class__hex-binary-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__float-type.html">
+	  Class
+	  float-type</a></div>
+<div style="margin-left: 3em">The float data type. <a href="cxml-types__class__float-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__decimal-type.html">
+	  Class
+	  decimal-type</a></div>
+<div style="margin-left: 3em">The decimal data type. <a href="cxml-types__class__decimal-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__double-type.html">
+	  Class
+	  double-type</a></div>
+<div style="margin-left: 3em">The double data type. <a href="cxml-types__class__double-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__any-uri-type.html">
+	  Class
+	  any-uri-type</a></div>
+<div style="margin-left: 3em">The anyURI data type. <a href="cxml-types__class__any-uri-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__qname-type.html">
+	  Class
+	  qname-type</a></div>
+<div style="margin-left: 3em">The QName data type. <a href="cxml-types__class__qname-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__notation-type.html">
+	  Class
+	  notation-type</a></div>
+<div style="margin-left: 3em">The NOTATION data type. <a href="cxml-types__class__notation-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__xsd-string-type.html">
+	  Class
+	  xsd-string-type</a></div>
+<div style="margin-left: 3em">The string data type. <a href="cxml-types__class__xsd-string-type.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id63092"></a>Enumerated XSD built-in types</h2>
+      The following types are part of the XSD built-in data type
+      library, and are defined as derived types through enumeration.
+      Relax NG does not implement the enumeration facet, so although these
+      types are described as "derived", they are implemented directly.<br><br>      <div class="def"><a href="cxml-types__class__xsd-idrefs-type.html">
+	  Class
+	  xsd-idrefs-type</a></div>
+<div style="margin-left: 3em">The IDREFS data type, an enumeration. <a href="cxml-types__class__xsd-idrefs-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__entities-type.html">
+	  Class
+	  entities-type</a></div>
+<div style="margin-left: 3em">The ENTITIES data type, an enumeration. <a href="cxml-types__class__entities-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__nmtokens-type.html">
+	  Class
+	  nmtokens-type</a></div>
+<div style="margin-left: 3em">The NMTOKENS data type, an enumeration. <a href="cxml-types__class__nmtokens-type.html#details">...</a>
+</div>
+<br>    <h2>
+<a name="id63113"></a>Derived XSD built-in types</h2>
+      The following types are part of the XSD built-in data type
+      library, and are defined as derived types through restriction.<br><br>      <div class="def"><a href="cxml-types__class__normalized-string-type.html">
+	  Class
+	  normalized-string-type</a></div>
+<div style="margin-left: 3em">The normalizedString data type, derived from string. <a href="cxml-types__class__normalized-string-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__xsd-token-type.html">
+	  Class
+	  xsd-token-type</a></div>
+<div style="margin-left: 3em">The token data type, derived from normalizedString. <a href="cxml-types__class__xsd-token-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__language-type.html">
+	  Class
+	  language-type</a></div>
+<div style="margin-left: 3em">The language data type, derived from token. <a href="cxml-types__class__language-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__name-type.html">
+	  Class
+	  name-type</a></div>
+<div style="margin-left: 3em">The Name data type, derived from token. <a href="cxml-types__class__name-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__ncname-type.html">
+	  Class
+	  ncname-type</a></div>
+<div style="margin-left: 3em">The NCName data type, derived from Name. <a href="cxml-types__class__ncname-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__xsd-id-type.html">
+	  Class
+	  xsd-id-type</a></div>
+<div style="margin-left: 3em">The ID data type, derived from NCName. <a href="cxml-types__class__xsd-id-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__xsd-idref-type.html">
+	  Class
+	  xsd-idref-type</a></div>
+<div style="margin-left: 3em">The IDREF data type, derived from ID. <a href="cxml-types__class__xsd-idref-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__entity-type.html">
+	  Class
+	  entity-type</a></div>
+<div style="margin-left: 3em">The ENTITY data type, derived from NCName. <a href="cxml-types__class__entity-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__nmtoken-type.html">
+	  Class
+	  nmtoken-type</a></div>
+<div style="margin-left: 3em">The NMTOKEN data type, derived from token. <a href="cxml-types__class__nmtoken-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__integer-type.html">
+	  Class
+	  integer-type</a></div>
+<div style="margin-left: 3em">The integer data type, derived from decimal. <a href="cxml-types__class__integer-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__non-positive-integer-type.html">
+	  Class
+	  non-positive-integer-type</a></div>
+<div style="margin-left: 3em">The nonPositiveInteger data type, derived from integer. <a href="cxml-types__class__non-positive-integer-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__negative-integer-type.html">
+	  Class
+	  negative-integer-type</a></div>
+<div style="margin-left: 3em">The negativeInteger data type, derived from nonPositiveInteger. <a href="cxml-types__class__negative-integer-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__long-type.html">
+	  Class
+	  long-type</a></div>
+<div style="margin-left: 3em">The long data type, derived from integer. <a href="cxml-types__class__long-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__int-type.html">
+	  Class
+	  int-type</a></div>
+<div style="margin-left: 3em">The int data type, derived from long. <a href="cxml-types__class__int-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__short-type.html">
+	  Class
+	  short-type</a></div>
+<div style="margin-left: 3em">The short data type, derived from int. <a href="cxml-types__class__short-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__byte-type.html">
+	  Class
+	  byte-type</a></div>
+<div style="margin-left: 3em">The byte data type, derived from short. <a href="cxml-types__class__byte-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__non-negative-integer-type.html">
+	  Class
+	  non-negative-integer-type</a></div>
+<div style="margin-left: 3em">The nonNegativeInteger data type, derived from integer. <a href="cxml-types__class__non-negative-integer-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__unsigned-long-type.html">
+	  Class
+	  unsigned-long-type</a></div>
+<div style="margin-left: 3em">The unsignedLong data type, derived from nonNegativeInteger. <a href="cxml-types__class__unsigned-long-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__unsigned-int-type.html">
+	  Class
+	  unsigned-int-type</a></div>
+<div style="margin-left: 3em">The unsignedInt data type, derived from unsignedLong. <a href="cxml-types__class__unsigned-int-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__unsigned-short-type.html">
+	  Class
+	  unsigned-short-type</a></div>
+<div style="margin-left: 3em">The unsignedShort data type, derived from unsignedInt. <a href="cxml-types__class__unsigned-short-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__unsigned-byte-type.html">
+	  Class
+	  unsigned-byte-type</a></div>
+<div style="margin-left: 3em">The unsignedByte data type, derived from unsignedInt. <a href="cxml-types__class__unsigned-byte-type.html#details">...</a>
+</div>
+<br>      <div class="def"><a href="cxml-types__class__positive-integer-type.html">
+	  Class
+	  positive-integer-type</a></div>
+<div style="margin-left: 3em">The positiveInteger data type, derived from nonNegativeInteger. <a href="cxml-types__class__positive-integer-type.html#details">...</a>
+</div>
+<br>    </div>
+      </td>
+      <td valign="top">
+        <h3>
+<a name="index"></a>Symbol Index</h3>
+        <table cellspacing="0" cellpadding="0">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    <tr><td valign="top">
+<a href="cxml-types__class__any-uri-type.html"><tt>any-uri-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__base64-binary-type.html"><tt>base64-binary-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__boolean-type.html"><tt>boolean-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__byte-type.html"><tt>byte-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__context-find-namespace-binding.html"><tt>context-find-namespace-binding</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__context-find-unparsed-entity.html"><tt>context-find-unparsed-entity</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__data-type.html"><tt>data-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__date-time-type.html"><tt>date-time-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__date-type.html"><tt>date-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__day-type.html"><tt>day-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__decimal-type.html"><tt>decimal-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__double-type.html"><tt>double-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__dtd-compatibility-type.html"><tt>dtd-compatibility-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__duration-type.html"><tt>duration-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__entities-type.html"><tt>entities-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__entity-type.html"><tt>entity-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__equal-using-type.html"><tt>equal-using-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__exact-length.html"><tt>exact-length</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__find-type.html"><tt>find-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__float-type.html"><tt>float-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__fraction-digits.html"><tt>fraction-digits</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__hex-binary-type.html"><tt>hex-binary-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__id-type.html"><tt>id-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__idref-type.html"><tt>idref-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__idrefs-type.html"><tt>idrefs-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__int-type.html"><tt>int-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__integer-type.html"><tt>integer-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__klacks-validation-context.html"><tt>klacks-validation-context</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__language-type.html"><tt>language-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__lessp-using-type.html"><tt>lessp-using-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__long-type.html"><tt>long-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__make-klacks-validation-context.html"><tt>make-klacks-validation-context</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__make-param.html"><tt>make-param</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__max-exclusive.html"><tt>max-exclusive</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__max-inclusive.html"><tt>max-inclusive</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__max-length.html"><tt>max-length</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__min-exclusive.html"><tt>min-exclusive</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__min-inclusive.html"><tt>min-inclusive</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__min-length.html"><tt>min-length</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__month-day-type.html"><tt>month-day-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__month-type.html"><tt>month-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__name-type.html"><tt>name-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__ncname-type.html"><tt>ncname-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__negative-integer-type.html"><tt>negative-integer-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__nmtoken-type.html"><tt>nmtoken-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__nmtokens-type.html"><tt>nmtokens-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__non-negative-integer-type.html"><tt>non-negative-integer-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__non-positive-integer-type.html"><tt>non-positive-integer-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__normalized-string-type.html"><tt>normalized-string-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__notation-type.html"><tt>notation-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__param.html"><tt>param</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__param-name.html"><tt>param-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__param-value.html"><tt>param-value</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__parse.html"><tt>parse</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__patterns.html"><tt>patterns</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__positive-integer-type.html"><tt>positive-integer-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__qname-type.html"><tt>qname-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__rng-type.html"><tt>rng-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__sax-validation-context-mixin.html"><tt>sax-validation-context-mixin</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__short-type.html"><tt>short-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__string-type.html"><tt>string-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__time-type.html"><tt>time-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__token-type.html"><tt>token-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__total-digits.html"><tt>total-digits</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__type-context-dependent-p.html"><tt>type-context-dependent-p</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__type-id-type.html"><tt>type-id-type</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__type-library.html"><tt>type-library</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__type-name.html"><tt>type-name</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__unsigned-byte-type.html"><tt>unsigned-byte-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__unsigned-int-type.html"><tt>unsigned-int-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__unsigned-long-type.html"><tt>unsigned-long-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__unsigned-short-type.html"><tt>unsigned-short-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__validation-context.html"><tt>validation-context</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__fun__validp.html"><tt>validp</tt></a>, function</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-id-type.html"><tt>xsd-id-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-idref-type.html"><tt>xsd-idref-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-idrefs-type.html"><tt>xsd-idrefs-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-string-type.html"><tt>xsd-string-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-token-type.html"><tt>xsd-token-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__xsd-type.html"><tt>xsd-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__year-month-type.html"><tt>year-month-type</tt></a>, class</td></tr>
+<tr><td valign="top">
+<a href="cxml-types__class__year-type.html"><tt>year-type</tt></a>, class</td></tr>
+</table>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+../site/ucw-boxset/dependencies/trivial-garbage/trivial-garbage.asd

@@ -1,0 +1,14 @@
+
+A simple mostly-HTTP/1.0 server.
+
+See documentation in doc/index.html or at http://www.cliki.net/araneida
+
+Your first point of call for questions should be the lispweb mailing
+list.  If you mail me (Daniel) directly you may not get a timely
+response, and if you mail me to ask about non-SBCL stuff you won't get
+a useful response either.  I tell you this now not because I'm
+naturally offensive, but because I only use SBCL and I'm basically
+just really badly organised.  For lispweb details, see
+
+ http://www.cliki.net/lispweb
+

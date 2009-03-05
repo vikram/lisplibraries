@@ -1,0 +1,179 @@
+<html><head><title>Araneida - Request Parameters</title>
+<LINK rel="stylesheet" href="/doc/araneida.css">
+<title>Araneida - How to Get Request Parameters</title>
+</head><body>
+
+<p>Unfortunately, this documents only dealing with URL parameters, AKA
+GET parameters. Others are invited and encouraged to contribute documentation
+for POST.</p>
+
+<p>The relevant code is in "url.lisp"</p>
+
+<p>Note that you should use inexact matching on your handlers in order
+to receive GET parameters. Otherwise, your handlers will never be matched!</p>
+
+<h1>Parameters</h1>
+<p>To obtain all parameters, use URL-QUERY-ALIST</p>
+<pre>
+(defmethod handle-request-response ((handler my-handler) method request)
+  ; let's say the request is "http://example.com/my/handler?foo=1;bar=12"
+  (let ((params (url-query-alist (request-url request))))
+    insert-code-here))
+</pre>
+
+<p>Params would now look like:
+<pre>
+'(("foo" "1")("bar" "12"))
+</pre>
+
+<p>To improve clarity in your code, or because you just want one or two parameters,
+consider using URL-QUERY-PARAM</p>
+<pre>
+(defmethod handle-request-response ((handler my-handler) method request)
+  ; let's say the request is "http://example.com/my/handler?foo=1;bar=12"
+  (let ((foo (url-query-param (request-url request) "foo"))
+	(bar (url-query-param (request-url request) "bar")))
+    insert-code-here))
+</pre>
+
+<p>It's important to note that the values will be returned as strings.</p>
+
+<p>If you pass :case-sensitive f to URL-QUERY-PARAM, the key will be matched without
+regard to case. This is best to use when you can.</p>
+
+<p>Lastly, there is a convenience macro WITH-URL-PARAMS
+<pre>
+(with-url-params (foo bar) (request-url request)
+  (format nil "Foo: ~A, Bar: ~A" foo bar))
+</pre>
+
+<p>When there is no parameter, the value is nil.
+
+
+<h1>Tainted Parameters</h1>
+<p>To help prevent errors (and help close some security holes), the above functions
+have tainted equivalents. CL-TAINT is a package developed by Alan Shields and is included
+with Araneida. Taint wraps a value in a lambda, preventing it from being used directly -
+you must untaint it first.
+
+<pre>
+CL-USER&gt; (setf x "5")
+"5"
+CL-USER&gt; x
+"5"
+CL-USER&gt; (setf y (taint "5"))
+#&lt;CLOSURE (LAMBDA ()) {5082C97D}&gt;
+CL-USER&gt; y
+#&lt;CLOSURE (LAMBDA ()) {5082C97D}&gt;
+CL-USER&gt; (untaint #'parse-integer y)
+5
+</pre>
+
+<p>WITH-URL-PARAMS has an equivalent WITH-TAINTED-URL-PARAMS. Absent values (nils) are
+untainted.
+
+<p>By defining your own untainting functions, you can make sure that only proper values are
+used.
+
+<p>The tainted versions are TAINTED-URL-QUERY-ALIST and TAINTED-URL-QUERY-PARAM. They have
+the same argument list - the only difference is that the values are returned tainted.
+
+<p>If you wish to be warned when you use untainted calls, set araneida:*warn-when-using-untainted-values*
+to a true value. This will cause a USING-UNTAINTED-VALUES condition (a warning) to be signaled whenever
+untainted calls are used.
+
+
+<h1>URL Methods</h1>
+<p>In addition, there is also the urlmethod system. The idea is to have
+generic-method-like functions for URL parameters that, in addition
+to binding parameters to variable names, allows dispatch based upon the
+parameters.
+
+<p>A simple example should clarify. Given:
+
+<pre>
+(defurlmethod foo-method (handler method request
+                                  &amp;key (foo "foo default") (bar "bar default"))
+  (format nil "foo: ~A bar: ~A" foo bar))
+
+(defmethod handle-request-response ((handler my-handler) method request)
+  (request-send-headers request)
+  (html-stream
+    (request-stream request)
+    `(html
+       (p ,(foo-method handler method request)))))
+</pre>
+
+<p>And that "http://example.com/method" is bound to MY-HANDLER, then
+the request "http://example.com/method?foo=myfoo&bar=mybar" will yield
+"foo: myfoo bar: mybar".
+
+<p>The request "http://example.com/method" would yield "foo: foo default bar: bar default".
+
+<p>While this accomplishes a large part of what people want with URL parameters,
+there is More!</p>
+
+<p>Let's say, rather than the above definition of FOO-METHOD, you had:
+
+<pre>
+(defurlmethod foo-method (handler method request
+                                  &amp;key (foo "foo default") (bar "bar default"))
+  (format nil "foo: ~A bar: ~A" foo bar))
+
+(defurlmethod foo-method (handler method request
+                                  &amp;require state
+				  &amp;key (foo "foo default") (bar "bar default"))
+  (format nil "My, aren't we in a state? state = ~A, foo = ~A, bar = ~A" state foo bar))
+</pre>
+
+<p>While "http://example.com/method" and "http://example.com/method?foo=myfoo&bar=mybar"
+would return exactly as before, the request "http://example.com/method?state=anystate" would
+yield "My, aren't we in a state? state = anystate, foo = foo default, bar = bar default". In other words,
+if state was present at all then the second method gets called.
+
+<p>While that is useful, let's do something a bit more realistic:
+(defurlmethod say-hello (handler method request
+                                 &amp;key (from "me"))
+  (format nil "Hello to the world from ~A" from))
+
+(defurlmethod say-hello (handler method request
+                                 &amp;require language)
+  (format nil "I'm sorry, I don't recognize language ~A." language))
+
+(defurlmethod say-hello (handler method request
+                                 &amp;require (language (string-equal "horriblespanish"))
+				 &amp;key (from "yo"))
+  (format nil "Hola al mundo de ~A" from))
+
+(defurlmethod say-hello (handler method request
+                                 &amp;require (language (string-equal "poorlyspelledthai")))
+  (format nil "Soa ti"))
+<pre>
+
+<p>This says a plain hello world message (with an optional "from" specifier), unless
+you specify a language. If it's an unknown language, it tells you so.
+
+<p>As you see, you can start to do some interesting things here. Imagine a multi-stage form or
+sequence of forms.
+
+<p>There is one other feature to be aware about: function parameters. If you want to pass
+parameters that are not URL parameters, you can do so, just put them after the handler, method, and request
+and before a &amp;key or &amp;request.
+
+<pre>
+(defurlmethod my-method (handler method request x y
+                                 &key foo)
+  ;dosomething
+)
+</pre>
+
+<p>Please note that the number of function parameters must be the same across all methods of the same name.
+
+<p>Lastly, if you wish to have the parameters within the method be tainted parameters, declare the method
+as deftaintedurlmethod. The parameters will NOT be tainted in the lambda list but WILL be tainted within the
+body.
+
+<p>Information on how a method is chosen from amongst the methods is detailed in defurlmethod.lisp.
+
+</body>
+</html>

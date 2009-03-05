@@ -1,0 +1,41 @@
+<!-- -*- html -*- -->
+
+<table xmlns:tal="http://common-lisp.net/project/bese/tal/core"
+      xmlns:ucw="http://common-lisp.net/project/ucw/core"
+      tal:in-package="it.bese.ucw">
+  <tr tal:dolist="$items">
+    <td valign="top" tal:content="$index">item index</td>
+    <td><tal:lisp>(render-range-view-item $component $item)</tal:lisp></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table width="100%" cellpadding="2">
+        <tr>
+          <td>
+            <a ucw:action="(scroll-start $component)"><tt>[&lt;&lt;]</tt></a>
+          </td>
+          <td>
+            <a tal:when="$previousp"       ucw:action="(scroll-backward $component)"><tt>[&lt;]</tt></a>
+            <a tal:when="(not $previousp)"                                          ><tt>[&lt;]</tt></a>
+          </td>
+          <td align="center">
+            <tal:tal tal:dolist="$windows">
+              [<a tal:when="(not $selected)"
+                  ucw:action="(scroll-to-page $component (1- $num))"
+                  tal:content="$num">i</a>
+              <tal:tal tal:when="$selected" tal:content="$num">i</tal:tal>]
+            </tal:tal>
+          </td>
+          <td>
+            <a tal:when="$nextp"       ucw:action="(ucw::scroll-forward $component)"><tt>[&gt;]</tt></a>
+            <a tal:when="(not $nextp)"                                              ><tt>[&gt;]</tt></a>
+          </td>
+          <td>
+            <a ucw:action="(ucw::scroll-end $component)"><tt>[&gt;&gt;]</tt></a>
+          </td>
+        </tr>
+      </table>
+    </td>      
+  </tr>
+</table>
+

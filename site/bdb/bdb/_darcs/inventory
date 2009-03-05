@@ -1,0 +1,96 @@
+[Initial
+-urso-@web.de**20060504164132] 
+[add licence information
+-urso-@web.de**20060505171652] 
+[bugfix: make-get-buffer now adjusts size of newly created buffer
+-urso-@web.de**20060505192552] 
+[added src/config.lisp to asdf load file
+-urso-@web.de**20060507205915] 
+[added some flags to db-open
+-urso-@web.de**20060507210237] 
+[added build-assoc-callback-maker
+-urso-@web.de**20060507210542] 
+[WARNING: changed output path of make-qbook
+-urso-@web.de**20060507213909] 
+[added src/classes.lisp and a class for db. Changed all funs using db handles to methods using db class
+-urso-@web.de**20060509202935] 
+[modified cursors to be clos classes and changed cursor related functions to be methods
+-urso-@web.de**20060511001748] 
+[changed db-env and related functions to be represneted using clos
+-urso-@web.de**20060511003724] 
+[changed txn and related functions to be represneted using clos
+-urso-@web.de**20060511004557] 
+[forgot to update some functions when updating db, cursor, txn and db-env to classes to handle these classes... update now...
+-urso-@web.de**20060511160154] 
+[fixed typo in src/txn.lisp
+-urso-@web.de**20060511232747] 
+[changed all closing operations to set handles to nil in classes...
+-urso-@web.de**20060511232903] 
+[added db_get_env and db_dummy_associate to lib and aux-bindings
+-urso-@web.de**20060512193256] 
+[some bugfixes in db-open, added db-get-env
+-urso-@web.de**20060512193436] 
+[methods using transactions don't rely on using class txn, thus nil instead of using a transaction is valid
+-urso-@web.de**20060516195359] 
+[add db-get-type and made db-get-env public
+-urso-@web.de**20060516195616] 
+[export db-get-type
+-urso-@web.de**20060516200155] 
+[added with-txn macro
+-urso-@web.de**20060516214545] 
+[added dependencie for db.lisp file
+-urso-@web.de**20060518231632] 
+[added :auto-commit flag to db-env-open-flags
+-urso-@web.de**20060518231841] 
+[fixed with-txn macro
+-urso-@web.de**20060518232019] 
+[introduced new classes to handle database depending on environment they are opened in, modified methods to handle new classes and added secondary database support depending on database type (which is specified by db-open depending on the environment)
+-urso-@web.de**20060518232246] 
+[added some notes about secondary databases to secondary.lisp
+-urso-@web.de**20060518232748] 
+[export new symbols
+-urso-@web.de**20060518233003] 
+[if database is db-txn, db-del will ensure that it runs in a transaction
+-urso-@web.de**20060525194009] 
+[db-associate ensures to run in transaction when used with db-txn
+-urso-@web.de**20060525203502] 
+[update-secondary is 'exception-save' now...
+-urso-@web.de**20060525203848] 
+[fixed some bugs preventing secondary databases to work when db-txn is used as database representation
+-urso-@web.de**20060525232024] 
+[introduced classes db-ext-env, db-ext and ext-cursor which store buffer reader and writer functions in its instances, thus user only needs to work with objects
+-urso-@web.de**20060601155451] 
+[added some docs to classes.lisp
+-urso-@web.de**20060601161451] 
+[added classes.lisp to qbook generation
+-urso-@web.de**20060601162555] 
+[added support for sequences into libbdb (c library)
+-urso-@web.de**20060602165509] 
+[fixed typo between constants no-sync and txn-no-sync
+-urso-@web.de**20060602171330] 
+[improved with-txn macro
+-urso-@web.de**20060602191039] 
+[added support for sequences
+-urso-@web.de**20060602192609] 
+[When functions need to run within transaction they will create a new one, but avoid nesting transactions (see with-txn macro)
+-urso-@web.de**20060603204340] 
+[updated dependencies in bdb.asd
+-urso-@web.de**20060603205900] 
+[fixed typo in with-txn macro
+-urso-@web.de**20060603224807] 
+[fixed bug in with-txn and in-txn macros
+-urso-@web.de**20060603231327] 
+[fixed typo in with-txn (again....)
+-urso-@web.de**20060603232225] 
+[updated readme
+-urso-@web.de**20060604002448] 
+[new workaround for lisp implementations without longlong support (used by sequences)
+-urso-@web.de**20060604204208] 
+[README update
+-urso-@web.de**20060604204501] 
+[added function: db-pget
+-urso-@web.de**20060606184957] 
+[added db_cursor_pget to c lib
+-urso-@web.de**20060606185811] 
+[added function db-cursor-pget
+-urso-@web.de**20060606192714] 

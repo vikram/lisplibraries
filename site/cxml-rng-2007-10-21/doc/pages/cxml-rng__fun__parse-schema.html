@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Function parse-schema</title>
+<link rel="stylesheet" type="text/css" href="../index.css">
+</head>
+<body>
+<div id="header"><table cellspacing="0" cellpadding="0" width="100%"><tr>
+<td valign="center">
+		  
+	      <b> cxml-rng</b>
+</td>
+<td valign="center" align="right"><b>API documentation</b></td>
+</tr></table></div>
+<div class="main">
+    <div class="padded">
+      <p class="noindent">
+	  Package:
+	  <a href="cxml-rng.html">cxml-rng</a></p>
+      <h2 class="page-title">
+	  Function
+	  parse-schema</h2>
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%"><tr>
+      <td valign="top" width="60%">
+        <div class="padded">
+          <h3>Lambda List</h3>
+          <div class="indent">
+<tt>parse-schema</tt> (<b>input</b> <b>&amp;key</b> <b>entity-resolver</b> <b>(process-dtd-compatibility t)</b>)</div>
+          <h3>Arguments</h3>
+          <div class="indent">
+            <ul>
+              <li>
+<tt>input</tt> -- a string, pathname, stream, or xstream</li>
+              <li>
+<tt>entity-resolver</tt> -- a function of two arguments, or NIL</li>
+              <li>
+<tt>process-dtd-compatibility</tt> -- a boolean</li>
+            </ul>
+          </div>
+          <h3>Return Value</h3>
+          <div class="indent">a parsed <a href="cxml-rng__class__schema.html"><tt>schema</tt></a>
+</div>
+          <h3>Details<a name="details"></a>
+</h3>
+          <div class="indent">            This function parses a Relax NG schema file in XML syntax
+   and returns a parsed representation of that schema.<br><br>   <tt>input</tt> can be any stream designator as understood by   <tt>cxml:make-source</tt>.<br><br>
+   Note that namestrings are not valid arguments,
+   because they would be interpreted as XML source code.  Use pathnames
+   instead.<br><br>   <tt>entity-resolver</tt> can be passed as a function of two arguments.
+   It is invoked for every entity referenced by the
+   document with the entity's Public ID (a rod) and System ID (an
+   URI object) as arguments.  The function may either return
+   nil, CXML will then try to resolve the entity as usual.
+   Alternatively it may return a Common Lisp stream specialized on   <tt>(unsigned-byte 8)</tt> which will be used instead.<br><br>   If <tt>process-dtd-compatibility</tt> is true, the schema will be checked   for <i>compatibility</i> with Relax NG DTD Compatibility, and default values   will be recorded.  (Without <tt>process-dtd-compatibility</tt>, the schema   will not be checked <i>compatibility</i>, and annotations for
+   DTD Compatibility will be ignored like any other foreign element.)<br><br>      </div>
+        </div>
+      </td>
+      <td valign="top" width="5%">
+	     
+	  </td>
+      <td valign="top" width="35%">
+        <h3>See also</h3>
+        <div class="indent">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <a href="cxml-rng__class__schema.html">
+                  <tt>schema</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-rng__fun__parse-compact.html">
+                  <tt>parse-compact</tt>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="cxml-rng__fun__make-validator.html">
+                  <tt>make-validator</tt>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr></table>
+  </div>
+</body>
+</html>

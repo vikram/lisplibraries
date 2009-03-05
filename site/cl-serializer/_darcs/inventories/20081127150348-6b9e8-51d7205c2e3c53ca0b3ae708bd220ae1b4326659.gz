@@ -1,0 +1,48 @@
+[Initial.
+levente.meszaros@gmail.com**20070823132850] 
+[Added circularity
+levente.meszaros@gmail.com**20070823233326] 
+[Added integer support and refactored to gain more speed and use less space.
+levente.meszaros@gmail.com**20070825040739] 
+[Add buffer-size keyword argument.
+levente.meszaros@gmail.com**20070825114009] 
+[Refactored to support customization through serialize/deserialize.
+levente.meszaros@gmail.com**20070826001630] 
+[Serializer uninterned symbols with identity.
+levente.meszaros@gmail.com**20070904132612] 
+[Optimization.
+levente.meszaros@gmail.com**20070904132759] 
+[Use special variable to transparently provide position for announce-identity.
+levente.meszaros@gmail.com**20071003131228] 
+[Implemented read-stream-into-vector.
+levente.meszaros@gmail.com**20071003150200] 
+[Support non simple strings.
+levente.meszaros@gmail.com**20071004081831] 
+[Fix serialization of propert-lists.
+levente.meszaros@gmail.com**20071004090441] 
+[Support reading in content from arbitrary streams not only from file streams.
+levente.meszaros@gmail.com**20080104174419] 
+[follow bind :values changes
+attila.lendvai@gmail.com**20080316195856] 
+[added closer-mop to dependencies (reported by Tayssir John Gabbour, thanks)
+attila.lendvai@gmail.com**20080516135329] 
+[follow sbcl constant changes
+attila.lendvai@gmail.com**20080530013932] 
+[Use def load-time-value.
+levente.meszaros@gmail.com**20080530080818] 
+[Implement serialization of simple-vector, simple-array, vector and array.
+levente.meszaros@gmail.com**20080723132535] 
+[Avoid printing the whole content of context.
+levente.meszaros@gmail.com**20080723141058] 
+[Reorder simple-array and simple-vector, incompatible change.
+levente.meszaros@gmail.com**20080725085617] 
+[Added hash-table serialization.
+levente.meszaros@gmail.com**20080725085640] 
+[don't use in-root-suite
+attila.lendvai@gmail.com**20081115193529
+ Ignore-this: 6c0522e3fc78ef7281ab6151b96ef384
+] 
+[no retest anymore
+attila.lendvai@gmail.com**20081115194331
+ Ignore-this: 5da270cf00c040f70dba6d5b02ec02cb
+] 
