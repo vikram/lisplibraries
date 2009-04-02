@@ -1,16 +1,5 @@
 (in-package #:lift-test)
 
-;;; ---------------------------------------------------------------------------
-;;; lift-test-ensure
-;;; make sure that ensure and its friends work as expected
-;;;
-;;; The strategy here is to pair "regular" tests with meta-tests. The 
-;;; regular tests are normal tests written using LIFT. The meta-tests
-;;; use run-tests or run-tests to run the regular test and then grovel
-;;; over the returned test-result to make sure it contains what it is
-;;; supposed to.
-;;; ---------------------------------------------------------------------------
-
 (defpackage #:one-test-package
   (:use #:common-lisp #:lift))
 
@@ -34,10 +23,10 @@
 
 (addtest (test-find-test-suite)
   not-such-suite
-  (ensure-condition lift::test-class-not-defined
-    (lift::find-testsuite (gensym))))
+  (ensure-condition lift::testsuite-not-defined
+    (lift::find-testsuite (gensym) :errorp t)))
 
 (addtest (test-find-test-suite)
   two-many-tests
-  (ensure-error (lift::find-testsuite "test-finding")))
+  (ensure-error (lift:find-testsuite 'test-finding :errorp t)))
 

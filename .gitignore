@@ -1,0 +1,10 @@
+*pyc
+*~
+.DS_Store
+*gz
+*dylib
+*dylib*
+*fasl
+*log
+*dx32fsl
+*dx64fsl

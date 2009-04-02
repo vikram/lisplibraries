@@ -1,42 +1,35 @@
 (in-package #:common-lisp-user)
 
-(unless (find-symbol (symbol-name :next-element) (find-package :metatilities))
-  (intern (symbol-name :next-element) (find-package :metatilities)))
-
 (defpackage #:metabang.cl-containers
   (:use #:common-lisp)
   (:nicknames #:cl-containers #:containers)
-  (:documentation "A library of container classes and algorithms for Common Lisp.")
+  (:documentation
+   "A library of container classes and algorithms for Common Lisp.")
   (:import-from #:metatilities
                 #:deprecated
                 #:defclass*
                 #:defcondition
                 #:ensure-list
-                #:find-or-create-class
                 #:length-at-most-p 
                 #:length-at-least-p
                 #:length-1-list-p
                 #:maparray
-                #:reset
                 #:samep
                 #:set-equal
-                
-                #:add-parameter->dynamic-class
-                #:add-dynamic-class-for-parameters
-                #:determine-dynamic-class
-                #:existing-subclass
-                #:find-existing-subclass
-                #:include-class-dependencies
-                
+                #:apply-if-exists
+		#:funcall-if-exists
+
                 #:*samep-test*
                 #:parent
                 #:element
                 #:argmax
                 #:argmin
                 #:best-item
-                
+                #:filter
+
                 #:size
                 #:root
+                #:next-element
                 #:total-size
                 #:element-type)
   
@@ -86,6 +79,7 @@
            
            #:stable-associative-container
            #:iteratable-container-mixin
+           #:key-value-iteratable-container-mixin
            
            #:set-container
            #:bag-container
@@ -112,6 +106,7 @@
            
            find-item
            find-node
+	   find-successor-node
            find-element
            search-for-key
            search-for-item
@@ -130,6 +125,7 @@
            total-size                    ; bounded-container-mixin
            
            iteratable-p
+           key-value-iteratable-p
            
            ;;?? deprecated
            iterate-container             ; iteratable-container-mixin

@@ -6,8 +6,10 @@ show or log backtraces.  It accepts a condition object ERROR and
 returns a string with the corresponding backtrace.")
 
 (defun ensure-directory (pathname)
-  (merge-pathnames (make-pathname :name :unspecific
-				  :type :unspecific)
+  (merge-pathnames #+clisp
+		   (make-pathname :name "" :type "")
+		   #-clisp
+		   (make-pathname :name :unspecific :type :unspecific)
 		   pathname))
 
 (defun writable-directory-p (directory)
@@ -26,7 +28,7 @@ returns a string with the corresponding backtrace.")
 (defun %total-bytes-allocated ()
   (sys::gsgc-totalloc-bytes t))
 
-#+(or digitool openmcl)
+#+(or digitool openmcl ccl)
 (defun %total-bytes-allocated ()
   (ccl::total-bytes-allocated))
 
@@ -43,7 +45,7 @@ returns a string with the corresponding backtrace.")
 (defun %total-bytes-allocated ()
   (hcl:total-allocation))
 
-#+mcl
+#+(or mcl ccl)
 (defun get-backtrace (error)
   (with-output-to-string (s)
     (let ((*debug-io* s))

@@ -20,7 +20,7 @@ instructions."))
   (operate 'load-op 'asdf-system-connections))
 
 (defsystem cl-containers
-  :version "0.9.10"
+  :version "0.11.4"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
@@ -43,13 +43,13 @@ instructions."))
      (:file "stacks"
 	    :depends-on ("package" "basic-operations"))
      (:file "trees"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "vectors"))
      (:file "lists"
 	    :depends-on ("package" "basic-operations"))
      (:file "bags-and-sets"
 	    :depends-on ("package" "basic-operations"))
      (:file "ring-buffers"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "queues"))
      (:file "miscellaneous"
 	    :depends-on ("package" "basic-operations"))
      (:file "associative"
@@ -59,7 +59,7 @@ instructions."))
      (:file "vectors"
 	    :depends-on ("package" "basic-operations"))
      (:file "quad-tree"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "trees"))
      (:file "heaps"
 	    :depends-on ("package" "basic-operations"))
      (:file "container-mixins"
@@ -79,19 +79,24 @@ instructions."))
 	    :depends-on ("containers"))))
    (:module "website"
 	    :components ((:module "source"
-				  :components ((:static-file "index.lml"))))))
+				  :components ((:static-file "index.md"))))))
   :in-order-to ((test-op (load-op cl-containers-test)))
   :perform (test-op :after (op c)
                     (describe 
 		     (funcall (intern (symbol-name '#:run-tests) :lift) 
 			      :config :generic)))
-  :depends-on (:asdf-system-connections
-               :metatilities-base 
-               :metabang-dynamic-classes))
+  :depends-on ((:version :metatilities-base "0.6.6")))
 
 (defmethod operation-done-p 
            ((o test-op) (c (eql (find-system 'cl-containers))))
   (values nil))
+
+
+#+asdf-system-connections
+(asdf:defsystem-connection containers-moptilities
+  :requires (cl-containers moptilities)
+  :components ((:module "dev"
+                        :components ((:file "containers-moptilities")))))
 
 #+asdf-system-connections
 (asdf:defsystem-connection containers-and-utilities
@@ -115,13 +120,20 @@ instructions."))
                         :components ((:file "copying")))))
 
 
+#+asdf-system-connections
+(asdf:defsystem-connection containers-and-dynamic-classes
+  :requires (cl-containers dynamic-classes)
+  :components ((:module 
+		"dev"
+		:components ((:file "dynamic-classes")))))
+
+
+
 #|
 
 (define-eksl-module :container-immutable 
   ("immutable-containers" :depends-on ("conditions"))
   :system containers)
-
-;;; ---------------------------------------------------------------------------
 
 (define-eksl-module :container-tables 
   ((("table-container"
@@ -129,13 +141,9 @@ instructions."))
   :system containers
   :depends-on (containers moptilities))
 
-;;; ---------------------------------------------------------------------------
-
 (define-eksl-module :r-tree
   ("r-tree")
   :system :containers)
-
-;;; ---------------------------------------------------------------------------
 
 (define-eksl-module :container-thread-safe 
   ((("container-thread-safe")))

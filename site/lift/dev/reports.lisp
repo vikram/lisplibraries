@@ -2,7 +2,6 @@
 
 ;; dribble
 ;; full output for all tests on separate pages per suite? whatever.
-;; maybe lift should have the option to print test suite names and test case names
 ;; test environment
 
 #|
@@ -20,6 +19,27 @@ For *debug-io*, *query-io*: a bidirectional stream.
   (setf (test-result-property *test-result* :if-exists) :supersede)
   (test-result-report *test-result*  #p"/tmp/report.html" :html))
 
+lift::(progn
+  (setf (test-result-property *test-result* :style-sheet) "test-style.css")
+  (setf (test-result-property *test-result* :title) "Merge LUBM 8000")
+  (setf (test-result-property *test-result* :if-exists) :error)
+  (test-result-report *test-result* #p "/fi/internal/people/gwking/agraph/testing/report/" :html))
+
+lift::(progn
+  (setf (test-result-property *test-result* :style-sheet) "test-style.css")
+  (setf (test-result-property *test-result* :title) "lubm-50")
+  (setf (test-result-property *test-result* :unique-name) t)
+  (test-result-report *test-result* #p "/fi/internal/people/gwking/agraph/testing/report/2008-08-21-lubm-50-prolog" :html))
+
+lift::(progn
+	(setf (test-result-property *test-result* :style-sheet) 
+	      "test-style.css")
+	(setf (test-result-property *test-result* :title)
+	      "Ugh")
+	(setf (test-result-property *test-result* :if-exists)
+	      :error)
+	(test-result-report *test-result*  #p"report-20080813a.sav" :save))
+	
 (run-tests :suite '(lift-test test-cursors))
 
 (run-tests :suite 'lift-test-ensure)
@@ -27,50 +47,38 @@ For *debug-io*, *query-io*: a bidirectional stream.
 (test-result-property *test-result* :title)
 |#
 
-#|
-in start-test (result test name)
-   (push `(,name ,(current-values test)) (tests-run result))
 
-if fails / errors, will get problem appended 
+(defgeneric start-report-output (result stream format)
+  )
 
-current-values comes from prototype stuff
+(defgeneric summarize-test-result (result stream format)
+  )
 
-use property-list format 
-  start-time
-  end-time
-  time
-  space??
+(defgeneric summarize-test-environment (result stream format)
+  )
 
-:created
-:testsuite-setup
-:testing
+(defgeneric summarize-test-problems (result stream format)
+  )
 
-run-tests-internal
-  do-testing with testsuite-run
+(defgeneric summarize-test-problems-of-type 
+    (problems stream id heading)
+  )
 
-do-testing (suite)
-  testsuite-setup *
-  foreach prototype
-    initialize-test
-    <fn> (= testsuite-run)
-  testsuite-teardown *
+(defgeneric summarize-single-test 
+    (format suite-name test-case-name data &key stream)
+  )
 
-testsuite-run
-  foreach method in suite, run-test-internal
-  if children, foreach direct-subclass, run-tests-internal
+(defgeneric generate-detailed-reports (result stream format)
+  )
 
-run-test-internal
-  start-test - push, name, value onto test-placeholder *
-  setup-test *
-  lift-test *
-  teardown-test *
-  end-test - setf :end-time *
-  (add test-data to tests-run of result)
+(defgeneric summarize-tests-run (result stream format)
+ )
 
-run-test 
-  do-testing with run-test-internal
+(defgeneric end-report-output (result stream format)
+ )
 
-|#
+(defgeneric html-header (stream title style-sheet)
+ )
 
 ;; when it doubt, add a special
 (defvar *report-environment* nil
@@ -81,8 +89,16 @@ run-test
 
 ;; env variables need to be part saved in result
 
-(defun test-result-report (result output format)
-  (let ((*report-environment* (make-report-environment)))
+(defgeneric test-result-report (result output format
+			       &key package &allow-other-keys)
+  )
+
+(defmethod test-result-report (result output format
+			       &rest args
+			       &key (package *package*) &allow-other-keys)
+  (declare (ignore args))
+  (let ((*report-environment* (make-report-environment))
+	(*package* (or (find-package package) *package*)))
     (cond ((or (stringp output)
 	       (pathnamep output))
 	   (with-open-file (stream 
@@ -211,7 +227,8 @@ run-test
 		 (length (expected-errors result)))
 	      (length (expected-errors result))))
 
-    (when (and (numberp (end-time-universal result))
+    (when (and (slot-boundp result 'end-time-universal)
+	       (numberp (end-time-universal result))
 	       (numberp (start-time-universal result)))
       (format stream "~&<h3>Testing took: ~:d seconds</h3>"
 	      (- (end-time-universal result)
@@ -251,7 +268,7 @@ run-test
 
 (defmethod summarize-test-problems-of-type 
     (problems stream id heading)
-  (format stream "~&<div id=\"id\">" id)
+  (format stream "~&<div id=\"~a\">" id)
   (format stream "~&<h3>~a</h3>" heading)
   (report-tests-by-suite 
    (mapcar (lambda (problem)
@@ -402,11 +419,11 @@ run-test
 (defmethod generate-detailed-reports (result stream (format (eql :html)))
   (loop for (suite test-name datum)  in (tests-run result)
      when (getf datum :problem) do
-     (let ((*print-right-margin* 64))
-       (let ((output-pathname (merge-pathnames
-			       (details-link stream suite test-name) 
-			       stream)))
-	 (ensure-directories-exist output-pathname)
+     (let ((output-pathname (merge-pathnames
+			     (details-link stream suite test-name) 
+			     stream)))
+       (ensure-directories-exist output-pathname)
+       (let ((*print-right-margin* 64))
 	 (with-open-file (out output-pathname
 			      :direction :output
 			      :if-does-not-exist :create
@@ -422,9 +439,11 @@ run-test
 					      :type (pathname-type stream))))
 	   (format out "~&<pre>")
 	   (format out "~a"
-		   (encode-pre 
+		   (wrap-encode-pre 
 		    (with-output-to-string (s)
-		      (print-test-problem "" (getf datum :problem) s))))
+		      (print-test-problem "" (getf datum :problem) s t))
+		    :width (test-result-property 
+			    *test-result* :print-width 60)))
 	   (format out "~&</pre>") 
 	   (html-footer out))))))
 
@@ -443,7 +462,7 @@ run-test
 
        (print)))
 
-(defun encode-pre (string)
+(defun wrap-encode-pre (string &key (width 80))
   ;; Copied from CL-Markdown
   ;; Copied from HTML-Encode
   ;;?? this is very consy
@@ -452,14 +471,27 @@ run-test
   (let ((output (make-array (truncate (length string) 2/3)
                             :element-type 'character
                             :adjustable t
-                            :fill-pointer 0)))
+                            :fill-pointer 0))
+	(column 0))
     (with-output-to-string (out output)
       (loop for char across string
 	 do (case char
-	      ((#\&) (write-string "&amp;" out))
-	      ((#\<) (write-string "&lt;" out))
-	      ((#\>) (write-string "&gt;" out))
-	      (t (write-char char out)))))
+	      ((#\&) (incf column) (write-string "&amp;" out))
+	      ((#\<) (incf column) (write-string "&lt;" out))
+	      ((#\>) (incf column) (write-string "&gt;" out))
+	      ((#\Tab #\Space #\Return #\Newline)
+	       (cond ((or (>= column width) 
+			  (char= char #\Return)
+			  (char= char #\Newline))
+		      (setf column 0)
+		      (terpri out))
+		     ((char= char #\Space)
+		      (incf column)
+		      (write-char char out))
+		     ((char= char #\Tab)
+		      (incf column 4)
+		      (write-string "    " out))))
+	      (t (incf column) (write-char char out)))))
     (coerce output 'simple-string)))
 
 ;;;;;
@@ -475,9 +507,10 @@ run-test
 
 (defmethod summarize-test-result (result stream (format (eql :save)))
   (flet ((add-property (name)
-	   (format stream "~&\(~s ~a\)" 
-		   (intern (symbol-name name) :keyword)
-		   (slot-value result name))))
+	   (when (slot-boundp result name)
+	     (format stream "~&\(~s ~a\)" 
+		     (intern (symbol-name name) :keyword)
+		     (slot-value result name)))))
     (format stream "\(~%")
     (add-property 'results-for)
     (format stream "~&\(:date-time ~a\)" (get-universal-time))
@@ -490,34 +523,10 @@ run-test
        ;; FIXME - this is a hack intended to show tests
        ;; in the order they were run (even if it works, it's
        ;; bound to be fragile)
-	 (copy-list (tests-run result))
-	 #+(or)
-	 (nreverse (copy-list (tests-run result))) do
-	 (labels ((out (name &key (source data)
-			     (print-if-nil? nil))
-		    (let* ((key (intern (symbol-name name) :keyword))
-			   (value (getf source key))) 
-		      (when (or value print-if-nil?)
-			(format stream "~&\(~s ~a\)" key value))))
-		  (prop (name)
-		    (out name :source (getf data :properties))))
-	   (format stream "\(~%")
-	   (format stream "~&\(:suite ~a\)" suite)	     
-	   (format stream "~&\(:name ~a\)" name)
-	   ;; FIXME - we could make these extensible
-	   (out 'start-time-universal)
-	   (out 'end-time-universal)
-	   (out 'result)
-	   (out 'seconds)
-	   (out 'conses)
-	   (loop for stuff in (getf data :properties) by #'cddr do
-		(prop stuff))
-	   (format stream "~&\)")))
+	 (copy-list (tests-run result)) do
+	 (summarize-single-test format suite name data :stream stream))
     (format stream "~&\)")
     (format stream "~&\)")))
-  
-#+(or)
-(compile 'summarize-test-result)
 
 #+(or)
 (progn
@@ -600,7 +609,7 @@ run-test
 	 (copy-list (tests-run result))
 	 #+(or)
 	 (nreverse (copy-list (tests-run result))) do
-	 (labels ((out (name type &key (source data))
+	 (labels ((write-datum (name type &key (source data))
 		    (let* ((key (intern (symbol-name name) :keyword))
 			   (value (getf source key)))
 		      (when value
@@ -608,16 +617,16 @@ run-test
 				(symbol->turtle name)
 				(convert-value value type)))))
 		  (prop (name type)
-		    (out name type :source (getf data :properties))))
+		    (write-datum name type :source (getf data :properties))))
 	   (format stream "~&\[ ")
 	   (format stream ":testSuite ~s ;" (symbol-name suite))
 	   (format stream "~&  :testName ~s ;" (symbol-name name))
 	   ;; FIXME - we could make these extensible
-	   (out 'start-time 'dateTime)
-	   (out 'end-time 'dateTime)
-	   (out 'result 'string)
-	   (out 'seconds 'string)
-	   (out 'conses 'string)
+	   (write-datum 'start-time 'dateTime)
+	   (write-datum 'end-time 'dateTime)
+	   (write-datum 'result 'string)
+	   (write-datum 'seconds 'string)
+	   (write-datum 'conses 'string)
 	   (loop for stuff in (getf data :properties) by #'cddr do
 		(prop stuff 'string))
 	   (format stream " \]")))
@@ -628,3 +637,280 @@ run-test
   (setf (test-result-property *test-result* :if-exists) :supersede)
   (test-result-report *test-result*  #p"/tmp/report.n3" :turtle))
 
+;;;;
+
+(defmacro append-to-report ((var output-to) &body body)
+  (let ((gclosep (gensym "closep"))
+	(gstream (gensym "stream")))
+    `(let* ((,gclosep nil)
+	    (,gstream ,output-to)
+	    (,var (etypecase ,gstream 
+		    (stream ,gstream)
+		    ((or pathname string)
+		     (setf ,gclosep t)
+		     (open ,gstream 
+			   :if-does-not-exist :create
+			   :if-exists :append
+			   :direction :output)))))
+       (unwind-protect
+	    (labels ((out (key value)
+		       (when value
+			 (let ((*print-readably* nil))
+			   (format out "~&\(~s ~s\)" key value)))))
+	      (declare (ignorable (function out)))
+	      (progn ,@body))
+	 (when ,gclosep
+	   (close ,var))))))
+
+(defvar *lift-report-header-hook* nil)
+
+(defvar *lift-report-footer-hook* nil)
+
+(defvar *lift-report-detail-hook* nil)
+
+(defun write-report-header (stream result args)
+  (append-to-report (out stream)
+    (format out "~&\(")
+    (out :results-for (results-for result))
+    (out :arguments args)
+    (out :features (copy-list *features*))
+    (out :datetime (get-universal-time))
+    (loop for hook in *lift-report-header-hook* do
+	 (funcall hook out result))
+    (format out "~&\)~%")))
+
+(defun write-report-footer (stream result)
+  (append-to-report (out stream)
+    (format out "~&\(")
+    (out :test-case-count (length (tests-run result)))
+    (out :test-suite-count (length (suites-run result)))
+    (out :failure-count (length (failures result)))
+    (out :error-count (length (errors result)))
+    (out :expected-failure-count (length (expected-failures result)))
+    (out :expected-error-count (length (expected-errors result)))
+    (out :start-time-universal (start-time-universal result))
+    (when (slot-boundp result 'end-time-universal)
+      (out :end-time-universal (end-time-universal result)))
+    (out :errors (collect-testsuite-summary result :errors))
+    (out :failures (collect-testsuite-summary result :failures))
+    (out :expected-errors
+	 (collect-testsuite-summary result :expected-errors))
+    (out :expected-failures 
+	 (collect-testsuite-summary result :expected-failures))
+    (loop for hook in *lift-report-footer-hook* do
+	 (funcall hook out result))
+    (format out "~&\)~%")))
+
+(defmethod summarize-single-test :around
+    (format suite-name test-case-name data &key stream)
+  (append-to-report (out stream)
+    (call-next-method format suite-name test-case-name data :stream out)))
+
+(defmethod summarize-single-test 
+    ((format (eql :save)) suite-name test-case-name data
+     &key (stream *standard-output*))
+  (labels ((out (key value)
+	     (when value
+	       (format stream "~&\(~s ~s\)" key value)))
+	   (write-datum (name &key (source data))
+	     (let* ((key (intern (symbol-name name) :keyword))
+		    (value (getf source key)))
+	       (out key value)))
+	   (prop (name)
+	     (write-datum name :source (getf data :properties))))
+    (format stream "~&\(~%")
+    (format stream "~&\(:suite ~a\)" suite-name)	     
+    (format stream "~&\(:name ~a\)" test-case-name)
+    ;; FIXME - we could make these extensible
+    (write-datum 'start-time-universal)
+    (write-datum 'end-time-universal)
+    (write-datum 'result)
+    (write-datum 'seconds)
+    (write-datum 'conses)
+    (loop for stuff in (getf data :properties) by #'cddr do
+	 (prop stuff))
+    (cond ((getf data :problem)
+	   (let ((problem (getf data :problem)))
+	     (out :problem-kind (test-problem-kind problem))
+	     (out :problem-step (test-step problem))
+	     (out :problem-condition 
+		  (let ((*print-readably* nil))
+		    (format nil "~s" (test-condition problem))))
+	     (out :problem-condition-description 
+		  (format nil "~a" (test-condition problem)))
+	     (when (slot-exists-p problem 'backtrace)
+	       (out :problem-backtrace (backtrace problem)))))
+	  (t
+	   (out :result t)))
+    (loop for hook in *lift-report-detail-hook* do
+	 (funcall hook stream data))
+    (format stream "\)~%")))
+
+;;;;
+
+(defun collect-testsuite-summary (result kind)
+  (let ((list (slot-value result (intern (symbol-name kind) 
+					 (find-package :lift)))))
+    (flet ((encode-symbol (symbol)
+	     (cons (symbol-name symbol) 
+		   (package-name (symbol-package symbol)))))
+      (mapcar (lambda (glitch)
+		(list (encode-symbol (type-of (testsuite glitch)))
+		      (encode-symbol (test-method glitch))))
+	      list))))
+
+#+(or)
+(collect-testsuite-summary lift:*test-result* :failures)
+
+;;;;;
+
+
+
+#+allegro
+(defun cancel-current-profile (&key force?)
+  (when (prof::current-profile-actual prof::*current-profile*)
+    (unless force?
+      (assert (member (prof:profiler-status) '(:inactive))))
+    (prof:stop-profiler)
+    (setf prof::*current-profile* (prof::make-current-profile))))
+
+#+allegro
+(defun current-profile-sample-count ()
+   (ecase (prof::profiler-status :verbose nil)
+    ((:inactive :analyzed) 0)
+    ((:suspended :saved)
+     (slot-value (prof::current-profile-actual prof::*current-profile*) 
+		 'prof::samples))
+    (:sampling (warn "Can't determine count while sampling"))))
+
+#+allegro
+(defun show-flat-profile (output)
+  (let ((prof:*significance-threshold* 
+	 (or *profiling-threshold* 0.01)))
+    (prof:show-flat-profile :stream output)))
+
+#+allegro
+(defun show-call-graph (output)
+  (let ((prof:*significance-threshold* 
+	 (or *profiling-threshold* 0.01)))
+    (prof:show-call-graph :stream output)))
+
+#+allegro
+(defun show-call-counts (output)
+  (format output "~%~%Call counts~%")
+  (let ((*standard-output* output))
+    (prof:show-call-counts)))
+
+
+#-allegro
+(defun show-flat-profile (output)
+  (format output "~%~%Flat profile: unavailable for this Lisp~%"))
+
+#-allegro
+(defun show-call-graph (output)
+  (format output "~%~%Call graph: unavailable for this Lisp~%"))
+
+#-allegro
+(defun show-call-counts (output)
+  (format output "~%~%Call counts: unavailable for this Lisp~%"))
+
+#+allegro
+(defun with-profile-report-fn 
+    (name style fn body &key
+     (log-name *benchmark-log-path*)
+     (count-calls-p *count-calls-p*)
+     (timeout nil))
+  (assert (member style '(:time :space :count-only)))
+  (cancel-current-profile :force? t)
+  (let* ((seconds 0.0) (conses 0) 
+	 error
+	 results
+	 (profile-fn (make-profiled-function fn)))
+    (unwind-protect
+	 (multiple-value-bind (result measures errorp)
+	     (while-measuring (t measure-seconds measure-space)
+	       (handler-case
+		   (with-timeout (timeout)
+		     (funcall profile-fn style count-calls-p))
+		 (timeout-error 
+		     (c)
+		   (declare (ignore c)))
+		 (error (c)
+		   (error c))))
+	   (setf seconds (first measures) conses (second measures) 
+		 results result error errorp))
+      ;; cleanup / ensure we get report
+      (generate-profile-log-entry log-name name seconds conses results error)
+      (when (> (current-profile-sample-count) 0)
+	(let ((pathname (unique-filename
+			 (merge-pathnames
+			  (make-pathname 
+			   :type "prof"
+			   :name (format nil "~a-~a-" name style))
+			  log-name))))
+	  (write-profile-report pathname name style body
+				seconds conses error count-calls-p))))
+    (values-list (if (atom results) (list results) results))))
+
+(defun write-profile-report (pathname name style body seconds conses
+			     error count-calls-p)
+  (format t "~&Profiling output being sent to ~a" pathname)
+  (with-open-file (output pathname
+			  :direction :output
+			  :if-does-not-exist :create
+			  :if-exists :append)
+    (format output "~&Profile data for ~a" name)
+    (format output "~&Date: ~a" (date-stamp :include-time? t))
+    (format output "~&  Total time: ~,2F; Total space: ~:d \(~:*~d\)"
+	    seconds conses)
+    (format output "~%~%")
+    (when error
+      (format output "~&Error occured during profiling: ~a~%~%" error))
+    (let ((*standard-output* output))
+      (when *current-test* 
+	(write-profile-information *current-test*)))
+    (when body
+      (format output "~&Profiling: ~%")
+      (let ((*print-length* 10)
+	    (*print-level* 10))
+	(dolist (form body)
+	  (pprint form output)))
+      (format output "~%~%"))
+    (when (or (eq :time style)
+	      (eq :space style))
+      (show-flat-profile output)
+      (show-call-graph output)
+      (when count-calls-p
+	(show-call-counts output)))
+    #+allegro
+    (when *functions-to-profile*
+      (loop for thing in *functions-to-profile* do
+	   (let ((*standard-output* output)
+		 (*print-readably* nil))
+	     (handler-case 
+		 (cond ((thing-names-generic-function-p thing)
+			(format output "~%~%Disassemble generic-function ~s:~%"
+				thing)
+			(prof:disassemble-profile thing)
+			(mapc 
+			 (lambda (m)
+			   (format t "~2%~a~%"
+				   (make-string 60 :initial-element #\-))
+			   (format t "~&Method: ~a~2%" m)
+			   (prof:disassemble-profile (clos:method-function m)))
+			 (clos:generic-function-methods 
+			  (symbol-function thing))))
+		       (t
+			(format output "~%~%Disassemble function ~s:~%"
+				thing)
+			(prof:disassemble-profile thing)))
+	       (error (c)
+		 (format 
+		  output "~2%Error ~a while trying to disassemble-profile ~s~2%"
+		  c thing))))))))
+
+;; stolen from cl-markdown and modified
+(defun thing-names-generic-function-p (thing)
+  (and (symbolp thing)
+       (fboundp thing)
+       (typep (symbol-function thing) 'standard-generic-function)))

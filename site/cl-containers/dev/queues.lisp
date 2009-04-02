@@ -2,12 +2,10 @@
 
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; Abstract Queue interface
 ;;;
 ;;; supports: enqueue (insert-item), dequeue (delete-first), empty!, 
 ;;; size, empty-p, first-element
-;;; ---------------------------------------------------------------------------
 
 (defclass* abstract-queue (initial-contents-mixin ordered-container-mixin)
   ())
@@ -38,13 +36,11 @@
     (error message rest)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Priority Queues on 'arbitrary' containers
 ;;;
 ;;; The underlying container must support: insert-item, first-element
 ;;; delete-item, empty-p, empty!, size, find-item,
 ;;; delete-item and delete-item-if
-;;; ---------------------------------------------------------------------------
 
 (defclass* priority-queue-on-container (iteratable-container-mixin
                                           sorted-container-mixin
@@ -55,17 +51,14 @@
   (:default-initargs 
     :container-type 'binary-search-tree))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :around ((object priority-queue-on-container) &rest args 
-                                        &key container-type &allow-other-keys)
+(defmethod initialize-instance :around
+    ((object priority-queue-on-container) &rest args 
+     &key container-type &allow-other-keys)
   (remf args :container-type)
   (remf args :initial-contents)
   (setf (slot-value object 'container)
         (apply #'make-container container-type args))
   (call-next-method))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((q priority-queue-on-container) item)
   (insert-item (container q) item))
@@ -95,32 +88,20 @@
   (let ((node (find-item (container q) item)))
     (when node (element node))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod find-node ((q priority-queue-on-container) (item t))
   (find-node (container q) item))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-element ((q priority-queue-on-container) (item t))
   (find-element (container q) item))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-item ((q priority-queue-on-container) (item t))
   (delete-item (container q) item))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-node ((q priority-queue-on-container) (item t))
   (delete-node (container q) item))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-element ((q priority-queue-on-container) (item t))
   (delete-element (container q) item))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-if (test (q priority-queue-on-container))
   (delete-item-if test (container q)))
@@ -128,23 +109,17 @@
 (defmethod iterate-nodes ((q priority-queue-on-container) fn)
   (iterate-nodes (container q) fn))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod iterate-elements ((q priority-queue-on-container) fn)
   (iterate-elements (container q) fn))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Standard no frills queue
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-queue (abstract-queue iteratable-container-mixin 
                                          concrete-container)
   ((queue nil :accessor queue-queue)
    (indexer nil :accessor queue-header))
   (:documentation "A simple FIFO queue implemented as a list with extra bookkeeping for efficiency."))
-
-;;; ---------------------------------------------------------------------------
 
 ;; Some semantically helpful functions
 (defun front-of-queue (queue)
@@ -162,8 +137,6 @@
   (proclaim '(inline front-of-queue front-of-queue!))
   (proclaim '(inline tail-of-queue tail-of-queue!)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod insert-item ((q basic-queue) (item t))
   "Add an item to the queue."
   (let ((new-item (list item)))
@@ -174,8 +147,6 @@
            (setf (cdr (tail-of-queue q)) new-item
                  (tail-of-queue q) new-item))))
   q)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((q basic-queue))
   (let ((result (front-of-queue q)))
@@ -188,19 +159,13 @@
     
     result))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod empty-p ((q basic-queue))
   (null (queue-header q)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((q basic-queue) fn)
   (let ((start (front-of-queue q)))
     (mapc fn start))
   (values q))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((q basic-queue))
   ;;??slow
@@ -208,27 +173,19 @@
     0
     (length (front-of-queue q))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod first-element ((q basic-queue))
   "Returns the first item in a queue without changing the queue."
   (car (front-of-queue q)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod (setf first-element) (value (q basic-queue))
   "Returns the first item in a queue without changing the queue."
   (setf (car (front-of-queue q)) value))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((q basic-queue))
   "Empty a queue of all contents."
   (setf (queue-queue q) nil
         (queue-header q) nil)
   (values))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((queue basic-queue) item)
   (unless (empty-p queue)

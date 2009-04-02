@@ -15,9 +15,11 @@
 				     (:file "test-containers" 
 				      :depends-on ("package"))))
 	       (:module "tests"
+			:depends-on ("setup")
 			:components 
 			((static-file "notes.text")
 			 (:file "priority-queues")
-			 (:file "misc")
-			 (:file "trees"))))
-  :depends-on (:cl-containers :lift))
+			 (:file "trees")
+			 (:file "dlist"))))
+  :depends-on (:cl-containers 
+	       (:version :lift "1.7.0")))

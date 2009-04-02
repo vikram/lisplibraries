@@ -1,18 +1,11 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; generic tree classes
-;;; ---------------------------------------------------------------------------
 
-;;; ---------------------------------------------------------------------------
 ;;; tree-container
-;;; ---------------------------------------------------------------------------
 (defclass* abstract-tree-container (abstract-container) ())
 
-
-;;; ---------------------------------------------------------------------------
 ;;; rooted-tree-container ::
-;;; ---------------------------------------------------------------------------
 
 (defclass* rooted-tree-container (abstract-tree-container)
   ((root nil ia))
@@ -52,30 +45,26 @@
   (:documentation "Children are unordered"))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Binary-Search-Trees
-;;; ---------------------------------------------------------------------------
 
 ;; we sort keys of the nodes using sorter; we test equality with test.
 (defclass* binary-search-tree (container-uses-nodes-mixin
 			       initial-contents-mixin
-			       sorted-container-mixin
-			       findable-container-mixin
-			       iteratable-container-mixin
-			       rooted-tree-container
-			       concrete-container)
+                                 sorted-container-mixin
+                                 findable-container-mixin
+                                 iteratable-container-mixin
+                                 rooted-tree-container
+                                 concrete-container)
   ((tree-size 0 iar))
   (:default-initargs
-      :key 'identity
+    :key 'identity
     :test 'eq
     :sorter '<))
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* bst-node (two-child-node)
   ((tree nil ia)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-node-for-container ((tree binary-search-tree) (item t) &key)
   (if item
@@ -94,9 +83,7 @@
     (format stream "~A" (element o))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Standard container operations for BST's
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((tree binary-search-tree))
   (tree-size tree))
@@ -109,12 +96,10 @@
                    (incf count)))
     count))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty-p ((tree binary-search-tree))
   (node-empty-p (root tree)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((tree binary-search-tree))
   (setf (root tree) (make-node-for-container tree nil))
@@ -122,9 +107,7 @@
   (values))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Search, max, min, etc.
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((tree binary-search-tree) (item bst-node))
   (let* ((key (key tree))
@@ -141,15 +124,40 @@
           (if (funcall sorter key-item
                        (funcall key (element current)))
             (setf current (left-child current))
-            (setf current (right-child current))))    
+            (setf current (right-child current))))
     (if (and (not (node-empty-p current)) (not not-found?))
       current
       nil)))
 
+(defmethod find-successor-item ((tree binary-search-tree) (item bst-node))
+  "Find the item equal to or the next greater than item"
+  (with-slots (key test sorter) tree
+    (let ((key-item (funcall key (element item))))
+      (labels ((node-equal-p (current)
+		 (funcall test key-item
+			  (funcall key (element current))))
+	       (compare-lt (current)
+		 (funcall sorter key-item
+			  (funcall key (element current))))
+	       (final-node (prior)
+		 (if (compare-lt prior) prior
+		     (let ((s (successor tree prior)))
+		       (if (node-empty-p s) nil s))))
+	       (find-successor (current prior)
+		 (cond ((node-empty-p current) 
+			(when prior (final-node prior)))
+		       ((node-equal-p current) current)
+		       ((compare-lt current)
+			(find-successor (left-child current) current))
+		       (t (find-successor (right-child current) current)))))
+	(find-successor (root tree) nil)))))
+			
+
 (defmethod find-node ((tree binary-search-tree) (item t))
   (find-item tree (make-node-for-container tree item)))
 
-;;; ---------------------------------------------------------------------------
+(defmethod find-successor-node ((tree binary-search-tree) (item t))
+  (find-successor-item tree (make-node-for-container tree item)))
 
 (defmethod first-element ((node bst-node))
   (element (first-node node)))
@@ -176,10 +184,16 @@
   (setf (first-element (root tree)) value))
 
 (defmethod last-element ((node bst-node))
+  (element (last-node node)))
+
+(defmethod last-node ((node bst-node))
   (let ((current node))
     (loop while (not (node-empty-p (right-child current))) do
           (setf current (right-child current)))
     current))
+
+(defmethod last-node ((tree binary-search-tree))
+  (last-node (root tree)))
 
 (defmethod last-element ((tree binary-search-tree))
   (last-element (root tree)))
@@ -190,12 +204,10 @@
           (setf current (right-child current)))
     (setf (element current) value)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf last-element) (value (tree binary-search-tree))
   (setf (last-element (root tree)) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod successor ((tree binary-search-tree) (node bst-node))
   (if (not (node-empty-p (right-child node)))
@@ -207,11 +219,10 @@
                   y (parent y)))
       y)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod predecessor ((tree binary-search-tree) (node bst-node))
   (if (not (node-empty-p (left-child node)))
-    (last-element (left-child node))
+    (last-node (left-child node))
     (let ((y (parent node)))
       (loop while (and (not (node-empty-p y))
                        (eq node (left-child y))) do
@@ -219,9 +230,7 @@
                   y (parent y)))
       y)))
 
-;;; ---------------------------------------------------------------------------
 ;;; Insertion and deletion
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((tree binary-search-tree) (item bst-node))
   (loop with key = (key tree)
@@ -263,9 +272,9 @@
       (setf (root tree) x)
       (if (equal y (left-child (parent y)))
         (setf (left-child (parent y)) x)
-        (setf (right-child (parent y)) x)))    
+        (setf (right-child (parent y)) x)))
     (if (not (equal y node))
-      (setf (element node) (element y)))    
+      (setf (element node) (element y)))
     y))
 
 (defmethod delete-node :after ((tree binary-search-tree) (node bst-node))
@@ -294,14 +303,11 @@ test."
     (loop for node in to-delete do
           (delete-item tree node))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((tree binary-search-tree) fn)
   (inorder-walk-nodes tree fn))
 
-;;; ---------------------------------------------------------------------------
 ;;; Tree walking
-;;; ---------------------------------------------------------------------------
 
 (defmethod inorder-walk ((tree binary-search-tree) walk-fn)
   (walk-tree (root tree) walk-fn :inorder))
@@ -312,7 +318,6 @@ test."
 (defmethod postorder-walk ((tree binary-search-tree) walk-fn)
   (walk-tree (root tree) walk-fn :postorder))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod inorder-walk-nodes ((tree binary-search-tree) walk-fn)
   (walk-tree-nodes (root tree) walk-fn :inorder))
@@ -323,7 +328,6 @@ test."
 (defmethod postorder-walk-nodes ((tree binary-search-tree) walk-fn)
   (walk-tree-nodes (root tree) walk-fn :postorder))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod walk-tree ((node bst-node) walk-fn &optional (mode :inorder))
   (walk-tree-nodes node
@@ -350,7 +354,6 @@ test."
   (declare (ignore walk-fn mode)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Red-Black Trees
 ;;;
 ;;; A Red-black tree is a binary search tree whose nodes have a color
@@ -362,16 +365,13 @@ test."
 ;;; node. This makes delete-item cleaner but means that you need to be careful
 ;;; in the rest of the code to use node-empty-p instead of just assuming that
 ;;; a node will be nil.
-;;; ---------------------------------------------------------------------------
 
 (defconstant +rbt-color-black+ 0)
 (defconstant +rbt-color-red+ 1)
 
-;;; ---------------------------------------------------------------------------
 
 (defvar *rbt-empty-node* nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* red-black-tree (binary-search-tree)
   ()
@@ -381,14 +381,12 @@ test."
     :sorter #'<
     :root *rbt-empty-node*))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :after ((object red-black-tree) &key
                                        (root *rbt-empty-node*))
   (unless (eq root *rbt-empty-node*)
     (setf (parent root) *rbt-empty-node*)))
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* red-black-node (bst-node)
   ((color :initform +rbt-color-black+
@@ -400,12 +398,10 @@ test."
     :right-child *rbt-empty-node*
     :left-child *rbt-empty-node*))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod node-empty-p ((node red-black-node))
   (eq node *rbt-empty-node*))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-node-for-container ((tree red-black-tree) (item t) &key)
    (if item
@@ -414,21 +410,18 @@ test."
        :tree tree)
      *rbt-empty-node*))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-object ((o red-black-node) stream)
    (format stream "#<RB-NODE COLOR: ~A, ~A>"
            (if (= (rbt-color o) +rbt-color-black+) "B" "R")
            (element o)))
 
-;;; ---------------------------------------------------------------------------
 
 (setf *rbt-empty-node* (make-instance 'red-black-node
                          :right-child nil
                          :left-child nil
                          :element nil))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod rotate-left ((tree binary-search-tree) (x two-child-node))
    (assert (not (eq (right-child x) *rbt-empty-node*)))
@@ -453,7 +446,6 @@ test."
      (setf (left-child y) x
            (parent x) y)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod rotate-right ((tree binary-search-tree) (x two-child-node))
    (assert (not (eq (left-child x) *rbt-empty-node*)))
@@ -478,54 +470,53 @@ test."
      (setf (right-child y) x
            (parent x) y)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item :after ((tree red-black-tree) (item bst-node))
-   (setf (rbt-color item) +rbt-color-red+)
+  (assert item)
+  (setf (rbt-color item) +rbt-color-red+)
 
-   (let ((y nil))
-     (loop while (and (not (eq item (root tree)))
-                      (= (rbt-color (parent item)) +rbt-color-red+)) do
-           (if (eq (parent item) (left-child (parent (parent item))))
+  (let ((y nil))
+    (loop while (and (not (eq item (root tree)))
+		     (= (rbt-color (parent item)) +rbt-color-red+)) do
+	 (if (eq (parent item) (left-child (parent (parent item))))
              (progn
                (setf y (right-child (parent (parent item))))
                (if (= (rbt-color y) +rbt-color-red+)
-                 (progn
-                   (setf (rbt-color (parent item)) +rbt-color-black+
-                         (rbt-color y) +rbt-color-black+
-                         (rbt-color (parent (parent item))) +rbt-color-red+
-                         item (parent (parent item))))
-                 ;; ELSE
-                 (progn
-                   (when (eq item (right-child (parent item)))
-                     (setf item (parent item))
-                     (rotate-left tree item))
-                   (setf (rbt-color (parent item)) +rbt-color-black+
-                         (rbt-color (parent (parent item))) +rbt-color-red+)
-                   (rotate-right tree (parent (parent item))))))
+		   (progn
+		     (setf (rbt-color (parent item)) +rbt-color-black+
+			   (rbt-color y) +rbt-color-black+
+			   (rbt-color (parent (parent item))) +rbt-color-red+
+			   item (parent (parent item))))
+		   ;; ELSE
+		   (progn
+		     (when (eq item (right-child (parent item)))
+		       (setf item (parent item))
+		       (rotate-left tree item))
+		     (setf (rbt-color (parent item)) +rbt-color-black+
+			   (rbt-color (parent (parent item))) +rbt-color-red+)
+		     (rotate-right tree (parent (parent item))))))
              ;; ELSE
              (progn
                (setf y (left-child (parent (parent item))))
                (if (= (rbt-color y) +rbt-color-red+)
-                 (progn
-                   (setf (rbt-color (parent item)) +rbt-color-black+
-                         (rbt-color y) +rbt-color-black+
-                         (rbt-color (parent (parent item))) +rbt-color-red+
-                         item (parent (parent item))))
-                 ;; ELSE
-                 (progn
-                   (when (eq item (left-child (parent item)))
-                     (setf item (parent item))
-                     (rotate-right tree item))
-                   (setf (rbt-color (parent item)) +rbt-color-black+
-                         (rbt-color (parent (parent item))) +rbt-color-red+)
-                   (rotate-left tree (parent (parent item))))))))
+		   (progn
+		     (setf (rbt-color (parent item)) +rbt-color-black+
+			   (rbt-color y) +rbt-color-black+
+			   (rbt-color (parent (parent item))) +rbt-color-red+
+			   item (parent (parent item))))
+		   ;; ELSE
+		   (progn
+		     (when (eq item (left-child (parent item)))
+		       (setf item (parent item))
+		       (rotate-right tree item))
+		     (setf (rbt-color (parent item)) +rbt-color-black+
+			   (rbt-color (parent (parent item))) +rbt-color-red+)
+		     (rotate-left tree (parent (parent item))))))))
 
-     (setf (rbt-color (root tree)) +rbt-color-black+)))
+    (setf (rbt-color (root tree)) +rbt-color-black+)))
 
-;;; ---------------------------------------------------------------------------
 
-(defmethod delete-item ((tree red-black-tree) (item red-black-node))
+(defmethod delete-node ((tree red-black-tree) (item red-black-node))
    (let ((y nil) (x nil))
      (if (or (eq (left-child item) *rbt-empty-node*)
              (eq (right-child item) *rbt-empty-node*))
@@ -632,7 +623,6 @@ test."
 
      (setf (rbt-color x) +rbt-color-black+)))
 
-;;; ---------------------------------------------------------------------------
 ;;; Misc
 
 (defmethod walk-tree-nodes ((node (eql *rbt-empty-node*)) walk-fn 
@@ -645,7 +635,6 @@ test."
   "Special case..."
   (declare (ignore walk-fn mode)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod height ((node two-child-node))
    (let ((result 0))
@@ -664,19 +653,18 @@ test."
      result))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Splay Tree
 ;;; 
 ;;; A splay tree implementation based on openmcl implementation
 ;;; and Goodrich and Tamassia "Algorithm Design"
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((tree binary-search-tree) &rest indexes)
   (declare (dynamic-extent indexes))
   (do* ((test (test tree))
         (sorter (sorter tree))
         (node (root tree)))
-       ((null node))
+       ((or (null node)
+	    (node-empty-p node)))
     (let ((key-of-node (funcall (key tree) (element node))))
       (if (funcall test (first indexes) key-of-node)
         (return node)
@@ -684,7 +672,6 @@ test."
           (setq node (left-child node))
           (setq node (right-child node)))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod update-element ((tree binary-search-tree) (value t) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -704,7 +691,6 @@ test."
    (insert-item tree (make-bst-node '(4 four))))
  'five 2) 
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric bst-node-is-left-child (node)
   (:documentation "Is this node the left child of its parent?")
@@ -714,7 +700,6 @@ test."
   (:method (item)
            (declare (ignore item))))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric bst-node-is-right-child (node)
   (:documentation "Is this node the right child of its parent?")
@@ -724,7 +709,6 @@ test."
     (:method (item)
            (declare (ignore item))))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric bst-node-set-right-child (node new-right)
   (:documentation "Set new-right as the right child of node")
@@ -738,7 +722,6 @@ test."
 #+test
 (bst-node-set-right-child (make-bst-node "node") nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric bst-node-set-left-child (node new-left)
   (:documentation "Set new-left as the left child of node")
@@ -752,7 +735,6 @@ test."
 #+test
 (bst-node-set-left-child (make-bst-node "foo") nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric bst-node-replace-child (node old-node new-node)
   (:documentation "Replace the child of this node.")
@@ -761,7 +743,6 @@ test."
              (bst-node-set-left-child node new-node)
              (bst-node-set-right-child node new-node))))
    
-;;; ---------------------------------------------------------------------------
 
 (defclass* splay-tree (binary-search-tree)
   ()
@@ -770,7 +751,6 @@ test."
     :test 'eq
     :sorter '<))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric splay-tree-rotate (tree node)
   (:documentation "rotate the node (and maybe the parent) until the node is
@@ -794,7 +774,6 @@ the root of the tree")
   (:method ((tree binary-search-tree) item)
            (declare (ignore item))))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric splay-tree-splay (tree node)
   (:documentation "Preform the splay operation on the tree about this node
@@ -816,7 +795,6 @@ rotating the node until it becomes the root")
                       (splay-tree-rotate tree node)
                       (splay-tree-rotate tree node)))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item :after ((tree splay-tree) (node bst-node))
   (splay-tree-splay tree node))
@@ -839,7 +817,6 @@ rotating the node until it becomes the root")
   (insert-item tree (make-bst-node '(3 three)))
   (insert-item tree (make-bst-node '(4 four))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((tree splay-tree) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -856,7 +833,6 @@ rotating the node until it becomes the root")
           (setq node (left-child node))
           (setq node (right-child node)))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod update-element ((tree splay-tree) (value t) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -876,7 +852,6 @@ rotating the node until it becomes the root")
    (insert-item tree (make-bst-node '(4 four))))
    'five 4)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((tree splay-tree) (node bst-node))
   (do* ((test (test tree))
@@ -914,7 +889,6 @@ rotating the node until it becomes the root")
              (insert-item tree (make-bst-node '("w" west))))
            '("s" south))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric right-most-child (node)
   (:documentation "Walk down the right side of the tree until a leaf node is
@@ -924,11 +898,10 @@ found, then return that node")
              (right-most-child (right-child node))
              node)))
 
-;;; ---------------------------------------------------------------------------
 
 ;;; must call find-item first to ensure proper amortized
 ;;; analysis - jjm
-(defmethod delete-item ((tree splay-tree) (node bst-node))
+(defmethod delete-node ((tree splay-tree) (node bst-node))
   (if (find-item tree node)
     (let* ((old-root (root tree))
            (new-root (right-most-child (left-child old-root)))
@@ -943,7 +916,7 @@ found, then return that node")
     (warn "Item ~A not found in splay-tree" node)))
 
 (defmethod delete-item ((tree splay-tree) (item t))
-  (delete-item tree (make-node-for-container tree item)))
+  (delete-node tree (make-node-for-container tree item)))
       
 
 #+test
@@ -968,7 +941,6 @@ found, then return that node")
   (delete-item tree '(8 eight))
   tree)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-at ((tree splay-tree) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -996,7 +968,6 @@ found, then return that node")
   (delete-item-at tree 8)
   tree)
 
-;;; ---------------------------------------------------------------------------
   
 
 #+test
@@ -1029,9 +1000,7 @@ found, then return that node")
      (format t "~%~A"
              node)))
 
-;;; ---------------------------------------------------------------------------
 ;;; end splay tree
-;;; ---------------------------------------------------------------------------
 
 ;;; ***************************************************************************
 ;;; *                              End of File                                *
