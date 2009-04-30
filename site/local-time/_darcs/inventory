@@ -1,0 +1,29 @@
+Starting with tag:
+[TAG local-time-1.0.1
+Daniel Lowe <dlowe@bitmuse.com>**20090312154109] 
+[Work with Lispworks
+Larry Clapp <larry@theclapp.org>**20090323132602
+ 
+ - Added a dummy reader macro for #_ so the
+ 
+     #+ccl
+     (... #_gettimeofday ... )
+     
+   doesn't break the compile
+ - Fix %unix-gettimeofday for Lisps other than CMU, SBCL, and CCL.
+] 
+[be more conservative when installing global reader macros as a lispwork workaround
+attila.lendvai@gmail.com**20090323142133
+ Ignore-this: dca64a6f7daa4d478beba41d1c102a16
+] 
+[Less intrusive version of the Lispworks patch for #_.
+Larry Clapp <larry@theclapp.org>**20090324132813
+ 
+ Use an around method in ASDF's compile-op to set the readtable to ignore #_.
+ This achieves the same end, but more elegantly, and doesn't pollute the
+ regular readtable.
+] 
+[clarification comment for the lispworks #_ situation
+attila.lendvai@gmail.com**20090324135651
+ Ignore-this: 1f97d85c23ecffd5806f7a3c137f8491
+] 
