@@ -177,7 +177,7 @@ determine the content type via the file's suffix."
       (lambda ()
         (handle-static-file path content-type)))))
 
-(defun create-folder-dispatcher-and-handler (uri-prefix base-path &optional content-type)
+(defun create-folder-dispatcher-and-handler (uri-prefix base-path &optional content-type (cache t))
   "Creates and returns a dispatch function which will dispatch to a
 handler function which emits the file relative to BASE-PATH that is
 denoted by the URI of the request relative to URI-PREFIX.  URI-PREFIX
@@ -204,6 +204,8 @@ it'll be the content type used for all files in the folder."
                                     always (stringp component))))
                (setf (return-code) +http-forbidden+)
                (throw 'handler-done nil))
+	     (when (not cache)
+	       (no-cache))
              (handle-static-file (merge-pathnames script-path base-path) content-type))))
     (create-prefix-dispatcher uri-prefix #'handler)))
 
