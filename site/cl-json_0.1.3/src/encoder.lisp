@@ -19,6 +19,45 @@
     (t (write-json-string (string s) stream))))
 
 (defmethod encode-json((s sequence ) stream)
+  (cond ((alistp s) (encode-alist s stream))
+	((islist s) (encode-list s stream))
+	(t (encode-cons s stream))))
+
+(defun isList (s)
+  (and (listp s)
+       (listp (rest s))))
+
+(defun isCons (s)
+  (and (listp s)
+       (not (listp (rest s)))))
+
+(defun alistp (s)
+  (and (islist s)
+       (or
+	(= (length s) (count-if #'isCons s))
+	(iscons (first s)))))
+
+(defun encode-alist (s stream)
+  (let ((first-element t))
+    (write-char #\{ stream)
+    (map nil #'(lambda (element)
+                 (if first-element
+                     (setf first-element nil)
+                     (write-char #\, stream))
+		 (encode-json (car element) stream)
+		 (write-char #\: stream)
+		 (encode-json (cdr element) stream))
+	 s)
+    (write-char #\} stream)))
+
+(defun encode-cons (s stream)
+  (write-char #\[ stream)
+  (encode-json (car s) stream)
+  (write-char #\, stream)
+  (encode-json (cdr s) stream)
+  (write-char #\] stream))
+
+(defun encode-list (s stream)
   (let ((first-element t))
     (write-char #\[ stream)    
     (map nil #'(lambda (element)

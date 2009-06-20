@@ -25,7 +25,7 @@
 ;; is a subdirectory of it
 ;;
 
-(defparameter *langutils-directory-root* "/Users/eslick/Work/think/trunk/distributions/langutils-staging/")
+(defparameter *langutils-directory-root* "/Users/vb/repositories/vendorsrc/lisplibraries/site/langutils/")
 (defun make-langutils-path (path) (merge-pathnames path *langutils-directory-root*))
 
 (setf (logical-pathname-translations "think")
@@ -72,7 +72,7 @@
 ;;
 ;; Second, load our custom asdf extension
 ;;
-(load "libs/asdf-config")
+(load (make-langutils-path "libs/asdf-config.lisp"))
 
 ;;
 ;; Finally, load the system and its dependencies through ASDF
