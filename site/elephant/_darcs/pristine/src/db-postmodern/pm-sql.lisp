@@ -133,6 +133,9 @@ $$ LANGUAGE plpgsql;
 (defmethod make-local-name ((ex pm-executor) name)
   (read-from-string (format nil "~a~a" (executor-prefix ex) name)))
 
+(defmethod lookup-query ((ex pm-executor) query-identifier)
+  (cdr (assoc query-identifier (queries-of ex))))
+
 (defmethod register-query ((ex pm-executor) query-identifier sql)
   (let ((local-name (make-local-name ex query-identifier)))
     (pushnew (cons query-identifier
@@ -142,6 +145,14 @@ $$ LANGUAGE plpgsql;
                          sql))
              (queries-of ex)
              :key #'car)))
+
+(defun set-savepoint (con savepoint)
+  (ignore-errors
+    (cl-postgres:exec-query con (concatenate 'string "SAVEPOINT " savepoint))))
+
+(defun rollback-to-savepoint (con savepoint)
+  (ignore-errors
+    (cl-postgres:exec-query con (concatenate 'string "ROLLBACK TO " savepoint))))
 
 (defmethod executor-exec-prepared ((ex pm-executor) query-identifier params row-reader)
   (labels ((lookup-query (query-identifier)
@@ -155,21 +166,7 @@ $$ LANGUAGE plpgsql;
            (ensure-prepared-on-connection (name-symbol name-string sql)
              (let ((meta (cl-postgres:connection-meta (active-connection))))
                (unless (gethash name-symbol meta)
-                 (handler-case
-                     (cl-postgres:prepare-query (active-connection) name-string sql)
-                   (cl-postgres:database-error (e)
-                     (cond
-                       ((string= (cl-postgres:database-error-code e)
-                                 "42P05")
-                   ;; TODO note 20070810: Ugly but I sometimes get:
-                   ;;Database error 42P05: prepared statement "TREE140CURSOR-SET-HELPER" already exists
-                   ;; Despite the attempts above trying to check if it is already prepared.
-                   ;; This error in itself does not cause any problems, so we can ignore it.
-                   ;; But this should be investigated
-                   ;;
-                   ;; Update: Maybe it has to do with connection pooling within postmodern?
-                         'ignoring-this-error)
-                       (t (error e)))))
+                 (cl-postgres:prepare-query (active-connection) name-string sql)
                  (setf (gethash name-symbol meta) t))))
            (exec-prepared (name-string)
              (cl-postgres:exec-prepared (active-connection)
@@ -180,20 +177,16 @@ $$ LANGUAGE plpgsql;
         (ensure-registered-on-class query-identifier)
       (ensure-prepared-on-connection name-symbol name-string sql)
       (with-performance-stat-collector (stat-identifier)
+      (let ((savepoint (princ-to-string (gensym))))
+        ;(set-savepoint (active-connection) savepoint)
         (handler-case
-            (exec-prepared name-string)
+          (progn
+            ;(format t "Executing prepared query ~A~%" name-string)
+            (exec-prepared name-string))
           (cl-postgres:database-error (e)
-            ;; Sometimes the prepared statement might hold references to old oids,
-            ;; which might be have been dropped after a rollback. For safety, try
-            ;; to remove the prepared statement and prepare it again
-            (cond
-              ((string= (cl-postgres:database-error-code e)
-                        "42P01")
-               ;; It seems that this error automatically drops the transaction! Postgresql bug?
-               (cl-postgres:exec-query (active-connection) (concatenate 'string "DEALLOCATE " name-string))
-               (cl-postgres:prepare-query (active-connection) name-string sql)
-               (exec-prepared name-string))
-              (t (error e)))))))))
+            (warn "Error while executing prepared statement ~S (params: ~A).~%"
+                  name-string params)
+            (error e))))))))
 
 ;;---------------- Global queries -----------
 
@@ -212,9 +205,6 @@ $$ LANGUAGE plpgsql;
      (defun ,name (connection ,@parameters &key (row-reader 'cl-postgres:list-row-reader))
        (declare (ignore connection)) ;; TODO remove connetion
        (executor-exec-prepared (active-controller) name (list ,@parameters) row-reader))))
-
-(define-prepared-query next-tree-number ()
-  "select nextval('tree_seq');")
 
 (define-prepared-query sp-select-blob-bob-by-bid (bid)
   "select bob from blob where bid=$1")
@@ -254,8 +244,7 @@ $$ LANGUAGE plpgsql;
   (sp-ensure-bid (active-connection) bob :row-reader 'first-value-row-reader))
 
 (defun create-base-tables (connection)
-  (dolist (stmt '("create sequence tree_seq;"
-                  "create sequence blob_bid_seq;"
+  (dolist (stmt '("create sequence blob_bid_seq;"
 
                   "create table blob (
 bid bigint primary key not null default nextval('blob_bid_seq'),

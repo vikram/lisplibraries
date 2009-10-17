@@ -37,4 +37,3 @@
                            (list (postgres-format secondary-key (key-type-of bt))
                                  (postgres-format value (value-type-of bt)))
                            'cl-postgres:ignore-row-reader))))
-

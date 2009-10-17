@@ -45,9 +45,10 @@
     (with-connection-for-thread (*sc*)
         ,@body)))
 
-(defmethod initialize-instance :after ((bt pm-btree) &rest initargs)
-  (declare (ignore initargs))
-  (unless (table-of bt)
+(defmethod shared-initialize :after ((bt pm-btree) slot-names
+				     &rest rest)
+  (declare (ignore slot-names rest))
+  (unless (table-of bt) ; unless table is given explicitly (for system btrees)
     (setf (table-of bt) (format nil "tree~a" (oid bt)))
     (with-trans-and-vars (bt)
       (when (postmodern:table-exists-p (table-of bt))
@@ -62,7 +63,7 @@
 (defmethod make-table ((bt pm-btree))
   (with-trans-and-vars (bt)
     (unless (table-of bt)
-      (setf (table-of bt) (format nil "tree~a" (next-tree-number (active-connection) :row-reader 'first-value-row-reader))))
+      (error "btree is not initialized properly"))
     (while-ignoring-warnings 
       (cl-postgres:exec-query (active-connection)
                               (format nil "create table ~a (qi ~a ~a not null, value ~a not null) with oids;"
@@ -118,7 +119,7 @@ BEGIN
     END IF;"
 
 #+ele-global-sync-cache
-(format nil "PERFORM notify_btree_update(~a, the_key);"	(oid bt))
+(format nil "PERFORM notify_btree_update(~a, the_key::text);"	(oid bt))
 
 "END;
 $$ LANGUAGE plpgsql;
@@ -136,7 +137,7 @@ $$ LANGUAGE plpgsql;
   (register-query bt 'insert (format nil "select ins_upd_~a($1,$2)" (table-of bt)))
   (register-query bt 'delete (format nil "delete from ~a where qi=$1" (table-of bt)))
   #+ele-global-sync-cache
-  (register-query bt 'notify-update (format nil "select notify_btree_update(~a, $1)" (oid bt))))
+  (register-query bt 'notify-update (format nil "select notify_btree_update(~a, $1::text)" (oid bt))))
 
 (defmethod btree-exec-prepared ((bt pm-btree) query-identifier params row-reader)
   (executor-exec-prepared bt query-identifier params row-reader))
@@ -239,7 +240,9 @@ and make the old instance refer to the new database table"
 	(setf value cached-value
 	      exists-p t)))
 
-    (when (and (initialized-p bt) (not exists-p))
+    (when (and (not exists-p)
+               (initialized-p bt)
+               key)
       (with-vars (bt)
         (let ((result (btree-exec-prepared bt 'select
                                            (list (key-parameter key bt))
@@ -258,20 +261,21 @@ and make the old instance refer to the new database table"
   (setf (internal-get-value key bt) value))
 
 (defmethod (setf internal-get-value) (value key (bt pm-btree))
-  (unless (initialized-p bt)
-    (create-table-from-first-values bt key value))
-  (assert (initialized-p bt)) ;; Should be initialized now
-  (unless (eq :object (key-type-of bt))
-    (unless (eq (key-type-of bt) (data-type key))
-      (upgrade-btree-type bt :object)))
+  (when key
+    (unless (initialized-p bt)
+      (create-table-from-first-values bt key value))
+    (assert (initialized-p bt)) ;; Should be initialized now
+    (unless (eq :object (key-type-of bt))
+      (unless (eq (key-type-of bt) (data-type key))
+        (upgrade-btree-type bt :object)))
 
-  (txn-cache-set-value bt key value)
+    (txn-cache-set-value bt key value)
 
-  (with-trans-and-vars (bt)
-    (btree-exec-prepared bt 'insert
-                         (list (key-parameter key bt)
-                               (value-parameter value bt))
-                         'cl-postgres:ignore-row-reader))
+    (with-trans-and-vars (bt)
+      (btree-exec-prepared bt 'insert
+                           (list (key-parameter key bt)
+                                 (value-parameter value bt))
+                           'cl-postgres:ignore-row-reader)))
   value)
 
 (defmethod existsp (key (bt pm-btree))

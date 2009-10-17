@@ -16,6 +16,7 @@
    ccl:process-name
    ccl:process-preset
    #-openmcl-native-threads ccl:process-run-reasons
+   ccl:all-processes
    ccl:process-wait
    ccl:process-wait-with-timeout
    ccl:without-interrupts))
@@ -28,6 +29,7 @@
    lock
    process-allow-schedule
    process-name
+   all-processes
    process-preset
    process-run-reasons
    process-wait
@@ -181,3 +183,4 @@ See the functions process-plist, (setf process-plist).")
           (process-wait-with-timeout (or whostate "Waiting for input") timeout #'collect-fds)
           (process-wait (or whostate "Waiting for input") #'collect-fds)))
     collected-fds))
+

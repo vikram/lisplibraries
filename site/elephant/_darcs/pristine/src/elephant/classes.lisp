@@ -25,12 +25,7 @@
 
 (declaim #-elephant-without-optimize (optimize (speed 3)))
 
-(defmethod initialize-instance :before  ((instance persistent)
-					 &rest initargs
-					 &key from-oid
-					 (sc *store-controller*))
-  "Sets the OID and home controller"
-  (declare (ignore initargs))
+(defun initial-persistent-setup (instance &key from-oid sc)
   (if (or (null sc) (not (subtypep (type-of sc) 'store-controller)))
       (error "Initialize instance for type persistent requires valid store controller argument :sc
               or valid *store-controller*"))
@@ -39,6 +34,14 @@
       (setf (oid instance) (next-oid sc)))
   (setf (dbcn-spc-pst instance) (controller-spec sc))
   (cache-instance sc instance))
+
+(defmethod initialize-instance :before  ((instance persistent)
+					 &rest initargs
+					 &key from-oid
+					 (sc *store-controller*))
+  "Sets the OID and home controller"
+  (declare (ignore initargs))
+  (initial-persistent-setup instance :from-oid from-oid :sc sc))
 
 (defclass persistent-object (persistent) ()
   (:metaclass persistent-metaclass)
@@ -59,8 +62,7 @@
 	 (persistent-object (find-class 'persistent-object))
 	 (not-already-persistent (loop for superclass in direct-superclasses
 				       never (eq (class-of superclass) persistent-metaclass))))
-    (when index
-      (update-indexed-record class nil :class-indexed t))
+    (setf (%indexed-class class) index)
     (if (and (not (eq class persistent-object)) not-already-persistent)
 	(apply #'call-next-method class slot-names
 	       :direct-superclasses (append direct-superclasses (list persistent-object)) args)
@@ -89,7 +91,9 @@
 	      (when class-idx
 		(wipe-class-indexing instance class-idx)))
 	    (setf (%index-cache instance) nil))
-	  (set-db-synch instance :class))
+	  (if *enable-multi-store-indexing*
+	      (set-db-synch instance :class)
+	      (setf (%index-cache instance) nil)))
       #+allegro
       (loop with persistent-slots = (persistent-slots instance)
 	    for slot-def in (class-direct-slots instance)
@@ -100,6 +104,25 @@
 ;; ================================================
 ;; PERSISTENT OBJECT MAINTENANCE
 ;; ================================================
+
+;;
+;; RECREATING A PERSISTENT INSTANCE
+;;
+
+(defmethod recreate-instance-using-class ((class standard-class) &rest initargs &key &allow-other-keys)
+  "use normal initialization sequence for ordinary classes."
+  (apply #'make-instance class initargs))
+
+(defmethod recreate-instance-using-class ((class persistent-metaclass) &rest initargs &key &allow-other-keys)
+  "persistent-objects bypass initialize-instance"
+    (let ((instance (allocate-instance class)))
+    (apply #'recreate-instance instance initargs)
+    instance))
+
+(defgeneric recreate-instance (instance &rest initargs &key &allow-other-keys)
+  (:method ((instance persistent-object) &rest args &key from-oid (sc *store-controller*))
+   (initial-persistent-setup instance :from-oid from-oid :sc sc)
+   (shared-initialize instance t :from-oid from-oid)))
 
 ;;
 ;; CLASS INSTANCE INITIALIZATION
@@ -218,7 +241,7 @@ slots."
 (defmethod change-class :around ((previous persistent) (new-class standard-class) &rest initargs)
   (declare (ignorable initargs))
   (unless (subtypep (type-of new-class) 'persistent-metaclass)
-    (error "Persistent instances cannot be changed to non-persistent classes in change-class"))
+    (error "Persistent instances cannot be changed to persistent classes via change-class"))
   ;; Inform user, if warnings are active, that slot values are about to be dropped
   (warn-about-dropped-slots 'change-class (class-of previous) 
 			    (set-difference 

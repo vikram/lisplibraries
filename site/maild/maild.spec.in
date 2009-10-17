@@ -1,0 +1,106 @@
+# $Id: maild.spec.in,v 1.9 2008/04/09 16:45:42 dancy Exp $
+
+# Spec file suitable for modern Redhat-like hosts, using the
+# "alternatives" system.  Modeled after the sendmail.spec from FC4.
+
+Summary: Allegro Mail Daemon
+Name: maild
+Version: __VERSION__
+Release: %{release}
+License: Commercial
+Group: System Environment/Daemons
+#URL: 
+# Stuff required for installation
+Prereq: /usr/sbin/alternatives 
+Prereq: /usr/sbin/useradd
+Prereq: chkconfig
+# Stuff required for operation
+Requires: procmail
+# for /etc/aliases
+Requires: setup 
+# BuildRequires: allegrocl
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Provides: smtpdaemon
+Provides: %{_sbindir}/sendmail %{_bindir}/mailq %{_bindir}/newaliases
+Provides: /usr/lib/sendmail
+
+# Don't attempt to make the debuginfo package
+%define debug_package %{nil}
+
+%description
+Allegro Mail Daemon.  Highly configurable.
+
+%prep
+%setup -q
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/{bin,sbin,lib}
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
+mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
+mkdir -p $RPM_BUILD_ROOT/etc/pam.d
+# I don't know why /var/spool/mqueue is created.  maild doesn't
+# use it.
+mkdir -p $RPM_BUILD_ROOT/var/spool/{maild,mqueue}
+chmod 0700 $RPM_BUILD_ROOT/var/spool/maild
+make ROOT=$RPM_BUILD_ROOT install
+mv $RPM_BUILD_ROOT/etc/pam.d/smtp $RPM_BUILD_ROOT/etc/pam.d/smtp.maild
+# Redo some symlinks here 
+ln -snf /usr/lib/maild/maild $RPM_BUILD_ROOT/usr/sbin/maild
+ln -snf /usr/lib/greyadmin/greyadmin $RPM_BUILD_ROOT/usr/sbin/greyadmin
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+/etc/rc.d/init.d/maild
+/usr/lib/greyadmin
+/usr/lib/maild
+/usr/sbin/maild
+/usr/sbin/greyadmin
+%dir /var/spool/maild
+%dir /var/spool/mqueue
+%doc config.cl ALIASES MAILERS.txt NOTES STATS greylist.sql greylist.sql.notes
+%config(noreplace) /etc/sysconfig/maild
+%config(noreplace) /etc/pam.d/smtp.maild
+
+%pre
+/usr/sbin/useradd -u 47 -d /var/spool/mqueue -r -s /bin/false mailnull >/dev/null 2>&1
+exit 0
+
+%post
+/sbin/chkconfig --add maild
+
+/usr/sbin/alternatives --install \
+	/usr/sbin/sendmail mta /usr/sbin/maild 91 \
+	--slave /usr/lib/sendmail mta-sendmail /usr/sbin/maild \
+	--slave /usr/bin/mailq mta-mailq /usr/sbin/maild \
+	--slave /usr/bin/newaliases mta-newaliases /usr/sbin/maild \
+	--slave /etc/pam.d/smtp mta-pam /etc/pam.d/smtp.maild \
+	--initscript maild
+
+%preun
+if [ $1 = 0 ]; then
+	/sbin/service maild stop >/dev/null 2>&1
+	/sbin/chkconfig --del maild
+	/usr/sbin/alternatives --remove mta /usr/sbin/maild
+fi
+exit 0
+
+%postun
+if [ "$1" != 0 ]; then
+	/sbin/service maild condrestart 2>&1 > /dev/null
+fi
+exit 0
+
+
+%changelog
+* Tue Feb 28 2006 Ahmon Dancy <dancy@dancy> - 
+- Initial build.
+

@@ -67,6 +67,7 @@
 	     (:file "testcollections")
 	     (:file "testindexing")
 	     (:file "testmigration")
+	     (:file "testconcurrency")
 	     )
 	    :serial t)))
 

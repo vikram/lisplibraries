@@ -2,6 +2,7 @@
 ;; Linux defaults
 #+(and (or sbcl allegro openmcl lispworks) (not (or mswindows windows)) (not (or macosx darwin)))
 ((:compiler . :gcc)
+ (:berkeley-db-version . "4.5")
  (:berkeley-db-include-dir . "/usr/local/BerkeleyDB.4.5/include/")
  (:berkeley-db-lib-dir . "/usr/local/BerkeleyDB.4.5/lib/")
  (:berkeley-db-lib . "/usr/local/BerkeleyDB.4.5/lib/libdb-4.5.so")
@@ -14,6 +15,7 @@
 ;; OSX Defaults 
 #+(and (or sbcl allegro openmcl lispworks) (not (or mswindows windows)) (or macosx darwin))
 ((:compiler . :gcc)
+ (:berkeley-db-version . "4.5")
  (:berkeley-db-include-dir . "/usr/local/BerkeleyDB.4.5/include/")
  (:berkeley-db-lib-dir . "/usr/local/BerkeleyDB.4.5/lib/")
  (:berkeley-db-lib . "/usr/local/BerkeleyDB.4.5/lib/libdb-4.5.dylib")
@@ -26,6 +28,7 @@
 ;; Windows defaults (assumes prebuild libraries)
 #+(or mswindows windows)
 ((:compiler . :cygwin)
+ (:berkeley-db-version . "4.5")
  (:berkeley-db-include-dir . "C:/Program Files/Oracle/Berkeley DB 4.5.20/include/")
  (:berkeley-db-lib-dir . "C:/Program Files/Oracle/Berkeley DB 4.5.20/bin/")
  (:berkeley-db-lib . "C:/Program Files/Oracle/Berkeley DB 4.5.20/bin/libdb45.dll")
@@ -35,8 +38,9 @@
  (:clsql-lib-paths . nil)
  (:prebuilt-libraries . t))
 
-;; Berkeley 4.5 is required, each system will have different settings for
-;; these directories, use this as an indication of what each key means
+;; Berkeley 4.5 or 4.6 are valid as set by berkeley-db-version, each 
+;; system will have different settings for these directories, use this 
+;; as an indication of what each key means
 ;;
 ;; :prebuilt-libraries is true by default for windows machines.  It causes
 ;; the library loader to look in the elephant root directory for the shared 
@@ -59,6 +63,13 @@
 ;;
 ;; Additional supported parameters include:
 ;;
+;; :berkeley-db-version 
+;;          Tells the db-bdb backend which version of the 
+;;          constants to load to match the header files of 
+;;          the specific BDB version.  It's a hack vs. using 
+;;          CFFI to do this automatically, but it gives us 
+;;          configurability without much pain, maintenance 
+;;          or external dependencies
 ;;
 ;; :berkeley-db-cachesize
 ;;          An integer indicating the number of bytes

@@ -10,10 +10,10 @@
     (setf regression-test::*catch-errors* nil))
 ;;  (trace elephant::indexed-slot-writer)
   (trace ((method initialize-instance :before (persistent))))
-  (trace ((method initialize-instance (persistent-object))))
+;;  (trace ((method initialize-instance (persistent-object))))
 ;;  (trace ((method shared-initialize :around (persistent-object t))))
 ;;  (trace ((method shared-initialize :around (persistent-metaclass t))))
-;;  (trace elephant::find-class-index)
+  (trace elephant::find-class-index)
 ;;  (trace get-instances-by-class)
 ;;  (trace get-instances-by-value)  
   (trace enable-class-indexing)
@@ -21,7 +21,7 @@
   (trace elephant::cache-instance)
   (trace elephant::get-cached-instance)
   (trace elephant::get-cache)
-  (trace elephant::db-transaction-commit)
+;;  (trace elephant::db-transaction-commit)
   )
 
 (defvar inst1)
@@ -364,7 +364,8 @@
 
       (defclass idx-five-del ()
 	((slot1 :initarg :slot1 :initform 1 :accessor slot1 :index t))
-	(:metaclass persistent-metaclass))
+	(:metaclass persistent-metaclass
+	 :index t))
 
       (with-transaction (:store-controller *store-controller*)
 	(drop-instances (get-instances-by-class 'idx-five-del))
@@ -374,7 +375,8 @@
 
 	(defclass idx-five-del ()
 	  ((slot1 :initarg :slot1 :initform 1 :accessor slot1))
-	  (:metaclass persistent-metaclass))
+	  (:metaclass persistent-metaclass)
+	  (:index nil))
 	(values 
 	 (eq (length r1) 1)
 	 (signals-error (get-instances-by-value 'idx-five-del 'slot1 1))
@@ -418,9 +420,11 @@
 	  (make-instance 'idx-five))
 
 	;; DB should dominate (if set as default)
-	(values (length (get-instances-by-value 'idx-five 'slot3 3))
-		(length (get-instances-by-value 'idx-five 'slot1 1))
-		(signals-error (length (get-instances-by-value 'idx-five 'slot2 2))))))
+	(if elephant::*enable-multi-store-indexing*
+	    (values 2 2 t)
+	    (values (length (get-instances-by-value 'idx-five 'slot3 3))
+		    (length (get-instances-by-value 'idx-five 'slot1 1))
+		    (signals-error (length (get-instances-by-value 'idx-five 'slot2 2)))))))
   2 2 t)
 
 (test (indexing-change-class :depends-on index-reset)
@@ -655,6 +659,19 @@
       )
   t)
   
+(elephant:defpclass foo-1 ()
+ ((str :type string
+       :initarg :str
+       :reader str-of
+       :index t)))
 
+(test map-inverted-index-1
+ (with-open-store (`(:bdb "/tmp/store/"))
+   (drop-instances (get-instances-by-class 'foo-1))
+   (loop :for st :in '("a" "b" "c" "d" "g" "ga" "gb" "gc" "z")
+         :do (make-instance 'foo-1 :str st))
+   (is (null (map-inverted-index (lambda (x y)
+                                   (declare (ignore y))
+                                   x) 'foo-1 'str :start "f" :end "fz" :collect t)))))
       
 

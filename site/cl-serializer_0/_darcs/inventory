@@ -1,0 +1,41 @@
+Starting with tag:
+[TAG 2008-11-27
+attila.lendvai@gmail.com**20081127150348
+ Ignore-this: dd29bba79ed6f559322b174deaed5053
+] 
+[added dispatch for simple-ub8-vector
+attila.lendvai@gmail.com**20090115162035
+ Ignore-this: ebee0d350a36c7fc665c5a8254be30b
+] 
+[some TODO's, some declare -> check-type, some doc
+attila.lendvai@gmail.com**20090219204938
+ Ignore-this: 36b19a9172ea5737c4aee7c850a105c8
+] 
+[cons cells and strings have identity by default
+attila.lendvai@gmail.com**20090228183326
+ Ignore-this: bb602979a5ff41700f859130c4996954
+] 
+[avoid a warning
+attila.lendvai@gmail.com**20090308223021
+ Ignore-this: d0dcca4bc08a40ae94a6e9d6d02b4075
+] 
+[Added a couple of duplicates.
+levente.meszaros@gmail.com**20090404154249
+ Ignore-this: 9a3cf2764b0f496079448dd1c2d87bf4
+] 
+[Added standard-class, standard-effective-slot-definition and standard-direct-slot-definition support.
+levente.meszaros@gmail.com**20090404154553
+ Ignore-this: 9f0a02f26c50e1c751f8aab7d738e410
+] 
+[drop stale ignore declaration
+attila.lendvai@gmail.com**20090518204939
+ Ignore-this: bea452fbf908f4ab10c12dbfc45ef309
+] 
+[use check-type instead of declare, it's guaranteed to signal an error
+attila.lendvai@gmail.com**20090713124117
+ Ignore-this: 3a2bcf5c6478e6e823fe4e67d56e9b36
+] 
+[add a restart and a proper error when a package can not be found while deserializing something
+attila.lendvai@gmail.com**20090713124408
+ Ignore-this: 54323d93eeb01fc123842842669999e1
+] 

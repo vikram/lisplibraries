@@ -1,0 +1,1566 @@
+2009-05-09  layer  <layer@relay.known.net>
+
+	* Makefile:
+	- look for and include Makefile.local, so predefined variables
+	  can be overridden
+	- use ?= in a bunch of places so Makefile.local can provide
+	  default values
+	- remove $(at_franz); use $(REMOVE_PREVIOUS_VERSIONS) instead
+
+2009-05-09  Ahmon Dancy  <dancy@dancy>
+1.2.19
+	
+	* deliver-smtp.cl: Some servers say "SIZE 0" during EHLO.
+	Interpret this to mean that it supports the SIZE extension,
+	but it doesn't have a fixed maximum message size.
+
+2009-05-06  Ahmon Dancy  <dancy@dancy>
+1.2.18 
+
+	Tweaks for bandwidth reduction in the face of large messages:
+	
+	* bounce.cl:  Only send the first
+	*bounce-max-original-msg-lines* (defaults to 300) lines of the
+	original message in bounces.  This helps prevent bounces from
+	bouncing if the original message was rejected for being too
+	large.
+
+	* config.cl:  New *bounce-max-original-msg-lines* parameter.
+
+	* deliver-smtp.cl: use EHLO and honor the server's reported
+	max message size (if any) to avoid wasting bandwidth
+	transmitting a message that will ultimately be rejected.
+	Likewise, supply the SIZE= parameter during MAIL FROM: if the
+	server supports it.
+
+	* deliver.cl: 
+
+	write-message-to-stream: Support new max-lines keyword
+	arg (used by bounce.cl).
+
+	read-message-from-stream:  Keep track of the "smtp byte count"
+	of messages as they are read in so we can use the information
+	when relaying via SMTP.  
+
+	* queue.cl: Added smtp-size slot to hold computed "smtp byte
+	count".
+
+	* smtp-server.cl: Report *maxmsgsize* (if set) in EHLO
+	response.  Support SIZE= parameter in MAIL FROM: command.
+
+	
+2008-08-18  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: more tweaks for non-franz building, of the rpm and
+	  repo installation, this time.
+
+2008-07-31  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: make --sign a make variable, so I can specify it
+	  as null
+
+2008-07-30  root  <root@gills.dancysoft.com>
+1.2.17
+	* blacklist.cl, smtp-server-checkers.cl: Never run blacklist
+	checks against trusted clients.
+
+2008-04-09  root  <root@gills.dancysoft.com>
+1.2.16
+	
+	* greylist.cl: Added dnswl.org support in the greylisting module.
+	Greylisting is bypassed for IPs found in dnswl.org.
+
+	* deliver.cl: Remove extra newlines when reporting stdout/stderr
+	from delivery program.
+
+	* maild.spec.in: Added %define debug_package %{nil} to avoid
+	building the debuginfo package (which doesn't currently work w/
+	8.1 shared lib).
+	
+2007-07-23  Ahmon Dancy  <dancy@dancy>
+1.2.15
+	
+	* smtp-server.cl: bug17189.  Reduce memory leaks caused by failing
+	to close the ssl-server-stream created by the STARTTLS command.  A
+	leak still exists in the real C heap, though. 
+
+2007-07-18  Ahmon Dancy  <dancy@dancy>
+1.2.14
+	
+	* Just a version bump for 8.1rc1 build.
+
+2007-05-30  Ahmon Dancy  <dancy@dancy>
+1.2.13
+
+        * config.cl: Added new config parametr *maxheadersize* which
+	defaults to 32768.  Messages with total header size larger than
+	this will be rejected.
+
+	* input.cl: 
+
+	Adjusted read-message-stream so that it checks the
+	maximum header size and returns a complaint if exceeded.  
+
+	Header lines longer than *maxdatalinelen* are handled properly
+	now.
+
+	read-message-stream now returns information about any size
+	constraint violations (headers or total message size) to the
+	caller.
+
+	read-from-stdin will now properly generate an error for messages
+	that exceeded size contraints.
+	
+	* checkers.cl: Removed message-size-checker.  It's function has
+	been integrated into input.cl:read-message-stream.
+
+	* smtp-server.cl: smtp-data.  Allow either :err or :reject return
+	status from smtp-data-checkers.
+	
+
+2007-05-18  Ahmon Dancy  <dancy@dancy>
+1.2.12
+	
+	* Built with 8.1.beta with bug17033 fixes.
+
+	* config.cl: Added *postpone-checkers* setting for postponing most
+	spam checks until after message data has been received.  This is
+	to help w/ the KDDI project.
+
+	* deliver-smtp.cl: Added missing word to an error message.
+
+	* smtp-server.cl:  New statistic: transactions-started.  Counts
+	number of successful MAIL FROM commands.  
+
+	* smtp-server.cl: Many changes in order to implement
+	*postpone-checkers* option.
+
+	* www.cl: Added display for transactions started stat.
+
+2007-05-09  Ahmon Dancy  <dancy@dancy>
+1.2.9
+	
+	* Rebuild w/ latest 8.1.beta.
+
+	* config.cl: Default ssl key file is now /etc/maild.key
+
+2007-04-24  Ahmon Dancy  <dancy@dancy>
+1.2.8
+	
+	* Version number bump to easily identify 8.1.beta build.
+
+	* load.cl: Include :mcombin in module list (unless version>= 8 1)
+
+2007-04-12  Ahmon Dancy  <dancy@dancy>
+1.2.7
+	
+	* maild.cl: Added support for -bD run mode.. which is the same as
+	-bd, but does not fork, and turns on debugging mode.
+
+2007-03-21  Ahmon Dancy  <dancy@dancy>
+1.2.6
+	* delivr-smtp.cl Fix suspected fd leak during failed SMTP delivery.
+
+2007-03-01  Ahmon Dancy  <dancy@dancy>
+1.2.5
+       * deliver-smtp.cl: Bugfix to prior change.
+	
+1.2.4
+	
+	* deliver-smtp.cl: Improve error reporting for MX connection
+	failures.  Also, always make connections to port 25, not
+	*smtp-port* (which is used to define the port that maild listens
+	on).
+	
+
+2007-02-06  Ahmon Dancy  <dancy@dancy>
+1.2.3
+	
+	* config.cl: Added *smtps-port* parameter.  Removed comment from
+	*smtp-port* parameter.
+
+	* headers.cl: Construct message ids in a better way.
+
+	* smtp-server.cl: Use *smtp-port* always.  Ignore 'smtp' entry in
+	/etc/services.  This makes it easier to run maild on a
+	non-standard port.
+
+2007-01-08  Ahmon Dancy  <dancy@dancy>
+1.2.2
+	
+	* queue.cl: queue-finalize: Only call queue-prefinalize if it
+	hasn't been called before.
+
+	* config.cl: Fixed typo in comment.
+
+2006-11-15  Ahmon Dancy  <dancy@dancy>
+1.2.1
+	
+	* queue.cl: queue-prefinalize: Copy the headers list since it may
+	be destructively modified by subsequent calls to
+	queue-append-header.  
+
+	* smtp-server.cl: with-smtp-err-handler: Print socket errors in a
+	nicer way.
+
+2006-11-14  Ahmon Dancy  <dancy@dancy>
+1.2.0
+
+	* INCOMPATIBLE CHANGE: Adjusted the way (smtp and non-smtp) data
+	checkers are invoked.  If you use checkers in your /etc/maild.cl,
+	you'll need to update their argument lists and code.  The
+	'external-checker' function has also been changed.
+
+	* Added *metoo* configuration variable to force senders who send
+	mail to a mailing list their on to get a copy of that mail.
+
+	* smtp-server.cl:  Added an error handler which will log a
+	backtrace in the case of unexpected errors.
+
+2006-10-05  Ahmon Dancy  <dancy@dancy>
+1.1.70
+	
+	* greyadmin/greyadmin.cl: Updated to use PAM auth.
+
+2006-10-02  Ahmon Dancy  <dancy@dancy>
+1.1.69:
+       
+	* deliver-smtp.cl, get-smtp-reply: Collect all the server's
+	response for proper reporting in bounce messages.
+
+	* queue-process.cl: Fixed case where 'nil' would be printed in a
+	bounce message instead of a recipient address.
+
+2006-09-14  root  <root@gills2.dancysoft.com>
+1.1.67/1.1.68
+       
+	* smtp-server.cl, do-smtp: Adjusted pre-greeting traffic check so
+	that it doesn't treat client disconnect as traffic.
+	
+1.1.66:
+
+	* Makefile/maild*.spec.in: Default release number (1) is specified
+	in Makefile and can be overridden with an environment variable.
+
+	* config.cl: New *greet-pause*.
+
+	* smtp-server.cl: Add support for *greet-pause* setting.  See docs
+	near *greet-pause* in config.cl for details.  Right now
+	pre-greeting traffic is simply logged.  After a testing period, it
+	will be changed to disconnection violators.
+	
+1.1.65:
+
+        *** INCOMPATIBLE CHANGES *** /etc/maild.cl may need to be updated.
+	
+	* config.cl: Replaced *relay-access* and *relay-checkers* with
+	*trusted-clients* and *trusted-client-checker*.  trusted client
+	checkers just take a single argument: the ip address of the
+	client.
+
+	* greylist.cl, greylist-init: Replaced call to relaying-allowed-p
+	to trusted-client-p.  Also moved the check to the top of the function.
+
+	* smtp-server-checkers.cl: Replaced calls to relaying-allowed-p to
+	trusted-client-p.  Removed function 'check-relay-access'.  
+
+	* utils.cl:  Added functions 'addr-in-list-p' and 'trusted-client-p'
+	
+2006-09-12  root  <root@gills2.dancysoft.com>
+	* *.spec.in:  Chmod 0700 /var/spool/maild.
+
+	* greylist.sql: Adjusted grant statement per jkfs recommendation.
+
+2006-08-27  root  <root@gills2.dancysoft.com>
+1.1.64
+        * config.cl:  New option: *pid-file*, defaults to /var/run/maild.pid.
+
+	* smtp-server.cl: If *pid-file* is true, record the process at the
+	specified location at SMTP server startup.  Use an unwind-protect
+	to clean it up during shutdown.
+
+2006-08-26  root  <root@gills.dancysoft.com>
+1.1.63
+
+	* aliases.cl: Don't log "Reparsing aliases" if aliases hadn't been
+	parsed at all yet (such as when starting maild from the command
+	line).  Rearranged some code and structures to make the system
+	more robust in case of alias parsing errors.  Fixed bug where 'eq'
+	was being used to compare file-write-dates.  file-write-dates tend
+	to be bignums so will 'eq' will return nil for two bignums that
+	look the same.  Changed to 'eql' (not using = because 'nil' may be
+	returned for non-existent files).
+
+2006-08-25  Ahmon Dancy  <dancy@dancy>
+1.1.62
+	
+	* Removed pam.cl since it's in Allegro CL now.
+
+2006-08-23  Ahmon Dancy  <dancy@dancy>
+
+	* load.cl: Added :regexp2 to the module list for building.
+
+2006-08-21  Ahmon Dancy  <dancy@dancy>
+1.1.61
+	
+	* Use different pam files for modern redhat/fedora and redhat 7.3.
+
+2006-08-17  Ahmon Dancy  <dancy@dancy>
+1.1.60
+	
+	* aliases.cl: BUGFIX: If parsing of system aliases file was
+	aborted due to incorrect owner/permissions, it would never be
+	reparsed again.  Fixed.
+
+2006-08-11  root  <root@gills.dancysoft.com>
+1.1.59
+
+	* greylist.cl: Additional "don't greylist authenticate clients"
+	fix.
+
+1.1.58
+	
+	* config.cl: Comment updates for some checkers.
+
+	* greylist.cl: Don't greylist authenticated clients (fix).
+
+	* smtp-server-checkers.cl: Call smtp-data-checkers with 'sess' as first arg.
+
+2006-08-08  root  <root@gills.dancysoft.com>
+1.1.57
+	
+	* Makefile:  Pass -W arg to lisp when building.
+
+	* smtp-server.cl: In places where checkers are called, if one of
+	them returns :sufficient, then skip the remaining checkers in the
+	list.
+
+	Call data-pre-checkers with 'sess' as first argument.
+	
+	* smtp-server-checkers.cl (smtp-rcpt-to-relay-checker): Return
+	:sufficient if client has authenticated or is in the
+	allowed-to-relay list.
+
+	* greylist.cl (greylist-data-pre-checker): Return :ok if client is
+	authenticated.
+
+2006-08-08  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: tweaks to make suse rpm build work
+
+2006-08-08  root  <root@gills.dancysoft.com>
+1.1.56
+	
+	* Makefile: Use maild.pam.suse when building on SuSE.  
+
+	* maild.pam.suse: New.
+
+2006-08-06  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: tweaks for SuSE
+
+2006-07-30  root  <root@gills.dancysoft.com>
+1.1.55
+
+	* Makefile, *.spec.in, auth.cl, load.cl:
+	Changed client authentication code so that it uses PAM now.
+	Updated RPM specs to supply /etc/pam.d/smtp.
+
+	* maild.pam, pam.cl: New
+
+	* config.cl: Fixed the documentation for *client-authentication*
+
+2006-07-05  Ahmon Dancy  <dancy@dancy>
+1.1.54
+	* config.cl: New parameter: *rcpt-to-negative-initial-delay*,
+	defaults to 5 (seconds).  
+
+	* smtp-server.cl: If RCPT TO is to fail with 4xx or 5xx code,
+	sleep for a while before reporting the failure.  Initially, sleep
+	for *rcpt-to-negative-initial-delay* seconds, then double each
+	subsequent time.  This is to slow down dictionary spam attacks.
+
+2006-06-14  Ahmon Dancy  <dancy@dancy>
+1.1.53
+	
+	* Include "5.7.1" prefix on Relaying denied response.
+
+2006-04-12  Ahmon Dancy  <dancy@dancy>
+1.1.52
+	When adding a From: header, quote the gecos information if
+	necessary:
+
+	* emailaddr.cl: New function: quote-if-necessary.
+
+	* header.cl: make-from-header: Make use of quote-if-necessary.
+
+2006-04-09  root  <root@gills.dancysoft.com>
+1.1.51
+
+	* greylist.sql: For whitelist table, do not specify 'not null' for
+	the expire column.  A NULL in the expire column indicates a record
+	that should not expire.  Manually issue this SQL statement to fix
+	your whitelist table definition if necessary:
+
+	alter table whitelist modify expire bigint;	
+
+	* aliases.cl: Fix processing of continuation lines.
+
+1.1.50
+        * aliases.cl:  Be tolerant of syntax errors during parsing of 
+	aliases files. 
+	
+1.1.49
+
+	* config.cl: Updated some comments.  Removed *short-host-name*
+	since it's not really a configuration parameter.  
+
+	* dns.cl: Minor reformatting.
+
+	* recips.cl: local-domain-p: Include (gethostname) in the list of
+	domains to automatically include.
+
+	* rewrite.cl: this-host-p: Include (gethostname) in the list of
+	domains to automatically include.
+
+	* utils.cl: Minor reformatting.
+
+2006-03-30  Ahmon Dancy  <dancy@dancy>
+1.1.48
+        * utils.cl: Additional adjustments to fix bugs related to SSL
+	connections. 
+
+2006-03-30  Ahmon Dancy  <dancy@dancy>
+1.1.47
+
+	* utils.cl:  Updated socketp macro so that it recognizes
+	excl::ssl-server-stream's as sockets.  This fixes a bug where SSL
+	connections were not being closed properly.
+
+	* smtp-server.cl: Modified smtp-remote-host so that it returns 0
+	if argument is not a socket.  Modified smtp-remote-dotted so that
+	it returns "[local]" if argument is not a socket.
+
+2006-03-27  Ahmon Dancy  <dancy@dancy>
+1.1.46
+	
+	* maild.cl, main function:  Set umask to 022 before doing any file
+	i/o.  
+
+2006-03-21  root  <root@gills.dancysoft.com>
+1.1.45
+	
+	* bounce.cl: Adjusted bounce message appearance.
+
+	* deliver-smtp.cl: Try to generate better delivery status
+	information to aid in diagnosis of problems.
+
+2006-03-04  root  <root@gills.dancysoft.com>
+
+        * greyadmin/greyadmin.cl: Changed default *libdir* to
+	/usr/lib/greyadmin.
+	
+	* maild-rh73.spec.in: Bumped released to 2 for greyadmin fix.
+
+2006-03-01  root  <root@gills.dancysoft.com>
+
+	* Additional rpm-related mods.
+
+2006-03-01  Ahmon Dancy  <dancy@dancy>
+1.1.44
+	* Changes to various files to support RPM packaging.
+
+2006-02-28  root  <root@gills.dancysoft.com>
+1.1.43
+	
+	* config.cl: Bump *queue-max-threads* down to 10.  20 was too
+	aggressive on some systems.
+
+	* queue-process.cl: Bugfix.  There was a race condition between
+	checking the number of running threads and the inc of the running
+	thread counter when a new queue processing thread was started.
+	This could result in extra threads being spawned.
+	
+2005-12-19  Ahmon Dancy  <dancy@dancy>
+1.1.42:
+	
+	* Makefile: Mods to Kevin's recent changes.  Use /etc/init.d/maild
+	instead of /etc/rc.d/maild.  On SuSE /etc/rc.d is a symlink to
+	/etc/init.d.  /etc/rc.d does not exist on Redhat systems.  Also,
+	install /etc/init.d/maild before attempting to use it.  And don't
+	fail if maild isn't running when the stop attempt occurs.
+
+	* deliver-smtp.cl, deliver.cl, queue-process.cl: Better status
+	information in the queue file.  More robust error handling and
+	reporting.  Recompute local mailer each time a recipient is
+	processed.
+
+	* mailer.cl: Comment changes.
+
+	* recips.cl: New special-recip-p function.  Misc cosmetic changes.
+	
+	* aliases.cl, queue.cl: Minor cosmetic changes.
+
+2005-12-19  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: install-stop/start around install; install-greyadmin
+
+2005-12-18  Ahmon Dancy  <dancy@dancy>
+1.1.41
+	
+	* Makefile: Build using latest 8.0.
+
+	* config.cl: New parameter *queue-max-threads* (default 20).
+	Determines the maximum number of parallel threads to use during
+	automatic queue processing.  This improves the flow of queued mail
+	on hosts that run mailing lists (such as pandorabots).
+
+	* queue-process.cl: Make use of new *queue-max-threads*.
+
+2005-11-29  Ahmon Dancy  <dancy@dancy>
+1.1.40
+	* greylist.cl: Fixed argument list for greylist-rcpt-to-checker.
+	It was out of date.
+
+2005-11-28  Ahmon Dancy  <dancy@dancy>
+1.1.39
+	
+	* aliases.cl:  recip-expanded-from wasn't being set properly and
+	was causing unhandled errors in the bounce code.  Fixed.
+
+	* config.cl:  Added a comment on the use of *short-host-name*. 
+
+2005-10-26  root  <root@gills.dancysoft.com>
+1.1.38
+
+
+	* Makefile: Changed alt_lisp1 to /storage1/acl80b/mlisp
+
+	* utils.cl: New get-line function.
+	
+	* deliver.cl: When delivering to a file, escape "From " lines.
+
+2005-10-11  Ahmon Dancy  <dancy@dancy>
+1.1.37 
+
+	* Makefile: Fixed 'arch' variable (x86 should have been 86).
+	Parameterized the preferred build lisp.  Use the same lisp to
+	build greyadmin.
+
+	* version.cl.  Bumped to 1.1.37 to indicate 8.0.beta build.  Added
+	an Id tag.
+
+2005-10-10  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: default to `mlisp'; all does clean first
+	* lock.cl: use mp:process-sleep instead of sleep, since 8.0's
+	  definition changed to not allow the `whostate' optional.
+
+2005-09-23  Ahmon Dancy  <dancy@dancy>
+1.1.36
+	
+	* maild.cl: Log when maild is terminated via signal.
+
+	* auth.cl: Adding to repository (late).
+
+2005-09-22  Ahmon Dancy  <dancy@dancy>
+1.1.35
+	
+	* Fix client authentication sanity check in maild.cl
+
+2005-09-21  Ahmon Dancy  <dancy@dancy>
+1.1.34
+
+	* Added support for client authentication using plain-text
+	mechanisms (which allow for the standard password database
+	mechanisms to be used).  By default, ssl is required before
+	authentication can be performed (so that the plaintext passwords
+	are not transferred in the clear).  
+
+	* maild.cl:  Moved the /tmp/maild.trace stuff to smtp-server.cl.
+
+	* sasl.cl: New.
+
+	* smtp-server-checkers.cl:  rcpt-to checkers now take the SMTP
+	session structure as the first argument.  The relay checker now
+	checks to see if the client is authenticate.  If so, then relaying
+	is allowed.  
+
+	* smtp-server.cl:  Only open /tmp/maild.trace if the REP server is
+	running. 
+
+2005-09-16  Ahmon Dancy  <dancy@dancy>
+1.1.33
+	
+	* Bugfix from 1.1.32.  Allow EHLO/HELO again after STARTTLS.
+
+2005-09-15  Ahmon Dancy  <dancy@dancy>
+1.1.32
+	
+	* Added support for SMTP/SSL (on port 465) and STARTTLS on port 25.
+
+2005-09-07  root  <root@gills.dancysoft.com>
+1.1.31
+	
+	* emailaddr.cl: In quoted text, loosen the restrictions on the
+	allowed characters.  Yahoo allows 8-bit characters to pass
+	through.
+
+2005-06-15  root  <root@gills.dancysoft.com>
+1.1.30
+      
+	* deliver-smtp.cl: Fixed bug when greylist is enabled and
+	auto-whitelisting outgoing recips is enabled and the sender is <>.
+
+	* queue-process.cl: Fixed typo in a log message.
+
+2005-06-15  Ahmon Dancy  <dancy@dancy>
+1.1.29
+
+       * aliases.cl, mailer.cl, recips.cl, MAILERS.txt
+
+       The recip struct has changed.  Do a clean build.
+	
+       Fixes to the address extension stuff.  As a side effect, some
+       incompatible changes to the way mailers work have been made:
+	
+	********** Incompatible changes made **************
+
+	mailer command line construction function is now called with
+	two arguments: The recip struct and the queue struct.  Before,
+	the first argument was the parsed email addr of the recip.  If you
+	have custom mailer definitions, you'll need to update.
+
+	*****************************************************	
+
+	* config.cl: Comments only
+
+	* utils.cl: Added fqdn-p (for future use w/ SPF)
+
+2005-06-13  Ahmon Dancy  <dancy@dancy>
+1.1.28
+
+        * deliver-smtp.cl, greylist.cl, greylist.sql, load.cl:
+	
+	Added support for adding auto-whitelist entries for addresses
+	that local users send mail to.  An entry will be made in the 
+	whitelist table that allows return from the original recipient
+	to come in without being delayed by greylisting.
+
+	**** GREYLIST DATABASE CHANGES REQUIRED ****
+
+	Issue the following statements:
+
+	(e.g., "mysql greylist", then:)
+
+	alter table whitelist add expire bigint;
+	create index ind6 on whitelist (expire);
+
+	********************************************
+
+	
+	* config.cl and input.cl: Comment changes only
+
+	* recips.cl: Made local-domain-p more convenient (argument may be 
+	a string now).
+	
+1.1.27
+      
+        * aliases.cl, config.cl, mailer.cl:
+
+	 Added support for address extensions via
+	*address-extension-delimiter*.  See the notes for
+	*address-extension-delimiter* in config.cl.
+
+	* recips.cl, utils.cl:  Just comments.
+
+	
+2005-06-08  Ahmon Dancy  <dancy@dancy>
+
+	* maild-installer:  Restart maild if it was stopped by the installer.
+
+	* Makefile: 
+
+	Added a 'dist' rule to make a distribution tarball.  Augmented the
+	'clean' rule to clean up the tarballs.
+
+	* maild-installer (new).  Installation script suitable for RedHat
+	linux and possibly others.
+
+	* maild-init: Changed default queue processing interval to 15
+	minutes.  Default can be overridden in /etc/sysconfig/maild.
+	Also, don't silently exit if /usr/local/sbin/maild doesn't exist.
+	This is a situation that warrants a noticeable complaint.  I'm not
+	sure why the sendmail init script works that way.
+	
+	
+2005-05-20  Ahmon Dancy  <dancy@dancy>
+
+	* Makefile: Make sure maild is installed setuid root.
+
+2005-04-06  root  <root@gills.dancysoft.com>
+1.1.26
+
+	* ALIASES: New document describing Allegro Maild's aliasing
+	features.
+
+	* recips.cl: Added utility function: augment-recip-with-domain.
+
+	* aliases.cl: Added support for include files which are locked to
+	a particular domain.  Added support for user include files which
+	are also locked to a particular domain.. and which have many
+	restrictions on use.
+
+2005-04-05  root  <root@gills.dancysoft.com>
+1.1.25
+	
+	* aliases.cl: Allow system aliases file to include other aliases
+	files (This isn't the same as using :include: on the right hand
+	side of an alias.. which would only define the expansion for a
+	single left hand side).  Included alias files are subject to the
+	same security restrictions that the global aliases file is (i.e,
+	must be owned by root and must not be group/world writable).
+
+	* Makefile: Also look for mlisp in /storage1/acl70.
+
+2004-12-20  Kevin Layer  <layer@gemini>
+1.1.24
+
+	* Makefile,
+	* greyadmin/Makefile: use 7.0
+
+2004-12-15  Kevin Layer  <layer@relay.known.net>
+
+	* TODO: additions
+	* blacklist.cl: *ignore-dns-cache* support
+	* config.cl: add *ignore-dns-cache*
+	* deliver-smtp.cl: *ignore-dns-cache* support
+	* dns.cl: *ignore-dns-cache* support
+	* maild.cl:
+	- require :trace, for debugging
+	- when debugging, trace to /tmp/maild.trace
+	* smtp-server.cl: when debugging, don't detach-from-terminal
+
+2004-11-14  Kevin Layer  <layer@relay.known.net>
+1.1.23
+
+	* Makefile: build greyadmin, too
+	* config.cl: add *rep-server-port* and *rep-start-server*
+	* load.cl: add rep-server.cl
+	* maild.cl: maybe start rep server
+	* (NEW) rep-server.cl: read-eval-print loop via telnet
+
+2004-11-10  Kevin Layer  <layer@relay.known.net>
+1.1.22
+
+	* Makefile:
+	- work in progress for building an RPM package
+	- batch mode to compile
+	* (NEW) config-greyadmin.cl -- demo config file
+	* (NEW) config-maild-greylist.cl -- demo config file
+	* (NEW) config-maild.cl -- demo config file
+	* deliver-smtp.cl: change maild-log call to maild-log-and-print to
+	  fix wrong number of args problem
+	* log.cl: bullet proof the logging against possible errors
+
+2004-09-26  root  <root@gills.dancysoft.com>
+
+	* version.cl: 1.1.21:
+
+	* greylist.cl: Allow for *@domain.com style entries in optin and
+	optout tables.
+
+2004-09-13  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.20
+	 
+	* Conditionalize tests in process-dead-p for 7.0
+
+2004-09-06  root  <root@gills.dancysoft.com>
+
+	* version.cl: 1.1.19
+
+	* If a fully qualiified left hand side is specified in the aliases
+	file, then the associated owner- alias (if there is one) must be
+	fully qualified as well.
+
+	* smtp-server.cl: Rudimentary EHLO support.  May add STARTTLS
+	soon.
+
+2004-08-16  root  <root@gills.dancysoft.com>
+
+        * version.cl: 1.1.18
+	
+	* bounce.cl: Fix problem when generating bounce message when the
+	recipient was a program.
+
+2004-07-21  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.17
+
+	* greylist.cl:  greylist-whitelisted-sender-p:  Add special case
+	for null sender.
+
+2004-07-14  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.16
+
+	* greylist.cl/sql:  Made the whitelist database more flexible.
+	receiver column can be '*' to indicate a global whitelist.  sender
+	column can be '*@domain' to whitelist an entire domain.  
+
+	---
+	greyadmin/
+
+  	* greyadmin.cl/menu.clp: Added ability for users to manage their
+	own whitelist entries.
+
+2004-07-08  Ahmon Dancy  <dancy@dancy>
+
+	* greylist.cl [updated]: Print ip address properly when logging
+	manually whitelisted senders.
+
+	* version.cl: 1.1.15
+
+	* greylist.cl: If a particular sender address is in the
+	'whitelist' table of the greylist database, excuse from
+	greylisting.  This feature should be used with care since it is
+	trivial for spammers to forge sender addresses.  If you are
+	upgrading from a prior version, you'll need to create the
+	whitelist table and index.  See greylist.sql for the two sql
+	statements.
+
+	* greylist.sql: Updated to include creation of the whitelist table
+	and index.
+
+2004-01-12  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.14
+
+	* log.cl:  Added function maild-log-and-print for use with verbose
+	operation modes.
+
+	* deliver-smtp.cl, queue-process.cl: improve verbosity.
+
+	* greylist.sql.notes:  Minor reformat.
+
+2004-01-07  root  <root@gills.dancysoft.com>
+
+	* version.cl: 1.1.13
+
+	* greylist.cl: delete expired records before doing triple lookups.
+	Note:  This will make greyadmin report incorrect information.  
+
+	* greyadmin/{greyadmin.cl,login.clp}:  Added support code for putting keyboard focus
+	into the login edit box.
+
+	* greyadmin/menu.clp:  Removed statistics.  Accurate information
+	cannot be gleaned since expired records are removed now.  Also
+	removed the never-reattempted list.  It was useless most of the
+	time and most people don't know how to interpret the information
+	correctly.  It never should have been added in the first place.
+
+2003-12-18  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.12
+
+	* queue.cl: Set the queue status string to "Ready for delivery" in
+	queue-finalize.
+
+	* smtp-server.cl: Changed the regular expression for mail from:
+	and rcpt to: commands so that trailing spaces are ignored properly.
+
+2003-12-17  root  <root@gills.dancysoft.com>
+
+	* version.cl: 1.1.11
+
+	* greylist.cl: Shuffled around some checks to avoid duplicate
+	checking.  Also, when doing post-DATA checking, make sure the
+	check is run on all indenteded recipients, even if one of them
+	will cause the message to be delayed.  This way, the
+	auto-whitelisting will happen at the same time for all recips.
+
+2003-10-17  root  <root@gills.dancysoft.com>
+
+        * maild.cl: Don't say "Maild terminating..." in the signal handler
+	anymore.  Added *sighup* to the list of signals to catch.  Make
+	sure the signal hander returns t to indicate that it doesn't want
+	other signal handlers to execute.  This removes the need for (setf
+	(mp::process-interruptible-p process) nil) in queue.cl.
+
+2003-10-14  root  <root@gills.dancysoft.com>
+
+	* queue.cl: Added (setf (mp::process-interruptible-p process) nil)
+	to the code that creates the lock refresher thread so that the
+	thread is invisible to control-c's.
+
+2003-09-30  root  <root@gills.dancysoft.com>
+
+	* version.cl: 1.1.10
+
+	* config.cl:  New config options:
+
+	*queue-lock-timeout* 
+	*queue-lock-refresh-interval*
+
+	which default to 15 and 10 minutes respectively.  Queue locks that
+	haven't been refreshed for more than *queue-lock-timeout* seconds
+	are considered to be stale.  Under normal circumstances, queue
+	locks are refreshed every *queue-lock-refresh-interval* seconds.
+
+	* lock.cl:  Added stale lock handling functions.
+
+	* queue-process.cl:  Incomplete queue files are now removed
+	automatically during queue processing.
+
+	* queue.cl:  When a queue file is locked, a thread starts which
+	refreshes the lockfile periodically.  
+
+	* utils.cl:  Added utility functions for thread death and waiting
+	for a thread to die.  These should be implemented in acl70 and can
+	be removed from this file at that time.
+
+
+2003-09-19  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: 1.1.9
+
+	* headers.cl:  Fixed daylight savings time problem when generating
+	date header.
+
+	* config.cl:  New *smtp-data-checkers* variable to hold a list of
+	checkers that should be called after the message data has been
+	received in an SMTP session but before the response is sent.
+	This is different than the "checker" checkers that happen for all
+	messages, regardless of their means of reception (smtp, stdin).  
+
+	* smtp-server.cl:  Use the new *smtp-data-checkers* list.
+
+	* smtp-server-checkers.cl:  New utility function to add things to
+	the *smtp-data-checkers* list.
+
+	* greylist.cl:  New config parameter:
+	*greylist-after-data-received*.  If set to true, greylisting
+	checks will only be done after the message is received during the
+	DATA command.  This allegedly helps interoperability with some
+	mail servers.  However, this has a potentially undesirable side
+	effect.  When this option is turned off, a message arriving for
+	several recipients will have each recipient deferred or accepted
+	individually.  With this option turned on, if any one recipient
+	should be deferred, the message is deferred for all recipients.
+	
+2003-09-10  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: Bumped version to 1.1.8.
+
+	* dns.cl:  Removed useful-dns-query function.  Its functionality
+	is now provided by dns-query in acldns patch 5 (which is now
+	required to build maild).
+	
+	* misc source files:  Changed all calls to useful-dns-query to
+	dns-query w/ :search t keyword arg.
+
+2003-09-05  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: Bumped version to 1.1.7
+
+	* dns.cl:  New file containing dns-related stuff that used to be
+	in utils.cl.  Fixed useful-dns-query so that it doesn't do
+	repeated calls to configure-dns.
+
+2003-09-02  root  <root@dancy>
+
+	* version.cl: Bumped version to 1.1.6
+	
+	* smtp-server-checkers.cl: In sender domain checker, when
+	complaining about a resolution problem, include the domain in
+	question.
+
+	* smtp-server.cl: Tell queue-finalize to add a Date header to
+	received messages if they don't have one already.  
+
+2003-08-22  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: Bumped version to 1.1.5.
+
+	* rewrite.cl: Cope better with invalid email addresses that may be
+	found in mail headers during rewrite.  
+
+2003-08-19  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: Bumped version to 1.1.4.
+
+	* emailaddr.cl:  Allow carriage return characters to be treated as
+	whitespace even though it's not allowed in the RFC.  This helps
+	deal w/ bogus mail headers that spammers create sometimes.
+
+2003-08-15  Ahmon Dancy  <dancy@dancy>
+
+	* version.cl: Bumped version to 1.1.3.
+
+	* config.cl: Changed text name of smtp-mail-from-domain-checker to
+	"Sender domain must resolve checker" (easier to understand in the
+	statistics web page this way).
+
+	* utils.cl:  Removed domain-exists-p and added dns-record-exists-p
+	and valid-email-domain-p.  These new functions are more exacting
+	in their answers... and dns-record-exists-p is a bit more general
+	than the old domain-exists-p.  valid-email-domain-p has follows a
+	more specific definition of what it means for an email domain to
+	exist (see the code for details).
+
+	* smtp-server-checkers.cl:  In smtp-mail-from-domain-checker, use
+	valid-email-domain-p instead of domain-exists-p.  Update the
+	response message as well.
+
+	In the reverse DNS checker, use dns-record-exists-p instead of
+	domain-exists-p.
+
+2003-08-04  root  <root@gills.dancysoft.com>
+
+	* Added relaying-allowed-p utility function.  Use it in
+	smtp-conneciton-reverse-dns-checker to make an exception for
+	allowable relay clients.
+
+	* Bumped version to 1.1.2.
+
+	* greylist.cl: Added *greylist-ip-whitelist* configuration
+	parameter which specifies a list of IP addresses or networks to
+	skip greylisting for.  Evan Harris maintains a list in his
+	greylist cvs module.  I may do another update which can read his
+	file directly.. perhaps at runtime.
+
+2003-07-30  Ahmon Dancy  <dancy@dancy>
+
+	* Bumped version to 1.1.1
+
+	* headers.cl:  Added a big list (stolen from sendmail) of
+	potential sender and receiver headers that may need to be
+	rewritten.  
+
+2003-07-23  root  <root@gills.dancysoft.com>
+
+	* Bumped version to 1.1.0
+
+	* Greylisting now works in two modes (controlled by
+	*greylist-operation-mode*).  Default is :opt-out.  In :opt-out
+	mode the optout table is queried to see if the recipient doesn't
+	want greylisting, otherwise greylisting will occur.  In :opt-in
+	mode, no greylisting occurs unless there's an entry in the optin
+	table.  See updated greylist.sql for statements to create the new
+	tables and indexes.  The tables need to be there even if you're
+	not taking advantage of them.
+
+	* queue-process.cl:  Print "/var/spool/maild is empty" during
+	(queue-list) if the queue dir is empty.
+
+	* smtp-server.cl:  Wrap call to update-smtp-stats w/ ignore-errors.
+	
+
+2003-07-23  Kevin Layer  <layer@relay.known.net>
+1.0.1
+
+	* smtp-server.cl: final *helo-must-match-ip* changes, which really
+	  only have an effect if the value is `t'.
+
+2003-07-23  root  <root@gills.dancysoft.com>
+1.0
+
+	* Dubbed this version 1.0 and updated several places to include
+	the version number.
+
+	* Added check-mail-virus program.  
+
+	* Fixed message data checker statistic updater.
+
+	* SMTP delivery:  Now uses a single SMTP session for delivery of a
+	message for recipients at the particular domain.  I had avoided
+	adding this complexity but it was necessary to avoid recipients
+	getting multiple copies of a message.   [Lotsa new code here
+	<scary noises>]
+
+	* Program alias delivery: Removed requirement that programs use on
+	the right-hand side of aliases must be owned by root.  That's too
+	restrictive.
+
+	* Added a consistent syslog entry when a mail is received from any
+	source (SMTP or stdin).  Message ID is included to help tracking a
+	message.  
+
+
+2003-07-22  root  <root@gills.dancysoft.com>
+
+	* greylist.cl: *greylist-db-host* variable for specifying the
+	mysql host.  Default is "localhost".  Useful for shared database.
+	Also, use "lock tables..." when updating a triple to avoid
+	concurrency problems.
+	
+2003-07-21  Ahmon Dancy  <dancy@dancy>
+
+	* greylist.cl:  From Evan Harris' latest greylist announcement:
+
+	" - Discovered postfix normally uses <postmaster@some.domain> for
+	its envelope from address when doing SMTP callbacks.  Changed
+	milter to treat any email from postmaster@ as a callback and delay
+	the tempfail until after the DATA phase."
+
+	Made the corresponding change in maild.  
+
+2003-07-09  root  <root@gills.dancysoft.com>
+
+	* Don't do HELO domain check if connection is from localhost.
+
+	* SMTP server statistics are stored in a file so they can be read
+	back in during future server restarts.
+
+2003-07-08  Kevin Layer  <layer@relay.known.net>
+
+	* smtp-server.cl:
+	- small bug fix to format call
+	- have a non-nil and non-t value of *helo-must-match-ip* means
+	  just log, don't really reject (unless problems resolving the
+	  domain are found) the connection.  It's useful for seeing what
+	  would happen if you set the variable to `t'.
+	* config.cl: doc changes to *helo-must-match-ip*
+	...add CVS Id to all .cl files
+
+2003-07-08  Ahmon Dancy  <dancy@dancy>
+
+	*honors -m and -oM options so the sender will get a copy of mail
+	sent to mailing lists if the sender is a member of those lists.
+
+2003-07-03  root  <root@dancy>
+
+	* smtp-server.cl/config.cl: Added option *helo-must-match-ip*
+	which requires that clients use the HELO command... and that the
+	domain specified in the HELO command must resolve to the IP
+	address of the connecting client.
+
+2003-07-02  root  <root@gills.dancysoft.com>
+
+	* smtp-server.cl: Collects some statistics during operation now.
+
+	* www.cl: New file.  Optional web interface for viewing stats.
+	Added (enable-webserver) to your maild.cl to use.  Default port is
+	localhost:2525.  Use keyword arts :port and :interface to
+	override.
+
+2003-07-02  Kevin Layer  <layer@relay.known.net>
+
+	* config.cl,
+	* smtp-server-checkers.cl: added *dns-blacklist-failure-response*
+	  and *dns-blacklist-temp-failure-response*.  See comments in
+	  config.cl for more info.
+
+2003-07-02  root  <root@gills.dancysoft.com>
+
+	* Added new *dns-blacklist-recipient-exceptions* parameter for
+	specifying recipients that should not be subject to DNS
+	blacklisting.  
+
+2003-07-01  root  <root@gills.dancysoft.com>
+
+	* maild.cl: Allow alternate config file to be specified.  Must be
+	running as root to do this.
+
+	* smtp-server*.cl: Added hook for initial connection checkers.
+	Moved the regular blacklisting stuff into a checker.
+
+	Added option *reverse-dns-required* to insist that a connecting
+	client has a reverse DNS record.
+
+2003-06-30  Ahmon Dancy  <dancy@dancy>
+
+	* input.cl:  When reading a message in, strip the Unix mailbox
+	"From " separator if there is one. 
+
+2003-06-29  root  <root@gills.dancysoft.com>
+
+	* Many changes to allow for mailer definitions.  
+
+	Incompatible changes: The arguments to the local delivery program
+	command line building function are different now.  Check your
+	configuration files.  The first argument is a parsed emailaddr
+	struct... the second argument is the queue struct.
+
+	*local-recip-checks*, *local-delivey-user*, and
+	*deliver-local-command* variables have been removed.  They are
+	part of a mailer definition now.
+
+	* MAILERS.txt: new file describing how to use mailer definitions.
+
+	* Improved handling of wildcard aliases.
+
+	* Bounces show alias expansions to help diagnose problems in aliases.
+
+	* Additional relaying-allowed checkers can be specified now.  See
+	config.cl for details.
+
+	* greylist.cl:  Added reconnect code in case mysql was restarted
+	or something.   Also, hosts that are allowed to relay (as
+	determined by calling the new relay checkers) aren't subject to
+	greylisting now.
+
+2003-06-27  Ahmon Dancy  <dancy@dancy>
+
+	* Fix header rewrite after changes mentioned below (wasn't really
+	happening).
+
+2003-06-26  root  <root@gills.dancysoft.com>
+
+	* headers.cl/rewrite.cl: rewrite-headers now properly deals with
+	headers that span multiple lines.
+
+	* maild.cl:  Do 'maild -bp' if executed as 'mailq'.
+
+2003-06-25  Kevin Layer  <layer@relay.known.net>
+
+	* Makefile: fix install's chown; parameterize `lisp'; cp -p on
+	  init script
+
+2003-06-25  root  <root@gills.dancysoft.com>
+
+	* Changed the DNS blacklisting to a rcpt-to checker so that sender
+	and recipient can be logged.
+
+	* Makefile:  chown installed files to 'root'
+
+	* Update greylist.sql for faster setup.
+
+	* Added greylisting feature.
+
+	* Added rc script for redhat-style hosts.
+
+	* Added DNS-based blacklisting.
+
+	* Added in hooks so that administrators can easily add checks
+	during the MAIL FROM and RCPT TO and DATA phases of an SMTP
+	session.  The greylisting code uses these.
+
+	* Moved some of the built-in checks that the smtp server did
+	during the mail from, rcpt to and data phases into
+	smtp-server-checkers.cl.  They use the newly created hooks.
+
+2003-06-23  Ahmon Dancy  <dancy@dancy>
+
+	* utils.cl:  Make short-host-name really return a short host name.
+
+	* config.cl:  Removed franz-specific stuff.
+
+2003-06-18  root  <root@gills.dancysoft.com>
+
+	* Makefile:  Added 'install' rule.
+
+	* deliver.cl:  Downcase local recipient name.
+
+	* load.cl: Don't do the sendmail.dxl and sendmail.lic symlinks
+	anymore.  Not necessary w/ new patches.
+
+2003-06-18  Ahmon Dancy  <dancy@dancy>
+
+	* maild.cl: Make use of updated with-command-line-arguments
+	patches.  Process -oi option... ignores other unrecognized
+	options.  Ignores -bi command line arg.
+
+2003-06-08  root  <root@gills.dancysoft.com>
+
+	* deliver.cl: Add the "From " separator to messages being
+	delivered to programs and to files.
+
+	* aliases.cl:  Supports wildcard aliases now.
+
+	* checkers.cl:  Added support for external checker programs.
+
+	* config.cl:  Removed *virtusersfile*.  Not used anymore.  Added
+	*external-checker-user* variable for specifying user under which
+	external checkers run.
+
+	* deliver-smtp.cl:  Fixed check for nxdomain.
+
+	* deliver.cl:  When delivering to program alias, use
+	*program-alias-user*, not *local-delivery-user*.
+
+	* recips.cl:  Fixed buglet.
+
+	* virtusers.cl:  Removed.   Implemented in aliases.
+
+2003-06-06  Ahmon Dancy  <dancy@dancy>
+
+	* config.cl:  New parameter.  *extra-headers-func* for specifying
+	the a function that will be called to add additional message
+	headers when a queue item is being finalized.
+
+	* emailaddr.cl:  Added unquote-quoted-string.
+
+	* headers.cl:  Don't add the envelope recipient list to the
+	Received header.  
+
+	* load.cl:  Added break-on-warnings.
+
+	* queue.cl: Added queue-append-header, queue-replace-header, and
+	queue-locate-header convenience functions (intended for use in an
+	*extra-headers-func*).
+	
+	* utils.cl: removed unquote-quoted-string.
+	
+2003-05-19  root  <root@dancy>
+
+	* config.cl:  Parameterized the blacklisted host message in a new
+	*blacklisted-response* variable.  Added a new *maximum-hop-count*
+	parameter as well.   Changed *smtp-data-checkers* to
+	*message-data-checkers* since they are used during stdin reciption
+	and smtp reception.  The default list of checkers is the size
+	check and the max hop count check.
+
+	* checkers.cl:  New.  Has hop count and message size checkers.
+
+	* headers.cl:  New count-received-headers function.
+
+	* input.cl:  Run message checks before accepting a message.  Error
+	out if we get back reject or transient status.
+
+	* load.cl:  Added "checkers" to the file list.
+
+	* smtp-server.cl:  Use parameterized blacklisted client text now.
+	Moved out message checking stuff into check-message-checkers in
+	checkers.cl.  
+
+
+2003-05-16  root  <root@dancy>
+
+	* aliasees.cl:  Always copy recip structs before returning them
+	from alias expansions.
+
+	* emailaddr.cl:  Removed parse-email-addr-list.  It has been
+	replaced by parse-recip-list in recips.cl   Turned a few parsed
+	things into structs for easier manipulation.  Added collect-cfws
+	utility function.  Improved "group" mailbox parsing.
+
+	* queue-process.cl:  The list of all queue ids is now sorted
+	before being returned.    queue-list:  Print recipient status
+	information.  
+
+	* recips.cl:  Rewrote the parse-recip-list stuff again so that it
+	can handle group mailboxes but still be flexible when bad
+	addresses are encountered during parsing.
+
+	* rewrite.cl:  Fixed up the header rewrite stuff to correspond w/
+	the changes in emailaddr.cl
+
+	
+
+2003-05-15  root  <root@gills.dancysoft.com>
+
+	* aliases.cl:  Make sure that only one thread reparses the aliases
+	file.   Removed a bunch of stuff that became redundant with the
+	new recips code.
+
+	* emailaddr.cl:  Added some extra utility functions (for use in
+	recips.cl, mainly).
+
+	* input.cl:  send-from-smtp:  Accept emailaddr or recip struct
+	type recips.   use new get-good-recips-from-string function in
+	grab-recips-from-headers.  
+
+	* load.cl:  Load recips.cl before aliases.cl.
+
+	* maild.cl:  Added -bv mode for testing address parsing.
+	Simplified command line recipient processing by using new
+	get-good-recips-from-string function.
+
+	* queue.cl:  queue-finalize:  Accept emailaddr or recip type
+	recips.
+
+	* recips.cl:  Added 'orig' slot to recip struct for recording the
+	string that was originally parsed.    get-recipient-disposition
+	accepts emailaddr or recip struct arg now.   Improved address list
+	parsing.  
+
+2003-05-14  Ahmon Dancy  <dancy@dancy>
+
+	* queue.cl:  In queue-finalize, call expand-addresses w/ the queue
+	sender so that the address can be removed from mailing lists.
+
+	* recips.cl:  expand-addresses changed so that the message sender
+	will be removed from mailing list expansions.  Also fixed up
+	same-recip-p.  It behaves in a more sendmail-like way now.
+
+
+2003-05-12  root  <root@dancy>
+
+	* deliver.cl:  Use new recip struct. 
+
+	* headers.cl:  Removed replace-header function.  It was unsafe
+	because it would replace too much if there were multiple headers
+	of the same type (for example, two To: headers).  Added
+	recip-header-p and sender-header-p utility functions.  
+
+	* input.cl:  Fixed grab-recips-from-headers function so that it
+	works for multiple instances of the same header type..
+
+	* queue-process.cl:  Additional recip struct fixes.
+
+	* recips.cl:  Added recip-printable utility function.  
+
+	* rewrite.cl:  Fixed the rewrite-headers function so that it works
+	for multiple instances of the same header type.
+
+
+2003-05-12  root  <root@gills.dancysoft.com>
+
+	* aliases.cl:  Only allow one :error: thing on a right hand side
+	of an alias.
+
+	* bounce.cl:  Change the name of the bounce function to 'bounce'.
+	Added stuff so that bounces are sent to their proper owners.  Also
+	added an additional keyword argument to the bounce function so
+	that undeliverable recipients (due to timeout) will have a
+	sentence indicating so.
+
+	* config.cl:  Moved the aliases lookup in front of the passwd
+	lookup in the *local-recip-checks* parameter.  
+
+	* deliver-smtp.cl:  Uses new recip struct. 
+
+	* emailaddr.cl:  Make sure that the emailaddr-orig for <> is "<>".
+
+	* queue-process.cl:  queue-process-single-help uses the new recip
+	struct now.  The function is a smidge simpler now.
+
+	* recips.cl:  Added a 'status' slot to the recip struct.  
+	lookup-recip-in-passwd now returns a recip struct.
+
+	get-content-disposition modified since the lookup-recip-in-*
+	functions return recip structs now.  expand-recips is now
+	expand-addresses.  
+	
+
+2003-05-09  root  <root@gills.dancysoft.com>
+
+	* emailaddr.cl:  In parse-email-addr-list.  If cruft is all
+	whitespace, then convert it to "".  Also, emailaddr-orig is now
+	set to just the user@domain string.  No comments or other stuff is
+	included.  
+
+	* headers.cl:  Fixed bug in make-from-header when 'from' is <>.  
+
+	* input.cl:  New function:  grab-recips-from-headers for use w/
+	the -t flag.  send-from-stdin now uses this function if it is
+	called w/ grab-recips keyword argument.  
+
+	* maild.cl:  Added -t support.
+
+	* queue-process.cl:  Delivery failure messages for a particular
+	queue item are collected and sent in a single bounce message now.
+
+	* queue.cl:  make-queue-file doesn't take the recips list now.
+	That is saved for the new queue-finalize function (which is mostly
+	queue-init-headers renamed).   Updated the with-new-queue macro
+	for this as well.
+
+	* several places:  Changes due to the changes in queue.cl.
+
+2003-05-08  root  <root@dancy>
+
+	* aliases.cl:  Aliases file must be owned by root and have safe
+	permissions.
+
+	* deliver.cl:  Delivery programs (aliases and defined local
+	delivery program) must be owned by root and have safe
+	permissions.  I may relax this if it turns out to be too
+	restrictive.
+
+	* headers.cl:  Received header now includes the original envelope
+	recipients per Charley's request.  Note that this makes Bcc:
+	ineffective (in terms of blindness).
+
+	* lock.cl:  Generalized with-lock-file-nowait to with-lock-file
+	and a keyword arg.
+
+	* maild.cl:  /etc/maild/cl must be owned by root and have safe
+	permissions.  Same w/ *queuedir*.
+
+	* queue.cl:  Queue files are generated in a different way now.
+	Simpler.
+
+	* recips.cl:  Moved some of the recipient alias expansion stuff
+	out of queue.cl and into this file.   Fixed a bug w/ "user:
+	user@localdomain" type expansion.
+
+2003-04-30  root  <root@gills.dancysoft.com>
+
+	* Makefile:  Make maild/maild depend on *.cl
+
+	* bounce.cl: Use new with-new-queue macro.
+
+	* deliver.cl:  Add verbosity to deliver-local function.  In
+	send-message-to-program, return stderr along w/ the :transient
+	error code if the delivery program exited w/ non-zero
+	status... and do the same for the error condition from the message
+	stream writer.
+
+	* input.cl:  Had a call to string-downcase in the wrong place.
+	Moved.    Updated send-from-stdin.  read-message-stream now calls
+	finish-output and fsync on the datafile on behalf of the caller.
+
+	* queue.cl:  Updated with-new-queue macro.
+
+	* smtp-server.cl:  Updated to use with-new-queue macro.  
+
+2003-04-30  root  <root@dancy>
+
+	* deliver.cl:  write-message-to-stream:  headers that spanned
+	lines weren't being written out w/ the proper EOL convention.
+	Fixed.  
+
+	* queue-process.cl: Rearranged some code in the queue processing
+	function for better status reporting.    Minor changes to the
+	queue lister.  Added a queue processing daemon.
+
+	* queue.cl:  Added new 'valid' slot to the queue struct.  It is
+	used by the new with-new-queue macro.  If the slot is still nil
+	when the macro completes, the queue file will be deleted.  This
+	effects cleanup for interrupted message transmissions, etc.
+
+	* security.cl:  verify-root: new function to check that the real
+	user is root.
+	
+	* input.cl: send-from-stdin:  Try out new with-new-queue macro.
+
+	* maild.cl: main:  Implemented more of the command line args.  Can
+	run in daemon mode now w/ optional periodic queue processing.
+	Signal handlers added for SIGINT and SIGTERM for clean shutdown.
+	Security checks on queue-manipulating commands.  
+
+	* smtp-server.cl:  New smtp-server-daemon function.
+
+2003-04-28  root  <root@dancy>
+
+	* config.cl: Added *smtp-ip* parameter for binding the server
+	socket to a particular interface.
+
+	* smtp-server.cl:  Use the new *smtp-ip* parameter
+
+	* deliver-smtp.cl:  Added :verbose keyword arg to many of the
+	functions so that the SMTP transaction can be watched (ala
+	sendmail -v).   Also added a with-socket-timeout around the main
+	function so that an unresponsive SMTP server doesn't make us hang.
+
+	* deliver.cl:  New write-message-to-stream-async for use with
+	send-message-to-program.  It is intended to be called via
+	mp:process-run-function.  It takes a structure which has the usual
+	arguments to write-message-to-stream.. plus a gate and a status
+	field for returning information to the caller.
+
+	* queue-process.cl:  Added :verbose keyword stuff.  Also, the
+	queue processor now collects the error messages from the delivery
+	subroutines for storage in the queue file.  
+
+2003-04-24  root  <root@dancy>
+
+	* config.cl:  Call local delivery program w/ -f.
+	Added comments to the timeouts section.
+
+	* sockets are now hiper sockets so that I can use read and write
+	timeouts w/ ease.
+

@@ -50,7 +50,7 @@
 (defun lookup-data-store-con-init (name)
   (gethash name *elephant-controller-init*))
 
-(defvar *dbconnection-spec* (make-hash-table :test 'equal))
+(defvar *dbconnection-spec* (make-hash-table :test 'equalp))
 (defvar *dbconnection-lock* (ele-make-lock))
 
 (defgeneric get-con (instance &optional sc)
@@ -96,6 +96,8 @@
     (if (and cached-sc (connection-is-indeed-open cached-sc))
 	cached-sc
 	(build-controller spec))))
+
+
 
 (defun build-controller (spec)
   "Actually construct the controller & load dependencies"
@@ -216,7 +218,7 @@
 	   (get-cache oid (instance-cache sc)))))
     (if obj obj
 	;; Should get cached since make-instance calls cache-instance
-	(make-instance class-name :from-oid oid :sc sc))))
+	(recreate-instance-using-class (find-class class-name) :from-oid oid :sc sc))))
 
 (defmethod uncache-instance ((sc store-controller) oid)
   (ele-with-fast-lock ((instance-cache-lock sc))
@@ -477,7 +479,7 @@ true."))
    controllers yourself.  *store-controller* is a convenience variable for single-store
    applications or single-store per thread apps.  Multi-store apps should either confine
    their *store-controller* to a given dynamic context or wrap each store-specific op in
-   a transaction using with or ensure transaction"
+   a transaction using with or ensure transaction.  Returns the opened store controller."
   (assert (consp spec))
   ;; Ensure that parameters are set
   (initialize-user-parameters)
@@ -490,11 +492,16 @@ true."))
 	(setq *store-controller* controller))))
 
 (defun close-store (&optional sc)
-  "Conveniently close the store controller."
+  "Conveniently close the store controller.  If you pass a custom store controller, you are responsible for setting it to NIL."
   (when (or sc *store-controller*)
     (close-controller (or sc *store-controller*)))
   (unless sc
     (setf *store-controller* nil)))
+
+(defun close-all-stores ()
+  (maphash (lambda (k v)
+	     (close-store v))
+	   *dbconnection-spec*))
 
 (defmacro with-open-store ((spec) &body body)
   "Executes the body with an open controller,
@@ -515,7 +522,7 @@ true."))
   "Add an arbitrary persistent thing to the root, so you can
    retrieve it in a later session.  Anything referenced by an
    object added to the root is considered reachable and thus live"
-  (declare (type store-controller store-controller))
+  (declare (type store-controller sc))
   (assert (not (eq key *elephant-properties-label*)))
   (setf (get-value key (controller-root sc)) value))
 

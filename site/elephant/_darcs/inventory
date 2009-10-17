@@ -1,3 +1,159 @@
 Starting with tag:
 [TAG ELEPHANT-0-9-1
-ieslick@common-lisp.net**20071116153634] 
+ieslick@common-lisp.net**20071116153634] [Cheaper get-instance-by-value
+eslick@common-lisp.net**20071130222520] 
+[New map-index implementation
+eslick@common-lisp.net**20071130222620] 
+[Fix to from-end traversal of new map-index
+eslick@common-lisp.net**20071130223524] 
+[Fix instance deserialization to bypass initialization protocol
+sross@common-lisp.net**20071214141938] 
+[Ensure set-db-synch is defined before pset is loaded
+sross@common-lisp.net**20071214145041] 
+[remove kind-hints parameter from add-index
+Henrik Hjelte<henrik@evahjelte.com>**20071122151046
+ Probably a coming feature from Ian, but
+ right now it breaks the generic function add-index
+ and thus postmodern, so I removed it for now.
+] 
+[removed a little compiler warning (typo)
+Henrik Hjelte<henrik@evahjelte.com>**20071122151929] 
+[cursor-duplicate removed from db-postmodern
+Henrik Hjelte<henrik@evahjelte.com>**20071124163701] 
+[db-postmodern removed possiblity of using NIL as a key in btrees
+Henrik Hjelte<henrik@evahjelte.com>**20071124163828] 
+[added sh script for flushing logs sample
+alex.mizrahi@gmail.com**20070920095806] 
+[db-postmodern: small example update
+alex.mizrahi@gmail.com**20071207200630] 
+[db-postmodern: optimized form-slot-key for persistent-slot-reader
+alex.mizrahi@gmail.com**20071207200835
+ it uses SBCL internal function now, for other implementation it's less optimized.
+] 
+[db-postmodern: optimized map-index for -by-value case
+alex.mizrahi@gmail.com**20071207195402] 
+[Fix instance deserialization to bypass initialization protocol
+sross@common-lisp.net*-20071214141938] 
+[db-bdb bugfix: when bdb key comparison compared only the first half of utf16 strings
+kazennikov@gmail.com**20071230141055] 
+[Fix the use of internal symbol of sb-kernel in memutils
+Leonardo Varuzza <varuzza@gmail.com>**20071230000120
+ 
+ memutil.lisp use the functions sb-kernel::copy-*-from-system-area, which
+ aren't exported in the latest version of sbcl.
+ 
+ Fix it adding the :: when appropriate
+ 
+] 
+[documentation type fix
+read@robertlread.net**20080111151124] 
+[function-call-key-form
+sross@common-lisp.net**20080113173547] 
+[non-keyword-accessors
+sross@common-lisp.net**20080113173616
+ allows lispworks to run tests.
+] 
+[tutorial
+read@robertlread.net**20080203161532] 
+[controller-doc-improvement
+read@robertlread.net**20080210155716] 
+[db-postmodern: cursors re-implemented
+alex.mizrahi@gmail.com**20071215191805] 
+[db-postmodern fix map-index optimization bug
+Henrik Hjelte <henrik.hjelte@stix.to>**20080104151644] 
+[cursor-duplicate removed from db-postmodern
+Henrik Hjelte<henrik@evahjelte.com>*-20071124163701] 
+[db-postmodern: removed specialized map-index
+alex.mizrahi@gmail.com**20080107134012
+ because pure cursor version works fine and is more robust
+] 
+[recreate-instance stuff improved
+alex.mizrahi@gmail.com**20080116220138] 
+[db-postmodern: pm-btree initialization fixed
+alex.mizrahi@gmail.com**20080116222316] 
+[accessor name in tests change
+alex.mizrahi@gmail.com**20080116222405] 
+[moved cache-instance into initial-persistent-setup
+alex.mizrahi@gmail.com**20080120142436
+ because it was bypassed by recreate-instance otherwise
+] 
+[mtype change in dcm
+read@robertlread.net**20080215135054] 
+[Alex's patch for 8.3
+read@robertlread.net**20080217223512
+ I entered here the patch from Alex of 2088/02/16
+ which apparently makes this compatible with Postgres 8.3.
+ It is green for me on all tests on Posgres 8.1, so 
+ I am committing it.
+] 
+[Minor edits, fixed a comment, fixed a db-lisp out of date error
+eslick@common-lisp.net**20080221024151] 
+[Change semantics of transaction :retry-count from tries to retries
+eslick@common-lisp.net**20080221031015] 
+[Enable multi-store indexed classes
+eslick@common-lisp.net**20080223184504] 
+[Enable multiple process connections to a BDB data-store via DB_REGISTER option
+eslick@common-lisp.net**20080225222713] 
+[Refactor UTF{16,32}LE serializers.
+polzer@gnu.org**20080222084824] 
+[add test for STRING types (as opposed to SIMPLE-STRING types)
+polzer@gnu.org**20080222081256] 
+[db-bdb updated to BerkeleyDB 4.6
+kazennikov@gmail.com**20071230140731
+ Changed only BDB constants as upgrade 4.5 -> 4.6 they were
+ changed.
+ A kind of hack perhaps. But it works. The testing was not excessive,
+ but it works well for my project.
+] 
+[Support for multiple BDB versions
+eslick@common-lisp.net**20080226150114] 
+[Improve berkeley DB version agnostic code
+eslick@common-lisp.net**20080226151453
+ 
+ Added an error message to configure my-config.sexp and made sure we load
+ it directly from my-config.sexp so that we get it right at load time.
+ Prior patch didn't override default until after load time.
+ 
+] 
+[Fix test dependence for ff-index-test
+eslick@common-lisp.net**20080226151654] 
+[Check for unbound slot; potential fix for a compiler error
+eslick@common-lisp.net**20080226195839] 
+[DB-POSTMODERN: reap old connections when a new one is requested.
+polzer@gnu.org**20080227150322] 
+[added concurrency test cases.
+polzer@gnu.org**20080306124407] 
+[added BORDEAUX-THREADS dependency and changed PM controller to use it instead of SB-THREAD stuff.
+polzer@gnu.org**20080306124512] 
+[DB-POSTMODERN: support transaction retries; handle deadlock; add savepoint utility functions; add warnings to help debugging problematic conditions.
+polzer@gnu.org**20080306124528] 
+[Changed erroneous statement in tutorial that index comparison uses EQUALP.
+polzer@gnu.org**20080226123252] 
+[DB-POSTMODERN: remove DBPM-ERROR; don't attempt to remove an already prepared statement (pointless since the txn is aborted at the time); defer all errors to txn handler (but warn and print the offending statement)
+polzer@gnu.org**20080317171254] 
+[spelling errors
+Robert L. Read**20080408140049] 
+[Chun Tian's conditional for lispworks slot-definition-allocation
+sross@common-lisp.net**20080416161010] 
+[Disabling threading tests for SBCL
+Robert L. Read**20080410015544] 
+[db-postmodern: small sync cache fix
+alex.mizrahi@gmail.com**20080318155129
+ cache was discarded in empty txn
+] 
+[db-postmodern: transaction retry handling, serializable isolation
+alex.mizrahi@gmail.com**20080318155444] 
+[transaction restart support plus extended features
+alex.mizrahi@gmail.com**20080326203005] 
+[test concurrency extended
+alex.mizrahi@gmail.com**20080326203147] 
+[db-postmodern: sync-cache type handling fix
+alex.mizrahi@gmail.com**20080326222018] 
+[un-disabled tests for SBCL
+alex.mizrahi@gmail.com**20080410070805] 
+[LesliePolzerNilOIDpatch
+Robert L. Read**20080506032238] 
+[CLBUILDreadiness
+Robert L. Read**20080514052710] 
+[Fix map-btree failure to check if first value in a range map is out of range
+Ryszard Szopa <ryszard.szopa@gmail.com>**20080513140503] 

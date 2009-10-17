@@ -55,7 +55,7 @@
    #:process-disable
    #:process-reset
    #:process-interrupt
-   
+   #:all-processes
    #:process-run-function      ;*
    #:process-property-list     ;*
    #:without-scheduling        ;*

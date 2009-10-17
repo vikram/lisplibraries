@@ -52,6 +52,20 @@
 		 ))
 
 ;;
+;; Import version appropriate BDB flags
+;;
+
+(eval-when (:compile-toplevel :load-toplevel)
+  (let* ((bdb-version (get-user-configuration-parameter :berkeley-db-version))
+	 (const-pkg (find-package 
+		     (cond ((equal bdb-version "4.5")
+			    :db-bdb-c45)
+			   ((equal bdb-version "4.6")
+			    :db-bdb-c46)
+			   (t (error "A valid Berkeley DB version must be defined in my-config.sexp, got ~A.  Valid values are \"4.5\" and \"4.6\"" bdb-version))))))
+    (import-all-symbols const-pkg (find-package :db-bdb))))
+
+;;
 ;; EXTERNAL LIBRARY DEPENDENCIES - LOAD DURING LOAD/COMPILATION
 ;;
 
@@ -70,7 +84,8 @@
     (:report
      (lambda (condition stream)
        (declare (type bdb-db-error condition) (type stream stream))
-       (format stream "Berkeley DB error: ~A"
+       (format stream "Berkeley DB error #~A: ~A"
+	       (db-error-errno condition)
 	       (db-strerror (db-error-errno condition)))))
     (:documentation "Berkeley DB errors."))
 
@@ -80,136 +95,6 @@
   `(progn
      (assert (null ,dvar))
      +NULL-VOID+))
-
-;;
-;; Constants and Flags
-;; eventually write a macro which generates a custom flag function.
-;;
-
-;; Current header file version required: Berkeley DB 4.5
-
-;; I don't like the UFFI syntax for enumerations
-(defconstant DB-BTREE                 1)
-(defconstant DB-HASH                  2)
-(defconstant DB-RECNO                 3)
-(defconstant DB-QUEUE                 4)
-(defconstant DB-UNKNOWN               5)
-
-(defconstant DB_LOCK_NOWAIT   #x00000002)
-
-(defconstant DB_CREATE        #x00000001)
-(defconstant DB_FORCE         #x00000004)
-(defconstant DB_MULTIVERSION  #x00000008)
-(defconstant DB_NOMMAP        #x00000010)
-(defconstant DB_RDONLY        #x00000020)
-(defconstant DB_RECOVER       #x00000040)
-(defconstant DB_THREAD        #x00000080)
-(defconstant DB_TRUNCATE      #x00000100)
-(defconstant DB_TXN_NOSYNC    #x00000200)
-(defconstant DB_TXN_NOT_DURABLE #x00000400)
-(defconstant DB_TXN_WRITE_NOSYNC #x00000800)
-
-(defconstant DB_EXCL          #x00004000)
-
-(defconstant DB_TXN_NOWAIT    #x00004000)
-(defconstant DB_TXN_SYNC      #x00008000)
-
-(defconstant DB_DUP           #x00008000)
-(defconstant DB_DUPSORT       #x00010000)
-
-(defconstant DB_JOINENV          #x00000000)
-(defconstant DB_INIT_CDB         #x00004000)
-(defconstant DB_INIT_LOCK        #x00008000)
-(defconstant DB_INIT_LOG         #x00010000)
-(defconstant DB_INIT_MPOOL       #x00020000)
-(defconstant DB_INIT_REP         #x00040000)
-(defconstant DB_INIT_TXN         #x00080000)
-(defconstant DB_LOCKDOWN         #x00100000)
-(defconstant DB_PRIVATE          #x00200000)
-(defconstant DB_RECOVER_FATAL    #x00400000)
-(defconstant DB_REGISTER         #x00800000)
-(defconstant DB_SYSTEM_MEM       #x01000000)
-(defconstant DB_AUTO_COMMIT      #x02000000)
-(defconstant DB_READ_COMMITTED   #x04000000)
-(defconstant DB_DEGREE_2         #x04000000) ;; DEPRECATED, now called DB_READ_COMMITTED
-(defconstant DB_READ_UNCOMMITTED #x08000000)
-(defconstant DB_DIRTY_READ       #x08000000) ;; DEPRECATED, now called DB_READ_UNCOMMITTED
-
-(defconstant DB_AFTER		      1)
-(defconstant DB_BEFORE		      3)
-(defconstant DB_CURRENT		      6)
-(defconstant DB_FIRST		      7)
-(defconstant DB_GET_BOTH	      8)
-(defconstant DB_GET_BOTH_RANGE	     10)
-(defconstant DB_KEYFIRST	     13)
-(defconstant DB_KEYLAST		     14)
-(defconstant DB_LAST		     15)
-(defconstant DB_NEXT		     16)
-(defconstant DB_NEXT_DUP	     17)
-(defconstant DB_NEXT_NODUP	     18)
-(defconstant DB_PREV		     23)
-(defconstant DB_PREV_NODUP	     24)
-(defconstant DB_SET		     25)
-(defconstant DB_SET_RANGE	     27)
-
-(defconstant DB_NODUPDATA	     19)
-(defconstant DB_NOOVERWRITE	     20)
-(defconstant DB_NOSYNC		     21)
-
-(defconstant DB_POSITION	     22)
-
-(defconstant DB_SEQ_DEC	     #x00000001)
-(defconstant DB_SEQ_INC	     #x00000002)
-(defconstant DB_SEQ_WRAP     #x00000008)
-
-(defconstant DB_SET_LOCK_TIMEOUT     26)
-(defconstant DB_SET_TXN_TIMEOUT      30)
-
-(defconstant DB_FREELIST_ONLY  #x00004000)
-(defconstant DB_FREE_SPACE     #x00008000)
-
-(defconstant DB_KEYEMPTY         -30997)
-(defconstant DB_KEYEXIST	 -30996)
-(defconstant DB_LOCK_DEADLOCK    -30995)
-(defconstant DB_LOCK_NOTGRANTED  -30994)
-(defconstant DB_NOTFOUND         -30989)
-
-(defconstant DB_LOCK_DEFAULT	     1)
-(defconstant DB_LOCK_EXPIRE	     2)
-(defconstant DB_LOCK_MAXLOCKS        3)
-(defconstant DB_LOCK_MAXWRITE        4)
-(defconstant DB_LOCK_MINLOCKS        5)
-(defconstant DB_LOCK_MINWRITE        6)
-(defconstant DB_LOCK_OLDEST	     7)
-(defconstant DB_LOCK_RANDOM	     8)
-(defconstant DB_LOCK_YOUNGEST        9)
-
-
-(def-enum DB-LOCKOP ((:DUMP 0) :GET :GET-TIMEOUT :INHERIT 
-		     :PUT :PUT-ALL :PUT-OBJ :PUT-READ
-		     :TIMEOUT :TRADE :UPGRADE-WRITE))
-
-(def-enum DB-LOCKMODE ((:NG 0) :READ :WRITE :WAIT 
-		       :IWRITE :IREAD :IWR :DIRTY :WWRITE))
-
-(def-struct DB-LOCK
-    (off :unsigned-int)
-  (ndx :unsigned-int)
-  (gen :unsigned-int)
-  (mode DB-LOCKMODE))
-
-#+openmcl
-(ccl:def-foreign-type DB-LOCK (:struct DB-LOCK))
-
-(def-struct DB-LOCKREQ
-    (op DB-LOCKOP)
-  (mode DB-LOCKMODE)
-  (timeout :unsigned-int)
-  (obj (:array :char))
-  (lock (* DB-LOCK)))
-
-#+openmcl
-(ccl:def-foreign-type DB-LOCKREQ (:struct DB-LOCKREQ))
 
 (defconstant +2^32+ 4294967296)
 (defconstant +2^64+ 18446744073709551616)
@@ -309,7 +194,7 @@
 		(t (error 'bdb-db-error :errno ,errno)))))))))
 
 (defmacro flags (&key auto-commit joinenv init-cdb init-lock init-log
-		 init-mpool init-rep init-txn recover recover-fatal lockdown
+		 init-mpool init-rep init-txn recover register recover-fatal lockdown
 		 private system-mem thread force create excl nommap 
 		 degree-2 read-committed dirty-read read-uncommitted
 		 rdonly truncate txn-nosync txn-nowait txn-sync lock-nowait
@@ -331,6 +216,7 @@
       ,@(when init-rep `((when ,init-rep (setq ,flags (logior ,flags DB_INIT_REP)))))
       ,@(when init-txn `((when ,init-txn (setq ,flags (logior ,flags DB_INIT_TXN)))))
       ,@(when recover `((when ,recover (setq ,flags (logior ,flags DB_RECOVER)))))
+      ,@(when register `((when ,recover (setq ,flags (logior ,flags DB_REGISTER)))))
       ,@(when recover-fatal `((when ,recover-fatal (setq ,flags (logior ,flags DB_RECOVER_FATAL)))))
       ,@(when lockdown `((when ,lockdown (setq ,flags (logior ,flags DB_LOCKDOWN)))))
       ,@(when private `((when ,private (setq ,flags (logior ,flags DB_PRIVATE)))))
@@ -414,8 +300,8 @@
 
 (wrap-errno db-env-open (dbenvp home flags mode)
 	    :flags (auto-commit init-cdb init-lock init-log 
-		    init-mpool init-rep init-txn
-		    recover recover-fatal create
+		    init-mpool init-rep init-txn 
+		    recover register recover-fatal create
 		    lockdown private system-mem thread
 		    )
 	    :keys ((mode #o640))

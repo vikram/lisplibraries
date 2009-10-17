@@ -43,10 +43,21 @@
 
 (defvar *user-configurable-parameters*
   '((:berkeley-db-map-degree2 *map-using-degree2*)
-    (:berkeley-db-cachesize *berkeley-db-cachesize*)))
+    (:berkeley-db-cachesize *berkeley-db-cachesize*)
+    (:berkeley-db-version *bdb-version*)
+    (:enable-multi-store-indexing *enable-multi-store-indexing*)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Optimization parameters
+;;;; System-wide configuration options
+
+(defvar *enable-multi-store-indexing* nil
+  "Allow indexed class instances to reside in more than one
+   data store.  Inhibits various checks and errors and allows
+   the class to cache multiple index controllers.  Set by
+   a user configurable parameter.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Optimization parameters 
 
 (defvar *circularity-initial-hash-size* 50
   "This is the default size of the circularity cache used in the serializer")

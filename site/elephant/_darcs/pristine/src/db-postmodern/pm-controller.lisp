@@ -68,6 +68,18 @@
   (elephant::ele-with-lock (*thread-table-lock*)
     (setf (thread-bookkeeper-tran-count (gethash (thread-hash) (controller-db-table sc))) value)))
 
+
+(defun reap-orphaned-connections (sc)
+  (let ((n-reaped 0))
+    (maphash (lambda (thread bookkeeper)
+               (let ((alive-p (thread-alive-p thread)))
+                 (unless alive-p
+                   (cl-postgres:close-database (car bookkeeper))
+                   (incf n-reaped)
+                   (remhash thread (controller-db-table sc)))))
+             (controller-db-table sc))
+    n-reaped))
+
 (defmethod controller-connection-for-thread ((sc postmodern-store-controller))
   (elephant::ele-with-lock (*thread-table-lock*)
     (let ((bookkeeper (gethash (thread-hash) (controller-db-table sc))))
@@ -75,6 +87,7 @@
           (thread-bookkeeper-connection bookkeeper)
           (destructuring-bind (db-type host database user password &key port) (second (controller-spec sc))
             (assert (eq :postgresql db-type))
+            (reap-orphaned-connections sc)
             (let ((con (apply #'postmodern:connect database user password host :pooled-p nil
                               (if port
                                   (list :port port)
@@ -240,10 +253,15 @@
      sc)))
 
 (defun form-slot-key (oid name)
-  (with-output-to-string (x)
-    (princ oid x)
-    (write-char #\Space x)
-    (princ name x)))
+  (declare (optimize speed))
+  #-sbcl (let ((*print-pretty* nil)) (format nil "~a ~a" oid name))
+  ;; performance hack for SBCL uses SB-IMPL. unfortunately no better way to convert OID to string faster,
+  ;; unless we'll cache it in instance..
+  #+sbcl (concatenate 'simple-string
+		      (sb-impl::quick-integer-to-string oid)
+		      " "
+		      (symbol-name name)))
+
 
 (defmethod persistent-slot-writer ((sc postmodern-store-controller) new-value instance name)
   (with-controller-for-btree (sc)

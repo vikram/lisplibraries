@@ -311,8 +311,8 @@ directory to my-config.sexp and edit it appropriately."))
 		       (:file "serializer")
 		       (:file "controller")
 		       (:file "collections")
-		       (:file "pset")
 		       (:file "classindex-utils")
+		       (:file "pset")
 		       (:file "classindex")
 		       (:file "serializer1") ;; 0.6.0 db's
 		       (:file "serializer2") ;; 0.6.1 db's
@@ -324,4 +324,10 @@ directory to my-config.sexp and edit it appropriately."))
 		      :serial t
 		      :depends-on (memutil utils)))))
   :serial t
-  :depends-on (:uffi :cl-base64))
+  :depends-on (:uffi :cl-base64
+#+sbcl  :sb-posix
+ :bordeaux-threads))
+
+
+(defmethod asdf:perform :after ((op load-op) (system (eql (find-system :elephant))))
+   (pushnew :elephant cl:*features*))

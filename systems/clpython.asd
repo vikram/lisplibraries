@@ -1,1 +1,1 @@
-..itory/crawler/vendor/clpython/clpython.asd
+../site/cl-python/clpython.asd

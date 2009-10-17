@@ -43,12 +43,13 @@
 		translate-and-intern-symbol
 		valid-persistent-reference-p
 		signal-cross-reference-error
-		elephant-type-deserialization-error))
+		elephant-type-deserialization-error
+                recreate-instance-using-class))
 
 (in-package :elephant-serializer2)
 
 (eval-when (:compile-toplevel)
-  (declaim  #-elephant-without-optimize (optimize (speed 3) (safety 1) (space 0) (debug 0))
+  (declaim #-elephant-without-optimize (optimize (speed 3) (safety 1) (space 0) (debug 0))
 	   (inline serialize deserialize
 		   slots-and-values
 		   deserialize-bignum
@@ -429,7 +430,7 @@
 	     ((= tag +utf8-string+)
 	      #+lispworks
 	      (coerce (deserialize-string :utf8 bs) 'base-string)
-	      #-lispworks
+
 	      (deserialize-string :utf8 bs))
 	     ((= tag +utf16-string+)
 	      #+lispworks
@@ -510,7 +511,7 @@
 		      (let ((o 
 			     (or (handler-case
 				   (if (subtypep typedesig 'persistent)
-				       (make-instance typedesig :sc sc)
+				       (recreate-instance-using-class (find-class typedesig) :sc sc)
 				       ;; if the this type doesn't exist in our object
 				       ;; space, we can't reconstitute it, but we don't want 
 				       ;; to abort completely, we will return a special object...

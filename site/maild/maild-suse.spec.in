@@ -1,0 +1,103 @@
+# $Id: maild-suse.spec.in,v 1.9 2006/09/14 17:51:17 dancy Exp $
+
+# Spec file suitable for SuSE.
+
+Summary: Allegro Mail Daemon
+Name: maild
+Version: __VERSION__
+Release: %{release}.suse
+License: Commercial
+Group: Productivity/Networking/Email/Servers
+#URL: 
+# Stuff required for installation
+Prereq: /usr/sbin/useradd
+Prereq: insserv
+# Stuff required for operation
+Requires: procmail
+# for /etc/aliases
+Requires: netcfg
+# BuildRequires: allegrocl
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Provides: smtp_daemon
+Provides: %{_sbindir}/sendmail %{_bindir}/mailq %{_bindir}/newaliases
+Provides: /usr/lib/sendmail
+
+%description
+Allegro Mail Daemon.  Highly configurable.  Resistant to buffer overflows.
+
+%prep
+%setup -q
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/sbin
+mkdir -p $RPM_BUILD_ROOT/usr/{bin,sbin,lib}
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
+mkdir -p $RPM_BUILD_ROOT/etc/pam.d
+# I don't know why /var/spool/mqueue is created.  maild doesn't
+# use it.
+mkdir -p $RPM_BUILD_ROOT/var/spool/{maild,mqueue}
+chmod 0700 $RPM_BUILD_ROOT/var/spool/maild
+make ROOT=$RPM_BUILD_ROOT install
+# Redo some symlinks here 
+ln -snf /usr/lib/maild/maild $RPM_BUILD_ROOT/usr/sbin/maild
+ln -snf /usr/lib/greyadmin/greyadmin $RPM_BUILD_ROOT/usr/sbin/greyadmin
+# additional symlinks
+ln -snf /usr/sbin/maild $RPM_BUILD_ROOT/usr/sbin/sendmail
+ln -snf /usr/sbin/maild $RPM_BUILD_ROOT/usr/lib/sendmail
+ln -snf /usr/sbin/maild $RPM_BUILD_ROOT/usr/bin/mailq
+ln -snf /usr/sbin/maild $RPM_BUILD_ROOT/usr/bin/newaliases
+ln -snf /etc/init.d/maild $RPM_BUILD_ROOT/sbin/rcmaild
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+/etc/init.d/maild
+/sbin/rcmaild
+/usr/lib/greyadmin
+/usr/lib/maild
+/usr/sbin/maild
+/usr/sbin/greyadmin
+/usr/sbin/sendmail
+/usr/lib/sendmail
+/usr/bin/mailq
+/usr/bin/newaliases
+%dir /var/spool/maild
+%dir /var/spool/mqueue
+%doc config.cl ALIASES MAILERS.txt NOTES STATS greylist.sql greylist.sql.notes
+%config(noreplace) /etc/sysconfig/maild
+%config(noreplace) /etc/pam.d/smtp
+
+%pre
+/usr/sbin/useradd -u 47 -d /var/spool/mqueue -r -s /bin/false mailnull >/dev/null 2>&1
+exit 0
+
+%post
+/sbin/insserv maild
+
+%preun
+if [ $1 = 0 ]; then
+	/etc/init.d/maild stop >/dev/null 2>&1
+	/sbin/insserv -r maild
+fi
+exit 0
+
+%postun
+if [ "$1" != 0 ]; then
+	/etc/init.d/maild try-restart 2>&1 > /dev/null
+fi
+exit 0
+
+
+%changelog
+* Tue Feb 28 2006 Ahmon Dancy <dancy@dancy> - 
+- Initial build.
+
