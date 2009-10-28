@@ -1,5 +1,0 @@
-static const char compiler_data_text[] = 
-":url-rewrite si::dodefpackage \"CL-USER\" \"URL-REWRITE\" (\"CL\") (\"*URL-REWRITE-TAGS"
- "*\" \"*URL-REWRITE-FILL-TAGS*\" \"STARTS-WITH-SCHEME-P\" \"ADD-GET-PARAM-TO-URL\" \"REWR"
- "ITE-URLS\" \"URL-ENCODE\")) ";
-#define compiler_data_text_size 185
