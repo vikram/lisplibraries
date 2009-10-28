@@ -1,0 +1,5 @@
+;;; -*- Lisp -*-(load "shared");; put into subdirectories of a common compiled lisp directory(setf asdf:*centralize-lisp-binaries* t      asdf:*default-toplevel-directory* 
+      (merge-pathnames (make-pathname :directory '(:relative "my-fasls"))
+                       *default-pathname-defaults*)
+      asdf:*source-to-target-mappings* nil)(load "test1.asd")(asdf:oos 'asdf:load-op 'test1 :verbose t)(load "test2.asd")(asdf:oos 'asdf:load-op 'test2 :verbose t)(let ((directory asdf:*default-toplevel-directory*))  (print (merge-pathnames          (make-pathname :name :wild                         :type :wild                         :directory `(:relative "test2"))          directory))  (assert (not (null (directory                       (merge-pathnames          (make-pathname :name :wild                         :type :wild                         :directory `(:relative "test1"))          directory)))))  (assert (not (null (directory                       (merge-pathnames          (make-pathname :name :wild                         :type :wild                         :directory `(:relative "test2"))          directory))))))
+

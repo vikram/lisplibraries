@@ -1,0 +1,32 @@
+#!/bin/sh
+
+do_tests() {
+echo $1
+for i in *.script; 
+do 
+    echo $i
+done
+echo "Using $1, all tests apparently successful" >&2
+}
+
+# do_tests {lisp invocation} {fasl extension}
+# - read lisp forms one at a time from standard input
+# - quit with exit status 0 on getting eof
+# - quit with exit status >0 if an unhandled error occurs
+
+set -e
+
+if type sbcl 
+then 
+  do_tests "sbcl --userinit /dev/null --sysinit /dev/null --noprogrammer" fasl 
+fi
+
+if [ -x /usr/bin/lisp ]
+then 
+  do_tests "/usr/bin/lisp -batch -noinit" x86f
+fi
+
+if [ -x /usr/bin/clisp ]
+then 
+  do_tests "/usr/bin/clisp -norc -ansi -I " fas
+fi

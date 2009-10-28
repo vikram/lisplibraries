@@ -1,0 +1,14 @@
+;;; -*- Lisp -*-
+(load "shared")
+
+;; put into subdirectories for this implementation
+(setf asdf:*centralize-lisp-binaries* nil
+      asdf:*source-to-target-mappings* nil)
+
+(load "test1.asd")
+(asdf:oos 'asdf:load-op 'test1)
+
+(let ((directory (asdf::implementation-specific-directory-name)))
+  (assert (not (null (directory (make-pathname :name :wild :type :wild
+   :defaults directory))))))
+   
