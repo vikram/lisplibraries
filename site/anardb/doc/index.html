@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>anardb</title>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  
+  <body>
+    <div class="header">
+      <h1>anardb</h1>
+
+      <h2>Atomic, consistent, isolated, durable multi-process safe
+      Lisp object serialisation</h2>
+    </div>
+    
+    <h3>Introduction</h3>
+    
+    <p> Anardb provides persistent classes, which can have slots
+      indexed in hash-tables, and the ability to perform ACID
+      transactions on them from multiple processes simultaneously.</p>    
+
+    <p>It requires UN*X filesystem semantics and has been tested on
+      Allegro x86 but should be portable to SBCL, etc.</p>
+    
+    <p>Anardb has not been deployed in production and it is likely
+      that there are bugs.</p>
+
+    <h3>Contact</h3>
+
+    <p>Email John Fremlin
+      at <a href="http://www.msi.co.jp">MSI</a>. His address is
+      jf@[the domain without www].</p>
+
+    <p>View or edit the <a href="http://cliki.net/anardb">Cliki
+	entry</a>.</p>
+
+    <h3> Using it </h3>
+
+    <p> Start
+      Lisp. Get <a href="http://www.cliki.net/ASDF-Install">asdf-install</a>.
+    </p>
+
+    <pre>
+      CL-USER> (asdf-install:install 'anardb)
+      CL-USER> (asdf:operate 'asdf:load-op 'anardb)
+    </pre>
+
+    <pre>
+CL-USER&gt; (anardb:defdbclass lisp-company () ((name :index t) (location :index t)))
+#&lt;STANDARD-CLASS LISP-COMPANY&gt;
+CL-USER&gt; (make-instance 'lisp-company :name "MSI" :location "Tokyo")
+#&lt;#&lt;LISP-COMPANY @ #x1001160112&gt; NAME: "MSI" LOCATION: "Tokyo"&gt;
+CL-USER&gt; (find-lisp-company :location "Tokyo")
+(#&lt;#&lt;LISP-COMPANY @ #x1001160112&gt; NAME: "MSI" LOCATION: "Tokyo"&gt;)
+T
+CL-USER&gt; (find-lisp-company :location "Osaka")
+NIL
+NIL
+</pre>
+    
+    <p>The <a href="api.html">API is documented</a>.</p>
+    
+    <h3>Downloads</h3>
+
+    <p><a href="downloads/">Downloads</a></p>
+
+    <h3>Git development tree access</h3>
+
+    <p>git clone http://cl-www.msi.co.jp/projects/anardb/anardb.git</p>
+
+  </body>
+</html>

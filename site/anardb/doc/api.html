@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>ANARDB - API reference</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  h3, h4 { text-decoration: underline; }
+  a { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+  a.none { text-decoration: none; padding: 0; }
+  a.none:visited { text-decoration: none; padding: 0; } 
+  a.none:hover { text-decoration: none; border: none; padding: 0; } 
+  a.none:focus { text-decoration: none; border: none; padding: 0; } 
+  a.noborder { text-decoration: none; padding: 0; } 
+  a.noborder:visited { text-decoration: none; padding: 0; } 
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  pre.none { padding:5px; background-color:#ffffff }
+  pre { white-space: pre-wrap;word-wrap: break-word; }
+  </style>
+</head>
+
+<body bgcolor=white>
+
+<h2> ANARDB - API reference</h2>
+
+<p> This is the API reference. <a href="index.html">There is also an introduction to this library.</a></p>
+
+<blockquote>
+<br>&nbsp;<br><h3><a name=abstract class=none>Abstract</a></h3>
+
+<p>The code is released under the <a href="http://opensource.franz.com/preamble.html">Lisp Lesser GPL</a>.</p>
+
+<p>
+<font color=red>Download shortcut:</font> <a href="downloads/anardb.tar.gz">anardb.tar.gz</a>.</p>
+
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+<ol>
+  <li><a href="#download">Download</a>
+  <li><a href="#dictionary">The ANARDB dictionary</a>
+    <ol>
+      <li><a href="#with-transaction"><code>with-transaction</code></a>
+      <li><a href="#defdbclass"><code>defdbclass</code></a>
+      <li><a href="#with-store-lock"><code>with-store-lock</code></a>
+      <li><a href="#store-object"><code>store-object</code></a>
+      <li><a href="#retrieve-all-instances"><code>retrieve-all-instances</code></a>
+      <li><a href="#store-init-dir"><code>store-init-dir</code></a>
+      <li><a href="#store-dir"><code>store-dir</code></a>
+      <li><a href="#restart-transaction"><code>restart-transaction</code></a>
+      <li><a href="#drop"><code>drop</code></a>
+      <li><a href="#store-wipe"><code>store-wipe</code></a>
+      <li><a href="#freshen-object"><code>freshen-object</code></a>
+      <li><a href="#store-reset"><code>store-reset</code></a>
+      <li><a href="#do-all-instances"><code>do-all-instances</code></a>
+      <li><a href="#object-absent"><code>object-absent</code></a>
+      <li><a href="#object-absent"><code>object-absent</code></a>
+      <li><a href="#assert-in-transaction"><code>assert-in-transaction</code></a>
+      <li><a href="#*store*"><code>*store*</code></a>
+      <li><a href="#make-store"><code>make-store</code></a>
+      <li><a href="#store-object-id"><code>store-object-id</code></a>
+      <li><a href="#store-update"><code>store-update</code></a>
+      <li><a href="#retrieve-instance-by-id"><code>retrieve-instance-by-id</code></a>
+    </ol>
+  <li><a href="#ack">Acknowledgements</a>
+</ol>
+
+<br>&nbsp;<br><h3><a class=none name="download">Download</a></h3>
+
+<p>ANARDB together with this documentation can be downloaded from  <a href="downloads/anardb.tar.gz">anardb.tar.gz</a>.</p>
+
+<br>&nbsp;<br><h3><a class=none name="dictionary">The ANARDB dictionary</a></h3>
+
+
+
+<!-- Entry for WITH-TRANSACTION -->
+
+<p><br>[Macro]<br><a class=none name='with-transaction'><b>with-transaction</b> <i>(<tt>&amp;key</tt> message store on-restart) declaration* statement*</i> =&gt; <i>result</i></a>
+<pre>
+Protect changes to a store with a transaction.
+
+If the transaction fails (because another process updated the store
+before the changes could be saved) then the store will be rolled
+forward and the BODY will be run again.
+
+Rolls the store forward to the latest serialisation on start, if the
+file serialisation is newer than the last one loaded.
+
+Note that it will wipe unsaved changes to the store iff the last
+serialisation loaded is older than the newest available
+serialisation. Therefore it will not wipe unsaved changes if the store
+is not backed with a directory, or no other process has written to the
+store since the last load.
+
+If with-transaction returns normally, then it is successful and the
+changes have been committed to disk.
+
+
+</pre>
+
+<!-- End of entry for WITH-TRANSACTION -->
+
+
+<!-- Entry for DEFDBCLASS -->
+
+<p><br>[Macro]<br><a class=none name='defdbclass'><b>defdbclass</b> <i>name direct-supers direct-slots <tt>&amp;rest</tt> options</i> =&gt; <i>result</i></a>
+<pre>
+Define a class of serialisable objects.
+
+Syntax is like defclass but accessors and initargs are defined by default.
+
+Additional slot option :index specifies whether a slot&#039;s value should
+be indexed in a hash table. Note that changing an indexed slot&#039;s value
+is not supported.
+
+Additional class option :finder specifies the name of a helper
+function (by default (symbolicate &#039;find- classname)), which can be
+used to lookup class instances.
+
+Additional class option :store specifies the variable pointing to the
+store responsible for objects of this class.
+
+
+</pre>
+
+<!-- End of entry for DEFDBCLASS -->
+
+
+<!-- Entry for WITH-STORE-LOCK -->
+
+<p><br>[Macro]<br><a class=none name='with-store-lock'><b>with-store-lock</b> <i>(store) declaration* statement*</i> =&gt; <i>result</i></a>
+<pre>
+Prevent the store from being updated.
+
+Note that if you wait too long, the lock may be broken by another process.
+See *hard-break-delay*.
+
+</pre>
+
+<!-- End of entry for WITH-STORE-LOCK -->
+
+
+<!-- Entry for STORE-OBJECT -->
+
+<p><br>[Standard class]<br><a class=none name='store-object'><b>store-object</b></a>
+<pre>
+Base class of all classes defined through defdbclass
+
+</pre>
+
+<!-- End of entry for STORE-OBJECT -->
+
+
+<!-- Entry for RETRIEVE-ALL-INSTANCES -->
+
+<p><br>[Function]<br><a class=none name='retrieve-all-instances'><b>retrieve-all-instances</b> <i>class</i> =&gt; <i>result</i></a>
+<pre>
+Retrieve a list of instances of class CLASS
+
+</pre>
+
+<!-- End of entry for RETRIEVE-ALL-INSTANCES -->
+
+
+<!-- Entry for STORE-INIT-DIR -->
+
+<p><br>[Function]<br><a class=none name='store-init-dir'><b>store-init-dir</b> <i>store <tt>&amp;optional</tt> new-dir</i> =&gt; <i>result</i></a>
+<pre>
+Create a new database in the file-system
+
+</pre>
+
+<!-- End of entry for STORE-INIT-DIR -->
+
+
+<!-- Entry for STORE-OBJECT-ID -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>store-object-id</b> <i>(condition store-object)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>store-object-id</b> <i>(condition store-object)</i><tt>)</tt> <i>new-value</i><tt>)</tt></a>
+<pre>
+automatically generated reader method
+
+</pre>
+
+<!-- End of entry for STORE-OBJECT-ID -->
+
+
+<!-- Entry for STORE-DIR -->
+
+<p><br>[Accessor]<br><a class=none name='store-dir'><b>store-dir</b> <i>instance</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>store-dir</b> <i>instance</i><tt>)</tt> <i>new-value</i><tt>)</tt></a>
+<pre>
+A place for clients to stash things.
+
+</pre>
+
+<!-- End of entry for STORE-DIR -->
+
+
+<!-- Entry for RESTART-TRANSACTION -->
+
+<p><br>[Function]<br><a class=none name='restart-transaction'><b>restart-transaction</b> <i></i> =&gt; <i>result</i></a>
+<pre>
+Restart the innermost transaction
+
+</pre>
+
+<!-- End of entry for RESTART-TRANSACTION -->
+
+
+<!-- Entry for DROP -->
+
+<p><br>[Generic function]<br><a class=none name='drop'><b>drop</b> <i>object</i> =&gt; <i>result</i></a>
+<pre>
+Remove object from the database
+
+</pre>
+
+<!-- End of entry for DROP -->
+
+
+<!-- Entry for STORE-WIPE -->
+
+<p><br>[Function]<br><a class=none name='store-wipe'><b>store-wipe</b> <i>store</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for STORE-WIPE -->
+
+
+<!-- Entry for FRESHEN-OBJECT -->
+
+<p><br>[Function]<br><a class=none name='freshen-object'><b>freshen-object</b> <i>object</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for FRESHEN-OBJECT -->
+
+
+<!-- Entry for STORE-RESET -->
+
+<p><br>[Function]<br><a class=none name='store-reset'><b>store-reset</b> <i>store <tt>&amp;optional</tt> new-dir</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for STORE-RESET -->
+
+
+<!-- Entry for DO-ALL-INSTANCES -->
+
+<p><br>[Macro]<br><a class=none name='do-all-instances'><b>do-all-instances</b> <i>(var class) declaration* statement*</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for DO-ALL-INSTANCES -->
+
+
+<!-- Entry for OBJECT-ABSENT -->
+
+<p><br>[Condition type]<br><a class=none name='object-absent'><b>object-absent</b></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for OBJECT-ABSENT -->
+
+
+<!-- Entry for OBJECT-ABSENT -->
+
+<p><br>[Function]<br><a class=none name='object-absent'><b>object-absent</b> <i><tt>&amp;rest</tt> args</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for OBJECT-ABSENT -->
+
+
+<!-- Entry for ASSERT-IN-TRANSACTION -->
+
+<p><br>[Macro]<br><a class=none name='assert-in-transaction'><b>assert-in-transaction</b> <i><tt>&amp;optional</tt> store</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for ASSERT-IN-TRANSACTION -->
+
+
+<!-- Entry for *STORE* -->
+
+<p><br>[Special variable]<br><a class=none name='*store*'><b>*store*</b></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for *STORE* -->
+
+
+<!-- Entry for MAKE-STORE -->
+
+<p><br>[Function]<br><a class=none name='make-store'><b>make-store</b> <i><tt>&amp;key</tt> (next-id dum0) (dir dum1) (version dum2) (classnames dum3)</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for MAKE-STORE -->
+
+
+<!-- Entry for STORE-OBJECT-ID -->
+
+<p><br>[Generic accessor]<br><a class=none name='store-object-id'><b>store-object-id</b> <i>condition</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>store-object-id</b> <i>condition</i><tt>)</tt> <i>new-value</i><tt>)</tt></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for STORE-OBJECT-ID -->
+
+
+<!-- Entry for STORE-OBJECT-ID -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>store-object-id</b> <i>(condition object-absent)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>store-object-id</b> <i>(condition object-absent)</i><tt>)</tt> <i>new-value</i><tt>)</tt></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for STORE-OBJECT-ID -->
+
+
+<!-- Entry for STORE-UPDATE -->
+
+<p><br>[Function]<br><a class=none name='store-update'><b>store-update</b> <i>store</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for STORE-UPDATE -->
+
+
+<!-- Entry for RETRIEVE-INSTANCE-BY-ID -->
+
+<p><br>[Generic function]<br><a class=none name='retrieve-instance-by-id'><b>retrieve-instance-by-id</b> <i>classname id</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for RETRIEVE-INSTANCE-BY-ID -->
+
+
+<!-- Entry for RETRIEVE-INSTANCE-BY-ID -->
+
+<p><br>[Method]<br><a class=none><b>retrieve-instance-by-id</b> <i>(classname class) id</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for RETRIEVE-INSTANCE-BY-ID -->
+
+
+<!-- Entry for DROP -->
+
+<p><br>[Method]<br><a class=none><b>drop</b> <i>(object store-object)</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for DROP -->
+
+
+<!-- Entry for DROP -->
+
+<p><br>[Method]<br><a class=none><b>drop</b> <i>object</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for DROP -->
+
+
+<!-- Entry for DROP -->
+
+<p><br>[Method]<br><a class=none><b>drop</b> <i>(object sequence)</i> =&gt; <i>result</i></a>
+<pre>
+
+
+</pre>
+
+<!-- End of entry for DROP -->
+
+
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+<p>
+This documentation was prepared with a modified version of <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+</p>
+<p>
+$Header: /usr/local/cvsrep/documentation-template/output.lisp,v 1.14 2008/05/29 08:23:37 edi Exp $
+<p><a href="index.html">BACK TO THE MAIN PROJECT PAGE</a>
+
+</body>
+</html>

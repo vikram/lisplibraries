@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>cl-irregsexp</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  
+  <body>
+    <div class="header">
+      <h1>cl-irregsexp</h1>
+      <h2>A lispy alternative to traditional regular expression syntax for
+	text matching.</h2>
+    </div>
+    
+    <h3>Introduction</h3>
+    
+    <p>cl-irregsexp is an ASDF-installable library for fast text
+      matching. It goes beyond the facilities allowed by traditional
+      regular expressions, while also making the matchers easier to
+      write and maintain. </p>
+
+    <h3>Why?</h3>
+
+    <p>Traditional regexps are everywhere and well-understood. There are
+      already <a href="http://www.cliki.net/regular expression">several
+	fine regular expression toolkits for Common Lisp</a>. They are both
+      complete and mature.  Why use cl-irregsexp?</p>
+
+    <ul>
+      <li>The syntax: instead of writing (with <a href="http://www.weitz.de/cl-ppcre/">cl-ppcre</a>)
+	<pre>(register-groups-bind (method url version-major version-minor) 
+	  ("(\\S+)\\s+(\\S+)\\s+HTTP/(\\d+).(\\d+)$" line)
+	  ...)
+	</pre>
+	write
+	<pre>(match-bind (method (+ (space)) url (+ (space)) "HTTP/" (version-major (integer)) "." (version-minor (integer)) (last))  
+          line 
+	  ...)</pre>
+	which might be clearer and doesn't involve mentioning the
+	captured variables twice.</li>
+      <li>cl-irregsexp works seamlessly on both arrays of integers and on strings.</li>
+      <li>cl-irregsexp has excellent performance (for some operations) using
+	open-coded <a href="http://en.wikipedia.org/wiki/Boyer_-_Moore_string_search_algorithm">Boyer-Moore
+	  matchers</a>.</li>
+    </ul>
+
+    <h3>Why not?</h3>
+
+    <ul>
+      <li>No documentation.</li>
+      <li>The syntax is weird. For fast, complete and mature Perl
+	compatible regexps check
+	out <a href="http://www.weitz.de/cl-ppcre/">cl-ppcre</a> for
+	example, or <a href="http://code.google.com/p/terse-ppcre/">terse-ppcre</a>.</li>
+      <li>Things are still in early stages. Anything
+	might change, even the name.</li>
+      <li>Lack of testing and features.</li></ul>
+
+    <h3>Help!</h3>
+    <ul>
+      <li>Suggest a better name!</li>
+      <li>Improve the syntax.</li>
+      <li>Write documentation.</li>
+      <li>Add more features.</li>
+    </ul>
+
+    <p> Write to the 
+      <a href="http://www.common-lisp.net/mailman/listinfo/cl-irregsexp-devel">CL-IRREGSEXP-devel</a> mailing list. Or add to the <a href="http://www.cliki.net/cl-irregsexp">wiki</a>. </p>
+
+    <h3>Download</h3>
+
+    <p><a href="downloads/cl-irregsexp.tar.gz">Tarball of the the latest git commit</a>.</p>
+
+    <p>Here are some <a href="downloads/">snapshots</a>.</p>
+
+    <p>To check out the tree locally:</p>
+<pre>
+git clone http://common-lisp.net/projects/cl-irregsexp/cl-irregsexp.git
+</pre>
+
+    <h3>Implementation</h3>
+
+    <P> The string matcher is generated with macros, and is completely
+    inlined. It does not build a state machine (DFA) lookup table but uses
+      case statements to implement the state machine in native
+    code.</P>
+
+    <P>First the matcher description is translated to an intermediate
+      form with the following primitives:</P>
+    <ul>
+      <li>Fixed length constant string matcher. For each position in
+      the string any number of characters may be accepted. For example
+      the expression in traditional regexps "depot[A-Z](1|2)" is
+	considered as a constant string.</li>
+      <li>Finite list of choices. For example "(or (integer)
+	"undefined")".</li>
+      <li>Sequence of other matchers in order.</li>
+      <li>An object that only matches the end of the string.</li>
+      <li>Any other lisp form.</li>
+    </ul>
+
+    <P>A few transforms are applied to the intermediate form, then it
+      is output as Lisp, which will hopefully be compiled to efficient native
+      machine code by the Lisp environment.</P>
+
+    <P> One particular case that has been optimised a little is that
+      of searching for a constant string. The algorithm used is
+      <a href="http://en.wikipedia.org/wiki/Boyer_-_Moore_string_search_algorithm">Boyer-Moore</a>, but implementation has some unusual
+      facets.</P>
+
+    <ul>
+      <li>Native code generated.</li>
+      <li>Does not fall back to a slow matcher if the last
+	character of the needle string is matched in the
+	haystack, but continues to apply the algorithm to the rest of
+	the needle.</li>
+      <li>Can be applied not only to simple string needles but any
+	fixed length constant matcher as described above, so, for
+	example, it can quickly search for a case insensitive needle.</li>
+    </ul>
+
+    <h3>Benchmark against other regex implementations</h3>
+
+    <P>It is very irritating when people two different spellings for
+    the same word. cl-irregsexp can sometimes search for both nearly as
+    fast as it can search for just one.
+
+    <P>To demonstrate its efficiency, I chose to compare how long it
+      takes to search for "indecipherable" or "undecipherable" in a long
+      string, among many regex implementations.</P>
+
+    <P>The haystack was one million random lowercase letters followed by
+    "undecipherable". Each implementation reads the haystack into
+    memory and then prints out how many milliseconds it took to search
+    it for the two possibilities. Just to be safe, it also has to
+    print the offset where the needle was found.
+
+    <P>To make the test results less susceptible to slow starts from
+    caches and branch prediction units, most implementations repeat
+    the search 1000 times and print out the average number of
+    milliseconds. The implementations all abort if the string is ever
+    found at an incorrect position.</P>
+<table>
+  <thead><tr><th>Implementation</th><th style="width: 100%">Time (s), smaller is better</th></tr></thead>
+  <tbody>
+
+<tr><td>cl-ppcre.closure</td><td><span class=bar style="width: 57.88%">.</span>122.56</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 60.00%">.</span>127.05</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 55.19%">.</span>116.87</td></tr>
+<tr><td>cl-ppcre.sbcl</td><td><span class=bar style="width: 33.04%">.</span>69.97</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 34.73%">.</span>73.54</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 31.32%">.</span>66.31</td></tr>
+<tr><td>ruby.rb</td><td><span class=bar style="width: 10.79%">.</span>22.84</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 11.24%">.</span>23.80</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 9.93%">.</span>21.02</td></tr>
+<tr><td>pcre</td><td><span class=bar style="width: 9.73%">.</span>20.60</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 9.54%">.</span>20.21</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 8.83%">.</span>18.69</td></tr>
+<tr><td>python.py</td><td><span class=bar style="width: 8.95%">.</span>18.95</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 9.11%">.</span>19.30</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 8.14%">.</span>17.23</td></tr>
+<tr><td>perl.pl</td><td><span class=bar style="width: 4.70%">.</span>9.95</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 4.75%">.</span>10.06</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 4.90%">.</span>10.39</td></tr>
+<tr><td>cl-irregsexp.closure</td><td><span class=bar style="width: 4.08%">.</span>8.63</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 4.22%">.</span>8.93</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 4.01%">.</span>8.49</td></tr>
+<tr><td>cl-irregsexp.sbcl</td><td><span class=bar style="width: 1.63%">.</span>3.46</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 1.63%">.</span>3.46</td></tr>
+<tr><td>-</td><td><span class=bar style="width: 1.61%">.</span>3.41</td></tr>
+
+</tbody></table>
+
+    <h4>Notes on the benchmark implementations</h4>
+    
+    <P>The source code for all is available in
+      the <a href="downloads/">cl-irregsexp download</a> in the bench/
+      directory.</P>
+
+    <P>Ruby has the smallest and neatest benchmark program. It gets
+      the award for concision.</P>
+
+    <P>Perl has the implementation involving the most one character
+      global variables. It wins the second prize for speed and the
+      first prize for being impenetrable to language dilettanti.</P>
+
+    <P>I also tried with clisp (a Common Lisp implementation that
+    compiles to byte code). It took 115.95s with cl-irregsexp but a
+    massive 2622.48s with cl-ppcre, so I did not include it in the results.
+
+    <P>If you fancy sending in an example for another regexp
+      implementation, I'd be pleased to add it!</P>
+
+    <h4>Generating the test data</h4>
+
+    <p> Here are the commands to make the data in the bash shell.
+      
+    <pre>$ cat /dev/urandom | tr -d -c abcdefghijklmnopqrstuvwxyz | dd bs=1 count=1000000 > test-data
+$ echo undecipherable >> test-data
+</pre>
+
+    <h4>Even faster</h4>
+
+    <p>The code generated calculates a skip distance by doing a (case
+      (peek-one-character) ...). SBCL unfortunately translates this
+      into a sequence of conditional jumps apparently independently of
+      the number of different cases. At some point it is surely better
+      to use a jump table.</p>
+
+    <h3>Project members</h3>
+    <pre><!--#include virtual="../../pprinted-project-members/cl-irregsexp" --></pre>
+
+    <div class="check">
+      <a href="http://validator.w3.org/check/referer">
+	Valid XHTML 1.0 Strict</a>
+    </div>
+  </body>
+</html>
