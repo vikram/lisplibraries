@@ -17,7 +17,7 @@
 
 (cffi:define-foreign-library libssl
   (:windows "libssl32.dll")
-  (:darwin "libssl.0.9.8.dylib")
+  (:darwin (:or "libssl.0.9.8.dylib" "/usr/lib/libssl.dylib"))
   (:unix (:or "libssl.so.0.9.8" "libssl.so" "libssl.dylib"))
   (t (:default "libssl3")))
 

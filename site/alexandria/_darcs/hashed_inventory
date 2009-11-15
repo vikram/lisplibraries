@@ -1,0 +1,618 @@
+pristine:0000002279-73ddeadf894680248c7f94e9fae96def757a46597d5100585bb44eff1b7b4c8d
+[initial version
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015154202] 
+hash: 0000054425-b9a5de6bf9c9eca308f7a39b2ead80fe608433a9c629ca0a2ee98bc8195d2d7c
+[tests passing
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015160607] 
+hash: 0000000475-8ac6e31b32fef5194362764eeca98c15a876252fed0a0f99bfde04ee4f13fafa
+[Added .boring and added public_html to it, so you can darcs get it into your local alexandria repo
+attila.lendvai@gmail.com**20061015170133] 
+hash: 0000000341-b1b0dd3f829dd3cc5ffa9f6d08d1bc8b5ac20e11b2f59d9f6eb0aaf169992d28
+[documentation
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061015215052] 
+hash: 0000009278-e307d1fe657e8dfb64cc2f67371d1e5f6f5aff3811d57fbef40306d14b3bdb1a
+[variance and standard-deviation biased by default, documentation fixes for both
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016114618] 
+hash: 0000001149-e7a54e8d6a90775c892b6dad4626df0d8b6f9967b3f6b0b4b225aaa954643ce6
+[ROTATE-RIGHT and ROTATE-LEFT replaced by a single function ROTATE
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016123238] 
+hash: 0000003973-f13d872ef56a8b2a2222a14d83c7d2caaa702054b5d75244ed6938630521b2ca
+[REMOVE-KEYS renamed to SANS, with new --arguably better-- argument order
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016125413] 
+hash: 0000001821-39ba8c40289c4291ba577fdfa53cefe1c40f84038ed07c80b92fd7a95467cbb7
+[new: flatten, map-product, setp. fixed: set-equal
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061016150600] 
+hash: 0000004884-2b325f2cd13d9c2d965cafcd3403d9d7aedb5ab92c45537075876fa71ffbaccd
+[SETF-functions for lastcar, first-elt, and last-elt. :KEY and :TEST for starts-with and ends-with
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061017155126] 
+hash: 0000007162-6eb435a0a6379b6f9e3fa771ee354fa39c1a35a544c78baa56884eafaf6c0dcd
+[Added (declare (ignore sub)) for type=
+attila.lendvai@gmail.com**20061017155937] 
+hash: 0000000143-11abddd8ed8459c0c8e7429c7b1017829070b4c5ef713c37971c16f902d8a36e
+[Extended parse-body with a :whole arg, report multiple docstring error.
+attila.lendvai@gmail.com**20061022105744] 
+hash: 0000001044-2ac91e66ae4d818f5138f76de21a009175eb65086f9482cbb5656a58043d7841
+[IF-LET, IF-LET*, WHEN-LET, and WHEN-LET*
+Nikodemus Siivola <nikodemus@sb-studio.net>**20061107104944] 
+hash: 0000005656-37f3236d334b332d5bf472c5048522a6b8314dce833314b71ad12bc060cfd362
+[required-argument
+Nikodemus Siivola <nikodemus@random-state.net>**20070225160010] 
+hash: 0000000566-c1a38a7cdff70551c0270e086d1a543d9ac013bf4521eab054e15f7f8fa088aa
+[with-gensyms
+Nikodemus Siivola <nikodemus@random-state.net>**20070225160042] 
+hash: 0000000938-0109a65c8505dbb0c58148225d868603ac5a167180f1abc0566f47a79d1f2cab
+[Patch by Tayssin John Gabbour, fixing two typos.
+Nikodemus Siivola <nikodemus@random-state.net>**20070318015005] 
+hash: 0000000424-1f0a00b33b88ae99a79a3d1008e4f43b741e91e9afd10901f9cee3bad2ceddcd
+[Fix when-let documentation string.
+langstefan@gmx.at**20070318132238] 
+hash: 0000000284-9c6d0d34d2b4ef5c67d4cb7908cccc8d4f4ebca711adb63e494e0198dd826aa1
+[Docstring typo
+attila.lendvai@gmail.com**20070501143516] 
+hash: 0000000184-273fd2ab01169036bf1ec22ded0729d1828833dac35e07be3e3c4090f8ad9387
+[Added a REMOVE-FROM-PLIST (same as SANS)
+attila.lendvai@gmail.com**20070501143706] 
+hash: 0000000417-fca9494534ba49834d7950380a9a9284374075308a8acf9e412e76f91dcf909d
+[Added a faster loop based remove-from-plist
+attila.lendvai@gmail.com**20070501144915] 
+hash: 0000000633-50f657eb6cea04d108d195ad543833591a06db0c0d6c6551deb8b79f0043263f
+[Nothing Can Stop The Progressive Revolution
+Nikodemus Siivola <nikodemus@random-state.net>**20070601123336
+ 
+ Added:
+  * XOR
+  * WHICHEVER
+  * SWITCH, ESWITCH, CSWItCH
+  * UNIONF, NUNIONF
+  * ALIST-PLIST, PLIST-ALIST
+  * ENSURE-CONS
+  * NAMED-LAMDBA
+  * DEFINE-CONSTANT
+  * STRING-DESIGNATOR
+ 
+ Note:
+  Documentation strings of many new operators are sorely lacking, particularly
+  NAMED-LAMBDA and *SWITCH.
+ 
+] 
+hash: 0000009165-341fcf30d1ec1596bb5e74677a4da6e746496485dc7cc1dc8211ba68137ce4dd
+[MAP-IOTA, misc. fixes, and tests up to 100% coverage
+Nikodemus Siivola <nikodemus@random-state.net>**20070601143059] 
+hash: 0000010672-37b8dc2e6f2e0a27fb5526b011e6a51de039b013cf7274c4d4be4603085b32fc
+[Added delete-from-plist, delete-from-plistf, remove-from-plistf.
+attila.lendvai@gmail.com**20070625191357] 
+hash: 0000000708-50b7e3d3efa9255bc5326fe7220f39cad06d9724652c7e6ec90f8508a0d9b25f
+[Added starts-with-subseq and ends-with-subseq
+attila.lendvai@gmail.com**20070625193029] 
+hash: 0000002289-fb9ebfcb2d69956375d151aae1d3d81cbcb079f9d044ab5192cda5be0360bd42
+[deftype for ARRAY-LENGTH
+Nikodemus Siivola <nikodemus@random-state.net>**20070701120827] 
+hash: 0000000733-3ac668d2fcdac8e0d9c8e543baedbc9974765469c7a2dce0a5639b590b068cd6
+[Documentation and comment tweaks
+Nikodemus Siivola <nikodemus@random-state.net>**20070701121316] 
+hash: 0000000788-e0aac1f26c26a6b2e2ef9820a214bd68a95ae512683a335161e6cfda44fd08b6
+[ENSURE-FUNCTION
+Nikodemus Siivola <nikodemus@random-state.net>**20070701121903] 
+hash: 0000000745-b9ca21e63204a34523b16f700ba6873bf5c2087701b74bd2a1541fafd4c24c07
+[ENSURE-CAR
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122110] 
+hash: 0000000300-74270c355e98f95339d841897da39e6b29e4e11d62f3bfa1d39ff3a942f4d8ac
+[Compiler-macro for OF-TYPE
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122227] 
+hash: 0000000487-8828816a696e115f2a1c2af69b9a667193bc4a0cc0f162eeed919a7e6c0c8deb
+[Factorial, binomial-coefficient, subfactorial, and count-permutations.
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122419] 
+hash: 0000004556-8396fdf949b3e742d97c44cd1c594c94144f994c86af4c0fa9aabf3f0b4ad318
+[Combinations, permutations, and derangements
+Nikodemus Siivola <nikodemus@random-state.net>**20070701122604] 
+hash: 0000008292-44cc7521e368e49ea3adeeccb91048aef16f9b3f8556f3619ae78647e2aa2c71
+[DECLAIM, not DECLARE.
+Nikodemus Siivola <nikodemus@random-state.net>**20070703103139] 
+hash: 0000000236-ff680483f253a39f483db9b249ed3428e58f55440d45e9965ce81e51c07b2c7f
+[Make define-constant understand :test 'string= and #'string=. Feel free to 'darcs undo' it if it's considered too dwim'y.
+attila.lendvai@gmail.com**20070706215246] 
+hash: 0000000309-76264eb56432885e6046886d764223656f94fa2fa3b670faf3882e7a56c9bc2d
+[Use a shared expander for the SWITCH macros
+attila.lendvai@gmail.com**20070802120334
+  - support #'eq and 'eq style :test arg
+  - support T and OTHERWISE clause instead of the :default keyword arg
+] 
+hash: 0000004193-012ab8df8cd253adc405929977a8e826b9cfe5866f8b51bb5183f31aaeb29f6f
+[sane named-lambda
+Nikodemus Siivola <nikodemus@random-state.net>**20070809171107] 
+hash: 0000000719-de0df1f5012e5596bdb2b674efbb2229676bc68891f942d71a65e8b76c9024a1
+[Added simple-style-warning function and condition.
+attila.lendvai@gmail.com**20070827005343] 
+hash: 0000000383-2a926c8c16e724c8ac8ecf514be9736bf413d96e3b1d0f048a0c25b13e859b2c
+[Renamed errors.lisp to conditions.lisp
+attila.lendvai@gmail.com**20070827161429] 
+hash: 0000000241-4900fcf95ab437b583176d7e238270280e06ece5e415dc3558020506713de3d0
+[Remove trailing whitespace in source code
+Luis Oliveira <loliveira@common-lisp.net>**20070711140350] 
+hash: 0000005392-5d8590e9d09bcd814b47d98dd5d688fdc1eb9f0d207c32b8405f78f66cba7fed
+[Fix some type declarations for CLISP-compatibility.
+Stelian Ionescu <sionescu@common-lisp.net>**20070806160206
+ Type declareations like ((or fixnum null) bar) or (unsigned-byte foo)
+ don't work on CLISP. Must use (type unsigned-byte foo) instead.
+] 
+hash: 0000000680-4372bab323c4f253e6d12d21859061df9a677c2f59950764ebe4d313467e6fb5
+[Small fix to REQUIRED-ARGUMENT's control string.
+Luis Oliveira <loliveira@common-lisp.net>**20070823040500] 
+hash: 0000000245-f67b1146775bb375864689e7b71c0bdf197753258e8a41108cd75f0fcfc4f574
+[New macro: COERCEF
+Luis Oliveira <loliveira@common-lisp.net>**20070720003607
+ 
+ Added respective documentation to the manual.
+] 
+hash: 0000000358-f1a41db7ea5616e732a92f3017dbb2e1e6942ceaf73c8dad975e40c9e888425d
+[New function: FEATUREP
+Luis Oliveira <loliveira@common-lisp.net>**20070720003420
+ 
+ Added respective documentation in manual as well.
+] 
+hash: 0000001361-ff86dff64feb55eb09bab3da6ad256390be131356aa6dd0385250a2e4c759d73
+[New macro: NCONCF
+Luis Oliveira <loliveira@common-lisp.net>**20070720003523
+ 
+ - Added respective documentation to the manual.
+ - New test: NCONCF.1
+] 
+hash: 0000000627-fc96786c1486b580ff0ebe17bd2dc5345805ba460f343411cd6f60f4b0025c7d
+[New macro: IGNORE-SOME-CONDITIONS
+Luis Oliveira <loliveira@common-lisp.net>**20070726171110] 
+hash: 0000000960-080839d17f5ca3a549e170ec122141719d647fb24abeef04bf6e6ff395efa2f8
+[Simplify IGNORE-SOME-CONDITIONS's docstring.
+Luis Oliveira <loliveira@common-lisp.net>**20070823040556] 
+hash: 0000001137-d912656f7c8d9045142c7dca75d00306c5d88176b8b6d294e99441d61d44067c
+[Merge conflicts around the conditions
+attila.lendvai@gmail.com**20071001122707] 
+hash: 0000000901-f3fafc9c0c85c2af0dc032d06898786cb4f10c8170b1a4ac8f22468b1d2c70d7
+[fix: darcs merge conflict was recorded into package.lisp
+attila.lendvai@gmail.com**20071031173831] 
+hash: 0000000251-1fdf9bfca9ffd7c88d8412e62f06c99c514aa31d40ebdfd34fd304a2aeca5e0b
+[Fix map-permutations typo.
+levente.meszaros@gmail.com**20071102163851] 
+hash: 0000000143-6aabb4a9c59842885df1e46e9b7ad7ac9c8d686af1536d20b0d528a51868ceea
+[Switch the argument order of STARTS/ENDS-WITH-SUBSEQ to that it matches STARTS/ENDS-WITH.
+attila.lendvai@gmail.com**20071126135259] 
+hash: 0000000508-f7728e54553faadefa25aabb01dd53ee5a179be324a15661fe77edc1789744c1
+[fixed and robustified tests
+Nikodemus Siivola <nikodemus@random-state.net>**20071219125512] 
+hash: 0000000760-08b6c4bf52581df9f89fb6e698621cdfb63e8e1fe5ab60124981195125471a6b
+[ENSURE-GETHASH
+Nikodemus Siivola <nikodemus@random-state.net>**20071219125800
+ 
+  * new function: like GETHASH, but saves the default value in table if
+    key is not found.* 
+ 
+] 
+hash: 0000001191-17d94675567419b43da38fa9e5a47c8c069fc6c7777a449ec0490690fab996fc
+[better SHUFFLE
+Nikodemus Siivola <nikodemus@random-state.net>**20071219125911
+ 
+  * Thanks to Sean Ross: implement the Fisher/Yates/Knuth algorithm
+    correctly.
+ 
+  * As penance, specialize for lists as well: travel along the list,
+    swapping towards the end -- marginally more efficient then swapping
+    along the whole length.
+ 
+] 
+hash: 0000001477-4bc7d234cbde797440244f69c9315472525a81b243606fe8d824b433bfd8bdac
+[fix MAKE-GENSYM-LIST when called without the second argument
+Nikodemus Siivola <nikodemus@random-state.net>**20071219130559
+ 
+  * plus a test-case
+ 
+] 
+hash: 0000000556-b626585e7c92fb945d06db2a0e368df59e419a8fa8241324c853576edd548c50
+[fix SANS -> REMOVE-FROM-PLIST in tests
+Nikodemus Siivola <nikodemus@random-state.net>**20071219130641
+ 
+  * So SANS is now REMOVE-FROM-PLIST.
+ 
+    ...I have to say that I'm still not sure I like this:
+ 
+      (remove-from-plist x y) ; which is the plist?
+ 
+    The common usage in REMOVE &co is to put the element designators
+    first. This is confusing.
+ 
+    Maybe we really want both:
+ 
+     function SANS plist &rest keys
+     function REMOVE-FROM-PLIST keys plist
+ 
+] 
+hash: 0000001125-60790796d21ff974bfaf1d53fcc2e1c5afffe2c032a2b0bc23ff20dc650e9b74
+[NTH-VALUE-OR
+Nikodemus Siivola <nikodemus@random-state.net>**20071219132132
+ 
+  * Thanks to Andreas Fuchs -- I only took the liberty of changing the name from
+    MULTIPLE-VALUE-OR to NTH-VALUE-OR.
+ 
+] 
+hash: 0000001101-10be8b521452ab0182bd80694bf56944d3ed1b7ed684f0056986d1aa791c467d
+[fix dependency: macros.lisp is using MAKE-GENSYM-LIST from symbols.lisp
+attila.lendvai@gmail.com**20071221100634] 
+hash: 0000000259-1ad4fbcb69d06ce4ad4ee7db4b684449e145e09766a10412d63b27c7ededa837
+[Extract the function name of KEY too, not just TEST in GENERATE-SWITCH-BODY.
+attila.lendvai@gmail.com**20080209201446
+ Patch by Stelian Ionescu.
+] 
+hash: 0000000222-2eba19f59bc0ec8b642edd81bde95792fc4aef67dee97592d0564c301410420c
+[fix tests: DELETEF.1 modified constant data
+Nikodemus Siivola <nikodemus@random-state.net>**20080217070803
+ 
+  * ...so that running tests multiple times caused unrelated tests to fail
+    due to coalesced constants being frobbed. Gah.
+ 
+] 
+hash: 0000000319-391864142726a11c2ac18b07172cbddd01a45d905658a5eca86878478f48d9dc
+[new macro: DOPLIST
+Nikodemus Siivola <nikodemus@random-state.net>**20080217071024
+ 
+  * Like DOLIST, but iterates over plists.
+ 
+] 
+hash: 0000001773-dd1fd2b1964b569a0d6c4ac7892bc3c4b4250d5686af8ffd4c4a5995b10272e3
+[extended ONCE-ONLY
+Nikodemus Siivola <nikodemus@random-state.net>**20080217071829
+ 
+  * Support (once-only ((nx x)) ...) style also.
+ 
+] 
+hash: 0000002079-b73521b4a40f6965bbfb68189f361219266101dad3b75e75b0214925ff8df576
+[fix WHICHEVER
+Nikodemus Siivola <nikodemus@random-state.net>**20080217071955
+ 
+  * More efficient with constant arguments.
+ 
+  * Respect lexical environment with non-constant arguments.
+ 
+] 
+hash: 0000001517-02f229460420e1e76702e1e87c57ca9bb67294fd4fc81463677dff3b78f81e50
+[fix removef and deletef not to use an inline lambda
+nikodemus@random-state.net**20080223171025
+ 
+  CLHS says the third argument to DEFINE-MODIFY-MACRO must be a symbol.
+  Reported by Chun Tian.
+ 
+] 
+hash: 0000000896-f27d81f95396ead2460de512d70043b6a0d69d83069dc7aef45d6b4513ff8e00
+[Added an almost full implementation of CDR5
+attila.lendvai@gmail.com**20080301100637] 
+hash: 0000005078-cb39c319ba341c1a8403ae808ee1c49f251af6d535c14e8cb404a768fd59f20f
+[Fix file dependencies in the .asd
+attila.lendvai@gmail.com**20080301105628] 
+hash: 0000000362-616b2ea0df8e1e0186efe5a26ddaa2ed9b0255208a120cab418f3f18e3683ff1
+[FEATUREP accept any compound test specifier, not just the keywords :AND, :OR and :NOT.
+attila.lendvai@gmail.com**20080301105651
+ Patch by Stelian Ionescu.
+] 
+hash: 0000000711-a8185ae07723ce77d65cdb660ef18a107f97b29853a4fef407e430eb5f9b3ded
+[Fix autodoc argument list of remove-from-plistf and delete-from-plistf.
+attila.lendvai@gmail.com**20080301111034
+ Patch by Michael Weber.
+] 
+hash: 0000000470-fffa0b0e26ed010ce7dce87a290eb4cbbb5fe4984c4f65180392a1508b6cc696
+[Extract the body of define-constant macro into a function to avoid some warnings.
+attila.lendvai@gmail.com**20080310134214
+ (Based on patch by Tobias C. Rittweiler)
+] 
+hash: 0000002758-7c80c85f867305c59ca08168056cbe9c41f5b69efa806d59a5948ee651a96a7d
+[Fix define-constant thinko, thanks for Tobias C. Rittweiler for pointing it out.
+attila.lendvai@gmail.com**20080310141844] 
+hash: 0000000669-ef35c97c38043f8cb15b500c934b58f48990af3db77b599a13273a9ba15c5a1f
+[fix docstring typos in numbers.lisp (patch by Tobias C. Rittweiler)
+attila.lendvai@gmail.com**20080310180012] 
+hash: 0000000623-2e583f39bb14cd156b876fb296f3395105e41d8d8e1a412e04114ff7fc27150e
+[Optimize sequence-of-length-p, make it inlinable
+attila.lendvai@gmail.com**20080310181353] 
+hash: 0000000842-3fb054423e8a11cb1f716e92ffd592d7ab7e0b9fbe6057da39484ef8abe67f2e
+[alexandria-define-constant-testcase.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080311151906
+ 
+ 	* tests.lisp (define-constant.1): Adapted to latest changes;
+ 	argument to :KEY is now evaluated.
+] 
+hash: 0000000455-05b400e13626783001de2bed3d987bc6bf4b2f2fac231708ed3bcdd7d08c4628
+[More elegant implementation for remove-from-plist by Michael Weber.
+attila.lendvai@gmail.com**20080312091456] 
+hash: 0000000822-d9f190a7feadaeb1786bfbde6d10b4772422cec774822e6ed55f133c2c38945a
+[alexandria-copy-hashtable.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080311143832
+ 
+ 	* hash-tables.lisp (copy-hash-table): Added new &key arg :KEY;
+ 	it's run on each element before it's stored in the new HT.
+ 	Additionally, make all &key args get their default even when
+ 	NIL was passed for them.
+ 
+ 	* tests.lisp (copy-hash-table.2): New test case.
+ 	
+] 
+hash: 0000002376-5964561759b955e8c0961181f19ed71777ac7d5480e28caa7b88ca77290c1d54
+[alexandria-parse-body.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080311093924
+ 
+ * macros.lisp (parse-body): Don't use ALEXANDRIA:STARTS-WITH.
+ 
+     The reason is that this way PARSE-BODY is a completely 
+     standalone definition, and can hence be used in consequent
+     macro definitions within the Alexandria project without
+     having to worrying if `sequences.lisp' has already been
+     loaded (where STARTS-WITH is defined.)
+ 
+] 
+hash: 0000000582-6c8d6d85fbe395972a446ac6a56458c07aad499ee0e7dd03e84d05857314ab3b
+[One level less quote in the implementation of the CDR5 types macro
+attila.lendvai@gmail.com**20080313160255] 
+hash: 0000001951-f5137ac5331d312db418a773bb4b96b340f3643e80d2758fc691964e19f4ad27
+[alexandria-cdr5-types.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080313203602
+ 
+ 	* types.lisp: Fix quoting problem introduced by Attila's last
+ 	patch; additionally add automatically generated docstrings to all
+ 	the types defined.
+ 
+ 	* tests.lisp (cdr5.*): New test cases.
+] 
+hash: 0000004392-e07e4077aa1ba1ab00277c7fbe166cc21d5aa86a90a202f0b63a0fad700b7085
+[Fix dependency: previous patch to CDR5 in types.lisp uses ensure-car from lists.lisp
+attila.lendvai@gmail.com**20080314115151] 
+hash: 0000000272-4d3d313dee53419dd74dd32524958a5457cbc88b96c8e17952b6b6dea6dd7c09
+[alexandria-unwind-protect-case.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080311154836
+ 
+ 	* conditions.lisp (unwind-protect-case): New macro. Similiar to
+ 	CL:UNWIND-PROTECT except that it's possible to explicitly specify
+ 	under which circumstances cleanup operations are run.
+ 
+ 	* tests.lisp (unwind-protect-case.1-5): New test cases.
+] 
+hash: 0000003194-c19ca77a1cf2ae06ff2d55132107de30071015bbd6f4ff19fbc4ae9dfa01f7bb
+[alexandria-export-unwind-protect-case.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080311195448
+ 
+ 	* package.lisp: Export UNWIND-PROTECT-CASE.
+] 
+hash: 0000000202-1f2cc58dd53e261bbd482095f882317791803257e1e6cfe881f1c98e97c8f812
+[Added simple-reader-error
+attila.lendvai@gmail.com**20080327192821] 
+hash: 0000000354-622726b0122d1023e8fafed126bb288040cf387211e8d735b751d01ecb815139
+[Fix some glitches with simple-reader-error and add comment why there's no :report for it.
+attila.lendvai@gmail.com**20080401110518] 
+hash: 0000000762-18773e3ac2236dcc21a71261f0f7f93dbe062b85fcaf36b7faa7090808352df1
+[Added length=
+attila.lendvai@gmail.com**20080410172801] 
+hash: 0000003392-9c8b4a28e1cc9bf23fe8608c711ddc29b8a36275a6fd3051acb3b9ea214b78e1
+[added simple-parse-error
+attila.lendvai@gmail.com**20080427205301] 
+hash: 0000000369-0c44ff93bceb9cbb0edba17c726c565c8ba019fc45740036070d1176de9b64e2
+[fix MAP-PERMUTATIONS
+Nikodemus Siivola <nikodemus@random-state.net>**20080529181332
+ 
+  Editing damage: extra IF surrounding the permutation guts. Also add a
+  trivial test-case.
+ 
+] 
+hash: 0000001363-950f4086eb82941d29d048117c789a436672f0c1a8f6ba46d9582ee5d1c3b51a
+[Use #+sbcl's simple-reader-error to get an error report with line number and character position
+attila.lendvai@gmail.com**20080601114657] 
+hash: 0000000962-0301afc25768f6c7308bccb0659d398afc600e7cbaf02bb17cf947f3fcc21570
+[alexandria.asd-fixup.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080601085204
+ 
+ 	* alexandria.asd: Add dependency between `types.lisp' and
+ 	`sequences.lisp', as the latter uses ARRAY-INDEX since recently.
+] 
+hash: 0000000732-5bb7f3f754730e98935750ef36137d91c66911d04cc52b744f19dea4295311ff
+[alexandria-more-concrete-proper-list-type.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080601085509
+ 
+ 	* lists.lisp (proper-list): Make type more concrete, instead of
+ 	"(SATISFIES PROPER-LIST-P)" make it "(AND LIST ...)".
+] 
+hash: 0000000327-816e9bb6d7ec3d45252046090de4d3373a21323e6b5f45ca957a7e751218f525
+[alexandria-functions-shutup-opt-notes.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080601084312
+ 
+ 	* functions.lisp: Make optimization notes about
+ 	%COERCE-CALLABLE-TO-FUN go away by inserting calls to
+ 	ENSURE-FUNCTION to the appropriate places.
+] 
+hash: 0000002892-cb76da166e5eb476eef8e2fe09305d311d4a4cb5e800e6725b20036b5cbbcdc3
+[alexandria-functions-really-shutup-notes.diff
+Tobias C. Rittweiler <tcr@freebits.de>**20080601090111] 
+hash: 0000001034-faeea3b610f05673de38c249853e5a005eb69ba4c634339ebb99a492c3511631
+[WHEN-LET* short circuits, IF-LET* deleted
+Nikodemus Siivola <nikodemus@random-state.net>**20080531223509] 
+hash: 0000003065-52024e9f5853e69c1cbf77b031c05585eb2521726721de9a414c3841b3303df7
+[better lambda-list for IF-LET, thanks to Tobias Ritterweiler
+Nikodemus Siivola <nikodemus@random-state.net>**20080602084032] 
+hash: 0000000273-f7154a8f0f99f9feacaa259a5c7de2941a2d643d3436d8d85935a0b77ade1526
+[move EXTRACT-FUNCTION-NAME to control-flow.lisp
+Nikodemus Siivola <nikodemus@random-state.net>**20080602084255] 
+hash: 0000000675-6812ea3486ef9999fda56df567f74a3df6f54cba4c4c87f915c7f01e42266e92
+[additional restart for DEFINE-CONSTANT
+Nikodemus Siivola <nikodemus@random-state.net>**20080602084826] 
+hash: 0000001940-bdb5ce316a5c8d192142efded674861d195e53ada365da5407d2350cc2c83108
+[extended WITH-GENSYMS documentation
+Nikodemus Siivola <nikodemus@random-state.net>**20080602085028] 
+hash: 0000000738-176991dbe6a97c12a84a6d0efb17bdbb727b4560cb9850230aa6f92063b1f6f4
+[type in WHEN-LET* docstring
+Nikodemus Siivola <nikodemus@random-state.net>**20080602085848] 
+hash: 0000000185-cce09ae80c1e2f6275dc7cd0fd6565b1ef6abbbcc59fe8fd8ebcff8e8018c9ce
+[added io.lisp with a few utils:
+attila.lendvai@gmail.com**20080602164936
+ 
+ with-input-from-file
+ with-output-to-file
+ read-file-into-string
+ write-string-into-file
+ copy-stream
+ copy-file
+] 
+hash: 0000003837-f25e240b531a52fa72baaa8423440ecb0a00508f95f7281b2602d8b88a4673e7
+[added symbolicate
+attila.lendvai@gmail.com**20080604211020] 
+hash: 0000000702-cd8414ff5bef521f1474dbac8b5788feb4b43e499f7b7ab46a9b046654c997f4
+[Default value for external-format
+levente.meszaros@gmail.com**20080623104901] 
+hash: 0000000358-3ab9e4ef8f5c7cf5f39da1a3c06989259874dcab8a9c36f7d336edff1e21740b
+[implement SIMPLE-PROGRAM-ERROR
+Nikodemus Siivola <nikodemus@random-state.net>**20080707085114] 
+hash: 0000000956-ed78413081c57633fa6230839befffffaf408342ed232f476c1fc234fb2bb96c
+[implement PARSE-ORDINARY-LAMBDA-LIST
+Nikodemus Siivola <nikodemus@random-state.net>**20080707085506] 
+hash: 0000005660-9676f044f1f253f15d57bd08dc696aab4b081f7514507f5dbb8416227b7811b1
+[implement MAKE-GENSYM, use similar logic in MAKE-GENSYM-LIST
+Nikodemus Siivola <nikodemus@random-state.net>**20080707085704] 
+hash: 0000001471-5c5de6addfb55f78e7e6830f30fbd151d98645cf67937778d2182bf494b3f7b4
+[explicitly export the CDR5 types from DEFPACKAGE
+Nikodemus Siivola <nikodemus@random-state.net>**20080707095026] 
+hash: 0000002443-506a01e5f435a328d7f62b2a6ca0db9aefde63830b2bd9782fd57d6b3035077d
+[UNWIND-PROTECT-CASE docstring update
+Tobias C. Rittweiler <tcr@freebits.de>**20080607122202] 
+hash: 0000000389-6c228d36198731b3fb6ce7f0e2cbd37a7cf6a0d9e4891ce009a93db2599479a9
+[Add AUTHORS file.
+Tobias C. Rittweiler <tcr@freebits.de>**20080611162523] 
+hash: 0000000250-e0ee5783fc27d50ed53c0ff87387bc98dbd02feaecd1daf92f19f309c8854361
+[PROPER-LIST-LENGTH and related changes
+Nikodemus Siivola <nikodemus@random-state.net>**20080801174647
+ 
+ - New function: PROPER-LIST-LENGTH.
+ 
+ - Share code between PROPER-LIST-LENGTH, LASTCAR, and SETF LASTCAR
+   via a macrolet.
+ 
+ - Use ENDP wrapped in SAFETY 3, to ensure proper detection of dotted
+   lists.
+ 
+ - Use PROPER-LIST-LENGTH instead of LIST-LENGTH in ROTATE, RANDOM-ELT,
+   and SHUFFLE, and test that they signal an error for improper lists.
+   (Thanks to Tobias Rittweiler)
+ 
+] 
+hash: 0000006779-3e9e5c7e43147b588ed733262f6047ee4a9b524872443a682651ab4bc46f9748
+[New macro: MULTIPLE-VALUE-PROG2
+Luis Oliveira <loliveira@common-lisp.net>**20080727023713] 
+hash: 0000000394-e87c28727aa5e5839d8acf655256c8122994aff18200a2e29d57a7426aec991c
+[Define an alexandria-tests ASDF system.
+Luis Oliveira <loliveira@common-lisp.net>**20080727024321
+ 
+ - make it usable for other Lisps besides SBCL.
+ - TEST-OP runs tests both compiled and evaluated.
+] 
+hash: 0000001571-bb0149b141102260308543c978ce6e1305e53557344dde258ff70cd6c847d5ba
+[Small fix to COPY-HASH-TABLE
+Luis Oliveira <loliveira@common-lisp.net>**20080727024507
+ 
+ - New hash-table was being created with a bogus rehash-size.
+ - Added regression test in another patch.
+] 
+hash: 0000000360-795b4de4f693ab43a8cadd8510a84578cdef06f103f0539fa95851afbf90b703
+[tests: define and use ERRORP
+Luis Oliveira <loliveira@common-lisp.net>**20080727024635
+ 
+ - TYPEP returns a generalized boolean.  On Lisps like ECL, this detail
+   was causing some tests to fail.  ERRORP takes this into account.
+] 
+hash: 0000000685-8eff93dcc962e66b87a627c603121bd18fef85b67cca10747f9bf741d260c9d8
+[tests: mark CLISP failures
+Luis Oliveira <loliveira@common-lisp.net>**20080727025427
+ 
+ - COPY-HASH-TABLE.1 causes a stack overflow due to a CLISP bug.
+ - ALIST-HASH-TABLE.1, PLIST-HASH-TABLE.1 fail because HASH-TABLE-TEST
+   returns EXT:FASTHASH-{EQ,EQL}.
+] 
+hash: 0000001502-298b5d2c88383c24b1dcf7fdfd7e711f1b61dae73b712b0bbf566e8009c78a04
+[amend COPY-SEQUENCE.1
+Luis Oliveira <loliveira@common-lisp.net>**20080727030130
+ 
+ - can't assume that (upgraded-array-element-type 'fixnum) => fixnum.
+   Fix that.
+ 
+] 
+hash: 0000000359-e9b5fb97b28b942ce3ef1b1422c1b0727f3335f04feb84fd6d9d9697feed06db
+[added reversef and nreversef
+attila.lendvai@gmail.com**20080907003107] 
+hash: 0000000520-9aa46958a6bc42c88cbfef85926b50c7051013f016c8ab862f2b389dac73938a
+[use &key's in copy-stream just like the other io functions. add :force-output, :buffer and :buffer-size arguments.
+attila.lendvai@gmail.com**20081027140214
+ Ignore-this: c583ace97461eafaadb90fa79a05c800
+] 
+hash: 0000001729-31735007aa1b4208db3ab098a9a6e72ef82008aa33bb456eedd0cef926cc15b8
+[fix force-output/finish-output thinko in io.lisp
+attila.lendvai@gmail.com**20081123111647
+ Ignore-this: abae326a00ad84dd73ce449dbc68cbce
+] 
+hash: 0000000673-6cba6a770a488f7d9ecb05f322f7cd28c5c61860047b6abe127e15cb9eec3f68
+[use ensure-function at one more place
+attila.lendvai@gmail.com**20081123114716
+ Ignore-this: e53d3c84d61bb34e08e919ee94afd725
+] 
+hash: 0000000390-ccccd3ee6378b9d107410c9c790a41539196e815f65718b7069d9211a407f733
+[nil external-format means the default for functions in io.lisp. also clean up doscstrings.
+attila.lendvai@gmail.com**20081123120049
+ Ignore-this: 62fc30322bc4cecd682e84043f1666f9
+] 
+hash: 0000004319-5dbae8dd203bf05bdbf8aebde338df415ed3745a0dfe87e6f794208984d303d1
+[added ensure-functionf
+attila.lendvai@gmail.com**20081116174909
+ Ignore-this: c1dfe2774c69343f5f1a12140870270b
+] 
+hash: 0000000365-8001752f996850b10e9b5213027eab808b29cec31145359faa9791966c6f02fd
+[added (unexported) with-open-file* to io.lisp, use there
+attila.lendvai@gmail.com**20081205131249
+ Ignore-this: 3ed6a1876bb19d6f2345cded7a625914
+] 
+hash: 0000003389-5a19b758b0c66e75561b3c0333bc581a1a8b4cd82f1c2d208bf586b01cee0079
+[added read-file-into-byte-vector and write-byte-vector-into-file (until io.lisp's fate is decided)
+attila.lendvai@gmail.com**20090324095758
+ Ignore-this: fd3ae3c16e33d167818560ef950acf86
+] 
+hash: 0000001162-08a2f313958cbb07808b41db7774069225ff2084d5a20102f22231eba571a706
+[fix median
+Johan Ur Riise**20090916132720
+ Ignore-this: 5113d1c2a501be8cdbaee5e5e1c34ea0
+] 
+hash: 0000000299-81796cbe2c10c8e5060da617fab0d013bfbaa5d435ec43dac8758edb1e221ad3
+[fix: in parse-ordinary-lambda-list normalize &aux specifications as promised in the docs
+attila.lendvai@gmail.com**20090928201318
+ Ignore-this: f2c1d6386263dc0635784f3f82a58b67
+] 
+hash: 0000000394-1af18fa7e6723e3fd3248d88a0adf5a89351d20c89ee451e4ca8d5ae40ed1fd6
+[fix: drop a leftover break from parse-ordinary-lambda-list (hint: setup bright red face for BREAK and PRINT... :)
+attila.lendvai@gmail.com**20090928210526
+ Ignore-this: 738e4053b24d12b1f75fc9f8f92afc31
+] 
+hash: 0000000354-5aebd8a9ce4c1d802b509b202bccbb15ffccd28dfbcdd9c3c85e5ead9a9683a8
+[reorder definitions to get rid of a warning about not inlining a forward reference
+Faré**20091009191235
+ Ignore-this: da40f532e08df72787eccb2b5c97692e
+] 
+hash: 0000001448-7fa864f53ac1c75d838f75ddbad265fe22e98d744aecc42ccc8bc9712d0596d8
+[parse-ordinary-lambda-list: make normalization customizable through keywords
+attila.lendvai@gmail.com**20090928210647
+ Ignore-this: 503732e2e48c6f0cbbf9e7c5757753b6
+] 
+hash: 0000002201-477e01cb68d0c20a610d78f3601470d6e6c88e5f274b958ae3cbd9847acc1eb9
+[added :allow-specializers to parse-ordinary-lambda-list
+attila.lendvai@gmail.com**20091030172411
+ Ignore-this: 8434c82873fb3eb108ba3eccebf1305a
+] 
+hash: 0000000830-3a001396d39b714e2b5e0253f7277c3e6fd4eb3c2dcf270803cc86babf33bc8c
+[copy-pastable goodie in the docstring of parse-ordinary-lambda-list
+attila.lendvai@gmail.com**20091030172903
+ Ignore-this: ee21f3a62c247b1fe8b76eda36bb2685
+] 
+hash: 0000000370-50577611908fedf75672b365f1ab12e1e3dc98c822191161a4a6918d0529a714
+[Fixed conjoin single predicate bug; more tests
+kilian.sprotte@gmail.com**20091101151643
+ Ignore-this: 93481adad9a01e88aadbb5f733bc3aaf
+ 
+ Added new test cases for DISJOIN, CONJOIN, COMPOSE and MULTIPLE-VALUE-COMPOSE.
+ All of them testing for the edge case of a single predicate / function.
+] 
+hash: 0000002069-5ddf6986d0edb482e9c0fbdfbb0bdd87db7dd46e53ee6ae21b9e58f45bcbe054

@@ -58,7 +58,20 @@
 
 (in-package "SPLIT-SEQUENCE")
 
-(defun split-sequence (delimiter seq &key (count nil) (remove-empty-subseqs nil) (from-end nil) (start 0) (end nil) (test nil test-supplied) (test-not nil test-not-supplied) (key nil key-supplied))
+(deftype array-index (&optional (length array-dimension-limit))
+  `(integer 0 (,length)))
+
+(declaim (ftype (function * (values list integer))
+                split-sequence)
+         (ftype (function * (values list integer))
+                split-sequence-if)
+         (ftype (function * (values list integer))
+                split-sequence-if-not))
+
+;; declaim it INLINE and at the end of the file as NOTINLINE, so it can be inlined with local DECLARE's.
+(declaim (inline split-sequence split-sequence-if split-sequence-if-not))
+
+(defun split-sequence (delimiter seq &key (count nil) (remove-empty-subseqs nil) (from-end nil) (start 0) (end (length seq)) test test-not key)
   "Return a list of subsequences in seq delimited by delimiter.
 
 If :remove-empty-subseqs is NIL, empty subsequences will be included
@@ -69,48 +82,47 @@ this function; :from-end values of NIL and T are equivalent unless
 :count is supplied. The second return value is an index suitable as an
 argument to CL:SUBSEQ into the sequence indicating where processing
 stopped."
-  (let ((len (length seq))
-        (other-keys (nconc (when test-supplied 
-                             (list :test test))
-                           (when test-not-supplied 
-                             (list :test-not test-not))
-                           (when key-supplied 
-                             (list :key key)))))
-    (unless end (setq end len))
-    (if from-end
-        (loop for right = end then left
-              for left = (max (or (apply #'position delimiter seq 
-					 :end right
-					 :from-end t
-					 other-keys)
-				  -1)
-			      (1- start))
-              unless (and (= right (1+ left))
-                          remove-empty-subseqs) ; empty subseq we don't want
-              if (and count (>= nr-elts count))
-              ;; We can't take any more. Return now.
-              return (values (nreverse subseqs) right)
-              else 
-              collect (subseq seq (1+ left) right) into subseqs
-              and sum 1 into nr-elts
-              until (< left start)
-              finally (return (values (nreverse subseqs) (1+ left))))
-      (loop for left = start then (+ right 1)
-            for right = (min (or (apply #'position delimiter seq 
-					:start left
-					other-keys)
-				 len)
-			     end)
-            unless (and (= right left) 
-                        remove-empty-subseqs) ; empty subseq we don't want
-            if (and count (>= nr-elts count))
-            ;; We can't take any more. Return now.
-            return (values subseqs left)
-            else
-            collect (subseq seq left right) into subseqs
-            and sum 1 into nr-elts
-            until (>= right end)
-            finally (return (values subseqs right))))))
+  (declare (optimize (speed 3))
+           (type array-index start end)
+           (type (or null array-index) count)
+           (type (or list vector) seq))
+  (if from-end
+      (loop
+         for right of-type array-index = end then left
+         for left of-type array-index = (max (or (position delimiter seq 
+                                                           :end right :from-end t
+                                                           :test test :test-not test-not
+                                                           :key key)
+                                                 -1)
+                                             (1- start))
+         unless (and (= right (1+ left))
+                     remove-empty-subseqs) ; empty subseq we don't want
+         if (and count (>= nr-elts count))
+           ;; We can't take any more. Return now.
+           return (values (nreverse subseqs) right)
+         else 
+           collect (subseq seq (1+ left) right) into subseqs
+           and sum 1 into nr-elts of-type array-index
+         until (< left start)
+         finally (return (values (nreverse subseqs) (1+ left))))
+      (loop
+         for left of-type array-index = start then (+ right 1)
+         for right of-type array-index = (min (or (position delimiter seq 
+                                                            :start left
+                                                            :test test :test-not test-not
+                                                            :key key)
+                                                  end)
+                                              end)
+         unless (and (= right left) 
+                     remove-empty-subseqs) ; empty subseq we don't want
+         if (and count (>= nr-elts count))
+           ;; We can't take any more. Return now.
+           return (values subseqs left)
+         else
+           collect (subseq seq left right) into subseqs
+           and sum 1 into nr-elts of-type array-index
+         until (>= right end)
+         finally (return (values subseqs right)))))
 
 (defun split-sequence-if (predicate seq &key (count nil) (remove-empty-subseqs nil) (from-end nil) (start 0) (end nil) (key nil key-supplied))
   "Return a list of subsequences in seq delimited by items satisfying
@@ -165,7 +177,7 @@ stopped."
 
 (defun split-sequence-if-not (predicate seq &key (count nil) (remove-empty-subseqs nil) (from-end nil) (start 0) (end nil) (key nil key-supplied))
   "Return a list of subsequences in seq delimited by items satisfying
-(CL:COMPLEMENT predicate).
+\(CL:COMPLEMENT predicate).
 
 If :remove-empty-subseqs is NIL, empty subsequences will be included
 in the result; otherwise they will be discarded.  All other keywords
@@ -213,6 +225,8 @@ stopped."
             and sum 1 into nr-elts
             until (>= right end)
             finally (return (values subseqs right))))))
+
+(declaim (notinline split-sequence split-sequence-if split-sequence-if-not))
 
 ;;; clean deprecation
 

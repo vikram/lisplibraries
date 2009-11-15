@@ -1,0 +1,117 @@
+pristine:0000001138-e0e90989b4292f70e72fd5a4518af2cbc236ca94d1fbf464a356d5eb10e62d5d
+Starting with inventory:
+0000007729-3d7300993829f4aee400fbc17a2d9f0941207be3389776447bd61c80b2c18535
+[TAG BELLEROPHON_DEPEND_2
+pjb@informatimago.COM**20070105102624] 
+hash: 0000004030-8fbc8b9aa9f3c5de15028070a628bcbfd5ec4c50d9d19f4e5d7f355443c1ee01
+[Fix
+pjb@informatimago.COM**20070122180819] 
+hash: 0000012890-9715d35be1b92c6f9a5e7bd42925b0ded554e1b0262324ce80f12e03c7f58cc5
+[Added defgenerics to cache.lisp
+pjb@informatimago.COM**20070130162601] 
+hash: 0000006210-c79a54e40acb81e4108a6ad076227028d44f72ea48db025f27597a2cd49238f0
+[Added a LLGPL copy of common-lisp/ ; added license files to the sub-directories.
+pjb@informatimago.COM**20070203181814] 
+hash: 0002011229-2bd6ef9c66e741f13eba9e3dd29357576b007f032c19dabc33d737e65bc05b7d
+[Moved llgpl to another repository.
+pjb@informatimago.COM**20070203182559] 
+hash: 0001862871-a2f925d7e2db0aa5a89c347ad46e4d000f0d654b2aa701aaabd0249421255e48
+[Merged changes from voyager & thalassa.
+Pascal Bourguignon <pjb@informatimago.com>**20070519063518] 
+hash: 0000547225-f4c8c6cb6dc094bda5e41a544eb694af5449018190cabf2d9f6816bae2dc4dd3
+[Merged.
+Pascal Bourguignon <pjb@informatimago.com>**20070519084831] 
+hash: 0000008817-dedb072fc2ed03c075898e2a0f7bd6388d4007d9f4c5570010dca3f67404049e
+[Disabled allegro from Makefile.
+Pascal Bourguignon <pjb@informatimago.com>**20070519144455] 
+hash: 0000026574-ed6c547c5391878fd0b7a1d03d45f3e2574f1183f981c1ecd4a08229e7fd1ebf
+[Fixes after the big merge to make it compile cleanly again.
+Pascal Bourguignon <pjb@informatimago.com>**20070530195049] 
+hash: 0000866503-08cf7f822f445a87b2ce236339b01e9bf67f3f85a359a913e4156d33270ec7e3
+[New implementation of COM.INFORMATIMAGO.COMMON-LISP.HTML; updated the dependent sources.
+Pascal Bourguignon <pjb@informatimago.com>**20070531013657] 
+hash: 0000221758-6a8bfb906dc00913539a89f3cd9ee95bbc584550b1e8ead798ec7d21a99a6a49
+[html: html-string -> html-string*
+Pascal Bourguignon <pjb@informatimago.com>**20070604203530] 
+hash: 0000032594-537ee258502d4528c3437e289f0a4455da2ec743c9bd245078c77652f2472d38
+[Reimplemented STRING-REPLACE.
+Pascal Bourguignon <pjb@informatimago.com>**20070605222618] 
+hash: 0000004325-af166ba52085fbc13074e742de99334a3bf974fd58a450e3f180bc2910b9d7ae
+[Added PACKAGE:REMOVE-NICKNAME and amended PACKAGE:ADD-NICKNAME.
+Pascal Bourguignon <pjb@informatimago.com>**20070703195639] 
+hash: 0000081475-290e4ed1fe36b4419c67b16edce034a0fdce8a3017a552c6b9af9950cd2dd469
+[Corrected PACKAGE:REMOVE-NICKNAME.
+Pascal Bourguignon <pjb@informatimago.com>**20070703210021] 
+hash: 0000001206-5738040f4b6388aa14fa168558800aebf5c307e6dad17b1add06792cec540e84
+[Abstracted error reporting in the regexp-posix parser.
+Pascal Bourguignon <pjb@informatimago.com>**20070704194416] 
+hash: 0000006354-6b5f9fac0f9583770381d24f92345643ae66264033f17d3ace0e307236c38c88
+[Corrected COM.INFORMATIMAGO.COMMON-LISP.CHARACTER-SETS:FIND-CHARACTER-SET
+Pascal Bourguignon <pjb@informatimago.com>**20070704225615] 
+hash: 0000001280-80b5c274646d63bf93f807875988d2207c732877b8da827c995af524e25c1e9d
+[Added common-lisp/ascii.lisp
+Pascal Bourguignon <pjb@informatimago.com>**20070705175231] 
+hash: 0000016692-bd3ac9a902a4a9d58ce3d293a1c58e686249e11e66e013f78e94081f8ac9b249
+[Added com.informatimago.common-lisp.stream:contents-from-string
+Pascal Bourguignon <pjb@informatimago.com>**20070707054332] 
+hash: 0000012845-b09f2789c733b4370215152530683ee3b4e61e89102dfed54f31e737cfee5a36
+[Long time no see.
+Pascal Bourguignon <pjb@informatimago.com>**20080113133354
+ 
+ Improved COM.INFORMATIMAGO.COMMON-LISP.ACTIVITY for the mailagent.
+ 
+] 
+hash: 0000081846-939ad1525c79ae0f9652a8b371a3ce1ceb6af7a1e55d651a0f728a5dde994b25
+[Commiting local changes made while disconnected from the Internet.
+Pascal Bourguignon <pjb@informatimago.com>**20080622092638] 
+hash: 0000021879-ee93bd49cfff952978398fbdc63f82a6d5f51affde7d1699804cd88d9b6822be
+[Added circular list functions in list.lisp; Corrected a bug in make-argument-list in source-form.lisp
+Pascal Bourguignon <pjb@informatimago.com>**20080709225633] 
+hash: 0000005514-0c63f8cf18f9b9af1caa9da66f6a759e269fb4aabf6c46968ae81903db68e30e
+[Moving home files to darcs from CVS.
+Pascal Bourguignon <pjb@informatimago.com>**20070317231341] 
+hash: 0000446038-9ca340a2779d21d7131fe26d798c0f6a4084861c7e3fb549c60e4dcc27d10f39
+[Removed root.emacs
+Pascal Bourguignon <pjb@informatimago.com>**20070317231543] 
+hash: 0000053583-c2bc58bf6a2f3b599ed9c6adf92dcf5af1f07205d9be907a6a5353531face3cf
+[fix.
+Pascal Bourguignon <pjb@informatimago.com>**20070417173545] 
+hash: 0000003582-ec1e7fb6a17e7ed12282f107e2741fce86b1abd2a4d253fcd9df68584ad71d6a
+[Merged changes to .emacs
+Pascal Bourguignon <pjb@informatimago.com>**20070417174744] 
+hash: 0000031697-f3f2255b8481494544919392c185b82bb017c3230d57fc204ea78ba7879a54bb
+[Merged load-lisp-file and added lisp.indentations
+Pascal Bourguignon <pjb@informatimago.com>**20070417185549] 
+hash: 0000006195-47850f21e9cf4ae7941af195c47d86a788e14702cbc480e6da9da3df721febf9
+[Commented out sbcl patch not needed with >=sbcl-1.0.18
+Pascal Bourguignon <pjb@informatimago.com>**20080809180355] 
+hash: 0000134545-8807eac5fa0ece9371a1d51990b7d47a6ea1cd9d54ce2634ea37c1a089c777d2
+[Merged conflicts.
+Pascal Bourguignon <pjb@informatimago.com>**20080816204921] 
+hash: 0000002307-1f4376e264251725bcbc613bf7e8efd223ae5cafef35a02d10d58a082b178e15
+[Corrected SOURCE-FORM:MAKE-ARGUMENT-LIST
+Pascal Bourguignon <pjb@informatimago.com>**20080831205051] 
+hash: 0000457012-d6673c7e6a4beb69d7ba2abeae8f53555404103b83792a2be3e222dfee8f366a
+[Corrected HTML vs. HTML401; added iana-character-set old file (will need to clean them up later); added rfc2047.lisp vaporware (not implemented yet).
+Pascal Bourguignon <pjb@informatimago.com>**20090711145555] 
+hash: 0000178747-1a3b0bbbc0360007f8071f34fdbf1a67ba6c935d47c2c47f8a3dc4bd3c0ceba8
+[FILE: Renamed TEXT-FILE-TO-STRING-LIST to STRING-LIST-TEXT-FILE-CONTENT, Added missing setf functions. READER: Corrected bugs reading "||", "( ;comment )" and "#C(123 456)".
+Pascal Bourguignon <pjb@informatimago.com>**20090826010258
+ Ignore-this: 8ebfa0b134ae669ce3abe66a163d7d0c
+] 
+hash: 0000026189-ae495d20c9e4f3abff48bbf8d2a084e9bfc83a51466074b1c54da4ff4d00c34b
+[Corrected export list of package com.informatimago.common-lisp.file.
+Pascal Bourguignon <pjb@informatimago.com>**20090904205712
+ Ignore-this: 62ef41e3311fd70c60cd9a0eaf14ddc2
+] 
+hash: 0000000298-fed99622913d640a296702778237c937caa71942d1b793a077f18a9c98913e4f
+[Added llrbt.lisp, an implementation of Left-Leaning Red-Black Trees
+Pascal Bourguignon <pjb@informatimago.com>**20090912231737
+ Ignore-this: d14b45a6cedb816d3be854218a0d5684
+] 
+hash: 0000032141-7ee7a6fce9c1d34e8365d73475447fd87b49c25676015aaac98a907f6e5608a4
+[Renamed llrbt to llrbtree and have the same name for the package (after the last dot) and the file (before the first dot).
+Pascal Bourguignon <pjb@informatimago.com>**20090914184125
+ Ignore-this: 79a8619495ac3bdad9f652fa9c3be1f3
+] 
+hash: 0000070116-a871e63ca558cae3018db0b10d62475d1c289f6eee4a7487ca20d17a1b84417f
