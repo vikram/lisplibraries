@@ -400,7 +400,7 @@ Also return the start position, end position, and buffer of the presentation."
     (slime-M-.-presentation presentation start end (current-buffer))))
 
 (defun slime-edit-presentation (name &optional where)
-  (if (or current-prefix-arg (not (equal (slime-symbol-name-at-point) name)))
+  (if (or current-prefix-arg (not (equal (slime-symbol-at-point) name)))
       nil ; NAME came from user explicitly, so decline.
       (multiple-value-bind (presentation start end whole-p)
 	  (slime-presentation-around-or-before-point (point))
@@ -415,12 +415,11 @@ Also return the start position, end position, and buffer of the presentation."
     (unless (eql major-mode 'slime-repl-mode)
       (slime-switch-to-output-buffer))
     (flet ((do-insertion ()
-			 (when (not (string-match "\\s-"
-						  (buffer-substring (1- (point)) (point))))
-			   (insert " "))
-			 (insert presentation-text)
-			 (when (and (not (eolp)) (not (looking-at "\\s-")))
-			   (insert " "))))
+	     (unless (looking-back "\\s-")
+	       (insert " "))
+	     (insert presentation-text)
+	     (unless (or (eolp) (looking-at "\\s-"))
+	       (insert " "))))
       (if (>= (point) slime-repl-prompt-start-mark)
 	  (do-insertion)
 	(save-excursion
@@ -680,7 +679,7 @@ output; otherwise the new input is appended."
 
 ;;; Presentation-related key bindings, non-context menu
 
-(defvar slime-presentation-command-map (make-sparse-keymap)
+(defvar slime-presentation-command-map nil
   "Keymap for presentation-related commands. Bound to a prefix key.")
 
 (defvar slime-presentation-bindings
@@ -693,9 +692,8 @@ output; otherwise the new input is appended."
     (?\  slime-mark-presentation)))
 
 (defun slime-presentation-init-keymaps ()
-  (setq slime-presentation-command-map (make-sparse-keymap))
-  (slime-define-both-key-bindings slime-presentation-command-map 
-				  slime-presentation-bindings)
+  (slime-init-keymap 'slime-presentation-command-map nil t 
+		     slime-presentation-bindings)
   (define-key slime-presentation-command-map "\M-o" 'slime-clear-presentations)
   ;; C-c C-v is the prefix for the presentation-command map.
   (define-key slime-prefix-map "\C-v" slime-presentation-command-map))
@@ -840,7 +838,7 @@ even on Common Lisp implementations without weak hash tables."
 (defun slime-presentation-sldb-insert-frame-variable-value (value frame index)
   (slime-insert-presentation
    (in-sldb-face local-value value)
-   `(:frame-var ,slime-current-thread ,(car frame) ,i) t))
+   `(:frame-var ,slime-current-thread ,(car frame) ,index) t))
 
 ;;; Initialization
 

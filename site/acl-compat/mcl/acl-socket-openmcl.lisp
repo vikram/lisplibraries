@@ -46,6 +46,7 @@
     (format stream "listening on port ~d" (port socket))))
 
 
+(defgeneric accept-connection (server-socket &key wait))
 (defmethod accept-connection ((server-socket server-socket)
 			      &key (wait t))
   "Return a bidirectional stream connected to socket."

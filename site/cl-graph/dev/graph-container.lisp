@@ -98,6 +98,11 @@ DISCUSSION
   (when target-vertex
     (setf (slot-value object 'vertex-2) target-vertex)))
 
+(defclass* directed-weighted-edge (weighted-edge graph-container-directed-edge)
+  ()
+  (:export-p t)
+  (:documentation "A weighted edge is both a weighted-edge-mixin and a graph-container-edge."))
+
 ;;; vertex-1 is defined to be the source vertex of an undirected edge
 
 (defmethod source-vertex ((edge graph-container-edge))

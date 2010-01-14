@@ -6,13 +6,13 @@
 ;;
 
 (defvar slime-package-file-candidates
-  (mapcar #'file-name-nondirectory 
+  (mapcar #'file-name-nondirectory
 	  '("package.lisp" "packages.lisp" "pkgdcl.lisp" "defpackage.lisp")))
 
-(defvar slime-export-symbol-representation-function 
+(defvar slime-export-symbol-representation-function
   #'(lambda (n) (format "#:%s" n)))
 
-(defvar slime-defpackage-regexp 
+(defvar slime-defpackage-regexp
   "^(\\(cl:\\|common-lisp:\\)?defpackage\\>[ \t']*")
 
 
@@ -26,7 +26,9 @@
       (block nil
 	(while (re-search-forward slime-defpackage-regexp nil t)
 	  (when (slime-package-equal package (slime-sexp-at-point))
-	    (return (make-slime-file-location ,(buffer-file-name) (point)))))))))
+            (backward-sexp)
+	    (return (make-slime-file-location (buffer-file-name)
+                                              (1- (point))))))))))
 
 (defun slime-package-equal (designator1 designator2)
   ;; First try to be lucky and compare the strings themselves (for the
@@ -48,7 +50,7 @@
 
 (defun slime-find-possible-package-file (buffer-file-name)
   (flet ((file-name-subdirectory (dirname)
-	   (expand-file-name 
+	   (expand-file-name
 	    (concat (file-name-as-directory (slime-to-lisp-filename dirname))
 		    (file-name-as-directory ".."))))
 	 (try (dirname)
@@ -85,7 +87,7 @@ places the cursor at the start of the DEFPACKAGE form."
 	(while (ignore-errors (slime-forward-sexp) t)
 	  (slime-forward-blanks)
 	  (when (slime-at-expression-p '(:export *))
-	    (setq point (point)) 
+	    (setq point (point))
 	    (return)))))
     (if point
 	(goto-char point)
@@ -99,7 +101,7 @@ places the cursor at the start of the DEFPACKAGE form."
       (while (ignore-errors (slime-goto-next-export-clause) t)
 	(let ((clause-end (save-excursion (forward-sexp) (point))))
 	  (when (and (search-forward symbol-name clause-end t)
-		     (equal (slime-symbol-name-at-point) symbol-name))
+		     (equal (slime-symbol-at-point) symbol-name))
 	    (return (point))))))))
 
 
@@ -138,11 +140,11 @@ already exported/unexported."
 	     (when point (goto-char point))
 	     point)))
     (let ((defpackage-point (point))
-	  (symbol-name (funcall slime-export-symbol-representation-function 
+	  (symbol-name (funcall slime-export-symbol-representation-function
 				symbol-name)))
       (cond ((goto-last-export-clause)
 	     (down-list) (slime-end-of-list)
-	     (unless (looking-back "^\\s-*") 
+	     (unless (looking-back "^\\s-*")
 	       (newline-and-indent))
 	     (insert symbol-name))
 	    (t
@@ -169,8 +171,8 @@ belonging to the current buffer-package. With prefix-arg, remove
 the symbol again. Additionally performs an EXPORT/UNEXPORT of the
 symbol in the Lisp image if possible."
   (interactive)
-  (let ((package (slime-current-package)) 
-	(symbol (slime-symbol-name-at-point)))
+  (let ((package (slime-current-package))
+	(symbol (slime-symbol-at-point)))
     (unless symbol (error "No symbol at point."))
     (cond (current-prefix-arg
 	   (if (slime-frob-defpackage-form package :unexport symbol)

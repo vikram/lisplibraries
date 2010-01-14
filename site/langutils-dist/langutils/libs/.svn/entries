@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="2022"
+   name=""
+   committed-date="2005-02-13T20:57:58.227473Z"
+   url="svn+ssh://think.media.mit.edu/home/proj/think/trunk/lisp/cl-prevalence"
+   last-author="eslick"
+   kind="dir"
+   uuid="5d778ad0-a7de-0310-9bfb-a2ef72141d87"
+   revision="2338"/>
+<entry
+   name="test"
+   kind="dir"/>
+<entry
+   name="doc"
+   kind="dir"/>
+<entry
+   committed-rev="1122"
+   name="cl-prevalence.asd"
+   text-time="2005-02-25T21:38:10.000000Z"
+   committed-date="2004-10-25T04:55:14.825182Z"
+   checksum="96127907023d33dc81764a3e435ebbc0"
+   last-author="eslick"
+   kind="file"
+   prop-time="2005-02-25T21:38:09.000000Z"/>
+<entry
+   name="src"
+   kind="dir"/>
+<entry
+   committed-rev="1122"
+   name="Makefile"
+   text-time="2005-02-25T21:38:10.000000Z"
+   committed-date="2004-10-25T04:55:14.825182Z"
+   checksum="aca4bf5f979e4613cd9d20ff1fb86ad3"
+   last-author="eslick"
+   kind="file"
+   prop-time="2005-02-25T21:38:10.000000Z"/>
+</wc-entries>
