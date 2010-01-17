@@ -142,6 +142,6 @@
   "Return the path of the directory of the file."
   ;; This function has only been tested in alegro and mcl
   #+allegro (excl:path-pathname file)
-  #+mcl (pathname-directory file)
+  #+openmcl (pathname-directory file)
   #-(or openmcl allegro) (excl:path-pathname file) ;; Should fail, but is easy to extend :)
   )

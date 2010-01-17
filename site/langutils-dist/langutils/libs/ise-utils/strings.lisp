@@ -30,8 +30,8 @@
 ;; Rule and data file utilities
 
 (defun-exported strncmp ( string1 string2 count start )
-  (declare #-mcl (type fixnum count start)
-	   #-mcl (type simple-string string1 string2)
+  (declare #-openmcl (type fixnum count start)
+	   #-openmcl (type simple-string string1 string2)
 	   (optimize speed (safety 0)))
   (ignore-errors 
     (loop for i fixnum from start to (+ start count -1)
@@ -41,10 +41,12 @@
 	(return nil)))))
 
 (defun-exported strncmp-end2 ( string1 string2 count start )
-  (declare #-mcl (type fixnum count start)
-	   #-mcl (type simple-string string1 string2)
+  (declare #-openmcl (type fixnum count start)
+	   #-openmcl (type simple-string string1 string2)
 	   (inline schar)
 	   (optimize speed (safety 0)))
+  (when (< start 0)
+    (setf start 0))
 ;;  (ignore-errors 
     (loop for i fixnum from 0 to (1- count) 
           finally (return t) do

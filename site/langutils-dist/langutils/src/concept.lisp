@@ -92,6 +92,9 @@
     into strings
     finally (return strings)))
 
+(defun list-to-delimited-string (lst &optional (str " "))
+  (reduce #'(lambda (string el) (format nil "~A~A~A" string str el)) lst))
+
 (defmethod-exported concept->string ((cname concept))
   (list-to-delimited-string (concept->words cname)))
 

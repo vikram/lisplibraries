@@ -143,15 +143,54 @@
 	(osicat-posix:close fd))))
   mtagmap)
 
+(defun made-up-mremap (mtagmap len new-len)
+  (let ((ptr (osicat-posix:mmap
+	      (cffi:null-pointer) 
+	      new-len
+	      *mmap-protection*
+	      *mmap-sharing*
+	      (mtagmap-fd mtagmap)
+	      0)))
+    (osicat-posix:memcpy ptr (mtagmap-ptr mtagmap)
+			 (if (> new-len len)
+			     len
+			     new-len))
+    (osicat-posix:munmap (mtagmap-ptr mtagmap) len)
+    ptr))
+    
+    
+#|
+mremap (void *old_address, size_t old_size, size_t new_size,
+	int flags ATTRIBUTE_UNUSED, ...)
+{
+  void *ret;
+
+  ret = mmap (0, new_size, PROT_READ | PROT_WRITE,
+	      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (ret == MAP_FAILED)
+    return ret;
+  memcpy (ret, old_address,
+	  old_size < new_size ? old_size : new_size);
+  (void) munmap (old_address, old_size);
+  return ret;
+}
+|#
+
 (defun mtagmap-resize (mtagmap new-len)
+  (print 'resizing)
+  (print mtagmap)
   (assert (not (mtagmap-closed-p mtagmap)))
   (check-mmap-truncate-okay)
   (symbol-macrolet ((len (mtagmap-len mtagmap)))
     (flet ((trunc ()
 	     (osicat-posix:ftruncate (mtagmap-fd mtagmap) new-len))
 	   (remap ()
+	     #+linux
 	     (setf (mtagmap-ptr mtagmap)
 		   (osicat-posix:mremap (mtagmap-ptr mtagmap) len new-len osicat-posix:MREMAP-MAYMOVE)
+		   len new-len)
+	     #+darwin
+	     (setf (mtagmap-ptr mtagmap) (made-up-mremap mtagmap len new-len)
 		   len new-len)))
       (let (done)
 	(unwind-protect

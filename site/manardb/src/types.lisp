@@ -13,7 +13,8 @@
   ((length :type mindex :initarg :length :reader marray-length)
    (base :type mptr :initarg :base :reader marray-base))
   (:documentation "The base representation of a memory-mapped vector.")
-  (walker walk-array))
+  (walker walk-array)
+  (:metaclass manardb:mm-metaclass))
 
 (defmmclass mm-array (marray) ;; stored lisp arrays
   ()
@@ -140,7 +141,8 @@ be affected.
 		      collect `((array ,type) (,(specialized-class-array-boxer-name class) object)))
 	      (t (general-box-array object))))
 	   (array
-	    (general-box-array object)))))))
+	    (general-box-array object))))
+       )))
 
 
 (defmacro define-box-array (array-boxer-name box-class lisp-type &key convertor (array-class 'mm-array))
