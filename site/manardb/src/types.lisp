@@ -13,8 +13,7 @@
   ((length :type mindex :initarg :length :reader marray-length)
    (base :type mptr :initarg :base :reader marray-base))
   (:documentation "The base representation of a memory-mapped vector.")
-  (walker walk-array)
-  (:metaclass manardb:mm-metaclass))
+  (walker walk-array))
 
 (defmmclass mm-array (marray) ;; stored lisp arrays
   ()

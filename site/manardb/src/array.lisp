@@ -13,6 +13,7 @@
 	  new))
   new)
 
+
 (defclause-sequence in-marray index-of-marray
   :access-fn 'marray-ref
   :size-fn 'marray-length
@@ -21,12 +22,12 @@
   :element-doc-string "Elements of an marray"
   :index-doc-string "Indices of marray")
 
+
 (defun marray-to-list (marray)
   "Converts a memory mapped array to a Lisp list; nil is converted to nil"
   (when marray
     (iter (for c in-marray marray)
 	  (collect c))))
-
 (defun list-to-marray (list)
   "Converts a Lisp list to a memory-mapped array object; nil is converted to nil"
   (when list

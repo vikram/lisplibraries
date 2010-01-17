@@ -158,24 +158,6 @@
     (osicat-posix:munmap (mtagmap-ptr mtagmap) len)
     ptr))
     
-    
-#|
-mremap (void *old_address, size_t old_size, size_t new_size,
-	int flags ATTRIBUTE_UNUSED, ...)
-{
-  void *ret;
-
-  ret = mmap (0, new_size, PROT_READ | PROT_WRITE,
-	      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  if (ret == MAP_FAILED)
-    return ret;
-  memcpy (ret, old_address,
-	  old_size < new_size ? old_size : new_size);
-  (void) munmap (old_address, old_size);
-  return ret;
-}
-|#
-
 (defun mtagmap-resize (mtagmap new-len)
   (print 'resizing)
   (print mtagmap)
