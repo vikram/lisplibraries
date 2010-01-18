@@ -140,8 +140,7 @@ be affected.
 		      collect `((array ,type) (,(specialized-class-array-boxer-name class) object)))
 	      (t (general-box-array object))))
 	   (array
-	    (general-box-array object))))
-       )))
+	    (general-box-array object)))))))
 
 
 (defmacro define-box-array (array-boxer-name box-class lisp-type &key convertor (array-class 'mm-array))
