@@ -20,7 +20,7 @@ names a directory. It can be in either file or directory form."
     ;; OpenMCl by default doesn't return subdirectories at all. But
     ;; when prodded to do so with the special argument :directories,
     ;; it returns them in directory form.
-    (directory wildcard :directories t)
+    (d wildcard :directories t :sorted nil)
             
     #+allegro
     ;; Allegro normally return directories in file form but we can
@@ -42,6 +42,42 @@ names a directory. It can be in either file or directory form."
     (error "list-directory not implemented")))
 
 
+(defun d (path 
+	  &key (directories nil) ;; include subdirectories
+	  (files t)         ;; include files
+	  (all t)           ;; include Unix dot files (other than dot and dot dot)
+	  (directory-pathnames t) ;; return directories as directory-pathname-p's.
+	  (include-emacs-lockfiles nil) ;; inculde .#foo
+	  test              ;; Only return pathnames matching test
+	  (sorted t)
+	  (follow-links t)) ;; return truename's of matching files.
+  #-openmcl
+  (directory path :directories directories :files files :all all
+	     :directory-pathnames directory-pathnames :include-emacs-lockfiles include-emacs-lockfiles
+	     :test test :follow-links follow-links)
+  #+openmcl
+  (let* ((keys (list :directories directories ;list defaulted key values
+		     :files files
+		     :all all
+		     :directory-pathnames directory-pathnames
+		     :test test
+                     :include-emacs-lockfiles include-emacs-lockfiles
+		     :follow-links follow-links))
+	 (path (ccl:full-pathname (merge-pathnames path) :no-error nil))
+	 (dir (directory-namestring path)))
+    (declare (dynamic-extent keys))
+    (if (null (pathname-directory path))
+      (setq dir (directory-namestring (setq path
+					    (merge-pathnames path
+							     (ccl:mac-default-directory))))))
+    (assert (eq (car (pathname-directory path)) :absolute) ()
+	    "full-pathname returned relative path ~s??" path)
+    ;; return sorted in alphabetical order, target-Xload-level-0 depends
+    ;; on this.
+    (if sorted
+	(nreverse
+	 (delete-duplicates (ccl::%directory "/" dir path '(:absolute) keys) :test #'equal))
+	(ccl::%directory "/" dir path '(:absolute) keys))))
 
 
 (defun file-exists-p (pathname)
