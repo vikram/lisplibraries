@@ -1,0 +1,6 @@
+*~
+*.fasl
+\#*
+.*
+*.dx64fsl
+!.gitignore
